@@ -13,7 +13,7 @@ import ArticleUpdate from "./containers/ArticleUpdate";
 import ArticleDetail from "./containers/ArticleDetail";
 import ArticleDetailMenu from "./containers/ArticleDetailMenu";
 import PeerList from "./containers/Peers/PeerList"
-import Corso from "./components/iFrame"
+import Test from "./components/test"
 // import Corso from "./components/VideoChatFrame"
 import AssignmentList from "./containers/AssignmentList";
 import AssignmentDetail from "./containers/AssignmentDetail";
@@ -25,7 +25,7 @@ const BaseRouter = () => (
     <Route exact path="/create/" component={AssignmentChoices} />
     <Route exact path="/articles/" component={ArticleList} />
     <Route exact path="/peers/" component={PeerList} />
-    <Route exact path="/corso/" component={Corso} />
+    <Route exact path="/frameTest/" component={Test} />
     <Route exact path="/create-article/" component={ArticleCreate} />
     <Route exact path="/articles/update/" component={ArticleUpdate} />
     <Route exact path="/articles/:articleID/feedback/" component={ArticleFeedback} />
