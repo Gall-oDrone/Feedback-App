@@ -3,8 +3,11 @@ from rest_auth.registration.serializers import RegisterSerializer
 from rest_framework import serializers
 from rest_framework.authtoken.models import Token
 
-from .models import User
+from .models import User, MeetingRequest, ProfileInfo, Profile
 
+class StringSerializer(serializers.StringRelatedField):
+    def to_internal_value(self, value):
+        return value
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
@@ -72,3 +75,56 @@ class TokenSerializer(serializers.ModelSerializer):
         return {
             'university': university
         }
+class ProfileSerializer(serializers.ModelSerializer):
+    # user = serializers.SerializerMethodField(many=False)
+    # slug = serializers.SerializerMethodField(many=False)
+    class Meta:
+        model = Profile
+        fields = ("__all__" )
+
+
+class UserProfileLCRequestSerializer(serializers.ModelSerializer):
+    to_user = StringSerializer()
+    from_user = StringSerializer()
+
+    class Meta:
+        model = MeetingRequest
+        fields = ("to_user", "from_user", "timestamp")
+
+class ProfileInfoSerializer(serializers.ModelSerializer):
+    profile_username = StringSerializer(many=False)
+    name = StringSerializer(many=False)
+    country = StringSerializer(many=False)
+    university = StringSerializer(many=False)
+    graduate = StringSerializer(many=False)
+    undergraduate = StringSerializer(many=False)
+    work_experience = StringSerializer(many=False)
+    website = StringSerializer(many=False)
+    message = StringSerializer(many=False)
+    github = StringSerializer(many=False)
+
+    class Meta:
+        model = ProfileInfo
+        fields = ("__all__")
+    
+    def update_account_info(self, request):
+        data = request.data
+        print('update_account_info data: ')
+        print(data)
+        profile = ProfileInfo(profile_username= User.objects.get(self.request.data.get("profile_username")).id)
+        profile.name = self.request.data.get("name"),
+        profile.country = self.request.data.get("country"),
+        profile.university = self.request.data.get("university"),
+        profile.graduate = self.request.data.get("graduate"),
+        profile.undergraduate = self.request.data.get("undergraduate"),
+        profile.work_experience = self.request.data.get("work_experience"),
+        profile.website = self.request.data.get("website"),
+        profile.message = self.request.data.get("message"),
+        profile.github = self.request.data.get("github")
+        profile.save()
+        return profile
+
+class ProfileInfoListSerializer(serializers.ListSerializer):
+    child = ProfileInfoSerializer()
+    allow_null = True
+    many = True
