@@ -1,8 +1,11 @@
 const path = require('path');
 const common = require("./webpack.common");
 const merge = require("webpack-merge");
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const { CleanWebpackPlugin } = require('clean-webpack-plugin');
+var HtmlWebpackPlugin = require("html-webpack-plugin");
 
-module.exports = {
+module.exports = merge(common, {
    mode: "production",
    devtool: "none",
    entry: {
@@ -11,8 +14,25 @@ module.exports = {
    },
    output: {
       filename: 'index_bundle.[contentHash:7].js',
-      path: path.resolve(__dirname, 'bundle'),
-      // path.resolve(__dirname, 'dist/static'),
-      // publicPath: 'static/',
+      // path: path.resolve(__dirname, 'bundle'),
+      path: path.resolve(__dirname, 'dist/static'),
+      publicPath: 'static/',
       publicPath: '/'
-   }
+   },
+   plugins: [
+      new MiniCssExtractPlugin({ filename: "[name].[contentHash:5].css" }),
+      new CleanWebpackPlugin()
+    ],
+    module: {
+      rules: [
+        {
+          test: /\.scss$/,
+          use: [
+            MiniCssExtractPlugin.loader, //3. Extract css into files
+            "css-loader", //2. Turns css into commonjs
+            "sass-loader" //1. Turns sass into css
+          ]
+        }
+      ]
+    }
+});

@@ -1,32 +1,18 @@
 const path = require('path');
-
+const fs = require('fs');
+var HtmlWebpackPlugin = require("html-webpack-plugin");
+const lessToJs = require('less-vars-to-js');
+const themeVariables = lessToJs(fs.readFileSync(path.join(__dirname, './ant-theme-vars.less'), 'utf8'));
 
 // lessToJs does not support @icon-url: "some-string", so we are manually adding it to the produced themeVariables js object here
 themeVariables["@icon-url"] = "'//localhost:8080/fonts/iconfont'";
 
 
 module.exports = {
-   mode: "development",
-   devtool: "none",
    entry: {
-      // vendor: ['react', 'react-dom', 'antd'],
-      app: './src/index.js',
-   },
-   output: {
-      filename: 'index_bundle.js',
-      path: path.resolve(__dirname, 'bundle'),
-      publicPath: '/'
-   },
-   resolve: {
-      modules: ['src/front', 'node_modules'],
-      extensions: ['.js', 'jsx', '.less'],
-   },
-   devServer: {
-      inline: true,
-      contentBase: path.resolve(__dirname, "/bundle"),
-      historyApiFallback: true,
-      port: 8001
-   },
+      main: "./src/index.js",
+      // vendor: "./src/vendor.js"
+    },
    module: {
       rules: [
          {
