@@ -52,13 +52,5 @@ module.exports = {
             use: [ { loader: 'url-loader' } ] 
         },
       ]
-   },
-   plugins: [
-      new HtmlWebpackPlugin({
-         template: './public/index.html',
-         filename: 'index.html',
-         favicon: './public/favicon.ico',
-         inject: 'body'
-      })
-   ]
+   }
 }
