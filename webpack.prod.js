@@ -60,5 +60,13 @@ module.exports = merge(common, {
           
        },
       ]
-    }
+    },
+    plugins: [
+      new HtmlWebpackPlugin({
+         template: './dist/index.html',
+         filename: 'index.html',
+         favicon: './public/favicon.ico',
+         inject: 'body'
+      })
+   ]
 });
