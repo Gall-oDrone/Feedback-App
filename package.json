@@ -21,14 +21,16 @@
     "webpack-dev-server": "^3.9.0"
   },
   "scripts": {
-    "start": "webpack-dev-server --mode development --open --hot",
+    "start": "node server.js",
+    "startO": "webpack-dev-server --mode development --open --hot",
     "build": "webpack --config webpack.prod.js",
     "buildR": "react-scripts build",
     "startw": "webpack-dev-server --mode development --open --hot",
     "buildW": "webpack --mode production",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
-    "postinstall": "npm run build"
+    "postinstall": "npm run build",
+    "heroku-postbuild": "webpack -p"
   },
   "engines": {
     "node": "12.6.0",
