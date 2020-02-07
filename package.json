@@ -23,7 +23,7 @@
   "scripts": {
     "start": "node server.js",
     "startO": "webpack-dev-server --mode development --open --hot",
-    "build": "webpack --config webpack.prod.js",
+    "build": "webpack --config webpack.config.js",
     "buildR": "react-scripts build",
     "startw": "webpack-dev-server --mode development --open --hot",
     "buildW": "webpack --mode production",
