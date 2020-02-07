@@ -10,6 +10,7 @@
     "babel-loader": "^8.0.6",
     "babel-preset-env": "^1.7.0",
     "babel-preset-react": "^6.24.1",
+    "express": "^4.17.1",
     "react": "^16.4.1",
     "react-dom": "^16.4.1",
     "react-redux": "^5.0.7",
@@ -21,8 +22,8 @@
     "webpack-dev-server": "^3.9.0"
   },
   "scripts": {
-    "startO": "node server.js",
-    "start": "webpack-dev-server --mode development --open --hot",
+    "start": "node server.js",
+    "startO": "webpack-dev-server --mode development --open --hot",
     "build": "webpack --config webpack.prod.js",
     "buildR": "react-scripts build",
     "startw": "webpack-dev-server --mode development --open --hot",
