@@ -13,7 +13,7 @@ module.exports = merge(common, {
       app: './src/index.js',
    },
    output: {
-      filename: 'index_bundle.js',
+      filename: '[name].[hash:7].js',
       // path: path.resolve(__dirname, 'bundle'),
       path: path.resolve(__dirname, 'dist'),
       // publicPath: 'static/',
