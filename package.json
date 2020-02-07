@@ -24,14 +24,15 @@
   "scripts": {
     "start": "node server.js",
     "start0": "webpack-dev-server --mode development --open --hot",
-    "build": "webpack --config webpack.prod.js",
+    "build": "webpack-dev-server --mode development",
     "buildR": "react-scripts build",
     "startw": "webpack-dev-server --mode development --open --hot",
     "buildW": "webpack --mode production",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
     "postinstall": "npm run build",
-    "heroku-postbuild": "webpack --config webpack.prod.js"
+    "heroku-postbuildO": "webpack --config webpack.prod.js",
+    "heroku-postbuild": "webpack-dev-server --mode development"
   },
   "engines": {
     "node": "12.6.0",
