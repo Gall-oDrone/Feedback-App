@@ -25,7 +25,7 @@ module.exports = {
    },
    devServer: {
       inline: true,
-      contentBase: path.resolve(__dirname, "/bundle"),
+      contentBase: path.resolve(__dirname, './dist'),
       historyApiFallback: true,
       port: 8001
    },
