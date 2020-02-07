@@ -47,6 +47,13 @@ module.exports = merge(common, {
                   javascriptEnabled: true
               }
           }]
+        },
+        {
+          test: /\.js$/,
+          loader: 'babel-loader',
+          query: {
+          presets: ['es2015', 'react']
+        }
         }
       ]
     }
