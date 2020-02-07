@@ -20,3 +20,4 @@ module.exports = {
       path: path.resolve(__dirname, 'bundle'),
       publicPath: '/'
    }
+}

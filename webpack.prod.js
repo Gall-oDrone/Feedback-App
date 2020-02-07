@@ -46,27 +46,6 @@ module.exports = merge(common, {
               }
           }]
         },
-        {
-          test: /\.(js|jsx)/,
-          exclude: /node_modules/,
-          use: {
-             loader: 'babel-loader',
-             options: {
-                "plugins": [
-                  ["import", { "libraryName": "antd", "libraryDirectory": "es", "style": "css" }]
-                ],
-              }
-          },
-          
-       },
       ]
-    },
-    plugins: [
-      new HtmlWebpackPlugin({
-         template: './public/index.html',
-         filename: 'index.html',
-         favicon: './public/favicon.ico',
-         inject: 'body'
-      })
-   ]
+    }
 });
