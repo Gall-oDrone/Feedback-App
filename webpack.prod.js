@@ -1,6 +1,7 @@
 const path = require('path');
 const common = require("./webpack.common");
 const merge = require("webpack-merge");
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 var HtmlWebpackPlugin = require("html-webpack-plugin");
