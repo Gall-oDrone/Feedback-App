@@ -14,9 +14,7 @@ module.exports = merge(common, {
    },
    output: {
       filename: '[name].[hash:7].js',
-      // path: path.resolve(__dirname, 'bundle'),
-      path: path.resolve(__dirname, 'dist/static'),
-      // publicPath: 'static/',
+      path: path.resolve(__dirname, 'dist'),
       publicPath: '/'
    },
    plugins: [

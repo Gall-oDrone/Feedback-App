@@ -7,7 +7,6 @@ const themeVariables = lessToJs(fs.readFileSync(path.join(__dirname, './ant-them
 // lessToJs does not support @icon-url: "some-string", so we are manually adding it to the produced themeVariables js object here
 themeVariables["@icon-url"] = "'//localhost:8080/fonts/iconfont'";
 
-
 module.exports = {
    mode: "development",
    devtool: "none",

@@ -2,16 +2,32 @@ const express = require('express');
 const path = require('path');
 const port = process.env.PORT || 8080;
 const app = express();
-let root = path.join(__dirname, 'dist')
+let root = path.join(__dirname, '/dist')
 // the __dirname is the current directory from where the script is running
-app.use(express.static(root));
+app.use(express.static(__dirname + '/dist'));
 
 // send the user to index html page inspite of the url
 app.get('*', (req, res) => {
-  res.sendFile(path.resolve('index.html', { root }));
+  res.sendFile(path.resolve(__dirname+ '/dist/index.html'));
 });
 
 app.listen(port);
+
+// const express = require('express');
+// const path = require('path');
+// const port = process.env.PORT || 8080;
+// const app = express();
+// let root = path.join(__dirname, '/dist')
+// // the __dirname is the current directory from where the script is running
+// app.use(express.static(root));
+
+// // send the user to index html page inspite of the url
+// app.get('*', (req, res) => {
+//   res.sendFile(path.join(__dirname + '/dist/index.html'));
+//   // res.sendFile(path.resolve('index.html', { root }));
+// });
+
+// app.listen(port);
 
 
 // var path = require('path');
