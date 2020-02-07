@@ -49,12 +49,18 @@ module.exports = merge(common, {
           }]
         },
         {
-          test: /\.js$/,
-          loader: 'babel-loader',
-          query: {
-          presets: ['es2015', 'react']
-        }
-        }
+          test: /\.(js|jsx)/,
+          exclude: /node_modules/,
+          use: {
+             loader: 'babel-loader',
+             options: {
+                "plugins": [
+                  ["import", { "libraryName": "antd", "libraryDirectory": "es", "style": "css" }]
+                ],
+              }
+          },
+          
+       },
       ]
     }
 });
