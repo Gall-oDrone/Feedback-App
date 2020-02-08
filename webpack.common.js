@@ -58,10 +58,10 @@ module.exports = {
          template: './public/index.html',
          filename: 'index.html',
          favicon: './public/favicon.ico',
-         inject: false
+         inject: "body"
       })
    ],
    resolve: {
-      extensions: ['*', '.js', '.jsx', '.css']
+      extensions: ['*', '.js', '.jsx', 'json', '.css']
     }
 }
