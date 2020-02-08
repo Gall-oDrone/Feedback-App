@@ -10,7 +10,7 @@ module.exports = merge(common, {
    mode: "production",
    devtool: "none",
    entry: {
-      // vendor: ['react', 'react-dom', 'antd'],
+      vendor: ['react', 'react-dom', 'antd'],
       app: './src/index.js',
    },
    output: {
@@ -59,23 +59,7 @@ module.exports = merge(common, {
                   javascriptEnabled: true
               }
           }]
-        },
-        {
-          test: /\.(js|jsx)/,
-          exclude: /node_modules/,
-          use: {
-             loader: 'babel-loader',
-             options: {
-                "plugins": [
-                  ["import", { "libraryName": "antd", "libraryDirectory": "es", "style": "css" }]
-                ],
-                presets: [
-                  '@babel/preset-env'
-                ]
-              }
-          },
-          
-       },
+        }
       ]
     }
 });
