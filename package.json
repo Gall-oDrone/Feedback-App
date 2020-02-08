@@ -33,7 +33,7 @@
     "eject": "react-scripts eject",
     "postinstall": "npm run build",
     "heroku-postbuildO": "webpack --config webpack.prod.js",
-    "heroku-postbuild": "webpack-dev-server --mode development"
+    "heroku-postbuild": "webpack --mode production"
   },
   "engines": {
     "node": "12.6.0",
