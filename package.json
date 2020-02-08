@@ -32,8 +32,8 @@
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
     "postinstall": "npm run build",
-    "heroku-postbuildO": "webpack --config webpack.prod.js",
-    "heroku-postbuild": "webpack --mode production"
+    "heroku-postbuild": "webpack --config webpack.prod.js",
+    "heroku-postbuildO": "webpack --mode production"
   },
   "engines": {
     "node": "12.6.0",
