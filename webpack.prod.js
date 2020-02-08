@@ -10,7 +10,7 @@ module.exports = merge(common, {
    mode: "production",
    devtool: "none",
    entry: {
-      vendor: ['react', 'react-dom', 'antd'],
+      // vendor: ['react', 'react-dom', 'antd'],
       app: './src/index.js',
    },
    output: {
@@ -44,21 +44,6 @@ module.exports = merge(common, {
             "css-loader", //2. Turns css into commonjs
             "sass-loader" //1. Turns sass into css
           ]
-        },
-        {
-          test: /\.less$/,
-          use: [{
-              loader: 'style-loader' // creates style nodes from JS strings
-          },
-          {
-              loader: 'css-loader' // translates CSS into CommonJ
-          },
-          {
-              loader: 'less-loader', // compiles Less to CSS
-              options: {
-                  javascriptEnabled: true
-              }
-          }]
         }
       ]
     }

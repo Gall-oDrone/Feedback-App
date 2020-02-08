@@ -9,10 +9,10 @@ themeVariables["@icon-url"] = "'//localhost:8080/fonts/iconfont'";
 
 
 module.exports = {
-   entry: {
-      main: "./src/index.js",
-      // vendor: "./src/vendor.js"
-    },
+   // entry: {
+   //    main: "./src/index.js",
+   //    // vendor: "./src/vendor.js"
+   //  },
    module: {
       rules: [
          {
@@ -58,7 +58,7 @@ module.exports = {
          template: './public/index.html',
          filename: 'index.html',
          favicon: './public/favicon.ico',
-         inject: 'body'
+         inject: false
       })
    ],
    resolve: {

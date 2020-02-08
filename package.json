@@ -32,7 +32,7 @@
     "buildW": "webpack --mode production",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
-    "postinstall": "npm run build",
+    "postinstallO": "npm run build",
     "heroku-postbuild": "webpack --config webpack.prod.js",
     "heroku-postbuildO": "webpack --mode production"
   },
