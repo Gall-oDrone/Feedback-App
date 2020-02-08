@@ -3,6 +3,7 @@ const common = require("./webpack.common");
 const merge = require("webpack-merge");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
+const TerserPlugin = require("terser-webpack-plugin");
 var HtmlWebpackPlugin = require("html-webpack-plugin");
 
 module.exports = merge(common, {
@@ -13,10 +14,23 @@ module.exports = merge(common, {
       app: './src/index.js',
    },
    output: {
-      filename: 'index_bundle.js',
-      path: path.resolve(__dirname, './dist'),
+      filename: '[name].[hash:7].js',
+      path: path.resolve(__dirname, 'dist'),
       publicPath: '/'
    },
+   optimization: {
+    minimizer: [
+      new TerserPlugin(),
+      new HtmlWebpackPlugin({
+        template: './public/index.html',
+        minify: {
+          removeAttributeQuotes: true,
+          collapseWhitespace: true,
+          removeComments: true
+        }
+      })
+    ]
+  },
    plugins: [
       new MiniCssExtractPlugin({ filename: "[name].[contentHash:5].css" }),
       new CleanWebpackPlugin()
@@ -60,13 +74,5 @@ module.exports = merge(common, {
           
        },
       ]
-    },
-    plugins: [
-      new HtmlWebpackPlugin({
-         template: './public/index.html',
-         filename: 'index.html',
-         favicon: './public/favicon.ico',
-         inject: 'body'
-      })
-   ]
+    }
 });

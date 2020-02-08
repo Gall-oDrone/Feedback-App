@@ -19,5 +19,13 @@ module.exports = {
       filename: 'index_bundle.js',
       path: path.resolve(__dirname, 'bundle'),
       publicPath: '/'
-   }
+   },
+   plugins: [
+      new HtmlWebpackPlugin({
+         template: './public/index.html',
+         filename: 'index.html',
+         favicon: './public/favicon.ico',
+         inject: 'body'
+      })
+   ]
 }
