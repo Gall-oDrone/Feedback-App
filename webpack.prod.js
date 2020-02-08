@@ -16,7 +16,7 @@ module.exports = merge(common, {
    output: {
       filename: '[name].[hash:7].js',
       path: path.resolve(__dirname, 'dist'),
-      publicPath: '/'
+      publicPath: './'
    },
    optimization: {
     minimizer: [
@@ -69,6 +69,9 @@ module.exports = merge(common, {
                 "plugins": [
                   ["import", { "libraryName": "antd", "libraryDirectory": "es", "style": "css" }]
                 ],
+                presets: [
+                  '@babel/preset-env'
+                ]
               }
           },
           
