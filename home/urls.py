@@ -16,7 +16,9 @@ urlpatterns = [
     path('graded-assignments/', include('assignmentApi.graded_assignments.urls')),
     path('graded-assignments/survey', include('assignmentApi.graded_assignments.survey.urls')),
     path('users/', include('users.urls')),
-    re_path(r'^.*', TemplateView.as_view(template_name='index.html'))
+    
+    path('', TemplateView.as_view(template_name='index.html'))
+    # re_path(r'^.*', TemplateView.as_view(template_name='index.html'))
 ]
 
 # if settings.DEBUG:

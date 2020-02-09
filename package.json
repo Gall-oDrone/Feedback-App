@@ -1,7 +1,7 @@
 {
   "name": "django-react-boilerplate",
+  "homepage": "./",
   "version": "0.1.0",
-  "proxy": "https://py3-test-app.herokuapp.com/",
   "private": true,
   "dependencies": {
     "@daily-co/daily-js": "^0.9.981",
@@ -12,30 +12,29 @@
     "babel-preset-env": "^1.7.0",
     "babel-preset-react": "^6.24.1",
     "express": "^4.17.1",
-    "html-webpack-include-assets-plugin": "^2.0.0",
+    "moment": "^2.24.0",
     "react": "^16.4.1",
     "react-dom": "^16.4.1",
     "react-redux": "^5.0.7",
     "react-router-dom": "^4.3.1",
-    "react-scripts": "1.1.4",
+    "react-scripts": "^3.3.1",
+    "react-select-country-list": "^2.1.2",
     "redux": "^4.0.0",
-    "redux-thunk": "^2.3.0",
-    "webpack-cli": "^3.3.10",
-    "webpack-dev-server": "^3.9.0"
+    "redux-thunk": "^2.3.0"
   },
   "main": "index.js",
   "scripts": {
-    "start": "node server.js",
-    "start0": "webpack-dev-server --mode development --open --hot",
-    "build": "webpack --config webpack.prod.js",
-    "buildR": "react-scripts build",
-    "startw": "webpack-dev-server --mode development --open --hot",
+    "startO": "node server.js",
+    "start W": "webpack-dev-server --mode development --open --hot",
+    "start": "react-scripts start",
     "buildW": "webpack --mode production",
+    "build": "react-scripts build",
+    "startw": "webpack-dev-server --mode development --open --hot",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
     "postinstallO": "npm run build",
-    "heroku-postbuild": "webpack --config webpack.prod.js",
-    "heroku-postbuildO": "webpack --mode production"
+    "heroku-postbuild": "npm run build",
+    "heroku-postbuildI": "webpack --mode production"
   },
   "engines": {
     "node": "12.6.0",
@@ -58,7 +57,18 @@
     "react-app-rewired": "^2.1.5",
     "style-loader": "^1.0.1",
     "terser-webpack-plugin": "^2.3.4",
-    "webpack": "^4.41.2",
     "webpack-merge": "^4.2.2"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
   }
 }

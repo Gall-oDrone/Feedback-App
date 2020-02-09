@@ -1,5 +1,5 @@
 import os
-# import django_heroku
+import django_heroku
 
 BASE_DIR = os.path.dirname(os.path.dirname(
     os.path.dirname(os.path.abspath(__file__))))
@@ -41,8 +41,8 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -56,7 +56,7 @@ ROOT_URLCONF = 'home.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'dist/')],
+        'DIRS': [os.path.join(BASE_DIR, 'build')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -76,10 +76,13 @@ USE_I18N = True
 USE_L10N = True
 USE_TZ = True
 
+# Configure app for Heroku deployment
+django_heroku.settings(locals())
+
 STATIC_URL = '/static/'
 MEDIA_URL = '/media/'
 
-STATICFILES_DIRS = [os.path.join(BASE_DIR, 'dist')]
+STATICFILES_DIRS = [os.path.join(BASE_DIR, 'build/static')]
 print("STATICFILES_DIRS XXX")
 print(STATICFILES_DIRS)
 # STATICFILES_STORAGE = 'whitenoise.django.GzipManifestStaticFilesStorage'

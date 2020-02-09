@@ -43,7 +43,7 @@ const Articles = (props) => {
                             //     src="https://gw.alipayobjects.com/zos/rmsportal/mqaQswcyDLcXyDKnZfES.png"
                             // />
                             <video width="250" controls >
-                                <source src={"http://127.0.0.1:8000/media/videos/Ads9_7ygmfRM.mp4"} type="video/mp4"/>
+                                <source src={`http://127.0.0.1:8000/media/${item.video}`} type="video/mp4"/>
                                 Your browser does not support HTML5 video.
                             </video>
                         }

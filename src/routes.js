@@ -12,20 +12,45 @@ import ArticleRating from "./containers/ArticleRating";
 import ArticleUpdate from "./containers/ArticleUpdate";
 import ArticleDetail from "./containers/ArticleDetail";
 import ArticleDetailMenu from "./containers/ArticleDetailMenu";
+
 import PeerList from "./containers/Peers/PeerList"
-import Corso from "./components/iFrame"
+import PeerList2 from "./containers/Peers/PeerList2"
+
+import Test from "./components/test"
 // import Corso from "./components/VideoChatFrame"
+import Meeting from "./components/MeetingSteps"
 import AssignmentList from "./containers/AssignmentList";
 import AssignmentDetail from "./containers/AssignmentDetail";
 import AssignmentChoices from "./containers/AssignmentChoices";
 import AssignmentCreate from "./containers/AssignmentCreate";
+import Meetings from "./components/MeetingSteps"
+import ProfileMeetings from "./containers/ProfileMeetings"
+import ProfileInfo from "./components/UserProfileInfo"
+import ProfileMainMenu from "./containers/ProfileMainMenu"
+import RoomMenu from "./containers/RoomMenu"
+import IncentiveList from "./containers/IncentiveList";
+import MeetingReview from "./components/MeetingReview"
+import ProfileAccountInfo from "./components/ProfileAccountInfo"
+import ProfileAccountUserInfo from "./components/ProfileAccountUserInfo"
+import ProfileAccountArticleList from "./components/ProfileArticleList"
+import ProfileAccountArticleDetail from "./components/ProfileArticleDetail"
+import ProfileAccountIncentiveList from "./containers/ProfileAccountIncentives"
+import Calendar from "./components/Calendar"
+
+import SurveyList from "./containers/SurveyList";
+import SurveyDetail from "./containers/SurveyDetail";
+import SurveyChoices from "./containers/SurveyChoices";
+import SurveyCreate from "./containers/SurveyCreate";
 
 const BaseRouter = () => (
   <Hoc>
     <Route exact path="/create/" component={AssignmentChoices} />
     <Route exact path="/articles/" component={ArticleList} />
+
     <Route exact path="/peers/" component={PeerList} />
-    <Route exact path="/corso/" component={Corso} />
+    <Route exact path="/peers2/" component={PeerList2} />
+
+    <Route exact path="/frameTest/:roomID" component={Test} />
     <Route exact path="/create-article/" component={ArticleCreate} />
     <Route exact path="/articles/update/" component={ArticleUpdate} />
     <Route exact path="/articles/:articleID/feedback/" component={ArticleFeedback} />
@@ -34,10 +59,27 @@ const BaseRouter = () => (
     <Route exact path="/articles/detailmenu/:articleID" component={ArticleDetailMenu} />
     <Route exact path="/assignments/" component={AssignmentList} />
     <Route exact path="/assignments/:id" component={AssignmentDetail} />
-    <Route exact path="/create/survey/" component={AssignmentCreate} />
+    <Route exact path="/create/assignment/" component={AssignmentCreate} />
+    <Route exact path="/meeting/" component={Meeting} />
     <Route exact path="/login/" component={Login} />
     <Route exact path="/signup/" component={Signup} />
     <Route exact path="/profile/:id" component={Profile} />
+    <Route exact path="/profile/:id/menu/" component={ProfileMainMenu} />
+    <Route exact path="/userProfile/" component={MeetingReview} />
+    <Route exact path="/profile/:id/meetings/" component={ProfileMeetings} />
+    <Route exact path="/profile/:id/account/info/" component={ProfileAccountInfo} />
+    <Route exact path="/profile/:id/account/user/info/" component={ProfileAccountUserInfo} />
+    <Route exact path="/profile/:id/account/articles/list/" component={ProfileAccountArticleList} />
+    <Route exact path="/profile/:id/account/articles/detail/:articleID" component={ProfileAccountArticleDetail} />
+    <Route exact path="/profile/:id/account/incentives/list/" component={ProfileAccountIncentiveList} />
+    <Route exact path="/incentives/" component={IncentiveList} />
+    <Route exact path="/rm/" component={RoomMenu} />
+    <Route exact path="/calendar/" component={Calendar} />
+
+    <Route exact path="/survey/" component={SurveyList} />
+    <Route exact path="/survey/:id" component={SurveyDetail} />
+    <Route exact path="/create/survey/" component={SurveyCreate} />
+    <Route exact path="/create/" component={SurveyChoices} />
   </Hoc>
 );
 

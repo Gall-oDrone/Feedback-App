@@ -7,45 +7,6 @@ import * as actions from "../store/actions/assignments";
 import assignment from '../containers/AssignmentDetail';
 import Hoc from "../hoc/hoc"
 
-// const columns = [
-//   {
-//     title: 'Teacher name',
-//     dataIndex: 'name',
-//     key: 'name',
-//     render: text => <a>{text}</a>,
-//   },
-//   {
-//     title: 'Assignment',
-//     dataIndex: 'age',
-//     key: 'age',
-//   },
-//   {
-//     title: 'Tags',
-//     key: 'tags',
-//     dataIndex: 'tags',
-//     render: tags => (
-//       <span>
-//         {tags.map(tag => {
-//           let color = tag.length > 5 ? 'geekblue' : 'green';
-//           if (tag === 'loser') {
-//             color = 'volcano';
-//           }
-//           return (
-//             <Tag color={color} key={tag}>
-//               {tag.toUpperCase()}
-//             </Tag>
-//           );
-//         })}
-//       </span>
-//     ),
-//   },
-//   {
-//     title: 'Progress',
-//     key: 'action',
-//     render: a => <Result key={a.id} grade={a.grade} />
-//   },
-// ];
-
 const data = [
   {
     key: '1',

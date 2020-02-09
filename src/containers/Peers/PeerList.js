@@ -1,7 +1,9 @@
 import React from 'react';
-import { List, Avatar, Button, Card, Skeleton } from 'antd';
+import { List, Avatar, Button, Card, Input, Skeleton, Checkbox, Row, Col } from 'antd';
 import axios from 'axios';
 import { connect } from 'react-redux';
+
+const { Search } = Input;
 
 const data = [
   {
@@ -17,6 +19,10 @@ const data = [
     title: 'Ant Design Title 4',
   },
 ];
+
+function onChange(checkedValues) {
+  console.log('checked = ', checkedValues);
+}
 
 class ProductList extends React.Component {
 
@@ -41,6 +47,33 @@ class ProductList extends React.Component {
     }
         render () {
                 return(
+
+                  <div>
+                    <Search placeholder="input search text" onSearch={value => console.log(value)} enterButton />
+                    
+                    <br />
+
+                    <Checkbox.Group style={{ width: '100%' }} onChange={onChange}>
+                      <Row>
+                        <Col span={8}>
+                          <Checkbox value="A">A</Checkbox>
+                        </Col>
+                        <Col span={8}>
+                          <Checkbox value="B">B</Checkbox>
+                        </Col>
+                        <Col span={8}>
+                          <Checkbox value="C">C</Checkbox>
+                        </Col>
+                        <Col span={8}>
+                          <Checkbox value="D">D</Checkbox>
+                        </Col>
+                        <Col span={8}>
+                          <Checkbox value="E">E</Checkbox>
+                        </Col>
+                      </Row>
+                    </Checkbox.Group>
+
+                    <br/>
                     <List
                     itemLayout="horizontal"
                     dataSource={data}
@@ -60,6 +93,7 @@ class ProductList extends React.Component {
                     </List.Item>
                     )}
                     />
+                </div>
                 )
             }
     }

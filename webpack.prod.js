@@ -16,7 +16,7 @@ module.exports = merge(common, {
    output: {
       filename: '[name].[hash:7].js',
       path: path.resolve(__dirname, 'dist'),
-      publicPath: './'
+      publicPath: '/'
    },
    optimization: {
     minimizer: [
@@ -34,17 +34,5 @@ module.exports = merge(common, {
    plugins: [
       new MiniCssExtractPlugin({ filename: "[name].[contentHash:5].css" }),
       new CleanWebpackPlugin()
-    ],
-    module: {
-      rules: [
-        {
-          test: /\.scss$/,
-          use: [
-            MiniCssExtractPlugin.loader, //3. Extract css into files
-            "css-loader", //2. Turns css into commonjs
-            "sass-loader" //1. Turns sass into css 11
-          ]
-        }
-      ]
-    }
+    ]
 });

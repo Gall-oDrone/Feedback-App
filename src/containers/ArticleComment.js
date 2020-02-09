@@ -84,8 +84,9 @@ class CommentForm extends React.Component {
     console.log(JSON.stringify(this.props))
     if (this.props.token !== undefined && this.props.token !== null) {
       // this.props.getASNTSDetail(this.props.token, this.props.match.params.id, this.props.match.params.userId);
-      console.log("ComponentDidMount after: " + JSON.stringify(this.props.token))
-      console.log("ComponentDidMount after: " + JSON.stringify(this.props.match.params.articleID))
+      console.log("1) ComponentDidMount after: " + JSON.stringify(this.props.token))
+      console.log("2) ComponentDidMount after: " + JSON.stringify(this.props.match.params.articleID))
+      console.log("3) ComponentDidMount after: " + JSON.stringify(this.props.getComment(this.props.token, this.props.match.params.articleID)))
       this.props.getComment(this.props.token, this.props.match.params.articleID)
       
       console.log("ComponentDidMount after: " + JSON.stringify(this.props))
@@ -97,6 +98,7 @@ class CommentForm extends React.Component {
       if (newProps.token !== undefined && newProps.token !== null) {
         // this.props.getASNTSDetail(newProps.token, this.props.match.params.id, this.props.match.params.userId);
         console.log("componentWillReceiveProps: " + JSON.stringify(this.props))
+        console.log("componentWillReceiveProps this.props.getComment: " + JSON.stringify(this.props.getComment(newProps.token, newProps.match.params.articleID)))
         this.props.getComment(newProps.token, newProps.match.params.articleID).then(res => {
           console.log("componentWillReceiveProps before assigning res to dataList: " + JSON.stringify(this.props))
           console.log(JSON.stringify(res))

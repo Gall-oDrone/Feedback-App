@@ -19,10 +19,10 @@ module.exports = {
       path: path.resolve(__dirname, './dist'),
       publicPath: '/'
    },
-   resolve: {
-      modules: ['src/front', 'node_modules'],
-      extensions: ['.js', 'jsx', '.less'],
-   },
+   // resolve: {
+   //    modules: ['src/front', 'node_modules'],
+   //    extensions: ['.js', 'jsx', '.less'],
+   // },
    devServer: {
       inline: true,
       contentBase: path.resolve(__dirname, './dist'),

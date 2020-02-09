@@ -47,9 +47,10 @@ class ArticleRating extends React.Component {
     console.log(JSON.stringify(this.props))
     if (this.props.token !== undefined && this.props.token !== null) {
       // this.props.getASNTSDetail(this.props.token, this.props.match.params.id, this.props.match.params.userId);
+      console.log("ComponentDidMount after 1: " + JSON.stringify(this.props.fetchRating(this.props.token, this.props.match.params.articleID)))
       this.props.fetchRating(this.props.token, this.props.match.params.articleID)
-      console.log("ComponentDidMount after: " + JSON.stringify(fetchRating(this.props.token, "15")))
-      console.log("ComponentDidMount after: " + JSON.stringify(this.props))
+      console.log("ComponentDidMount after 2: " + JSON.stringify(fetchRating(this.props.token, "15")))
+      console.log("ComponentDidMount after 3: " + JSON.stringify(this.props))
     }
   }
 
