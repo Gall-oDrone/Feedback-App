@@ -5,7 +5,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(
     os.path.dirname(os.path.abspath(__file__))))
 
 print("BASE_DIR")
-print([os.path.join(BASE_DIR, 'dist')])
+print([os.path.join(BASE_DIR, 'build')])
 
 SECRET_KEY = '-05sgp9!deq=q1nltm@^^2cc+v29i(tyybv3v2t77qi66czazj'
 ALLOWED_HOSTS = []
@@ -77,7 +77,7 @@ USE_L10N = True
 USE_TZ = True
 
 # Configure app for Heroku deployment
-django_heroku.settings(locals())
+# django_heroku.settings(locals())
 
 STATIC_URL = '/static/'
 MEDIA_URL = '/media/'

@@ -35,7 +35,7 @@ class CustomLayout extends React.Component {
       // <Link to={`/profile/${this.props.userId}/meetings`}>Meetings</Link>
     }
   };
-
+  //
   componentDidMount() {
     if (this.props.token !== undefined && this.props.token !== null) {
       if(this.props.userId !== null){
