@@ -8,7 +8,7 @@ var HtmlWebpackPlugin = require("html-webpack-plugin");
 
 module.exports = merge(common, {
    mode: "production",
-   devtool: "none",
+   devtool: "source-map",
    entry: {
       // vendor: ['react', 'react-dom', 'antd'],
       app: './src/index.js',
