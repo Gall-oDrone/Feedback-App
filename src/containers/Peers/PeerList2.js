@@ -61,7 +61,7 @@ const routes = [
   },
 ];
 
-const IconLink = ({ src, text }) => (
+const IconLink = ({ src, text, itype }) => (
   <a
     style={{
       marginRight: 16,
@@ -76,6 +76,7 @@ const IconLink = ({ src, text }) => (
       src={src}
       alt="start"
     />
+    <Icon type={itype} theme="twoTone" twoToneColor="#FADB14" />
     {text}
   </a>
 );
@@ -94,15 +95,20 @@ const content = (
     <Row className="contentLink" type="flex">
       <IconLink
         src="https://gw.alipayobjects.com/zos/rmsportal/MjEImQtenlyueSmVEfUD.svg"
-        text="Quick Start"
+        text="Give feedback"
       />
       <IconLink
         src="https://gw.alipayobjects.com/zos/rmsportal/NbuDUAuBlIApFuDvWiND.svg"
-        text=" Product Info"
+        text="Info"
       />
       <IconLink
         src="https://gw.alipayobjects.com/zos/rmsportal/ohOEPSYdDTNnyMbGuyLb.svg"
-        text="Product Doc"
+        text="See Doc"
+      />
+      <IconLink
+        // src="https://gw.alipayobjects.com/zos/rmsportal/ohOEPSYdDTNnyMbGuyLb.svg"
+        itype="trophy"
+        text="Incentive"
       />
     </Row>
   </div>
@@ -150,22 +156,19 @@ class ProductList2 extends React.Component {
         render () {
                 return(
                   <PageHeader
-                  title="Title"
+                  title="Topic: Data Science"
                   style={{
                     border: '1px solid rgb(235, 237, 240)',
                   }}
-                  subTitle="This is a subtitle"
+                  subTitle="Homework Review"
                   tags={<Tag color="blue">Running</Tag>}
                   extra={[
-                    <Button key="3">Operation</Button>,
+                    <Button key="3">Contact</Button>,
                     <Button key="2">Operation</Button>,
-                    <Button key="1" type="primary">
-                      Primary
-                    </Button>,
                     <DropdownMenu key="more" />,
                   ]}
                   avatar={{ src: 'https://avatars1.githubusercontent.com/u/8186664?s=460&v=4' }}
-                  breadcrumb={{ routes }}
+                  // breadcrumb={{ routes }}
                 >
                   <Content
                     extraContent={

@@ -130,7 +130,7 @@ export const getProfileArticleList = (token, username) => {
             "Content-Type": "application/json",
             Authorization: `Token ${token}`
         }
-        axios.get(`http://127.0.0.1:8000/articles/list/${username}`)
+        axios.get(`http://127.0.0.1:8000/articles/list/${username}/`)
         .then(res => {
             const data = res.data;
             console.log("data: "+ JSON.stringify(data))
@@ -172,7 +172,7 @@ export const getProfileArticleDetail = (token, articleID, username) => {
             "Content-Type": "application/json",
             Authorization: `Token ${token}`
         }
-        axios.get(`http://127.0.0.1:8000/articles/${articleID}/detail/${username}`)
+        axios.get(`http://127.0.0.1:8000/articles/${articleID}/detail/${username}/`)
         .then(res => {
             const data = res.data;
             console.log("data: "+ JSON.stringify(data))

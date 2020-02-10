@@ -2,7 +2,7 @@ import React from "react";
 import { connect } from "react-redux";
 import Hoc from "../hoc/hoc";
 import { Form, Input, Icon, Button, Divider } from 'antd';
-import QuestionForm from "./QuestionForm"
+import SurveyQuestionForm from "./SurveyQuestionForm"
 import {createASNT} from "../store/actions/assignments"
 
 const FormItem = Form.Item;
@@ -37,7 +37,7 @@ class AssignmentCreate extends React.Component {
                   questions.push({
                     title: values.question[i],
                     choices: values.questions[i].choices.filter(el => el !== null),
-                    answer: values.answers[i]
+                    // answer: values.answers[i]
                 });
               }
                 const asnt = {
@@ -63,7 +63,7 @@ class AssignmentCreate extends React.Component {
               onClick={() => this.remove()}
               />
           ) : null}
-          <QuestionForm id={i} {...this.props} />
+          <SurveyQuestionForm id={i} {...this.props} />
           <Divider />
         </Hoc>
         );
@@ -71,7 +71,7 @@ class AssignmentCreate extends React.Component {
 
     return (
       <Form onSubmit={this.handleSubmit}>
-          <h1>Create an assignment</h1>
+          <h1>Create a Survey</h1>
           <FormItem label={"Title:"}>
           {getFieldDecorator(`title`, {
           validateTrigger: ['onChange', 'onBlur'],

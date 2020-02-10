@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from articlesApi.models import Article, Video, Comment, Category, Like, Rating
+from articlesApi.models import Article, Video, Comment, Category, Like, Rating, Image
 from users.models import User
 
 
@@ -12,6 +12,7 @@ class ArticleSerializer(serializers.ModelSerializer):
     engagement = StringSerializer(many=True)
     categories = StringSerializer(many=True)
     author = StringSerializer(many=False)
+    video = StringSerializer(many=False)
     
 
     class Meta:
@@ -166,6 +167,10 @@ class ArticleSerializer(serializers.ModelSerializer):
         # grade = answered_correct_count / len(questions)
         # graded_asnt.grade = gradegraded_asnt.save()
         # return graded_asnt
+class ProfileArticleListSerializer(serializers.ListSerializer):
+    child = ArticleSerializer()
+    allow_null = True
+    many = True
 
 class LikeSerializer(serializers.ModelSerializer):
     user = StringSerializer(many=False)
@@ -222,7 +227,7 @@ class CommentSerializer(serializers.ModelSerializer):
         comment.content = data["content"]
         comment.liked = data["like"]
         comment.disliked = data["dislike"]
-        comment.reply_to = Comment.objects.get(id=data["reply_to"])
+        # comment.reply_to = Comment.objects.get(id=data["reply_to"])
         comment.article = Article.objects.get(id=data["articleID"])
         comment.save()
         return comment
@@ -251,3 +256,7 @@ class VideoFormSerializer(serializers.ModelSerializer):
         fields = ("__all__")
 
 
+class ImageFormSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Image
+        fields = ("__all__")

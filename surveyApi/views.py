@@ -5,7 +5,7 @@ from rest_framework.status import(
     HTTP_201_CREATED,
     HTTP_400_BAD_REQUEST
 )
-from .models import Survey, SurveyChoices, GradedSurvey
+from .models import Survey, SurveyChoices, GradedSurvey, SurveyData, SurveyCounter
 from .serializers import SurveySerializer, SurveyChoicesSerializer, GradedSurveySerializer
 
 
@@ -13,13 +13,19 @@ class SurveyViewSet(viewsets.ModelViewSet):
     serializer_class = SurveySerializer
     queryset = Survey.objects.all()
 
-    def create(self, request):
-        serializer = SurveySerializer(data=request.data)
-        if serializer.is_valid():
-            survey = serializer.create(request)
-            if survey:
-                return Response(status=HTTP_201_CREATED)
-        return Response(status=HTTP_400_BAD_REQUEST)
+    def create(self, request, *args, **kwargs):
+        username = self.kwargs.get('username')
+        article = self.kwargs.get('article')
+        s_counter = self.kwargs.get('number')
+        if(SurveyCounter.objects.values() == 5):
+            return Response("You reached the limit number of surveis!!")
+        else: 
+            serializer = SurveySerializer(data=request.data)
+            if serializer.is_valid():
+                survey = serializer.create(request)
+                if survey:
+                    return Response(status=HTTP_201_CREATED)
+            return Response(status=HTTP_400_BAD_REQUEST)
 
 
 class SurveyChoicesViewSet(viewsets.ModelViewSet):

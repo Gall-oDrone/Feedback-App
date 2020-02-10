@@ -33,28 +33,6 @@ class AssignmentChoices extends React.PureComponent {
     // choices_array.forEach(item.assignment_choices, choice => {
     //   console.log("1) renderItem(item) Choices: " + choice)
     // });
-    console.log("0) choices_array: " + JSON.stringify(choices_array))
-    console.log("0) choices_array LAST: " + JSON.stringify(choices_array[choices_array.length-1]))
-    console.log("0) renderItem(item) Item: " + JSON.stringify(item))
-    console.log("1) renderItem(item) Choices: " + item.assignment_choices)
-    console.log("1) renderItem(item) Choices [0]: " + item.assignment_choices[0])
-    console.log("1) renderItem(this.props.assignmentChoices) : " + JSON.stringify(this.props.assignmentChoices))
-    console.log("1) renderItem(this.props.assignmentChoices.assignment_choices) : " + JSON.stringify(this.props.assignmentChoices.assignment_choices))
-    //console.log("1) renderItem(this.props.assignmentChoices.assignment_choices.length) : " + JSON.stringify(this.props.assignmentChoices.assignment_choices).length)
-    console.log("1) renderItem(this.props.assignmentChoices[0]) : " + JSON.stringify(this.props.assignmentChoices[0]))
-    console.log("1) renderItem(this.props.assignmentChoices) LENGTH: " + (this.props.assignmentChoices.length))
-    for (var i = 0, keys = Object.keys(this.props.assignmentChoices), ii = keys.length; i < ii; i++) {
-      console.log("Printing key T.P.AC: ", keys + '|' + ii);
-    }
-    for (var i = 0, keys = Object.entries(item.assignment_choices), ii = keys.length; i < ii; i++) {
-      console.log("Printing key entries: ", keys + '|' + item.assignment_choices);
-    }
-    for (var i = 0, keys = Object.keys(item.assignment_choices), ii = keys.length; i < ii; i++) {
-      console.log("Printing key from map: ", keys + '|' + item.assignment_choices);
-    }
-    for (var i = 0, keys = choices_array, ii = keys.length; i < ii; i++) {
-      console.log("Printing array: ", keys[i] + '|');
-    }
     return (
         <Link to="/create/survey/">
           {item.assignment_choices}

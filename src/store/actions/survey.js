@@ -1,119 +1,129 @@
 import axios from "axios";
-import * as actionTypes from "./actionTypes";
+import {
+  GET_SURVEY_LIST_START,
+  GET_SURVEYS_LIST_FAIL,
+  GET_SURVEYS_LIST_SUCCESS,
+  GET_SURVEY_DETAIL_START,
+  GET_SURVEY_DETAIL_FAIL,
+  GET_SURVEY_DETAIL_SUCCESS,
+  CREATE_SURVEY_START,
+  CREATE_SURVEY_FAIL,
+  CREATE_SURVEY_SUCCESS
+} from "./actionTypes";
 
-const getASNTListStart = () => {
-  console.log("1) Actions getASNTListStart")
+const getSurveyListStart = () => {
+  console.log("1) Actions getSurveyListStart")
   return {
-    type: actionTypes.GET_ASSIGNMENT_LIST_START
+    type: GET_SURVEY_LIST_START
   };
 };
 
-const getASNTListSuccess = assignments => {
-  console.log("2) Actions getASNTListSuccess")
+const getSurveyListSuccess = surveys => {
+  console.log("2) Actions getSurveyListSuccess")
   return {
-    type: actionTypes.GET_ASSIGNMENTS_LIST_SUCCESS,
-    assignments
+    type: GET_SURVEYS_LIST_SUCCESS,
+    surveys
   };
 };
 
-const getASNTListFail = error => {
+const getSurveyListFail = error => {
   return {
-    type: actionTypes.GET_ASSIGNMENTS_LIST_FAIL,
+    type: GET_SURVEYS_LIST_FAIL,
     error: error
   };
 };
 
-export const getASNTS = token => {
+export const getSurveyS = token => {
     return dispatch => {
-      console.log(" getASNTS: ")
-        dispatch(getASNTListStart());
+      console.log(" getSurveyS: ")
+        dispatch(getSurveyListStart());
         axios.defaults.headers = {
             "Content-Type": "application/json",
             Authorization: `Token ${token}`
         }
-        axios.get("http://127.0.0.1:8000/assignments/")
+        axios.get("http://127.0.0.1:8000/surveys/")
         .then(res => {
-            const assignments = res.data;
-            dispatch(getASNTListSuccess(assignments));
+            const surveys = res.data;
+            dispatch(getSurveyListSuccess(surveys));
         })
         .catch(err => {
-            dispatch(getASNTListFail());
+            dispatch(getSurveyListFail());
         })
     }
 }
 
-const getASNTDetailStart = () => {
+const getSurveyDetailStart = () => {
   return {
-    type: actionTypes.GET_ASSIGNMENT_DETAIL_START
+    type: GET_SURVEY_DETAIL_START
   };
 };
 
-const getASNTDetailSuccess = assignment => {
+const getSurveyDetailSuccess = survey => {
   return {
-    type: actionTypes.GET_ASSIGNMENT_DETAIL_SUCCESS,
-    assignment
+    type: GET_SURVEY_DETAIL_SUCCESS,
+    survey
   };
 };
 
-const getASNTDetailFail = error => {
+const getSurveyDetailFail = error => {
   return {
-    type: actionTypes.GET_ASSIGNMENT_DETAIL_FAIL,
+    type: GET_SURVEY_DETAIL_FAIL,
     error: error
   };
 };
 
-export const getASNTSDetail = (token, id) => {
+export const getSurveySDetail = (token, id) => {
     return dispatch => {
-        dispatch(getASNTDetailStart());
+        dispatch(getSurveyDetailStart());
         axios.defaults.headers = {
             "Content-Type": "application/json",
             Authorization: `Token ${token}`
         }
-        axios.get(`http://127.0.0.1:8000/assignments/${id}/`)
+        axios.get(`http://127.0.0.1:8000/surveyApi/surveys/${id}/`)
         .then(res => {
-            const assignment = res.data;
-            dispatch(getASNTDetailSuccess(assignment));
+            const survey = res.data;
+            dispatch(getSurveyDetailSuccess(survey));
         })
         .catch(err => {
-            dispatch(getASNTDetailFail());
+            dispatch(getSurveyDetailFail());
         })
     }
 }
 
-const createASNTStart = () => {
+const createSurveyStart = () => {
   return {
-    type: actionTypes.CREATE_ASSIGNMENT_START
+    type: CREATE_SURVEY_START
   };
 };
 
-const createASNTSuccess = assignment => {
+const createSurveySuccess = survey => {
   return {
-    type: actionTypes.CREATE_ASSIGNMENT_SUCCESS,
-    assignment
+    type: CREATE_SURVEY_SUCCESS,
+    survey
   };
 };
 
-const createASNTFail = error => {
+const createSurveyFail = error => {
   return {
-    type: actionTypes.CREATE_ASSIGNMENT_FAIL,
+    type: CREATE_SURVEY_FAIL,
     error: error
   };
 };
 
-export const createASNT = (token, asnt) => {
+export const createSurvey = (token, asnt) => {
     return dispatch => {
-        dispatch(createASNTStart());
+        dispatch(createSurveyStart());
         axios.defaults.headers = {
             "Content-Type": "application/json",
             Authorization: `Token ${token}`
         }
-        axios.post(`http://127.0.0.1:8000/assignments/`, asnt)
+        axios.post(`http://127.0.0.1:8000/surveyApi/surveys/`, asnt)
         .then(res => {
             
-            dispatch(createASNTSuccess());
+            dispatch(createSurveySuccess());
         })
         .catch(err => {
-            dispatch(createASNTFail());
+            dispatch(createSurveyFail());
         })
     }
 }

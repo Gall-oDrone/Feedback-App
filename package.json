@@ -22,7 +22,6 @@
     "redux": "^4.0.0",
     "redux-thunk": "^2.3.0"
   },
-  "main": "index.js",
   "scripts": {
     "startO": "node server.js",
     "start W": "webpack-dev-server --mode development --open --hot",

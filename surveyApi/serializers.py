@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from .models import Survey, Question, SurveyChoices, Choice, GradedSurvey
+from .models import Survey, Question, SurveyChoices, Choice, GradedSurvey, SurveyCounter
 from users.models import User
 
 class StringSerializer(serializers.StringRelatedField):
@@ -34,9 +34,11 @@ class SurveySerializer(serializers.ModelSerializer):
         print(data)
 
         survey = Survey()
+        s_counter = SurveyCounter()
         teacher = User.objects.get(username=data["teacher"])
         survey.teacher = teacher
         survey.title = data["title"]
+        survey.article = data{"article"}
         survey.save()
 
         order = 1
@@ -56,6 +58,7 @@ class SurveySerializer(serializers.ModelSerializer):
             newQ.survey = survey
             newQ.save()
             oder += 1
+        s_counter += 1
         return survey
 
 class GradedSurveySerializer(serializers.ModelSerializer):
@@ -80,15 +83,30 @@ class GradedSurveySerializer(serializers.ModelSerializer):
         questions = [q for q in surveys.questions.all()]
         answers = [data['answers'][a] for a in data['answers']]
 
-        answered_correct_count = 0
+        # answered_correct_count = 0
+        # for i in range(len(questions)):
+        #     if questions[i].answer.title == answers[i]:
+        #         answered_correct_count += 1
+        #     i += 1
+
+        # grade = answered_correct_count / len(questions)
+        # graded_asnt.grade = gradegraded_asnt.save()
+        # return graded_asnt
+
+        answered_q_counter = 0
         for i in range(len(questions)):
-            if questions[i].answer.title == answers[i]:
-                answered_correct_count += 1
+            if questions[i].answer.title != None or len(questions[i].answer.title) > 1:
+                answered_q_counter += 1
             i += 1
 
-        grade = answered_correct_count / len(questions)
+        if (answered_q_counter == len(questions)):
+            graded_asnt.survey_completed = True
+        else:
+            graded_asnt.survey_completed = False
+
         graded_asnt.grade = gradegraded_asnt.save()
         return graded_asnt
+
 
 class SurveyChoicesSerializer(serializers.ModelSerializer):
 

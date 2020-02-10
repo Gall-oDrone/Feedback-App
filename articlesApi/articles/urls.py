@@ -7,6 +7,8 @@ from articlesApi.views import (
     ArticleCreateView,
     ArticleDeleteView,
     ArticleUpdateView,
+    ProfileArticleListView,
+    ProfileArticleDetailView,
     LikeListView,
     LikeDetailView,
     CreateLike,
@@ -15,6 +17,8 @@ from articlesApi.views import (
     CreateComment,
     UpdateComment,
     VideoViewSet,
+    ImageCreateView,
+    ImageDestroyView,
     CommentListView
 )
 
@@ -30,6 +34,9 @@ urlpatterns = [
     path('<pk>', ArticleDetailView.as_view()),
     path('<pk>/update/', ArticleUpdateView.as_view()),
     path('<pk>/delete/', ArticleDeleteView.as_view()),
+    path('list/<username>/', ProfileArticleListView.as_view()),
+    path('<pk>/detail/<username>/', ProfileArticleDetailView.as_view()),
+
     path('<pk>/create-likes/', CreateLike.as_view()),
     path('<pk>/likes/', LikeListView.as_view()),
     path('<pk>/likes/<user_id>/', LikeDetailView.as_view()),
@@ -40,6 +47,8 @@ urlpatterns = [
     path('<pk>/update-comment/<id>/', UpdateComment.as_view()),
     path('<pk>/comments/<id>/', CommentDetailView.as_view()),
     #path('<pk>/video/', VideoViewSet.as_view()),
+    path('create/images/', ImageCreateView.as_view),
+    path('destroy/images/', ImageDestroyView.as_view),
     url(r'^video/', include(router.urls)),
     # url(r'^comment/', include(router.urls))
 

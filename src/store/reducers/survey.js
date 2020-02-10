@@ -1,76 +1,86 @@
-import * as actionTypes from "../actions/actionTypes";
+import {
+  GET_SURVEY_LIST_START,
+  GET_SURVEYS_LIST_FAIL,
+  GET_SURVEYS_LIST_SUCCESS,
+  GET_SURVEY_DETAIL_START,
+  GET_SURVEY_DETAIL_FAIL,
+  GET_SURVEY_DETAIL_SUCCESS,
+  CREATE_SURVEY_START,
+  CREATE_SURVEY_FAIL,
+  CREATE_SURVEY_SUCCESS
+} from "./actionTypes";
 import { updateObject } from "../utility";
 
 const initialState = {
-  assignments: [],
-  currentAssignment: {},
+  surveys: [],
+  currentSurvey: {},
   error: null,
   loading: false
 };
 
-const getASNTListStart = (state, action) => {
-  console.log("1) Reducers getASNTListStart")
+const getSurveyListStart = (state, action) => {
+  console.log("1) Reducers getSurveyListStart")
   return updateObject(state, {
     error: null,
     loading: true
   });
 };
 
-const getASNTListSuccess = (state, action) => {
-  console.log("2) Reducers getASNTListSuccess")
+const getSurveyListSuccess = (state, action) => {
+  console.log("2) Reducers getSurveyListSuccess")
   return updateObject(state, {
-    assignments: action.assignments,
+    surveys: action.surveys,
     error: null,
     loading: false
   });
 };
 
-const getASNTListFail = (state, action) => {
+const getSurveyListFail = (state, action) => {
   return updateObject(state, {
     error: action.error,
     loading: false
   });
 };
 
-const getASNTDetailStart = (state, action) => {
+const getSurveyDetailStart = (state, action) => {
   return updateObject(state, {
     error: null,
     loading: true
   });
 };
 
-const getASNTDetailSuccess = (state, action) => {
+const getSurveyDetailSuccess = (state, action) => {
   return updateObject(state, {
-    currentAssignment: action.assignment,
+    currentSurvey: action.survey,
     error: null,
     loading: false
   });
 };
 
-const getASNTDetailFail = (state, action) => {
+const getSurveyDetailFail = (state, action) => {
   return updateObject(state, {
     error: action.error,
     loading: false
   });
 };
 
-const createASNTStart = (state, action) => {
-  console.log("1) Reducers createASNTStart")
+const createSurveyStart = (state, action) => {
+  console.log("1) Reducers createSurveyStart")
   return updateObject(state, {
     error: null,
     loading: true
   });
 };
 
-const createASNTSuccess = (state, action) => {
-  console.log("2) Reducers createASNTSuccess")
+const createSurveySuccess = (state, action) => {
+  console.log("2) Reducers createSurveySuccess")
   return updateObject(state, {
     error: null,
     loading: false
   });
 };
 
-const createASNTFail = (state, action) => {
+const createSurveyFail = (state, action) => {
   return updateObject(state, {
     error: action.error,
     loading: false
@@ -79,24 +89,24 @@ const createASNTFail = (state, action) => {
 
 const reducer = (state = initialState, action) => {
   switch (action.type) {
-    case actionTypes.GET_ASSIGNMENT_LIST_START:
-      return getASNTListStart(state, action);
-    case actionTypes.GET_ASSIGNMENTS_LIST_SUCCESS:
-      return getASNTListSuccess(state, action);
-    case actionTypes.GET_ASSIGNMENTS_LIST_FAIL:
-      return getASNTListFail(state, action);
-    case actionTypes.GET_ASSIGNMENT_DETAIL_START:
-      return getASNTDetailStart(state, action);
-    case actionTypes.GET_ASSIGNMENT_DETAIL_SUCCESS:
-      return getASNTDetailSuccess(state, action);
-    case actionTypes.GET_ASSIGNMENT_DETAIL_FAIL:
-      return getASNTDetailFail(state, action);
-    case actionTypes.CREATE_ASSIGNMENT_START:
-      return createASNTStart(state, action);
-    case actionTypes.CREATE_ASSIGNMENT_SUCCESS:
-      return createASNTSuccess(state, action);
-    case actionTypes.CREATE_ASSIGNMENT_FAIL:
-      return createASNTFail(state, action);
+    case GET_SURVEY_LIST_START:
+      return getSurveyListStart(state, action);
+    case GET_SURVEYS_LIST_SUCCESS:
+      return getSurveyListSuccess(state, action);
+    case GET_SURVEYS_LIST_FAIL:
+      return getSurveyListFail(state, action);
+    case GET_SURVEY_DETAIL_START:
+      return getSurveyDetailStart(state, action);
+    case GET_SURVEY_DETAIL_SUCCESS:
+      return getSurveyDetailSuccess(state, action);
+    case GET_SURVEY_DETAIL_FAIL:
+      return getSurveyDetailFail(state, action);
+    case CREATE_SURVEY_START:
+      return createSurveyStart(state, action);
+    case CREATE_SURVEY_SUCCESS:
+      return createSurveySuccess(state, action);
+    case CREATE_SURVEY_FAIL:
+      return createSurveyFail(state, action);
     default:
       return state;
   }

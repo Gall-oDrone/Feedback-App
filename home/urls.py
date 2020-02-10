@@ -10,23 +10,25 @@ urlpatterns = [
     path('rest-auth/registration/', include('rest_auth.registration.urls')),
     path('admin/', admin.site.urls),
     #path('accounts/', include("allauth.urls")),
-    #path('articles/', include('articlesApi.articles.urls')),
+    path('articles/', include('articlesApi.articles.urls')),
     path('assignments/', include('assignmentApi.assignments.urls')),
     # path('assignmentsChoices/', include('assignmentApi.assignments.survey.urls')),
     path('graded-assignments/', include('assignmentApi.graded_assignments.urls')),
     # path('graded-assignments/survey', include('assignmentApi.graded_assignments.survey.urls')),
-    # path('incentives/', include('incentivesApi.incentives.urls')),
-    # path('live-chat/', include('livechatApi.livechat.urls')),
-    # path('users/', include('users.urls')),
+    path('incentives/', include('incentivesApi.incentives.urls')),
+    path('live-chat/', include('livechatApi.livechat.urls')),
+    path('users/', include('users.urls')),
     path('accounts/', include('allauth.urls')),
+    # path('', TemplateView.as_view(template_name='index.html'))
+    re_path(r'^.*', TemplateView.as_view(template_name='index.html'))
 ]
 
-if settings.DEBUG:
-    urlpatterns += static(settings.STATIC_URL,
-                          document_root=settings.STATIC_ROOT)
-    urlpatterns += static(settings.MEDIA_URL,
-                          document_root=settings.MEDIA_ROOT)
+# if settings.DEBUG:
+#     urlpatterns += static(settings.STATIC_URL,
+#                           document_root=settings.STATIC_ROOT)
+#     urlpatterns += static(settings.MEDIA_URL,
+#                           document_root=settings.MEDIA_ROOT)
         
-if not settings.DEBUG:
-    urlpatterns += [re_path(r'^.*',
-                            TemplateView.as_view(template_name='index.html'))]
+# if not settings.DEBUG:
+#     urlpatterns += [re_path(r'^.*',
+#                             TemplateView.as_view(template_name='index.html'))]

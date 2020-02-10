@@ -9,33 +9,6 @@ import {getProfileArticleList} from "../store/actions/profile";
 const { Column, ColumnGroup } = Table;
 var moment = require('moment');
 
-const data = [
-  {
-    key: '1',
-    userName: 'John',
-    articleTitle: 'Brown',
-    meetingDate: 32,
-    topic: 'New York No. 1 Lake Park',
-    University: ['MIT'],
-  },
-  {
-    key: '2',
-    userName: 'Jim',
-    articleTitle: 'Green',
-    meetingDate: 42,
-    topic: 'London No. 1 Lake Park',
-    University: ['Stanford'],
-  },
-  {
-    key: '3',
-    userName: 'Joe',
-    articleTitle: 'Black',
-    meetingDate: 32,
-    topic: 'Sidney No. 1 Lake Park',
-    University: ['Berkley'],
-  },
-];
-
 class ProfileArticleList extends React.Component {
 
   state = {
@@ -108,8 +81,8 @@ class ProfileArticleList extends React.Component {
     console.log("EHRENO: "+JSON.stringify(index))
     console.log("EHRENO: "+JSON.stringify(meetingData[index]))
     Object.keys(meetingData[index]).map(k => {
-      console.log("k: "+JSON.stringify(k))
-      console.log("meetingData[index].k: "+JSON.stringify(meetingData[index][k]))
+      // console.log("k: "+JSON.stringify(k))
+      // console.log("meetingData[index].k: "+JSON.stringify(meetingData[index][k]))
       data[k] = meetingData[index][k]
       if (k === "scheduled") {
         data[k] = true
@@ -130,8 +103,8 @@ class ProfileArticleList extends React.Component {
     console.log("EHRENO: "+JSON.stringify(index))
     console.log("EHRENO: "+JSON.stringify(meetingData[index]))
     Object.keys(meetingData[index]).map(k => {
-      console.log("k: "+JSON.stringify(k))
-      console.log("meetingData[index].k: "+JSON.stringify(meetingData[index][k]))
+      // console.log("k: "+JSON.stringify(k))
+      // console.log("meetingData[index].k: "+JSON.stringify(meetingData[index][k]))
       data[k] = meetingData[index][k]
       if (k === "canceled") {
         data[k] = true
@@ -151,10 +124,10 @@ render(){
   const {articleList} = this.props.pArticleList
   if(articleList !== undefined) {
     console.log('articleList: ' +articleList)
-    Object.keys(articleList).map(k=>{
-      console.log("k: "+JSON.stringify(articleList[k]))
-      console.log("articleList[k].: "+JSON.stringify(articleList[k]))
-    })
+    // Object.keys(articleList).map(k=>{
+    //   console.log("k: "+JSON.stringify(articleList[k]))
+    //   console.log("articleList[k].: "+JSON.stringify(articleList[k]))
+    // })
   }
   return(
     <div>

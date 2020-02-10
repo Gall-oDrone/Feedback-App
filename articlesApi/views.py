@@ -2,16 +2,19 @@
 from django.db.models import Count, Q, Sum
 from django.shortcuts import get_object_or_404, redirect, reverse
 from django.core.exceptions import ObjectDoesNotExist
+from django.core.files.storage import FileSystemStorage
 from rest_framework.response import Response
-from rest_framework.parsers import MultiPartParser, FileUploadParser, FormParser
+from rest_framework.decorators import parser_classes
+from rest_framework.parsers import MultiPartParser, FileUploadParser, FormParser, JSONParser
+from django.views.decorators.csrf import csrf_exempt
 from rest_framework.status import(
     HTTP_201_CREATED,
     HTTP_400_BAD_REQUEST
 )
 from rest_framework import permissions
-from articlesApi.models import Article, Tag, Tagging, Category, ArticleView, Like, Rating, Comment, Video
+from articlesApi.models import Article, Tag, Tagging, Category, ArticleView, Like, Rating, Comment, Video, Image, FeedbackTypes
 from users.models import User
-from .serializers import ArticleSerializer, ArticleFeatureSerializer, VideoFormSerializer, CommentSerializer, LikeSerializer, LikeListSerializer, RatingSerializer, CommentListSerializer
+from .serializers import ArticleSerializer, ArticleFeatureSerializer, VideoFormSerializer, CommentSerializer, LikeSerializer, LikeListSerializer, RatingSerializer, CommentListSerializer, ImageFormSerializer, ProfileArticleListSerializer
 from analytics.models import View
 from django.http import Http404
 from rest_framework import viewsets
@@ -24,6 +27,8 @@ from rest_framework.generics import (
     UpdateAPIView,
     RetrieveUpdateDestroyAPIView
 )
+
+import json
 
 
 class ArticleFeatureView():
@@ -159,6 +164,33 @@ class ArticleUpdateView(UpdateAPIView):
         if update_article:
             return Response(status=HTTP_201_CREATED)
         return Response(status=HTTP_400_BAD_REQUEST)
+
+class ProfileArticleListView(RetrieveAPIView):
+    queryset = Article.objects.all()
+    print("queryset from ProfileArticleListView")
+    print(queryset)
+    serializer_class = ProfileArticleListSerializer
+    permission_classes = (permissions.IsAuthenticated,)
+
+    def get_object(self, *args, **kwargs):
+        try:
+            print("ProfileArticleListView")
+            userId = self.kwargs.get('username')
+            user = User.objects.get(username=userId)
+            # articleId = Article.objects.get(title=article).id
+            profile_article_list = Article.objects.filter(author=user.id)
+            print("FILTER")
+            print(profile_article_list)
+            ProfileArticleListSerializer(profile_article_list)
+            if len(profile_article_list) == 0:
+                return None
+            else:
+                return profile_article_list
+        except ObjectDoesNotExist:
+            raise Http404("You do not have an active order")
+            return Response({"message": "You do not have an active order"}, status=HTTP_400_BAD_REQUEST)
+
+
     # def index(request):
     # if request.method == "POST":
     #     article = request.POST['article']
@@ -170,7 +202,187 @@ class ArticleUpdateView(UpdateAPIView):
     #     return redirect('index')
     # return render(request, 'index.html')
 
-class LikeListView(RetrieveAPIView):
+class ProfileArticleDetailView(RetrieveUpdateDestroyAPIView):
+    parser_classes = (MultiPartParser, FormParser)
+    queryset = Article.objects.all()
+    print("queryset from ProfileArticleDetailView")
+    print(queryset)
+    serializer_class = ArticleSerializer
+    permission_classes = (permissions.IsAuthenticated,)
+
+    def get_object(self, *args, **kwargs):
+        try:
+            print("ProfileArticleDetailView")
+            userId = self.kwargs.get('username')
+            articleId = self.kwargs.get('pk')
+            user = User.objects.get(username=userId)
+            profile_article_detail = Article.objects.get(author=user.id, id=articleId)
+            ArticleSerializer(profile_article_detail)
+            return profile_article_detail
+        except ObjectDoesNotExist:
+            raise Http404("You do not have an active order")
+            return Response({"message": "You do not have an active order"}, status=HTTP_400_BAD_REQUEST)
+    
+    def update(self, request, *args, **kwargs):
+        serializer = ArticleSerializer(data=request.data)
+        serializer.is_valid()
+        print("On update method")
+        userId = self.kwargs.get('username')
+        articleId = self.kwargs.get('pk')
+        article = Article.objects.get(id=articleId)
+        print("self.request.FILES")
+        print(self.request.FILES)
+        # print("myfile")
+        # myfile = request.FILES['file']
+        # print("fs")
+        # fs = FileSystemStorage()
+        # print(fs.values())
+        print("self.request.data: ")
+        print(self.request.data)
+        print("self.request.data[data]: ")
+        print(self.request.data["data"])
+        print("type(self.request.data[data])")
+        print(type(self.request.data["data"]))
+        request_data = json.loads((self.request.data["data"]))
+        print("request_data.get(categories)")
+        print(request_data.get("categories"))
+        categories_var = article.categories.values()
+        article.title = request_data.get("title")
+        article.content = request_data.get("content")
+        article_engagement = self.add_engagement(request_data.get("feedback_type"), article)
+        article_categories = self.add_categories(request_data.get("categories"), article)
+        print("before myfile")
+        myfile = request.FILES['file']
+        print("myFile: ")
+        print(myfile)
+        print(type(myfile))
+        print(myfile.content_type)
+        print(myfile.content_type.split('/')[0])
+        file_type = myfile.content_type.split('/')[0]
+        fs = FileSystemStorage()
+        valid_extensions = ['.pdf', '.doc', '.docx', '.jpg', '.png', '.xlsx', '.xls']
+        if file_type == "video":
+            print("myfile.name is video")
+            videoD = Video()
+            filename = fs.save("videos/"+myfile.name, myfile)
+            uploaded_file_url = fs.url(filename)
+            videoD.videofile = "videos/"+myfile.name
+            videoD.save()
+            print("videoD, ", videoD)
+            print("videoD.id, ", videoD.id)
+            article.video= Video(id=videoD.id)
+            # raise ValidationError('Unsupported file extension.')
+        else: 
+            print("myfile.name is image")
+            filename = fs.save("images/"+myfile.name, myfile)
+            uploaded_file_url = fs.url(filename)
+            print("uploaded_file_url")
+            print(uploaded_file_url)
+            # with open(uploaded_file_url) as f:
+            #     data = f.read()
+            #     article.thumbnail.save("images/"+myfile.name, ContentFile(data))
+            print(myfile.name)
+            print(myfile.name)
+            # print(os.path.basename(uploaded_file_url))
+            print(article.thumbnail)
+            article.thumbnail = "images/"+myfile.name
+            print("article.thumbnail")
+            print(article.thumbnail)
+        article.save()
+        # article.thumbnail = self.request.data["file"]get("thumbnail")
+        # article.update(
+        #         title=self.request.data.get("title"),
+        #         content=self.request.data.get("content"),
+        #         categories= self.add_categories(self.request.data.get("categories"), article),
+        #         engagement= self.add_engagement(self.request.data.get("feedback_type"), article),
+        #         thumbnail=self.request.data.get("file"))
+        
+        return Response(serializer.data)
+    
+    def add_engagement(self, engagement, article):
+        print("ENGAGEMENTS")
+        print(engagement)
+        print("article_engagement")
+        print(article.engagement.values())
+        engagement_id_list = [x["id"] for x in (article.engagement.values())]
+        print(engagement_id_list)
+        for i in article.engagement.values():
+            print(i)
+            print(i["id"])
+            print(type(i["id"]))
+            if str(i["id"]) not in engagement:
+                print("removing")
+                oldE = FeedbackTypes.objects.get(id=i["id"])
+                article.engagement.remove(oldE.id)
+            else:
+                for e in engagement:
+                    print("e:")
+                    print(e)
+                    if int(e) not in engagement_id_list:        
+                        print("adding")
+                        print(e)
+                        newE = FeedbackTypes.objects.get(id=e)
+                        # newC = Category()
+                        print(newE)
+                        print(newE.id)
+                        # newC.id = c
+                        print("WHAT ?")
+                        # print(article.categories.category_id)
+                        article.engagement.add(newE.id)
+                        print("WHAT 2?")
+                    else:
+                        None
+
+    def add_categories(self, categoriesD, article):
+        print("CATEGORIES")
+        print(categoriesD)
+        print("article_categories")
+        print(article.categories.values())
+        category_id_list = [x["id"] for x in (article.categories.values())]
+        for i in article.categories.values():
+            print(i)
+            print(i["id"])
+            print(type(i["id"]))
+            if str(i["id"]) not in categoriesD:
+                print("removing")
+                oldC = Category.objects.get(id=i["id"])
+                article.categories.remove(oldC.id)
+            else:
+                for c in categoriesD:
+                    print("c:")
+                    print(c)
+                    print(type(c))
+                    if int(c) not in category_id_list:        
+                        print("adding")
+                        print(c)
+                        print(type(c))
+                        newC = Category.objects.get(id=c)
+                        # newC = Category()
+                        print(newC)
+                        print(newC.id)
+                        print(newC.title)
+                        # newC.id = c
+                        print("WHAT ?")
+                        # print(article.categories.category_id)
+                        article.categories.add(newC.id)
+                        print("WHAT 2?")
+                    else:
+                        print("None")
+                        return
+
+    # def index(request):
+    # if request.method == "POST":
+    #     article = request.POST['article']
+    #     tag = request.POST['tag']
+    #     articles = Article.objects.create(post=article)
+    #     tags, created = Tag.objects.get_or_create(tag=tag)
+    #     tp = Tagging(posts=articles, taggings=tags)
+    #     tp.save()
+    #     return redirect('index')
+    # return render(request, 'index.html')
+
+
+class LikeListView(RetrieveUpdateDestroyAPIView):
     queryset = Like.objects.all()
     serializer_class = LikeListSerializer
     permission_classes = (permissions.AllowAny,)
@@ -396,3 +608,42 @@ class VideoViewSet(viewsets.ModelViewSet):
           return Response(file_serializer.data, status=status.HTTP_201_CREATED)
         else:
           return Response(file_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class ImageCreateView(CreateAPIView):
+    parser_classes = (MultiPartParser, FormParser, FileUploadParser)
+    queryset = Image.objects.all()
+    serializer_class = ImageFormSerializer
+    permission_classes = (permissions.AllowAny,)
+
+    @csrf_exempt
+    def post(self, request, *args, **kwargs):
+        print("createImage at ImageViewSet")
+        print(request.data)
+        myfile = request.FILES['file']
+        fs = FileSystemStorage()
+        filename = fs.save(myfile.name, myfile)
+        uploaded_file_url = fs.url(filename)
+        imageSerializer = ImageFormSerializer(data=request.data)
+        if imageSerializer.is_valid():
+          imageSerializer.save()
+          return Response(imageSerializer.data, status=status.HTTP_201_CREATED)
+        else:
+          return Response(imageSerializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class ImageDestroyView(DestroyAPIView):
+    parser_classes = (MultiPartParser, FormParser, FileUploadParser, JSONParser)
+    queryset = Image.objects.all()
+    serializer_class = ImageFormSerializer
+    permission_classes = (permissions.IsAuthenticated,)
+
+    def delete(self, request, *args, **kwargs):
+        print("createImage at ImageViewSet")
+        print("self.request.FILES")
+        print(self.request.FILES)
+        print(request.objects.all())
+        imageSerializer = ImageFormSerializer(data=request.data)
+        if imageSerializer.is_valid():
+          imageSerializer.save()
+          return Response(imageSerializer.data, status=status.HTTP_201_CREATED)
+        else:
+          return Response(imageSerializer.errors, status=status.HTTP_400_BAD_REQUEST)

@@ -27,6 +27,12 @@ class Video(models.Model):
     def __str__(self):
         return str(self.videofile)
 
+class Image(models.Model):
+    image = models.ImageField(upload_to="images/", blank=True)
+
+    def __str__(self):
+        return str(self.image)
+
 class Comment(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     reply_to = models.ForeignKey("self", null=True, blank=True, on_delete=models.CASCADE, related_name='replies')
@@ -71,7 +77,7 @@ class Article(models.Model):
     likes_count = models.IntegerField(default=0)
     tag = models.ManyToManyField(Tag, related_name="article_tags")
     engagement = models.ManyToManyField(FeedbackTypes)
-    author = models.ForeignKey(Author, on_delete=models.CASCADE, related_name="article_author", null=True)
+    author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="article_author", null=True)
     timestamp = models.DateTimeField(auto_now_add=True, null=True)
     thumbnail = models.ImageField(upload_to="images/", blank=True)
     video = models.ForeignKey(Video, related_name='article_video',on_delete=models.SET_NULL,blank=True, null=True)

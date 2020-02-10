@@ -1,60 +1,64 @@
 import axios from "axios";
-import * as actionTypes from "./actionTypes";
+import {
+  GET_GRADED_SURVEY_LIST_START,
+  GET_GRADED_SURVEYS_LIST_FAIL,
+  GET_GRADED_SURVEYS_LIST_SUCCESS
+} from "./actionTypes";
 
-const getGradedASNTListStart = () => {
+const getGradedSurveyListStart = () => {
   return {
-    type: actionTypes.GET_GRADED_ASSIGNMENT_LIST_START
+    type: GET_GRADED_SURVEY_LIST_START
   };
 };
 
-const getGradedASNTListSuccess = assignments => {
+const getGradedSurveyListSuccess = surveys => {
   return {
-    type: actionTypes.GET_GRADED_ASSIGNMENTS_LIST_SUCCESS,
-    assignments
+    type: GET_GRADED_SURVEYS_LIST_SUCCESS,
+    surveys
   };
 };
 
-const getGradedASNTListFail = error => {
+const getGradedSurveyListFail = error => {
   return {
-    type: actionTypes.GET_GRADED_ASSIGNMENTS_LIST_FAIL,
+    type: GET_GRADED_SURVEYS_LIST_FAIL,
     error: error
   };
 };
 
-export const getGradedASNTS = (username, token) => {
+export const getGradedSurveyS = (username, token) => {
   return dispatch => {
-    dispatch(getGradedASNTListStart());
+    dispatch(getGradedSurveyListStart());
     axios.defaults.headers = {
       "Content-Type": "application/json",
       Authorization: `Token ${token}`
     };
     axios
-      .get(`http://127.0.0.1:8000/graded-assignments/?username=${username}`)
+      .get(`http://127.0.0.1:8000/surveyApi/graded-surveys/?username=${username}`)
       .then(res => {
-        const assignments = res.data;
-        dispatch(getGradedASNTListSuccess(assignments));
+        const surveys = res.data;
+        dispatch(getGradedSurveyListSuccess(surveys));
       })
       .catch(err => {
-        dispatch(getGradedASNTListFail(err));
+        dispatch(getGradedSurveyListFail(err));
       });
   };
 };
 
-export const createGradedASNT = (token, asnt) => {
+export const createGradedSurvey = (token, survey) => {
   return dispatch => {
-    //   dispatch(createASNTStart());
+    //   dispatch(createSurveyStart());
     axios.defaults.headers = {
       "Content-Type": "application/json",
       Authorization: `Token ${token}`
     };
     axios
-      .post(`http://127.0.0.1:8000/graded-assignments/create/`, asnt)
+      .post(`http://127.0.0.1:8000/surveyApi/graded-surveys/create/`, survey)
       .then(res => {
         console.log("success");
-        //   dispatch(createASNTSuccess());
+        //   dispatch(createSurveySuccess());
       })
       .catch(err => {
-        //   dispatch(createASNTFail());
+        //   dispatch(createSurveyFail());
       });
   };
 };
