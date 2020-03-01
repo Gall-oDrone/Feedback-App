@@ -17,7 +17,7 @@ urlpatterns = [
     path('graded-assignments/', include('assignmentApi.graded_assignments.urls')),
     path('graded-survey/', include('surveyApi.graded_survey.urls')),
     path('incentives/', include('incentivesApi.incentives.urls')),
-    # path('notifications/', include('notificationsApi.notifications.urls')),
+    path('notifications/', include('notificationsApi.notifications.urls')),
     path('live-chat/', include('livechatApi.livechat.urls')),
     path('users/', include('users.urls')),
     path('accounts/', include('allauth.urls')),
