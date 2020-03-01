@@ -84,7 +84,7 @@ export const fetchRating = (token, articleID) => {
       dispatch(ratingStart());
       axios.defaults.headers = {
         "Content-Type": "application/json",
-        Authorization: `Token ${token}`
+        // Authorization: `Token ${token}`
       };
       axios
         .get(`http://127.0.0.1:8000/articles/${articleID}`)

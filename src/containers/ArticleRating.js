@@ -134,10 +134,12 @@ class ArticleRating extends React.Component {
                 </Row>
                 <Row type="flex" justify="center">
                   <Col >
-                    <span>
-                      <Rate tooltips={desc} onChange={this.handleChange} value={value} />
-                      {value ? <span className="ant-rate-text">{desc[value - 1]}</span> : ''}
-                    </span>
+                    {this.props.username !== null && this.props.username !== undefined ? (
+                      <span>
+                        <Rate tooltips={desc} onChange={this.handleChange} value={value} />
+                        {value ? <span className="ant-rate-text">{desc[value - 1]}</span> : ''}
+                      </span>
+                    ):(<div>Signed Up to Rate</div>)}
                   </Col>
                 </Row>
               </Card>

@@ -1,5 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import Hoc from "../hoc/hoc";
 import {
   Form,
   Select,
@@ -38,9 +39,9 @@ function handleMenuClick(e) {
   console.log('click', e);
 }
 
-const menu = [
+const issue_type = [
     {
-      value: '2',
+      value: '1',
       label: 'User',
     },
     {
@@ -164,96 +165,144 @@ class ArticleCustomForm extends React.Component {
     });
   }
 
+  // add = (ID) => {
+  //   const { form } = this.props;
+  //   const user = form.getFieldValue(`user`);
+  //   const found = this.props.s.some(el => el[ID] === this.props.pa[ID]);
+  //   if (!found) {this.props.s[ID].push( this.props.pa[ID] );}
+  //   console.log("user at add() I: ", JSON.stringify(user))
+  //    let r = {
+  //       "user": this.props.pa[ID],
+  //     }
+  //   // console.log("qs at add(): ", JSON.stringify(question_chs_id))
+  //   console.log("r at add(): ", JSON.stringify(r))
+  //   const nextKeys = question_chs_id[ID].choices;
+  //   if(ID !== 0){
+  //     let rr = null
+  //     if(nextKeys.length>1){
+  //       rr = globChois
+  //       console.log("rr at add() I: ",  JSON.stringify(rr))
+  //       console.log("rr at add() II: ",  JSON.stringify(rr.splice(ID, 1, nextKeys)))
+  //       rr.splice(ID, 1, nextKeys) 
+  //       console.log("rr at add() III: ",  JSON.stringify(rr))
+  //     } 
+  //     else{
+  //       rr = [globChois]
+  //       rr[ID]=(nextKeys)
+  //     }
+  //     console.log("rr at add() IV: ",  JSON.stringify(rr))
+  //     globChois = rr
+  //     console.log("globChois at add() III: ",  JSON.stringify(globChois))
+  //     globChois = globChois.slice(globChois.length - (ID+1)) 
+  //     // console.log("globChois splitted at add(): ", (globChois[globChois.length - (ID+1)]))
+  //     form.setFieldsValue({
+  //       keys: globChois
+  //     });
+  //   } else {
+  //   globChois.push(nextKeys)
+  //   console.log("globChois at add() II: ", JSON.stringify(globChois))
+  //   globChois = globChois[globChois.length - (ID+1)] 
+  //   console.log("globChois at add() III: ", (globChois))
+  //   form.setFieldsValue({
+  //     keys: [globChois]
+  //   });
+  //   }
+  // };
+
   render() {
     const { comments, submitting, value } = this.state;
     console.log("this.props: "+ JSON.stringify(this.props))
-    const { getFieldDecorator } = this.props.form;
+    const { getFieldDecorator, getFieldValue } = this.props.form;
+    const { pa, id } = this.props
+    getFieldDecorator(`user`, { initialValue: pa[id] });
     const formItemLayout = {
       labelCol: { span: 6 },
       wrapperCol: { span: 14 },
     };
+    
     return (
-      <Form {...formItemLayout} onSubmit={event => this.handleFormSubmit(event)}>
-          <h4 style={{display: 'flex', justifyContent: 'center'}}>User attend meeting?</h4>
-        <Form.Item style={{display: 'flex', justifyContent: 'center'}} wrapperCol={{ justifyContent: 'center' }}>
-          {getFieldDecorator('attendace')(
-            <Radio.Group >
-              <Radio.Button value={true}>Yes</Radio.Button>
-              <Radio.Button value={false}>No</Radio.Button>
-            </Radio.Group>,
-          )}
-        </Form.Item>
+        <Hoc>
+          <div>
+            <h4 style={{display: 'flex', justifyContent: 'center'}}>User attend meeting?</h4>
+              <Form.Item key={`${id} attendance`} style={{display: 'flex', justifyContent: 'center'}} wrapperCol={{ justifyContent: 'center' }}>
+            {getFieldDecorator(`${pa[id]}.attendance`)(
+              <Radio.Group >
+                <Radio.Button value={true}>Yes</Radio.Button>
+                <Radio.Button value={false}>No</Radio.Button>
+              </Radio.Group>,
+            )}
+          </Form.Item>
 
-        <h4  style={{display: 'flex', justifyContent: 'center'}}>Would your work with this user in future proyects?</h4>
-        <Form.Item style={{display: 'flex', justifyContent: 'center'}} wrapperCol={{ justifyContent: 'center' }}>
-          {getFieldDecorator('recommendation')(
-            <Radio.Group >
-              <Radio.Button value={true}>Yes</Radio.Button>
-              <Radio.Button value={null}>Neutral</Radio.Button>
-              <Radio.Button value={false}>No</Radio.Button>
-            </Radio.Group>,
-          )}
-        </Form.Item>
+            <h4 style={{display: 'flex', justifyContent: 'center'}}>Would your work with this user in future proyects?</h4>
+              <Form.Item key={`${id} recommendation`} style={{display: 'flex', justifyContent: 'center'}} wrapperCol={{ justifyContent: 'center' }}>
+            {getFieldDecorator(`${pa[id]}.recommendation`)(
+              <Radio.Group >
+                <Radio.Button value={true}>Yes</Radio.Button>
+                <Radio.Button value={false}>No</Radio.Button>
+              </Radio.Group>,
+            )}
+          </Form.Item>
 
-        <h4 style={{display: 'flex', justifyContent: 'center'}}>Issues during meeting?</h4>
-        <Form.Item style={{display: 'flex', justifyContent: 'center'}} wrapperCol={{ justifyContent: 'center' }}>
-          {getFieldDecorator('issues', {
-            // initialValue: ['A', 'B'],
-          })(
-            <Radio.Group>
-              <Radio.Button value={true} onClick={() => {this.handlerIssues("Y")}}>
-                Yes
-              </Radio.Button>
-              <Radio.Button value={false} onClick={() => {this.handlerIssues("N")}}>No</Radio.Button>
-              {this.state.issues === true ? (
-                <div>
-                <Cascader options={menu} onChange={this.onChangeIssueType} placeholder="Issue">
-                  <Button>
-                    Issue type <Icon type="down" />
-                  </Button>
-                </Cascader>
-                </div>
-              ):(null)}
-            </Radio.Group>
-          )}
-        </Form.Item>
+            <h4 style={{display: 'flex', justifyContent: 'center'}}>Issues during meeting?</h4>
+              <Form.Item key={`${id} issues`} style={{display: 'flex', justifyContent: 'center'}} wrapperCol={{ justifyContent: 'center' }}>
+            {getFieldDecorator(`${pa[id]}.issues`, {
+              // initialValue: ['A', 'B'],
+            })(
+              <Radio.Group>
+                <Radio.Button value={true} onClick={() => {this.handlerIssues("Y")}}>
+                  Yes
+                </Radio.Button>
+                <Radio.Button value={false} onClick={() => {this.handlerIssues("N")}}>No</Radio.Button>
+                {this.state.issues === true ? (
+                  <div>
+                  <Cascader options={issue_type} onChange={this.onChangeIssueType} placeholder="Issue">
+                    <Button>
+                      Issue type <Icon type="down" />
+                    </Button>
+                  </Cascader>
+                  </div>
+                ):(null)}
+              </Radio.Group>
+            )}
+          </Form.Item>
 
-        <h4 style={{display: 'flex', justifyContent: 'center'}}>Conversation fluency</h4>
-        <Form.Item style={{display: 'flex', justifyContent: 'center'}} wrapperCol={{ justifyContent: 'center' }}>
-          {getFieldDecorator('worthiness', {
-            initialValue: 3.5,
-          })(<Rate tooltips={desc}/>)}
-        </Form.Item>
+            <h4 style={{display: 'flex', justifyContent: 'center'}}>Conversation fluency</h4>
+              <Form.Item key={`${id} fluency`} style={{display: 'flex', justifyContent: 'center'}} wrapperCol={{ justifyContent: 'center' }}>
+            {getFieldDecorator(`${pa[id]}.worthiness`, {
+              initialValue: 3.5,
+            })(<Rate tooltips={desc}/>)}
+          </Form.Item>
 
-        <h4 style={{display: 'flex', justifyContent: 'center'}}>Rate the meeting</h4>
-        <Form.Item style={{display: 'flex', justifyContent: 'center'}} wrapperCol={{ justifyContent: 'center'}}>
-          {getFieldDecorator('rate', {
-            initialValue: 3.5,
-          })(<Rate tooltips={desc}/>)}
-        </Form.Item>
+            <h4 style={{display: 'flex', justifyContent: 'center'}}>Rate the meeting</h4>
+              <Form.Item style={{display: 'flex', justifyContent: 'center'}} wrapperCol={{ justifyContent: 'center'}}>
+            {getFieldDecorator(`${pa[id]}.rate`, {
+              initialValue: 3.5,
+            })(<Rate tooltips={desc}/>)}
+          </Form.Item>
 
-        <h4 style={{display: 'flex', justifyContent: 'center'}}>Add Comments</h4>
-        <Form.Item style={{display: 'flex', justifyContent: 'center'}} wrapperCol={{ span: 12}}>
-          {getFieldDecorator('comment', {
-            initialValue: 3.5,
-          })(<Comment
-            content={
-              <Editor
-                onChange={this.handleChange}
-                onSubmit={this.handleSubmit}
-                submitting={submitting}
-                value={value}
-              />
-            }
-          />)}
-        </Form.Item>
-
-        <Form.Item style={{display: 'flex', justifyContent: 'center'}} wrapperCol={{ justifyContent: 'center' }}>
-          <Button type="primary" htmlType="submit">
-            Done
-          </Button>
-        </Form.Item>
-      </Form>
+            <h4 style={{display: 'flex', justifyContent: 'center'}}>Add Comment</h4>
+              <Form.Item key={`${id} comment`} style={{display: 'flex', justifyContent: 'center'}} wrapperCol={{ span: 12}}>
+            {getFieldDecorator(`${pa[id]}.comment`, {
+              initialValue: 3.5,
+            })(<Comment
+              content={
+                <Editor
+                  onChange={this.handleChange}
+                  onSubmit={this.handleSubmit}
+                  submitting={submitting}
+                  value={value}
+                />
+              }
+            />)}
+          </Form.Item>
+          </div>
+        
+            {/* <Form.Item style={{display: 'flex', justifyContent: 'center'}} wrapperCol={{ justifyContent: 'center' }}>
+              <Button type="primary" htmlType="submit">
+                Done
+              </Button>
+            </Form.Item> */}
+        </Hoc>
     );
   }
 }

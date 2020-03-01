@@ -6,35 +6,8 @@ import { Comment, Avatar, Form, Button, List, Input, Tooltip, Icon} from 'antd';
 import { createComment, getComment, getCommentList } from '../store/actions/comments';
 import moment from 'moment';
 
-const { TextArea } = Input;
 
-// const CommentList = ({ comments }) => (
-//   <List
-//     dataSource={comments}
-//     header={`${comments.length} ${comments.length > 1 ? 'replies' : 'reply'}`}
-//     itemLayout="horizontal"
-//     renderItem={console.log("Comment List does received dataList: "), props => 
-//       <Comment 
-//         author={props.user}
-//         content={props.content}
-//         avatar={
-//           <Avatar
-//             src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"
-//             alt="Han Solo"
-//           />
-//         }
-//         datetime={
-//           <Tooltip title={moment().format('YYYY-MM-DD HH:mm:ss')}>
-//             <span>{moment().fromNow()}</span>
-//           </Tooltip>
-//         }
-//         content={
-//           props.content
-//         }
-//       />
-//     }
-//   />
-// );
+const { TextArea } = Input;
 
 const Editor = ({ onChange, onSubmit, submitting, value }) => (
   <div>
@@ -181,29 +154,29 @@ class CommentForm extends React.Component {
     console.log("2) this.props.data AFTER: " + JSON.stringify(this.props.data))
     console.log("2) this.state AFTER: " + JSON.stringify(this.state))
 
-    const actions = [
-        <span key="comment-basic-like">
-          <Tooltip title="Like">
-            <Icon
-              type="like"
-              theme={action === 'liked' ? 'filled' : 'outlined'}
-              onClick={this.like}
-            />
-          </Tooltip>
-          <span style={{ paddingLeft: 8, cursor: 'auto' }}>{likes}</span>
-        </span>,
-        <span key=' key="comment-basic-dislike"'>
-          <Tooltip title="Dislike">
-            <Icon
-              type="dislike"
-              theme={action === 'disliked' ? 'filled' : 'outlined'}
-              onClick={this.dislike}
-            />
-          </Tooltip>
-          <span style={{ paddingLeft: 8, cursor: 'auto' }}>{dislikes}</span>
-        </span>,
-        <span key="comment-basic-reply-to" onClick={this.handleReply}>Reply to</span>,
-      ];
+    // const actions = [
+    //     <span key="comment-basic-like">
+    //       <Tooltip title="Like">
+    //         <Icon
+    //           type="like"
+    //           theme={action === 'liked' ? 'filled' : 'outlined'}
+    //           onClick={this.like}
+    //         />
+    //       </Tooltip>
+    //       <span style={{ paddingLeft: 8, cursor: 'auto' }}>{likes}</span>
+    //     </span>,
+    //     <span key=' key="comment-basic-dislike"'>
+    //       <Tooltip title="Dislike">
+    //         <Icon
+    //           type="dislike"
+    //           theme={action === 'disliked' ? 'filled' : 'outlined'}
+    //           onClick={this.dislike}
+    //         />
+    //       </Tooltip>
+    //       <span style={{ paddingLeft: 8, cursor: 'auto' }}>{dislikes}</span>
+    //     </span>,
+    //     <span key="comment-basic-reply-to" onClick={this.handleReply}>Reply to</span>,
+    //   ];
 
     return (
       <div>
@@ -217,11 +190,12 @@ class CommentForm extends React.Component {
               alt="Han Solo"
             />
           }
-          datetime={
-            <Tooltip title={moment().format('YYYY-MM-DD HH:mm:ss')}>
-              <span>{moment().fromNow()}</span>
-            </Tooltip>
-          }
+            datetime=
+              {submitting == true ? (
+                <Tooltip title={moment().format('YYYY-MM-DD HH:mm:ss')}>
+                    <span>{moment().fromNow()}</span>
+                </Tooltip>
+              ):( null )}
           content={
             <Editor
               onChange={this.handleChange}

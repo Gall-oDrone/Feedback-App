@@ -1,28 +1,57 @@
-import * as actionTypes from "../actions/actionTypes";
+import {
+  GET_GRADED_SURVEY_LIST_START,
+  GET_GRADED_SURVEYS_LIST_SUCCESS,
+  GET_GRADED_SURVEYS_LIST_FAIL,
+  GET_GRADED_SURVEY_DETAIL_START,
+  GET_GRADED_SURVEYS_DETAIL_SUCCESS,
+  GET_GRADED_SURVEYS_DETAIL_FAIL,
+} from "../actions/actionTypes";
 import { updateObject } from "../utility";
 
 const initialState = {
-  assignments: [],
+  surveys: [],
   error: null,
   loading: false
 };
 
-const getGradedASNTListStart = (state, action) => {
+const getGradedSurveyListStart = (state, action) => {
   return updateObject(state, {
     error: null,
     loading: true
   });
 };
 
-const getGradedASNTListSuccess = (state, action) => {
+const getGradedSurveyListSuccess = (state, action) => {
   return updateObject(state, {
-    assignments: action.assignments,
+    surveys: action.surveys,
     error: null,
     loading: false
   });
 };
 
-const getGradedASNTListFail = (state, action) => {
+const getGradedSurveyListFail = (state, action) => {
+  return updateObject(state, {
+    error: action.error,
+    loading: false
+  });
+};
+
+const getGradedSurveyDetailStart = (state, action) => {
+  return updateObject(state, {
+    error: null,
+    loading: true
+  });
+};
+
+const getGradedSurveyDetailSuccess = (state, action) => {
+  return updateObject(state, {
+    graded_survey: action.gsurvey,
+    error: null,
+    loading: false
+  });
+};
+
+const getGradedSurveyDetailFail = (state, action) => {
   return updateObject(state, {
     error: action.error,
     loading: false
@@ -31,12 +60,18 @@ const getGradedASNTListFail = (state, action) => {
 
 const reducer = (state = initialState, action) => {
   switch (action.type) {
-    case actionTypes.GET_GRADED_ASSIGNMENT_LIST_START:
-      return getGradedASNTListStart(state, action);
-    case actionTypes.GET_GRADED_ASSIGNMENTS_LIST_SUCCESS:
-      return getGradedASNTListSuccess(state, action);
-    case actionTypes.GET_GRADED_ASSIGNMENTS_LIST_FAIL:
-      return getGradedASNTListFail(state, action);
+    case GET_GRADED_SURVEY_LIST_START:
+      return getGradedSurveyListStart(state, action);
+    case GET_GRADED_SURVEYS_LIST_SUCCESS:
+      return getGradedSurveyListSuccess(state, action);
+    case GET_GRADED_SURVEYS_LIST_FAIL:
+      return getGradedSurveyListFail(state, action);
+    case GET_GRADED_SURVEY_DETAIL_START:
+      return getGradedSurveyDetailStart(state, action);
+    case GET_GRADED_SURVEYS_DETAIL_SUCCESS:
+      return getGradedSurveyDetailSuccess(state, action);
+    case GET_GRADED_SURVEYS_DETAIL_FAIL:
+      return getGradedSurveyDetailFail(state, action);
     default:
       return state;
   }

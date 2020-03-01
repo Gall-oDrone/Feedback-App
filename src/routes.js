@@ -15,6 +15,7 @@ import ArticleDetailMenu from "./containers/ArticleDetailMenu";
 
 import PeerList from "./containers/Peers/PeerList"
 import PeerList2 from "./containers/Peers/PeerList2"
+import PeerList3 from "./containers/Peers/PeerDetail"
 
 import Test from "./components/test"
 // import Corso from "./components/VideoChatFrame"
@@ -30,10 +31,12 @@ import ProfileMainMenu from "./containers/ProfileMainMenu"
 import RoomMenu from "./containers/RoomMenu"
 import IncentiveList from "./containers/IncentiveList";
 import MeetingReview from "./components/MeetingReview"
+import MeetingReviewP from "./containers/MeetingParticipantSelector"
 import ProfileAccountInfo from "./components/ProfileAccountInfo"
 import ProfileAccountUserInfo from "./components/ProfileAccountUserInfo"
 import ProfileAccountArticleList from "./components/ProfileArticleList"
 import ProfileAccountArticleDetail from "./components/ProfileArticleDetail"
+import ProfileSurveyMenu from "./components/ProfileSurveyMenu"
 import ProfileAccountIncentiveList from "./containers/ProfileAccountIncentives"
 import Calendar from "./components/Calendar"
 
@@ -41,6 +44,9 @@ import SurveyList from "./containers/SurveyList";
 import SurveyDetail from "./containers/SurveyDetail";
 import SurveyChoices from "./containers/SurveyChoices";
 import SurveyCreate from "./containers/SurveyCreate";
+import SurveyQuestions from "./containers/SurveyQuestions";
+import ProfileSurveyList from "./components/ProfileSurveyList"
+import ProfileSurveyDetail from "./components/ProfileSurveyDetail"
 
 const BaseRouter = () => (
   <Hoc>
@@ -49,6 +55,7 @@ const BaseRouter = () => (
 
     <Route exact path="/peers/" component={PeerList} />
     <Route exact path="/peers2/" component={PeerList2} />
+    <Route exact path="/peers3/" component={PeerList3} />
 
     <Route exact path="/frameTest/:roomID" component={Test} />
     <Route exact path="/create-article/" component={ArticleCreate} />
@@ -61,6 +68,7 @@ const BaseRouter = () => (
     <Route exact path="/assignments/:id" component={AssignmentDetail} />
     <Route exact path="/create/assignment/" component={AssignmentCreate} />
     <Route exact path="/meeting/" component={Meeting} />
+    <Route exact path="/meetingReview2/" component={MeetingReviewP} />
     <Route exact path="/login/" component={Login} />
     <Route exact path="/signup/" component={Signup} />
     <Route exact path="/profile/:id" component={Profile} />
@@ -77,9 +85,13 @@ const BaseRouter = () => (
     <Route exact path="/calendar/" component={Calendar} />
 
     <Route exact path="/survey/" component={SurveyList} />
-    <Route exact path="/survey/:id" component={SurveyDetail} />
+    <Route exact path="/survey/detail/:id" component={SurveyDetail} />
     <Route exact path="/create/survey/" component={SurveyCreate} />
     <Route exact path="/create/" component={SurveyChoices} />
+    <Route exact path="/survey/questions/" component={SurveyQuestions} />
+    <Route exact path="/profile-survey/" component={ProfileSurveyMenu} />
+    <Route exact path="/profile/:id/account/survey/list/" component={ProfileSurveyList} />
+    <Route exact path="/profile/:id/account/survey/detail/:articleID" component={ProfileSurveyDetail} />
   </Hoc>
 );
 

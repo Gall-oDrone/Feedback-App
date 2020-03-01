@@ -27,16 +27,16 @@ import requests
 
 
 class UserViewSet(viewsets.ModelViewSet):
+    serializer_class = UserSerializer
+    queryset = User.objects.all()
+    print("USER QS")
+    print(queryset)
+
     def get(self, request, *args, **kwargs):
         print("current_user QS")
         print(current_user.id)
         return Response({'userID': request.user.id}, status=HTTP_200_OK)
-    serializer_class = UserSerializer
-    queryset = User.objects.all()
     # current_user = request.user
-    
-    print("USER QS")
-    print(queryset)
 
 class UserFriendRequestsView(viewsets.ModelViewSet):
     User = get_user_model()
@@ -175,7 +175,24 @@ class UserProfileView(RetrieveUpdateDestroyAPIView):
                     button_status = 'friend_request_sent'
 
         return request
+class UserMeetingInfoView(RetrieveAPIView):
+    queryset = ProfileInfo.objects.all()
+    serializer_class = ProfileInfoSerializer
+    permission_classes = (permissions.IsAuthenticated,)
 
+    def get_object(self, *args, **kwargs):
+        try:
+            print("UserProfileInfoView")
+            username = self.kwargs.get('username')
+            user = User.objects.get(username=username)
+            # articleId = Article.objects.get(title=article).id
+            userInfo = ProfileInfo.objects.get(profile_username=user.id)
+            ProfileInfoSerializer(userInfo)
+            return userInfo
+        except ObjectDoesNotExist:
+            raise Http404("You do not have an active order")
+            return Response({"message": "You do not have an active order"}, status=HTTP_400_BAD_REQUEST)
+                
 class UserProfileInfoView(RetrieveUpdateDestroyAPIView):
     queryset = ProfileInfo.objects.all()
     serializer_class = ProfileInfoSerializer

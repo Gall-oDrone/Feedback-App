@@ -12,6 +12,7 @@ class StringSerializer(serializers.StringRelatedField):
 class IncentiveListSerializer(serializers.ModelSerializer):
     id = StringSerializer(many=False)
     buyer = StringSerializer(many=False)
+    recipient = StringSerializer(many=False)
     created = StringSerializer(many=False)
     incentive_brand = StringSerializer(many=True)
     amount = StringSerializer(many=False)
@@ -34,15 +35,18 @@ class IncentiveListSerializer(serializers.ModelSerializer):
         # print(datetime.strptime(data["created"], "%Y-%m-%dT%H:%M:%S.%fZ").date())
         incentive = Incentive()
         incentive.created = data["created"]
-        # incentive.currency = data["currency"]
-        incentive.currency = "1111"
+        incentive.currency = data["currency"]
+        # incentive.currency = "1111"
         incentive.amount = data["amount"]
         incentive.country = data["country"]
         print("MR CORSO")
         print(User.objects.get(username=data["buyer"]).id)
         incentive.buyer_id = User.objects.get(username=data["buyer"]).id
-        incentive.recipient_id = "2"
-        # incentive.recipient_id = User.objects.get(username=data["recipient"]).id
+        if "recipient" not in data:
+            incentive.recipient_id = User.objects.get(username=data["buyer"]).id
+        else:
+            # incentive.recipient_id = "2"
+            incentive.recipient_id = User.objects.get(username=data["recipient"]).id
         
         incentive.save()
         for b in data['incentive_brand']:

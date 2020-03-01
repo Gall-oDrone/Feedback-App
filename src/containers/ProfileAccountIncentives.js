@@ -146,7 +146,7 @@ render(){
         <Column 
           title="Buy date" 
           dataIndex="created"
-          key={`meetingDate `}
+          key={`date_created`}
           render={date => (
             <span>
                 {moment(date).format("DD-MM-YYYY HH:mm")}
@@ -168,6 +168,27 @@ render(){
           )}
         />
         <Column
+          title="Claimed"
+          dataIndex="claimed"
+          key="claimed_status"
+          render={claimed => (
+            claimed ? (
+              <li>
+                <a>Yes</a>
+              </li>
+            ):(
+              <li>
+                <a>No</a>
+              </li>
+            )
+          )}
+        />
+        <Column
+          title="Claimed Code"
+          dataIndex="cardClaimCode"
+          key="claimedCode"
+        />
+        <Column
           title="Amount"
           dataIndex="amount"
           key="language"
@@ -181,17 +202,20 @@ render(){
           title="Recipient"
           dataIndex="recipient"
           key="status"
-          render={topic => (
-            <li>
+          render={recipient => (
+            recipient === this.props.username ? (
+              <li>
+                <Tag color="pink" key={"val"}>
+                  {"myself"}
+                </Tag>
+              </li>
+            ):(
+              <li>
                 <Tag color="blue" key={"val"}>
-                  {topic}
+                  {recipient}
                 </Tag>
-              {/* {topic.map(val => (
-                <Tag color="blue" key={val}>
-                  {val}
-                </Tag>
-              ))} */}
             </li>
+            )
           )}
         />
         {/* <Column

@@ -1,49 +1,105 @@
 import React from 'react';
-import axios from 'axios';
+import Hoc from "../hoc/hoc";
 import { connect } from 'react-redux';
+import * as actions from "../store/actions/auth";
 import { withRouter } from "react-router-dom";
-import { Form, Input, Select, Popover, Checkbox, Upload, message, Icon, Button, Col, Row} from 'antd';
+import {getProfileAccountDetail} from "../store/actions/profileAccountInfo"
+import { Avatar, Popover, Icon, Menu, Dropdown, Button, Col, Row} from 'antd';
 
-const text = <span>Title</span>;
-const content = (
-  <div>
-    <p>Content</p>
-    <p>Content</p>
-  </div>
-);
+class ProfileHeaderMenu extends React.Component {
+  state = { 
+    visible: false,
+    usersInfo: [] 
+  };
 
-const buttonWidth = 70;
-
-const ProfileHeaderMenu = (username) => {
-        return (
-        <div className="demo">
-            <div style={{ marginLeft: buttonWidth, clear: 'both', whiteSpace: 'nowrap' }}>
-            <Popover placement="bottomRight" title={text} content={content} trigger="click">
-            </Popover>
-            </div>
-        </div>)
+  componentDidMount() {
+    if (this.props.token !== undefined && this.props.token !== null) {
+      if(this.props.username !== null){
+        this.props.getProfilAccountInfo(this.props.token, this.props.userId)
+      } else {
+        console.log("this.props.getMeetings was undefined at CDM")
+      }
     }
-
-export default ProfileHeaderMenu
-
-// const mapStateToProps = state => {
-//     console.log("mapStateToProps: "+JSON.stringify(state))
-//     return {
-//       token: state.auth.token,
-//       username: state.auth.username,
-//       userPAD: state.profile
-//     };
-//   };
+  }
   
-//   const mapDispatchToProps = dispatch => {
-//     console.log("mapDispatchToProps: ")
-//     return {
-//       getPAD: (token, articleID, userID) => dispatch(getProfileArticleDetail(token, articleID, userID)),
-//       putPAD: (token, articleID, username, data) => dispatch(putProfileArticleDetail(token, articleID, username, data)),
-//     };
-//   };
+  componentWillReceiveProps(newProps) {
+    if (newProps.token !== this.props.token) {
+      console.log("newProps.token !== this.props.token")
+      this.props.getProfilAccountInfo(newProps.token, newProps.userId)
+  } else {
+      console.log("newProps.token !== this.props.token NOT")
+      // this.props.getProfilAccountInfo(this.props.token, this.props.username)
+  }   
+  }
   
-//   export default connect(
-//     mapStateToProps,
-//     mapDispatchToProps
-//   )(ProfileHeaderMenu);
+
+  render() {
+    console.log("PHDM this.props",JSON.stringify(this.props))
+    console.log("PHDM this.state",JSON.stringify(this.state))
+    const {logout, userId} = this.props
+    const text = (username, avatar) => {return(
+      <div>
+        <li>
+        <Avatar src={avatar}>
+          <span>
+            {username[0].toUpperCase()}
+          </span>
+        </Avatar>
+        </li>
+        <li>
+        <span>Hi {username}</span>
+        </li>
+      </div>
+      )};
+    const content = (logout, uId) => {return(
+      <div>
+        <Menu style={{ width: 156 , height: 100}} >
+          <Menu.Item>
+            <a target="_blank" rel="noopener noreferrer" href={`/profile/${uId}/menu/`}>
+              Account
+            </a>
+          </Menu.Item>
+          <Menu.Item>
+            <a target="_blank" rel="noopener noreferrer" onClick={logout}>
+              Log out
+            </a>
+          </Menu.Item>
+        </Menu>
+      </div>
+    )}
+
+        return (
+          this.props.profileAI.ProfileAccount !== undefined ?
+          <Hoc>
+            <div className="demo">
+                <Popover placement="bottomRight" title={text(this.props.username, this.props.profileAI.ProfileAccount.profile_avatar)} content={content(logout, userId)}>
+                  <Icon type="user" />
+                </Popover>
+            </div>
+        </Hoc>
+        : null
+        )
+    }
+  }
+  
+    const mapStateToProps = state => {
+      return {
+        username: state.auth.username,
+        token: state.auth.token,
+        profileAI: state.profileAccountInfo
+      };
+    };
+
+    const mapDispatchToProps = dispatch => {
+      return {
+        logout: () => dispatch(actions.logout()),
+        getProfilAccountInfo: (token, userID) => dispatch(getProfileAccountDetail(token, userID)),
+      };
+    };
+    
+    export default withRouter(
+      connect(
+        mapStateToProps,
+        mapDispatchToProps
+      )(ProfileHeaderMenu)
+    );

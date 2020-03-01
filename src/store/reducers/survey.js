@@ -8,7 +8,7 @@ import {
   CREATE_SURVEY_START,
   CREATE_SURVEY_FAIL,
   CREATE_SURVEY_SUCCESS
-} from "./actionTypes";
+} from "../actions/actionTypes";
 import { updateObject } from "../utility";
 
 const initialState = {

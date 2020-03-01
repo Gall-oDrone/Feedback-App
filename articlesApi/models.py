@@ -35,7 +35,9 @@ class Image(models.Model):
 
 class Comment(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    reply_to = models.ForeignKey("self", null=True, blank=True, on_delete=models.CASCADE, related_name='replies')
+    reply_to = models.ForeignKey("self", null=True, blank=True, on_delete=models.CASCADE)
+    # reply_to_counter = models.IntegerField(default=0)
+    replies = models.ManyToManyField("self", blank=True)
     timestamp = models.DateTimeField(auto_now_add=True)
     content = models.TextField()
     liked = models.BooleanField(default=False)
@@ -46,6 +48,11 @@ class Comment(models.Model):
 
     def __str__(self):
         return self.user.username
+
+class CommentReply(models.Model):
+    comment = models.ForeignKey(Comment, on_delete=models.CASCADE, related_name='comment_reply_id')
+    reply = models.ManyToManyField(Comment, related_name="comment_reply")
+    
 
 class FeedbackTypes(models.Model):
     LIVE_CHAT_SESSION = 'live chat'

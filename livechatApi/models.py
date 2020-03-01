@@ -44,7 +44,7 @@ class Request(models.Model):
     sender = models.ForeignKey(User, related_name='is_sender', on_delete=models.CASCADE)
     recipient = models.ManyToManyField(User, related_name='is_recipient')
     article = models.ForeignKey(Article, on_delete=models.CASCADE)
-    room_name = models.CharField(max_length=60, null=True)
+    room_name = models.CharField(max_length=60, null=True, blank=True)
     #recipient's university
     #sender's university
     #recipient's information

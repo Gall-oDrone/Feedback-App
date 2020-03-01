@@ -2,12 +2,12 @@ import React from "react";
 import { connect } from "react-redux";
 import Hoc from "../hoc/hoc";
 import { Form, Input, Icon, Button, Divider } from 'antd';
-import SurveyQuestionForm from "./SurveyQuestionForm"
-import {createASNT} from "../store/actions/assignments"
+import SurveyQuestionForm from "./SurveyQuestionForm2"
+import {createSurvey} from "../store/actions/survey"
 
 const FormItem = Form.Item;
 
-class AssignmentCreate extends React.Component {
+class SurveyCreate extends React.Component {
     state = {
         formCount: 1
     };
@@ -31,21 +31,26 @@ class AssignmentCreate extends React.Component {
         e.preventDefault();
         this.props.form.validateFields((err, values) => {
             if (!err) {
-                console.log("Received values of form: ", values);
                 const questions = [];
                 for (let i =0; i< values.questions.length; i += 1) {
                   questions.push({
                     title: values.question[i],
                     choices: values.questions[i].choices.filter(el => el !== null),
-                    // answer: values.answers[i]
                 });
               }
+              console.log("Calling... 0");
                 const asnt = {
                   teacher: this.props.username,
                   title: values.title,
                   questions
                 };
-                this.props.createASNT(this.props.token, asnt);
+                this.props.createSurvey(this.props.token, asnt).then(res => {
+                  if (res.status === "HTTP 200"){
+
+                  } else {
+
+                  }
+                });
             }
         });
     };
@@ -99,7 +104,7 @@ class AssignmentCreate extends React.Component {
       }
 }
 
-const WrappedAssignmentCreate = Form.create()(AssignmentCreate);
+const WrappedSurveyCreate = Form.create()(SurveyCreate);
 
 const mapStateToProps = state => {
   return {
@@ -111,11 +116,11 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    createASNT: (token, asnt) => dispatch(createASNT(token, asnt))
+    createSurvey: (token, asnt) => dispatch(createSurvey(token, asnt))
   };
 };
 
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(WrappedAssignmentCreate);
+)(WrappedSurveyCreate);

@@ -1,12 +1,19 @@
 from rest_framework import serializers
-from articlesApi.models import Article, Video, Comment, Category, Like, Rating, Image
+from articlesApi.models import Article, Video, Comment, Category, Like, Rating, Image, CommentReply
 from users.models import User
-
+from django.core.files.storage import FileSystemStorage
+import json
 
 class StringSerializer(serializers.StringRelatedField):
     def to_internal_value(self, value):
         return value
 
+class CommentReplySerializer(serializers.ModelSerializer):
+    comment = StringSerializer(many=False)
+
+    class Meta:
+        model = CommentReply
+        fields = ("id", "comment")
 
 class ArticleSerializer(serializers.ModelSerializer):
     engagement = StringSerializer(many=True)
@@ -33,15 +40,48 @@ class ArticleSerializer(serializers.ModelSerializer):
         print(ArticleSerializer(obj, many=True).data)
         # return (ArticleSerializer(obj.choices.assignment_choices, many=True).data)
 
-    def create(self, request):
-        data = request.data
+    def create(self, request, *args):
+        data = request
         print("DATA")
         print(data)
+        print("args: ", args)
+        # print(self.args)
+        files = args[0]
         article = Article()
         article.save()
         article.title = data["title"]
         article.content = data["content"]
         # article.author = data["user"]
+        print("FILES I: ", files['file'])
+        print("FILES II: ", files['media'])
+        for f in files:
+            myfile = files[f]
+            print("file type: ", myfile.content_type.split('/')[0])
+            file_type = myfile.content_type.split('/')[0]
+            fs = FileSystemStorage()
+            valid_extensions = ['.pdf', '.doc', '.docx', '.jpg', '.png', '.xlsx', '.xls']
+            if file_type == "video":
+                print("myfile.name is video")
+                videoD = Video()
+                filename = fs.save("videos/"+myfile.name, myfile)
+                uploaded_file_url = fs.url(filename)
+                videoD.videofile = "videos/"+myfile.name
+                videoD.save()
+                print("videoD, ", videoD)
+                print("videoD.id, ", videoD.id)
+                article.video= Video(id=videoD.id)
+                # raise ValidationError('Unsupported file extension.')
+        else: 
+            print("myfile.name is image")
+            filename = fs.save("images/"+myfile.name, myfile)
+            uploaded_file_url = fs.url(filename)
+            print("uploaded_file_url")
+            print(uploaded_file_url)
+            print(myfile.name)
+            print(article.thumbnail)
+            article.thumbnail = "images/"+myfile.name
+            print("article.thumbnail")
+            print(article.thumbnail)
 
         for e in data['engagement']:
             # "2" phone call
@@ -214,10 +254,25 @@ class RatingSerializer(serializers.ModelSerializer):
 
 class CommentSerializer(serializers.ModelSerializer):
     user = StringSerializer(many=False)
+    article = StringSerializer(many=False)
+    content = StringSerializer(many=False)
+    liked = StringSerializer(many=False)
+    disliked = StringSerializer(many=False)
+    like_counter = StringSerializer(many=False)
+    dislike_counter = StringSerializer(many=False)
+    comment_reply = serializers.SerializerMethodField()
+
     class Meta:
         model = Comment
-        fields = ("id", 'user', "article", "content", "liked", "disliked", "like_counter", "dislike_counter", "reply_to")
-        
+        fields = ("id", 'user', "article", "content", "liked", "disliked", "like_counter", "dislike_counter", "reply_to", "replies", "comment_reply")
+    
+    def get_comment_reply(self, obj):
+        # obj is an survey
+        print("OBJ", obj.id)
+        questions = CommentReplySerializer(obj.comment_reply.filter(comment_id=obj.id), many=True).data
+        print("ASDADASDASSD", questions)
+        return questions
+
     def create_comment(self, request):
         data = request.data
         print("DATA CommentSerializer")
@@ -227,9 +282,12 @@ class CommentSerializer(serializers.ModelSerializer):
         comment.content = data["content"]
         comment.liked = data["like"]
         comment.disliked = data["dislike"]
-        # comment.reply_to = Comment.objects.get(id=data["reply_to"])
+        comment.reply_to = Comment.objects.get(id=data["reply_to"])
         comment.article = Article.objects.get(id=data["articleID"])
         comment.save()
+        if data["reply_to"] != None:
+            replyC = Comment(id=data["reply_to"])
+            replyC.replies.add(comment.id)
         return comment
     
     def upload_comment(self, request):

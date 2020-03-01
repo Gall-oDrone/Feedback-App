@@ -35,7 +35,7 @@ class Questions extends React.Component {
               Next
             </Button>
           )}
-          {current === questions.length - 1 && (
+          {current === questions.length - 1 &&(
             <Button
               type="primary"
               onClick={() => this.props.submit()}

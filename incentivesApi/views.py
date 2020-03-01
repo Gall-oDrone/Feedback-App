@@ -46,10 +46,7 @@ class IncentiveCreateView(CreateAPIView):
         post_data = request.data
         post_data["iid"] = create_lcrequest.id
         if create_lcrequest:
-            url = "http://127.0.0.1:7000/incentives/data/create/"
-            headers = {'content-type': "application/json"}
-            r = requests.post(url, data=json.dumps(request.data), headers=headers)
-            print(r.status_code)
+            post_incentive(self, request.data)
             return Response(status=HTTP_201_CREATED)
         return Response(status=HTTP_400_BAD_REQUEST)
 
@@ -155,3 +152,11 @@ class IncentiveDeleteView(DestroyAPIView):
 #             return Response(status=HTTP_201_CREATED)
 #         return Response(status=HTTP_400_BAD_REQUEST)
 
+def post_incentive(self, data):
+    url = "http://127.0.0.1:7000/incentives/data/create/"
+    headers = {'content-type': "application/json"}
+    r = requests.post(url, data=json.dumps(data), headers=headers)
+    print(r.status_code)
+    if r.status_code == 200:
+        return Response(status=HTTP_201_CREATED)
+    return HttpResponse('Could not save data', HTTP_400_BAD_REQUEST)

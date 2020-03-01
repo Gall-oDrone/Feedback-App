@@ -10,23 +10,23 @@ const Option = Select.Option;
 const AutoCompleteOption = AutoComplete.Option;
 const universities = [
   {
-    value: 'ITAM',
-    label: 'Instituto Autónomo Tecnológico de México (ITAM)'
-  },
-  {
-    value: 'CIDE',
+    value: 'Center of Teaching and Research in Economics',
     label: 'Centro de Investigación y Docencias Económicas (CIDE)'
   },
   {
-    value: 'COLMEX',
+    value: 'Instituto Tecnológico Autónomo de México',
+    label: 'Instituto Autónomo Tecnológico de México (ITAM)'
+  },
+  {
+    value: 'El Colegio de México',
     label: 'El Colegio de México (COLMEX)'
   },
   {
-    value: 'TEC_MONTERREY',
+    value: 'Instituto Tecnológico y de Estudios Superiores de Monterrey',
     label: 'Instituto Tecnológico y de Estudios Superiores de Monterrey (ITESM)'
   },
   {
-    value: 'IBERO',
+    value: 'Universidad Iberoamericana',
     label: 'Universidad Iberoamericana (IBERO)'
   },
 ]
@@ -35,6 +35,7 @@ class RegistrationForm extends React.Component {
   state = {
     confirmDirty: false,
     autoCompleteResult: [],
+    college: null
   };
 
   remove = k => {
@@ -58,6 +59,13 @@ class RegistrationForm extends React.Component {
     });
   };
 
+  onChangeCollege = value => {
+    console.log('Currency changed', value);
+    const { form } = this.props;
+    let keys = form.getFieldValue('university');
+    this.setState({ college: value[0] })
+  }
+
   handleSubmit = e => {
     e.preventDefault();
     this.props.form.validateFieldsAndScroll((err, values) => {
@@ -67,7 +75,7 @@ class RegistrationForm extends React.Component {
         this.props.onAuth(
           values.userName,
           values.email,
-          values.university,
+          values.university[0],
           values.password,
           values.confirm,
           is_student
@@ -111,7 +119,7 @@ class RegistrationForm extends React.Component {
 
   render() {
     const { getFieldDecorator, getFieldValue } = this.props.form;
-    const { autoCompleteResult } = this.state;
+    const { autoCompleteResult, college } = this.state;
     const websiteOptions = autoCompleteResult.map(website => (
       <AutoCompleteOption 
         key={website}>
@@ -125,6 +133,7 @@ class RegistrationForm extends React.Component {
       <Select style={{ width: 70 }}>
         <Option value="86">+86</Option>
         <Option value="87">+87</Option>
+        <Option value="55">+55</Option>
       </Select>,
     );
     
@@ -217,11 +226,11 @@ class RegistrationForm extends React.Component {
 
         <Form.Item label="College Institution">
           {getFieldDecorator("university", {
-            initialValue: [],
+            initialValue: "",
             rules: [
               { type: 'array', required: true, message: 'Please select your University' },
             ],
-          })(<Cascader options={universities} />)}
+          })(<Cascader options={universities} onChange={this.onChangeCollege} />)}
         </Form.Item>
 
         <Form.Item label="Phone number">
@@ -306,7 +315,7 @@ class RegistrationForm extends React.Component {
           })(
             <Select placeholder="Select a user type">
               <Option value="student">Student</Option>
-              <Option value="teacher">Teacher</Option>
+              <Option value="teacher">Teacher/Instructor</Option>
             </Select>
           )}
         </FormItem>
@@ -321,7 +330,7 @@ class RegistrationForm extends React.Component {
           </Button>
           Or
           <NavLink style={{ marginRight: "10px" }} to="/login/">
-            login
+            Login
           </NavLink>
         </FormItem>
       </Form>
@@ -342,7 +351,7 @@ const mapDispatchToProps = dispatch => {
   return {
     onAuth: (username, email, university, password1, password2, is_student) =>
       dispatch(
-        actions.authSignup(username, email, JSON.stringify(university), password1, password2, is_student)
+        actions.authSignup(username, email, university, password1, password2, is_student)
       )
   };
 };

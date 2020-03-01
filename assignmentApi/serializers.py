@@ -87,7 +87,8 @@ class GradedAssignmentSerializer(serializers.ModelSerializer):
             i += 1
 
         grade = answered_correct_count / len(questions)
-        graded_asnt.grade = gradegraded_asnt.save()
+        graded_asnt.grade = grade
+        graded_asnt.save()
         return graded_asnt
 
 class AssignmentChoicesSerializer(serializers.ModelSerializer):

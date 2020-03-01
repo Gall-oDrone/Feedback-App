@@ -8,6 +8,9 @@ import thunk from "redux-thunk";
 
 import authReducer from "./store/reducers/auth";
 import assignmentReducer from "./store/reducers/assignments";
+import surveyReducer from "./store/reducers/survey";
+import surveyChoiceReduce from "./store/reducers/surveyChoices";
+import gradedSurveyReducer from "./store/reducers/gradedSurvey";
 import assignmentChoiceReduce from "./store/reducers/assignmentsChoices";
 import gradedAssignmentReducer from "./store/reducers/gradedAssignments";
 import likeReducer from "./store/reducers/likes"
@@ -18,9 +21,11 @@ import incetivesReducer from "./store/reducers/incentives"
 import reviewMeetingReducer from "./store/reducers/reviewMeetings"
 import profileReducer from "./store/reducers/profile"
 import profileInfoReducer from "./store/reducers/profileUserInfo"
+import profileSurveyReducer from "./store/reducers/profileSurvey"
 import dailyRoomReducer from "./store/reducers/dailyRooms"
 import profileUserInfoReducer from "./store/reducers/profileAccountUserInfo"
 import profileAccountDetailReducer from "./store/reducers/profileAccountInfo"
+import profileNTFNListReducer from "./store/reducers/profileNTFN"
 
 const composeEnhances = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
@@ -28,7 +33,7 @@ const rootReducer = combineReducers({
   auth: authReducer,
   assignments: assignmentReducer,
   gradedAssignments: gradedAssignmentReducer,
-  // assignmentsChoices: assignmentChoiceReduce,
+  assignmentsChoices: assignmentChoiceReduce,
   like: likeReducer,
   rating: ratingReducer,
   comments: commentReducer,
@@ -40,6 +45,11 @@ const rootReducer = combineReducers({
   profileUserInfo: profileUserInfoReducer,
   profileAccountInfo: profileAccountDetailReducer,
   reviewMeeting: reviewMeetingReducer,
+  survey: surveyReducer,
+  gradedSurvey: gradedSurveyReducer,
+  surveyChoices: surveyChoiceReduce,
+  profileSurvey: profileSurveyReducer,
+  profileNTFN: profileNTFNListReducer
 
 });
 

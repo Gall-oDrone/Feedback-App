@@ -3,7 +3,7 @@ from rest_auth.registration.serializers import RegisterSerializer
 from rest_framework import serializers
 from rest_framework.authtoken.models import Token
 
-from .models import User, MeetingRequest, ProfileInfo, Profile
+from .models import User, MeetingRequest, ProfileInfo, Profile, Universities
 
 class StringSerializer(serializers.StringRelatedField):
     def to_internal_value(self, value):
@@ -45,6 +45,13 @@ class CustomRegisterSerializer(RegisterSerializer):
         user.university = self.cleaned_data.get('university')
         user.save()
         adapter.save_user(request, user, self)
+
+        profile_info = ProfileInfo()
+        profile_info.profile_username = User.objects.get(username=user.username)
+        print("self.cleaned_data.get('university')", self.cleaned_data.get('university'))
+        profile_info.university = Universities.objects.get(university=self.cleaned_data.get('university'))
+        profile_info.save()
+
         return user
 
 
@@ -76,7 +83,7 @@ class TokenSerializer(serializers.ModelSerializer):
             'university': university
         }
 class ProfileSerializer(serializers.ModelSerializer):
-    # user = serializers.SerializerMethodField(many=False)
+    user = StringSerializer(many=False)
     # slug = serializers.SerializerMethodField(many=False)
     class Meta:
         model = Profile

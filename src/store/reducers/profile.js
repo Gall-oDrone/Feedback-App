@@ -16,7 +16,9 @@ import {
   GET_PROFILE_ARTICLE_DETAIL_SUCCESS,
   PUT_PROFILE_ARTICLE_DETAIL_START,
   PUT_PROFILE_ARTICLE_DETAIL_FAIL,
-  PUT_PROFILE_ARTICLE_DETAIL_SUCCESS
+  PUT_PROFILE_ARTICLE_DETAIL_SUCCESS,
+  DELETE_PROFILE_ARTICLE_DETAIL_SUCCESS,
+  DELETE_PROFILE_ARTICLE_DETAIL_FAIL
 } from "../actions/actionTypes";
 import { updateObject } from "../utility";
 
@@ -189,6 +191,21 @@ const putProfileArticleDetailFail = (state, action) => {
   });
 };
 
+const deleteProfileArticleDetailSuccess = (state, action) => {
+  console.log("2) Reducers deleteProfileArticleDetailSuccess")
+  return updateObject(state, {
+    error: null,
+    loading: false
+  });
+};
+
+const deleteProfileArticleDetailFail = (state, action) => {
+  return updateObject(state, {
+    error: action.error,
+    loading: false
+  });
+};
+
 const reducer = (state = initialState, action) => {
   switch (action.type) {
     case GET_PROFILE_MR_START:
@@ -215,6 +232,10 @@ const reducer = (state = initialState, action) => {
       return putProfileArticleDetailFail(state, action);
     case PUT_PROFILE_ARTICLE_DETAIL_SUCCESS:
       return putProfileArticleDetailSuccess(state, action);
+    case DELETE_PROFILE_ARTICLE_DETAIL_SUCCESS:
+      return deleteProfileArticleDetailSuccess(state, action);
+    case DELETE_PROFILE_ARTICLE_DETAIL_FAIL:
+      return deleteProfileArticleDetailFail(state, action);
     default:
       return state;
   }

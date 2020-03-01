@@ -78,7 +78,7 @@ class ProfileMMenu extends React.Component {
                             <span>
                             <Link to={`/profile/${this.props.userId}/account/info/`}>
                                 <Icon type="user" />
-                                    Account
+                                    Profile
                             </Link>
                             </span>
                         </Menu.Item>
@@ -86,14 +86,16 @@ class ProfileMMenu extends React.Component {
                             <span>
                             <Link to={`/profile/${this.props.userId}/account/user/info/`}>
                                 <Icon type="setting" />
-                                    Configuration
+                                    Account Info
                             </Link>
                             </span>
                         </Menu.Item>
                         <Menu.Item key="sub3">
                             <span>
-                            <Icon type="notification" />
-                                Notifications
+                            <Link to={`/profile/${this.props.userId}/account/survey/list/`}>
+                                <Icon type="snippets" />
+                                    Survey
+                            </Link>
                             </span>
                         </Menu.Item>
                         <Menu.Item key="sub4">

@@ -3,9 +3,11 @@ const localhost = 'http://127.0.0.1:8000'
 const apiURL = '/api'
 const apiArticlesURL = '/api/articles'
 const imageURL = '/media'
+const mediaURL = imageURL
 
 export const endpoint = `${localhost}${apiURL}`
 const image_endpoint = `${localhost}${imageURL}`
+const media_endpoint = `${localhost}${mediaURL}`
 
 export const productListURL = `${endpoint}/products/`;
 export const productDetailURL = id => `${endpoint}/products/${id}/`;
@@ -23,3 +25,52 @@ export const addressUpdateURL = id => `${endpoint}/addresses/${id}/update/`;
 export const addressDeleteURL = id => `${endpoint}/addresses/${id}/delete/`;
 export const orderItemDeleteURL = id => `${endpoint}/order-items/${id}/delete/`;
 export const orderItemUpdateQuantityURL = `${endpoint}/order-item/update-quantity/`;
+
+export const articleCommentsURL = articleID => `${endpoint}/articles/${articleID}/comments/`
+export const articleCommentURL = articleID => `${endpoint}/articles/${articleID}/comment/`
+export const articleCreateCommentURL = data => `${endpoint}/articles/${data.articleID}/create-comment/`
+export const articleUpdateCommentURL = data => `${endpoint}/articles/${data.articleID}/update-comment/${data.id}/`
+export const lcroomCreateURL = `${endpoint}/live-chat/lcrequest/create/`
+export const lcroomDetailURL = roomName => `${endpoint}/live-chat/lcrequest/lcroom/detail/${roomName}`
+export const lcroomListURL = username => `${endpoint}/live-chat/lcrequest/userlist/${username}`
+export const lcroomReceivedURL = username => `${endpoint}/live-chat/lcrequest/received/userlist/${username}`
+export const lcroomBookedURL = username => `${endpoint}/live-chat/lcrequest/booked/userlist/${username}`
+export const lcroomListDetailURL =  (articleID, userID) => `${endpoint}/live-chat/lcrequest/listdetail/${articleID}/${userID}`
+export const gradedsurveyURL = username => `${endpoint}/surveyApi/graded-surveys/?username=${username}`
+export const gradedsurveyCreateURL = `${endpoint}/surveyApi/graded-surveys/create/`
+export const incentivesCreateURL = `${endpoint}/incentives/create/`
+export const incentivesListURL = username => `${endpoint}/incentives/userlist/${username}`
+export const incentivesDetailURL = userID => `${endpoint}/incentives/listdetail/${userID}`
+export const articleDetailURL = `${endpoint}/articles/${articleID}`
+export const articleLikeURL = (articleID, userID) =>  `${endpoint}/articles/${articleID}/likes/${userID}/`
+export const lcrequestURL = username => `${endpoint}/users/lcrequest/${username}`
+
+export const profileArticleListURL = username => `${endpoint}/articles/list/${username}/`
+export const profileArticleDetailURL = (articleID, username) => `${endpoint}/articles/${articleID}/detail/${username}/`
+export const profileAccountInfoURL = `${endpoint}/users/profile/account/info/${userId}`
+export const profileURL = (articleID, username) => `${endpoint}/articles/${articleID}/detail/${username}/`
+export const profileUserInfoURL = username => `${endpoint}/users/profile/info/${username}`
+export const profileAccountUserInfoURL = userID => `${endpoint}/users/profile/account/user/info/${userID}`
+export const profileAccountUserInfoUpdateURL = username => `${endpoint}/users/profile/account/user/info/update/${username}`
+export const profileAccountUserSurveyListURL = username => `${endpoint}/survey/profile/survey/list/${username}`
+export const profileAccountUserSurveyDetailURL = username => `${endpoint}/survey/profile/survey/detail/${username}/${surveyID}`
+export const profileAccountUserSurveyUpdateURL = username => `${endpoint}/survey/profile/survey/detail/${username}/${surveyID}/update`
+
+export const articleRatingURL = data => `${endpoint}/articles/${data.articleID}/rating/`
+export const articleListURL = articleID => `${endpoint}/articles/${articleID}`
+export const lcroomReviewURL = `${endpoint}/live-chat/lcrequest/lcroom/review/create/`
+
+export const surveyListURL = `${endpoint}/survey/`
+export const surveyDetailURL = id => `${endpoint}/survey/${id}/`
+export const surveyCreateURL = `${endpoint}/survey/create/`
+export const surveyChociesURL = `${endpoint}/survey/choices/`
+
+export const gradedSurveyListURL = `${endpoint}/graded-survey/`
+export const gradedSurveyDetailURL = id => `${endpoint}/graded-survey/${id}/`
+export const gradedSurveyCreateURL = `${endpoint}/graded-survey/create/`
+export const gradedSurveyChociesURL = `${endpoint}/graded-survey/choices/`
+
+export const notificationListURL = username => `${endpoint}/notifications/list/${username}/`
+export const notificationDetailURL = (notificationID, username)=> `${endpoint}/notifications/${notificationID}/detail/${username}/`
+export const notificationCreateURL = (notificationID, username)=> `${endpoint}/notifications/${notificationID}/detail/update/${username}/`
+export const notificationURL = (notificationID, username)=> `${endpoint}/notifications/${notificationID}/detail/delete/${username}/`

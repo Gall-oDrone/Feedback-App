@@ -33,7 +33,7 @@ const getSurveyListFail = error => {
   };
 };
 
-export const getSurveyS = token => {
+export const getSurvey = token => {
     return dispatch => {
       console.log(" getSurveyS: ")
         dispatch(getSurveyListStart());
@@ -41,7 +41,7 @@ export const getSurveyS = token => {
             "Content-Type": "application/json",
             Authorization: `Token ${token}`
         }
-        axios.get("http://127.0.0.1:8000/surveys/")
+        axios.get("http://127.0.0.1:8000/survey/")
         .then(res => {
             const surveys = res.data;
             dispatch(getSurveyListSuccess(surveys));
@@ -79,7 +79,7 @@ export const getSurveySDetail = (token, id) => {
             "Content-Type": "application/json",
             Authorization: `Token ${token}`
         }
-        axios.get(`http://127.0.0.1:8000/surveyApi/surveys/${id}/`)
+        axios.get(`http://127.0.0.1:8000/survey/${id}`)
         .then(res => {
             const survey = res.data;
             dispatch(getSurveyDetailSuccess(survey));
@@ -96,10 +96,9 @@ const createSurveyStart = () => {
   };
 };
 
-const createSurveySuccess = survey => {
+const createSurveySuccess = () => {
   return {
     type: CREATE_SURVEY_SUCCESS,
-    survey
   };
 };
 
@@ -111,19 +110,21 @@ const createSurveyFail = error => {
 };
 
 export const createSurvey = (token, asnt) => {
+  console.log("Create survey start")
     return dispatch => {
         dispatch(createSurveyStart());
         axios.defaults.headers = {
             "Content-Type": "application/json",
             Authorization: `Token ${token}`
         }
-        axios.post(`http://127.0.0.1:8000/surveyApi/surveys/`, asnt)
+        console.log("SOMETHING",JSON.stringify(asnt))
+        axios.post(`http://127.0.0.1:8000/survey/create/`, asnt)
         .then(res => {
             
             dispatch(createSurveySuccess());
         })
         .catch(err => {
-            dispatch(createSurveyFail());
+            dispatch(createSurveyFail(err));
         })
     }
 }

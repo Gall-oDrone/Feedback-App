@@ -169,7 +169,7 @@ render(){
   const {BookedMeetingList} = this.props.meeting;
   console.log('BookedMeetingList: ' +BookedMeetingList)
   // console.log(Object.values(BookedMeetingList))
-  if(BookedMeetingList !== undefined) {
+  if(BookedMeetingList !== undefined && BookedMeetingList.length > 0) {
     console.log('BookedMeetingList.recipient: ' +BookedMeetingList[0].recipient)
     console.log('BookedMeetingList.article: ' +BookedMeetingList.article)
     console.log('BookedMeetingList.scheduled: ' +BookedMeetingList[0].scheduled)
@@ -181,143 +181,138 @@ render(){
   }
   return(
     <div>
-    {BookedMeetingList !== undefined && username !== null ? (
-      
-  <Table dataSource={BookedMeetingList}>
-        
-        <Column 
-          title="Article Title" 
-          dataIndex="article"
-          key="article"
-        />
-        <Column 
-          title="Meeting date" 
-          dataIndex="date_to_appointment"
-          key={`meetingDate `}
-          render={date => (
-            <span>
-                {moment(date).format("DD-MM-YYYY HH:mm")}
-            </span>
-          )}
-        />
-        <Column 
-          title="Topic" 
-          dataIndex="discussion_topic"
-          key="discussion_topic"
-          render={topic => (
-            <li>
-              {topic.map(val => (
-                <Tag color="blue" key={val}>
-                  {val}
-                </Tag>
-              ))}
-            </li>
-          )}
-        />
-        <Column
-          title="Language"
-          dataIndex="notified"
-          key="language"
-        />
-        <Column
-          title="User"
-          dataIndex="notified"
-          key="userInfo"
-          render={(record, date, index) => (
-            <div style={{ width: buttonWidth}}>
-              <UProfInfo {...this.props}
-                token={this.props.token}
-                username={BookedMeetingList[index].sender}
-                keys = {index}
-              >
-              </UProfInfo>
-            </div>
-          )}
-        />
-        <Column
-          title="Status"
-          dataIndex="scheduled"
-          key="status"
-          render={(scheduled, record, index) => (
-              scheduled === true ? (
-              <div>
-                  <div>
-                    <Icon type="check-circle" key={`scheduled: ${index}`} theme="twoTone" twoToneColor="#52c41a" />
-                      <span key={`${index}`}>
-                        BOOKED
-                      </span>
-                  </div>     
-              </div>
-            ) : (
-              BookedMeetingList[index].canceled === true ? (
-                  <div>
-                      <div>
-                        <Icon type="close-circle" key={`canceled: ${index}`} theme="twoTone" twoToneColor="#F5222D" />
-                          <span key={`${index}`}>
-                            REJECTED
-                          </span>
-                      </div>     
-                  </div>
-                ) : (
-                    <span>
-                      <Button type="primary" key={`ARB: ${index}`} loading={this.state.iconLoading} onClick={() => this.handleAcceptR(index, this.state.dataList, BookedMeetingList)} size={"small"}>
-                        Accept
-                      </Button>
-                      <Divider type="vertical" />
-                      <Button type="danger" key={`RRB: ${index}`} onClick={() => this.handleRejectR(index, this.state.dataList, BookedMeetingList)} size={"small"}>
-                        Reject
-                      </Button>
-                  </span>
-                  )
-                )
-          )}
-        />
-        <Column
-          title="Action"
-          key="action"
-          render={(text, data, index) => (
-            console.log("EHRENOEHRENO: "+JSON.stringify(data)),
-            <span>
-              {this.state.dateNow ===  moment(data.date_to_appointment).format("DD-MM-YYYY HH:mm") ? (
-                <Link to={`/frameTest`}>
-                <Button type="primary" disabled size={"small"}>
-                  Attend
-                </Button>
-                </Link>
-              ):(
+      {username !== null ? (
+        <div>    
+          {BookedMeetingList !== undefined && BookedMeetingList.length > 0 ? (  
+              <Table dataSource={BookedMeetingList}>  
+                    <Column 
+                      title="Article Title" 
+                      dataIndex="article"
+                      key="article"
+                    />
+                    <Column 
+                      title="Meeting date" 
+                      dataIndex="date_to_appointment"
+                      key={`meetingDate `}
+                      render={date => (
+                        <span>
+                            {moment.utc(date).format("DD-MM-YYYY HH:mm")}
+                        </span>
+                      )}
+                    />
+                    <Column 
+                      title="Topic" 
+                      dataIndex="discussion_topic"
+                      key="discussion_topic"
+                      render={topic => (
+                        <li>
+                          {topic.map(val => (
+                            <Tag color="blue" key={val}>
+                              {val}
+                            </Tag>
+                          ))}
+                        </li>
+                      )}
+                    />
+                    <Column
+                      title="Language"
+                      dataIndex="notified"
+                      key="language"
+                    />
+                    <Column
+                      title="User"
+                      dataIndex="notified"
+                      key="userInfo"
+                      render={(record, date, index) => (
+                        <div style={{ width: buttonWidth}}>
+                          <UProfInfo {...this.props}
+                            token={this.props.token}
+                            username={BookedMeetingList[index].sender}
+                            keys = {index}
+                          >
+                          </UProfInfo>
+                        </div>
+                      )}
+                    />
+                    <Column
+                      title="Status"
+                      dataIndex="scheduled"
+                      key="status"
+                      render={(scheduled, record, index) => (
+                          scheduled === true ? (
+                          <div>
+                              <div>
+                                <Icon type="check-circle" key={`scheduled: ${index}`} theme="twoTone" twoToneColor="#52c41a" />
+                                  <span key={`${index}`}>
+                                    BOOKED
+                                  </span>
+                              </div>     
+                          </div>
+                        ) : (
+                          BookedMeetingList[index].canceled === true ? (
+                              <div>
+                                  <div>
+                                    <Icon type="close-circle" key={`canceled: ${index}`} theme="twoTone" twoToneColor="#F5222D" />
+                                      <span key={`${index}`}>
+                                        REJECTED
+                                      </span>
+                                  </div>     
+                              </div>
+                            ) : (
+                                <span>
+                                  <Button type="primary" key={`ARB: ${index}`} loading={this.state.iconLoading} onClick={() => this.handleAcceptR(index, this.state.dataList, BookedMeetingList)} size={"small"}>
+                                    Accept
+                                  </Button>
+                                  <Divider type="vertical" />
+                                  <Button type="danger" key={`RRB: ${index}`} onClick={() => this.handleRejectR(index, this.state.dataList, BookedMeetingList)} size={"small"}>
+                                    Reject
+                                  </Button>
+                              </span>
+                              )
+                            )
+                      )}
+                    />
+                    <Column
+                      title="Action"
+                      key="action"
+                      render={(text, data, index) => (
+                        <span>
+                          {this.state.dateNow ===  moment.utc(data.date_to_appointment).format("DD-MM-YYYY HH:mm") ? (
+                            <Link to={`/frameTest`}>
+                            <Button type="primary" disabled size={"small"}>
+                              Attend
+                            </Button>
+                            </Link>
+                          ):(
 
-                <div>
-                {this.state.dateNow <  moment(data.date_to_appointment).format("DD-MM-YYYY HH:mm") ? (
-                  <Link to={`/frameTest`}>
-                  <Button type="primary" disabled size={"small"}>
-                    Finished
-                  </Button>
-                  </Link>
-                ):(
-                  <Link to={`/frameTest/${BookedMeetingList[index].room_name}`}>
-                    <Button type="primary" onClick={() => this.handleAttend(BookedMeetingList[index].room_url)} size={"small"}>
-                      Attend
-                    </Button>
-                  </Link>
-                )}
-                </div>
-                // <Link to={`/frameTest/${BookedMeetingList[index].room_name}`}>
-                //   <Button type="primary" onClick={() => this.handleAttend(BookedMeetingList[index].room_url)} size={"small"}>
-                //     Attend
-                //   </Button>
-                // </Link>
-
-              )}
-              <Divider type="vertical" />
-                <Button type="danger" onClick={() => this.handleCancel()} size={"small"}>
-                  Cancel
-                </Button>
-            </span>
-          )}
-        />
-  </Table>
-  ): ( <a>Please Sign up to see your meetings</a>)}
-  </div>
+                            <div>
+                            {this.state.dateNow >  moment.utc(data.date_to_appointment).format("DD-MM-YYYY HH:mm") ? (
+                              <Link to={`/frameTest`}>
+                              <Button type="primary" disabled size={"small"}>
+                                Finished
+                              </Button>
+                              </Link>
+                            ):(
+                              <Link to={`/frameTest/${BookedMeetingList[index].room_name}`}>
+                                <Button type="primary" onClick={() => this.handleAttend(BookedMeetingList[index].room_url)} size={"small"}>
+                                  Attend
+                                </Button>
+                              </Link>
+                            )}
+                            </div>
+                          )}
+                          <Divider type="vertical" />
+                            <Button type="danger" onClick={() => this.handleCancel()} size={"small"}>
+                              Cancel
+                            </Button>
+                        </span>
+                      )}
+                    />
+              </Table>
+          ):(<a>No meetings yet</a>)}
+        </div>
+      ): ( <a>Please Sign up to see your meetings</a>)}
+    </div>
   )
 };
 }

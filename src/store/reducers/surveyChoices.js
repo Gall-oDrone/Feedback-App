@@ -2,7 +2,7 @@ import {
   GET_SURVEY_CHOICES_START,
   GET_SURVEYS_CHOICES_FAIL,
   GET_SURVEYS_CHOICES_SUCCESS
-} from "./actionTypes";
+} from "../actions/actionTypes";
 import { updateObject } from "../utility";
 
 const initialState = {

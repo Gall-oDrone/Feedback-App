@@ -15,6 +15,7 @@
     "moment": "^2.24.0",
     "react": "^16.4.1",
     "react-dom": "^16.4.1",
+    "react-infinite-scroll-component": "^5.0.4",
     "react-redux": "^5.0.7",
     "react-router-dom": "^4.3.1",
     "react-scripts": "^3.3.1",
@@ -25,7 +26,7 @@
   "scripts": {
     "startO": "node server.js",
     "start W": "webpack-dev-server --mode development --open --hot",
-    "start": "react-scripts start",
+    "start": "PORT=8001 react-scripts start",
     "buildW": "webpack --mode production",
     "build": "react-scripts build",
     "startw": "webpack-dev-server --mode development --open --hot",

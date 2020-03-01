@@ -150,7 +150,7 @@ class MeetingListIncentives extends React.Component {
 
   }
 
-  handlerparticipants(value, user) {
+  handlerParticipants(value, user) {
     var options3 = []
     for (var i in value) {
       if (value[i] != user) {
@@ -166,12 +166,13 @@ class MeetingListIncentives extends React.Component {
     });
   }
 
-  handlerBuy = async (amountD, countryD, currencyD, brand) => {
+  handlerBuy = async (participantD, amountD, countryD, currencyD, brand) => {
     this.toggle(true)
     console.log("this.props.error: " + JSON.stringify(this.props.err1))
     console.log("In handlerBuy")
     const data = {
       buyer: this.props.username,
+      recipient: participantD,
       amount: amountD,
       country: countryD,
       currency: currencyD,
@@ -237,7 +238,7 @@ class MeetingListIncentives extends React.Component {
     console.log("this.props " + this.props)
     console.log("this.state " + this.state)
 
-    const { initLoading, loading, amount, country, currency } = this.state;
+    const { initLoading, participant, loading, amount, country, currency } = this.state;
     const loadMore =
       !initLoading && !loading ? (
         <div
@@ -294,7 +295,7 @@ class MeetingListIncentives extends React.Component {
                   <Col xs={{ span: 4, offset: 1 }} lg={{ span: 4, offset: 2 }}>
                     <h3>Participant</h3>
                     <div>
-                      <Cascader options={this.handlerparticipants(this.props.roomDetails.RoomDetail.participants, this.props.username)} onChange={this.onChangeParticipant} placeholder="Please select" />
+                      <Cascader options={this.handlerParticipants(this.props.roomDetails.RoomDetail.participants, this.props.username)} onChange={this.onChangeParticipant} placeholder="Please select" />
                     </div>
                   </Col>
                 ) : (null)}
@@ -320,7 +321,7 @@ class MeetingListIncentives extends React.Component {
               <Row type="flex" justify="center">
                 <Col >
                   <div>
-                    <Button onClick={() => { this.handlerBuy(amount, country, currency, "1") }} style={{ marginTop: "2rem" }}>
+                    <Button onClick={() => { this.handlerBuy(participant, amount, country, currency, "1") }} style={{ marginTop: "2rem" }}>
                       Buy
                     </Button>
                   </div>

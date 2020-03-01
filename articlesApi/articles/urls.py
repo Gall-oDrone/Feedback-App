@@ -45,7 +45,7 @@ urlpatterns = [
     path('<pk>/comments/', CommentListView.as_view()),
     path('<pk>/create-comment/', CreateComment.as_view()),
     path('<pk>/update-comment/<id>/', UpdateComment.as_view()),
-    path('<pk>/comments/<id>/', CommentDetailView.as_view()),
+    path('<pk>/comment/<id>/', CommentDetailView.as_view()),
     #path('<pk>/video/', VideoViewSet.as_view()),
     path('create/images/', ImageCreateView.as_view),
     path('destroy/images/', ImageDestroyView.as_view),

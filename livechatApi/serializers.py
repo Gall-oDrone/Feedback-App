@@ -3,6 +3,7 @@ from django.utils.dateparse import parse_datetime
 from datetime import datetime
 from livechatApi.models import Sender, Recipient, Category, Request, LCRoom, MeetingReview, MeetingReviewChoice
 from users.models import User, MeetingRequest
+from articlesApi.models import Article
 
 class StringSerializer(serializers.StringRelatedField):
     def to_internal_value(self, value):
@@ -31,7 +32,7 @@ class LCRequestSerializer(serializers.ModelSerializer):
         print(datetime.strptime(data["date"], "%Y-%m-%dT%H:%M:%S.%fZ").date())
         request = Request()
         request.notified = True
-        request.scheduled = True
+        request.scheduled = False
         request.date_to_appointment = data["date"]
         request.article_id = data["articleId"]
         print("MR CORSO")
@@ -41,12 +42,35 @@ class LCRequestSerializer(serializers.ModelSerializer):
         request.save()
         request.recipient.add(User.objects.get(username=data["recipient"]).id)
         for c in data['topic']:
-            print(c)
-            newC = Category()
-            newC.category = c
-            print(newC.category)
-            request.discussion_topic.set(newC.category)
-
+            try:
+                print("try")
+                print(c)
+                newC = Category()
+                categories = Category.CATEGORIES
+                newC.category = categories[int(c)][0]
+                print(newC.category)
+                print(newC)
+                cat = Category.objects.get(category=newC)
+                print("cat", cat)
+                print("cat.id", cat.id)
+                request.discussion_topic.add(cat.id)
+            except:
+                print("except")
+                print(c)
+                print(Category.objects.get(id=1))
+                print(Category.CATEGORIES)
+                newC = Category()
+                categories = Category.CATEGORIES
+                print(Category.CATEGORIES[int(c)])
+                print(categories[int(c)][0])
+                newC.category = categories[int(c)][0]
+                newC.save()
+                print("End except")
+                print(newC.category)
+                cat = Category.objects.get(category=newC)
+                print("cat", cat)
+                print("catId", cat.id)
+                request.discussion_topic.add(cat.id)
         request.save()
         
         userNotification = MeetingRequest()
@@ -108,7 +132,7 @@ class LCCreateRoomSerializer(serializers.ModelSerializer):
         room.api_created = True
         room.url = data["url"]
         room.privacy = data["privacy"]
-        room.article = data["article"]
+        room.article = Article.objects.get(id=data["article"])
         room.save()
         for i in data["rp"]:
             room.participants.add(User.objects.get(id=i)) 
@@ -163,21 +187,26 @@ class LCMeetingReviewSerializer(serializers.ModelSerializer):
         meeting_review.meeting_rate = data["meeting_rate"]
         meeting_review.conversation_rate = data["worthiness"]
         meeting_review.attendace = data["attendace"]
-        meeting_review.accept_working_with = False
+        meeting_review.accept_working_with = data["recommendation"]
         print("worked 4")
         meeting_review.issues = data["issues"]
         print("worked 5")
         print("worked 6")
         meeting_review.comment = data["comment"]
-        meeting_review.issue_type = MeetingReviewChoice.objects.get(id=data["issue_type"])
+        if data["issues"] == True:
+            meeting_review.issue_type = MeetingReviewChoice.objects.get(id=data["issue_type"])
         meeting_review.save()
-        if data["attendace"] == True:
+        n_par = []
+        if data["attendance"] == True:
             for i in data["attended"]:
-                meeting_review.attended.add(User.objects.get(id=i)) 
-            # room.request = True
-            print("MR CORSO")
-            for i in data["not_attended"]:
-                meeting_review.not_attended.add(User.objects.get(id=i)) 
+                if i == (data["user"] or data["participant"]):
+                    meeting_review.attended.add(User.objects.get(username=i)) 
+                else:
+                    n.parh.add(i)
             meeting_review.save()
-        
+        else:
+            for i in n_par:
+                meeting_review.not_attended.add(User.objects.get(username=i)) 
+            meeting_review.save()
+
         return meeting_review

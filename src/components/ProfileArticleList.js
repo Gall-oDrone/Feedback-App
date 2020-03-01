@@ -5,7 +5,7 @@ import { Button, Table, Divider, Tag, DatePicker, Tab, Icon, Popover } from 'ant
 import {getUserReceivedMeeting, updateMeeting} from "../store/actions/meetings";
 import {getProfileMeetingInfo} from "../store/actions/profileUserInfo";
 import UProfInfo from "../components/UserProfileInfo";
-import {getProfileArticleList} from "../store/actions/profile";
+import {getProfileArticleList, deleteProfileArticleDetail} from "../store/actions/profile";
 const { Column, ColumnGroup } = Table;
 var moment = require('moment');
 
@@ -64,8 +64,8 @@ class ProfileArticleList extends React.Component {
     this.setState({ iconLoading: true });
   };
 
-  handleDelete() {
-
+  handleDelete(articleID) {
+    this.props.deleteArticle(this.props.token, articleID, this.props.username)
   }
 
   handleCancel() {
@@ -130,64 +130,66 @@ render(){
     // })
   }
   return(
-    <div>
-      
+    <div> 
     {articleList !== undefined && username !== null ? (
-      
-  <Table dataSource={articleList}>
-        
-        <Column 
-          title="Article Title" 
-          dataIndex="title"
-          key="title"
-        />
-        <Column 
-          title="Created date" 
-          dataIndex="timestamp"
-          key={`timestamp `}
-          render={date => (
-            <span>
-                {moment(date).format("DD-MM-YYYY HH:mm")}
-            </span>
-          )}
-        />
-        <Column 
-          title="Category" 
-          dataIndex="categories"
-          key="categories"
-          render={category => (
-            <li>
-              {category.map(val => (
-                <Tag color="blue" key={val}>
-                  {val}
-                </Tag>
-              ))}
-            </li>
-          )}
-        />
-        <Column
-          title="Views"
-          dataIndex="view_count"
-          key="view_count"
-        />
-        <Column
-          title="Likes"
-          dataIndex="likes_count"
-          key="likes_count"
-        />
-        <Column
-          title="Action"
-          dataIndex="id"
-          key="action"
-          render={(id, record) => (
-            <span>
-              <a href={`/profile/${1}/account/articles/detail/${id}`}>Modify</a>
-              <Divider type="vertical" />
-              <a>Delete</a>
-            </span>
-          )}
-        />
-  </Table>
+      <div>
+        <Table dataSource={articleList}>
+          <Column 
+            title="Article Title" 
+            dataIndex="title"
+            key="title"
+          />
+          <Column 
+            title="Created date" 
+            dataIndex="timestamp"
+            key={`timestamp `}
+            render={date => (
+              <span>
+                  {moment(date).format("DD-MM-YYYY HH:mm")}
+              </span>
+            )}
+          />
+          <Column 
+            title="Category" 
+            dataIndex="categories"
+            key="categories"
+            render={category => (
+              <li>
+                {category.map(val => (
+                  <Tag color="blue" key={val}>
+                    {val}
+                  </Tag>
+                ))}
+              </li>
+            )}
+          />
+          <Column
+            title="Views"
+            dataIndex="view_count"
+            key="view_count"
+          />
+          <Column
+            title="Likes"
+            dataIndex="likes_count"
+            key="likes_count"
+          />
+          <Column
+            title="Action"
+            dataIndex="id"
+            key="action"
+            render={(id, record) => (
+              <span>
+                <a href={`/profile/${1}/account/articles/detail/${id}`}>Modify</a>
+                <Divider type="vertical" />
+                <a onClick={() =>{this.handleDelete(id)}}>Delete</a>
+              </span>
+            )}
+          />
+        </Table>
+        <Button type="primary" block href={"/create-article/"}>
+          Create an Article
+        </Button>
+    </div>
   ): ( <a>Please Sign up to see your articles</a>)}
   </div>
   )
@@ -211,6 +213,7 @@ const mapStateToProps = state => {
     console.log("mapDispatchToProps: ")
     return {
       getPAL: (token, username) => dispatch(getProfileArticleList(token, username)),
+      deleteArticle: (token, articleID, username) => dispatch(deleteProfileArticleDetail(token, articleID, username))
     };
   };
 

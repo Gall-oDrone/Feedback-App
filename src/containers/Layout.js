@@ -1,9 +1,10 @@
 import React from "react";
-import { Layout, Menu, Breadcrumb, Popover, Icon, Avatar, Badge, Dropdown } from "antd";
+import { Layout, Menu, Breadcrumb, Button, Icon, Avatar, Badge, Dropdown } from "antd";
 import { Link, withRouter } from "react-router-dom";
 import { connect } from "react-redux";
 import * as actions from "../store/actions/auth";
-import {ProfileHeaderMenu} from "../components/ProfileHeaderMenu"
+import ProfileHeaderMenu from "../components/ProfileHeaderMenu"
+import NotificationHeaderMenu from "../components/NotificationHeaderMenu"
 import {getProfileAccountDetail} from "../store/actions/profileAccountInfo"
 
 const { Header, Content, Footer, Sider } = Layout;
@@ -64,6 +65,14 @@ class CustomLayout extends React.Component {
       <Layout className="layout" >
         {this.props.isAuthenticated ? (
           <Sider trigger={null} collapsible collapsed={this.state.collapsed} >
+            <div className="sH" align= "center">
+            <Button type="primary" onMouseEnter={this.toggle} style={{ marginBottom: 16 }}>
+                <Icon
+                  className="trigger"
+                  type={this.state.collapsed ? 'menu-unfold' : 'menu-fold'}
+                />
+            </Button>
+            </div>
             <div className="logo" />
             <Menu theme="dark" mode="inline" defaultSelectedKeys={['1']}>
               <Menu.Item key="1">
@@ -83,7 +92,7 @@ class CustomLayout extends React.Component {
               <Menu.Item key="4">
                 <Link to={`/userProfile`}>
                   <Icon type="eye"/>
-                  <span> userInfoDrawer </span>
+                  <span> Review </span>
                 </Link>
               </Menu.Item>
               <Menu.Item key="5">
@@ -95,7 +104,7 @@ class CustomLayout extends React.Component {
               <Menu.Item key="6">
                 <Link to={`/rm`}>
                   <Icon type="user"/>
-                  <span> userAccount </span>
+                  <span> meetingRoom </span>
                 </Link>
               </Menu.Item>
             </Menu>
@@ -112,7 +121,7 @@ class CustomLayout extends React.Component {
             defaultSelectedKeys={["2"]}
             style={{ lineHeight: "50px" }}
           >
-            {this.props.isAuthenticated ? (
+            {/* {this.props.isAuthenticated ? (
             <Menu.Item key="0">
               <Icon
                 className="trigger"
@@ -122,7 +131,7 @@ class CustomLayout extends React.Component {
             </Menu.Item>
             ) : (
               null
-            )}
+            )} */}
             {this.props.isAuthenticated ? (
               <Menu.Item key="2" onClick={this.props.logout}>
                 Logout
@@ -132,21 +141,15 @@ class CustomLayout extends React.Component {
                   <Link to="/login">Login</Link>
                 </Menu.Item>
               )}
-                <Menu.Item key="3" onClick={this.props.logout} style= {{float: 'right'}}>
+                {/* <Menu.Item key="3" onClick={this.props.logout} style= {{float: 'right'}}>
                   <Icon type="message" />
+                </Menu.Item> */}
+                <Menu.Item key="4" style= {{float: 'right'}}>
+                  <NotificationHeaderMenu/>
                 </Menu.Item>
-                <Menu.Item key="4" onClick={this.props.logout} style= {{float: 'right'}}>
-                  <Badge count={1} count={5} >
-                    <Icon type="notification" />
-                  </Badge>
+                <Menu.Item key="6" style= {{float: 'right'}}>
+                    <ProfileHeaderMenu logout={this.props.logout} userId={this.props.userId}/>
                 </Menu.Item>
-               {this.props.isAuthenticated && this.props.profileAI.ProfileAccount != undefined ? (
-                <Menu.Item key="5" onClick={"Corso"} style= {{float: 'right'}}>
-                    <Popover title={text(this.props.profileAI.ProfileAccount.profile_avatar)} content={content(this.props.userId)}>
-                      <Icon type="user" />
-                    </Popover>
-                </Menu.Item>
-               ) : (null)}
 
               {/* <Menu.Item key="3" onClick={this.props.logout} style= {{float: 'right'}}>
                 <Icon type="message" />
@@ -177,6 +180,9 @@ class CustomLayout extends React.Component {
               <Link to="/peers2/">Peers2</Link>
             </Breadcrumb.Item>
             <Breadcrumb.Item>
+              <Link to="/peers3/">Peers3</Link>
+            </Breadcrumb.Item>
+            <Breadcrumb.Item>
               <Link to="/articles/">Rewards</Link>
             </Breadcrumb.Item>
             <Breadcrumb.Item>
@@ -186,7 +192,7 @@ class CustomLayout extends React.Component {
                 <Link to={"/create/survey/"}>Create Survey</Link>
             </Breadcrumb.Item>
             <Breadcrumb.Item>
-                <Link to={"/calendar/"}>Cale</Link>
+                <Link to={"/survey/"}>Survey Questions</Link>
             </Breadcrumb.Item>
             {this.props.token !== null ? (
               <Breadcrumb.Item>

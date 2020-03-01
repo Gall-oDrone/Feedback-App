@@ -13,6 +13,7 @@ import {
     PUT_COMMENT_FAIL,
     PUT_COMMENT_SUCCESS
 } from "./actionTypes";
+// import articleCommentsURL from "../../constants"
 
 const getCommentListStart = () => {
   console.log("1) Actions getCommentListStart")
@@ -75,14 +76,14 @@ const getCommentDetailFail = error => {
   };
 };
 
-export const getCommentDetail = (token, articleID) => {
+export const getCommentDetail = (token, articleID, commentID) => {
     return dispatch => {
         dispatch(getCommentDetailStart());
         axios.defaults.headers = {
             "Content-Type": "application/json",
             Authorization: `Token ${token}`
         }
-        axios.get(`http://127.0.0.1:8000/articles/${articleID}/comment/`)
+        axios.get(`http://127.0.0.1:8000/articles/${articleID}/comment/${commentID}/`)
         .then(res => {
             const comments = res.data;
             dispatch(getCommentDetailSuccess(comments));

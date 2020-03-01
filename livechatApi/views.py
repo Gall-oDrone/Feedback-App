@@ -1,4 +1,5 @@
 # from rest_framework import viewsets
+from django.dispatch import Signal, receiver
 from django.db.models import Count, Q, Sum
 from django.shortcuts import get_object_or_404, redirect, reverse
 from django.core import serializers
@@ -13,6 +14,7 @@ from rest_framework import permissions
 from livechatApi.models import Sender, Recipient, Category, Request, LCRoom, MeetingReview, MeetingReviewChoice
 from users.models import User, MeetingRequest, Profile
 from articlesApi.models import Article
+from notificationsApi.models import Notification
 from .serializers import LCRequestSerializer, LCRequestUserListSerializer, LCRequestListDetailSerializer, LCRoomSerializer, LCCreateRoomSerializer, LCRoomListDetailSerializer, LCRoomDetailSerializer, LCMeetingReviewSerializer
 from analytics.models import View
 from django.http import Http404, JsonResponse, HttpResponse
@@ -144,16 +146,12 @@ class LCRequestListDetailView(RetrieveUpdateDestroyAPIView):
         serializer.is_valid()
         print("On update method")
         print(self.request.data)
-        print(self.request.data.get("article"))
         articleId = Article.objects.get(
             title=self.request.data.get("article")).id
-        print(articleId)
         uId = []
         for i in self.request.data.get("recipient"):
             uId.append(User.objects.get(username=i).id)
         print(uId)
-        print(Request.objects.filter(
-            recipient=uId[0]).filter(article=articleId))
         room_participants = uId 
         room_participants.append(User.objects.get(username=self.request.data.get("sender")).id)
         target_request = Request.objects.filter(recipient=uId[0]).filter(article=articleId)
@@ -162,19 +160,13 @@ class LCRequestListDetailView(RetrieveUpdateDestroyAPIView):
             Request.objects.filter(recipient=uId[0]).filter(article=articleId).update(
                 scheduled=self.request.data.get("scheduled"))
             print("MMM")
-            post_lc_room_view(self, request, room_participants, target_request)
+            post_lc_room_view(self, request, room_participants, target_request, date_to_appointment, articleId)
         elif (self.request.data.get("canceled") == True):
             Request.objects.filter(recipient=uId[0]).filter(
                 article=articleId).update(canceled=self.request.data.get("canceled"))
         else:
             print("M 5X")
-            #delete_lc_room_view(self, request)
             post_lc_room_view(self, request, room_participants, target_request, date_to_appointment)
-        # Request.objects.update_or_create(
-        #     article=self.request.data.get("article"),
-        #     defaults={"likes_count": Like.objects.filter(
-        #     article_id=self.request.data.get("article")).filter(liked=True).count()}
-        #     )
         return Response(serializer.data)
 
 
@@ -183,7 +175,7 @@ class LCRequestDetailView(RetrieveAPIView):
     serializer_class = LCRequestSerializer
     permission_classes = (permissions.AllowAny,)
 
-
+lcRequest_post_signal = Signal(providing_args=["context"])
 class LCRequestCreateView(CreateAPIView):
     queryset = Request.objects.all()
     print("queryset Create view at LCRequest")
@@ -203,6 +195,16 @@ class LCRequestCreateView(CreateAPIView):
             print("userId after validation")
             print(userId)
             print(self.request.data.get(userId))
+            notify = Notification()
+            notify.user = User.objects.get(id=userId)
+            notify.actor = request.data["user"]
+            notify.verb = "Sent"
+            notify.action = "No sé"
+            notify.target = "1"
+            print("WHERE")
+            notify.description = "Meeting Request NTFN"
+            notify.save()
+            print("WHERE II")
             notification_counter = Profile.objects.update_or_create(
                 user_id=userId,
                 defaults={"notification_counter": MeetingRequest.objects.filter(
@@ -324,7 +326,7 @@ class LCMeetingReviewCreateView(CreateAPIView):
             return Response(status=HTTP_201_CREATED)
         return Response(status=HTTP_400_BAD_REQUEST)
 
-def post_lc_room_view(self, request, rp, tr, dta):
+def post_lc_room_view(self, request, rp, tr, dta, article):
     url = "https://api.daily.co/v1/rooms"
     headers = {'content-type': "application/json",
                'authorization': "Bearer 73e7ad6ba64e004eceab7e54597f3f7a6081bfbaf74b09443d7dd84b282a6798"}
@@ -333,6 +335,7 @@ def post_lc_room_view(self, request, rp, tr, dta):
         data = r.json()
         data["rp"] = rp
         data["d_t_a"] = dta
+        data["article"] = article
         tr.update(room_name=data["name"])
         return LCRoomCreateView.post(self, data)
     return HttpResponse('Could not save data')

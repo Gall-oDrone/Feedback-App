@@ -11,7 +11,9 @@ import {
   GET_PROFILE_ARTICLE_DETAIL_SUCCESS,
   PUT_PROFILE_ARTICLE_DETAIL_START,
   PUT_PROFILE_ARTICLE_DETAIL_FAIL,
-  PUT_PROFILE_ARTICLE_DETAIL_SUCCESS
+  PUT_PROFILE_ARTICLE_DETAIL_SUCCESS,
+  DELETE_PROFILE_ARTICLE_DETAIL_FAIL,
+  DELETE_PROFILE_ARTICLE_DETAIL_SUCCESS
 } from "./actionTypes";
 
 const getProfileMeetingRequestsStart = () => {
@@ -225,6 +227,40 @@ export const putProfileArticleDetail = (token, articleID, username, data) => {
         })
         .catch(err => {
             dispatch(putProfileArticleDetailFail(err));
+        })
+    }
+}
+
+const deleteProfileArticleDetailSuccess = () => {
+  console.log("2) Actions deleteProfileArticleDetailSuccess")
+  return {
+    type: DELETE_PROFILE_ARTICLE_DETAIL_SUCCESS,
+  };
+};
+
+const deleteProfileArticleDetailFail = error => {
+  return {
+    type: DELETE_PROFILE_ARTICLE_DETAIL_FAIL,
+    error: error
+  };
+};
+
+export const deleteProfileArticleDetail = (token, articleID, username) => {
+    return dispatch => {
+      console.log(" putProfileArticleDetail ")
+        // dispatch(getMeetingDetailStart());
+        axios.defaults.headers = {
+          //'Accept': 'application/json, application/pdf, application/xml, text/plain, text/html, *.*',
+          'content-type': 'multipart/form-data',
+            // "Content-Type": "application/json",
+            Authorization: `Token ${token}`
+        }
+        axios.delete(`http://127.0.0.1:8000/articles/${articleID}/detail/${username}/`)
+        .then(res => {
+            dispatch(deleteProfileArticleDetailSuccess());
+        })
+        .catch(err => {
+            dispatch(deleteProfileArticleDetailFail(err));
         })
     }
 }

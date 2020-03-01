@@ -120,29 +120,33 @@ class ProfileMeetings extends React.Component {
     const { username, token, getMeetings } = this.props;
     const { UserMeetingList } = this.props.meetings;
     console.log('UserMeetingList: ' + UserMeetingList)
+    
     // console.log(Object.values(UserMeetingList))
     if (UserMeetingList !== undefined) {
-      console.log('UserMeetingList.recipient: ' + UserMeetingList[0].recipient)
-      console.log('UserMeetingList.article: ' + UserMeetingList.article)
-      console.log('this.state.DateNow: ' + JSON.stringify(this.state.dateNow))
-      Object.keys(UserMeetingList).map(k => {
-        console.log("k: " + JSON.stringify(UserMeetingList[k]))
-        console.log("UserMeetingList[k].: " + JSON.stringify(UserMeetingList[k].recipient))
-      })
+      console.log('UserMeetingList.length: ' + UserMeetingList.lengt)
+      // console.log('UserMeetingList.recipient: ' + UserMeetingList[0].recipient)
+      // console.log('UserMeetingList.article: ' + UserMeetingList.article)
+      // console.log('this.state.DateNow: ' + JSON.stringify(this.state.dateNow))
+      // Object.keys(UserMeetingList).map(k => {
+      //   console.log("k: " + JSON.stringify(UserMeetingList[k]))
+      //   console.log("UserMeetingList[k].: " + JSON.stringify(UserMeetingList[k].recipient))
+      // })
     }
     return (
       <div>
         {this.props.username !== (undefined || null)? (
-          <Card
-            style={{ width: '100%' }}
-            tabList={this.handleTabList(this.state.article)}
-            activeTabKey={this.state.noTitleKey}
-            onTabChange={key => {
-              this.onTabChange(key, 'noTitleKey');
-            }}
-          >
-            {meetingListContent[(this.state.noTitleKey)]}
-          </Card>
+          <div>
+              <Card
+              style={{ width: '100%' }}
+              tabList={this.handleTabList(this.state.article)}
+              activeTabKey={this.state.noTitleKey}
+              onTabChange={key => {
+                this.onTabChange(key, 'noTitleKey');
+              }}
+            >
+              {meetingListContent[(this.state.noTitleKey)]}
+            </Card>
+          </div>    
         ) : (<Result
           title="You need to be Logged In"
           extra={

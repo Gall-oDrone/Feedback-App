@@ -86,7 +86,9 @@ class MeetingSteps extends React.Component {
       recipient: this.state.article.author
     };
     this.props.createMeeting(this.props.token, meeting)
-    return message.success('Processing complete!')
+    // if(res.status == 201){
+    //   return message.success('Processing complete!')
+    // }
 };
 
   onStatus = (userAnswer) => {

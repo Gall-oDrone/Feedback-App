@@ -110,7 +110,7 @@ render(){
   const {UserMeetingList} = this.props.meetings;
   console.log('UserMeetingList: ' +UserMeetingList)
   // console.log(Object.values(UserMeetingList))
-  if(UserMeetingList !== undefined) {
+  if(UserMeetingList !== undefined && UserMeetingList.length > 0 ) {
     console.log('UserMeetingList.recipient: ' +UserMeetingList[0].recipient)
     console.log('UserMeetingList.article: ' +UserMeetingList.article)
     console.log('this.state.DateNow: ' +JSON.stringify(this.state.dateNow))
@@ -121,96 +121,98 @@ render(){
   }
   return(
     <div>
-    {UserMeetingList !== undefined && username !== null ? (
-      
-  <Table dataSource={UserMeetingList}>
-        
-        <Column 
-          title="Article Title" 
-          dataIndex="article"
-          key="article"
-        />
-        <Column 
-          title="Meeting date" 
-          dataIndex="date_to_appointment"
-          key={`meetingDate `}
-          render={date => (
-            <span>
-                {moment(date).format("DD-MM-YYYY HH:mm")}
-            </span>
-          )}
-        />
-        <Column 
-          title="Topic" 
-          dataIndex="discussion_topic"
-          key={`discussion_topic `}
-          render={topic => (
-            <li>
-              {topic.map(val => (
-                <Tag color="blue" key={val}>
-                  {val}
-                </Tag>
-              ))}
-            </li>
-          )}
-        />
-        <Column
-          title="Language"
-          dataIndex="notified"
-          key="language"
-        />
-        <Column
-          title="Confirmation"
-          dataIndex="scheduled"
-          key="confirmation"
-          render={(scheduled, record, index) => (
-            scheduled === true ? (
-            <div>
-                <div>
-                  <Icon type="check-circle" key={`scheduled: ${index}`} theme="twoTone" twoToneColor="#52c41a" />
-                    <span key={`${index}`}>
-                      CONFIRMED
+      {username !== null ? (
+        <div>
+          {UserMeetingList !== undefined && UserMeetingList.length > 0 ? (
+              <Table dataSource={UserMeetingList}>   
+                <Column 
+                  title="Article Title" 
+                  dataIndex="article"
+                  key="article"
+                />
+                <Column 
+                  title="Meeting date" 
+                  dataIndex="date_to_appointment"
+                  key={`meetingDate `}
+                  render={date => (
+                    <span>
+                        {moment.utc(date).format("DD-MM-YYYY HH:mm")}
                     </span>
-                </div>     
-            </div>
-          ) : (
-            UserMeetingList[index].canceled === true ? (
-                <div>
+                  )}
+                />
+                <Column 
+                  title="Topic" 
+                  dataIndex="discussion_topic"
+                  key={`discussion_topic `}
+                  render={topic => (
+                    <li>
+                      {topic.map(val => (
+                        <Tag color="blue" key={val}>
+                          {val}
+                        </Tag>
+                      ))}
+                    </li>
+                  )}
+                />
+                <Column
+                  title="Language"
+                  dataIndex="notified"
+                  key="language"
+                />
+                <Column
+                  title="Confirmation"
+                  dataIndex="scheduled"
+                  key="confirmation"
+                  render={(scheduled, record, index) => (
+                    scheduled === true ? (
                     <div>
-                      <Icon type="close-circle" key={`canceled: ${index}`} theme="twoTone" twoToneColor="#F5222D" />
-                        <span key={`${index}`}>
-                          REJECTED
-                        </span>
-                    </div>     
-                </div>
-              ) : (
-                <div>
-                    <div>
-                      <Icon type="question-circle" key={`canceled: ${index}`} theme="twoTone" />
-                    </div>     
-                </div>
-                )
-              )
-        )}
-        />
-        <Column
-          title="Action"
-          key="action"
-          render={(text, record, index) => (
-            <span>
-              {UserMeetingList[index].scheduled === false ? (
-                <Button type="danger" onClick={() => this.handleCancel()} size={"small"}>
-                  Cancel
-                </Button>
-              ):(
-                null
-              )}
-            </span>
-          )}
-        />
-  </Table>
-  ): ( <a>Please Sign up to see your meetings</a>)}
-  </div>
+                        <div>
+                          <Icon type="check-circle" key={`scheduled: ${index}`} theme="twoTone" twoToneColor="#52c41a" />
+                            <span key={`${index}`}>
+                              CONFIRMED
+                            </span>
+                        </div>     
+                    </div>
+                  ) : (
+                    UserMeetingList[index].canceled === true ? (
+                        <div>
+                            <div>
+                              <Icon type="close-circle" key={`canceled: ${index}`} theme="twoTone" twoToneColor="#F5222D" />
+                                <span key={`${index}`}>
+                                  REJECTED
+                                </span>
+                            </div>     
+                        </div>
+                      ) : (
+                        <div>
+                            <div>
+                              <Icon type="question-circle" key={`canceled: ${index}`} theme="twoTone" />
+                            </div>     
+                        </div>
+                        )
+                      )
+                )}
+                />
+                <Column
+                  title="Action"
+                  key="action"
+                  render={(text, record, index) => (
+                    <span>
+                      {UserMeetingList[index].scheduled === false ? (
+                        <Button type="danger" onClick={() => this.handleCancel()} size={"small"}>
+                          Cancel
+                        </Button>
+                      ):(
+                        null
+                      )}
+                    </span>
+                  )}
+                />
+          </Table>
+          ):(<a>No meetings yet</a>)}
+        </div>
+        ): ( <a>Please Sign up to see your meetings</a>)}
+    </div>
   )
 };
 }

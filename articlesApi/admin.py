@@ -4,7 +4,7 @@ from .models import(
     Article, Tag, Tagging, Category, 
     Comment, ArticleView, Video, 
     FeedbackTypes, Author, Like,
-    Rating, Comment
+    Rating, Comment, CommentReply
 ) 
 
 # class RatingAdmin(admin.ModelAdmin):
@@ -21,4 +21,5 @@ admin.site.register(Author)
 admin.site.register(Like)
 admin.site.register(Rating)
 admin.site.register(Comment)
+admin.site.register(CommentReply)
 # admin.site.register(RatingAdmin)

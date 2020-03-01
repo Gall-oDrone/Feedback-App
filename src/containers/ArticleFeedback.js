@@ -6,6 +6,7 @@ import { Link, withRouter } from "react-router-dom";
 import { Menu, Card, Button, Skeleton, message, Result, List, Icon, Form } from "antd";
 import CalendarComponent from '../components/Calendar';
 import MeetingSteps from '../components/MeetingSteps';
+import SurveyDetail from "./SurveyDetail"
 import {getDetailMeetingList} from "../store/actions/meetings"
 import { configConsumerProps } from 'antd/lib/config-provider';
 import * as actions from "../store/actions/auth";
@@ -15,7 +16,7 @@ const { SubMenu } = Menu;
   const contentListNoTitle = {
     livechat: <div><MeetingSteps/></div>,
     app: <p>app content</p>,
-    survey: <p>survey content</p>,
+    survey: <SurveyDetail/>,
   };
 
 class ArticleFeedback extends React.Component {
@@ -28,10 +29,17 @@ class ArticleFeedback extends React.Component {
         noTitleKey: '',
     };
 
-    onTabChange = (key, type) => {
+    onTabChange = (key, type, arId) => {
         console.log("onTabChange:", key, type);
+        console.log("onTabChange arId:",arId);
+        if(key === "survey"){
+        contentListNoTitle["survey"] = <SurveyDetail {...{arId}}/>
+        console.log("Looking at CLNT: ",JSON.stringify(contentListNoTitle))
         this.setState({ [type]: key });
-      };
+        }else{
+            this.setState({ [type]: key });
+        };
+    };
 
     componentDidMount() {
         console.log("Component Did Mount")
@@ -176,12 +184,12 @@ class ArticleFeedback extends React.Component {
                         tabList={this.handleTabList(this.state.article.engagement)}
                         activeTabKey={this.state.noTitleKey}
                         onTabChange={key => {
-                            this.onTabChange(key, 'noTitleKey');
+                            this.onTabChange(key, 'noTitleKey', this.props.match.params.articleID);
                         }}
                         >
                             {!this.state.schedule && this.state.noTitleKey == "live chat" ? (
                                 <div>
-                                 {this.props.meetingDetails.date_to_appointment == null ? (
+                                 {this.props.meetingDetails.date_to_appointment != null ? (
                                 <Button type="primary" onClick={() =>{this.handleClick()}}>
                                    Schedule a Meeting
                                 </Button>

@@ -25,6 +25,7 @@ class Universities(models.Model):
     ITAM = "Instituto Tecnológico Autónomo de México"
     COLMEX = "El Colegio de México"
     TEC = "Instituto Tecnológico y de Estudios Superiores de Monterrey"
+    IBERO = "Universidad Iberoamericana"
     OTHER = 'other'
     UNIVERSITIES = [
         (MIT, ('Massachusetts Institute of Technology')),
@@ -36,6 +37,7 @@ class Universities(models.Model):
         (ITAM, ("Instituto Tecnológico Autónomo de México")),
         (COLMEX, ("El Colegio de México")),
         (TEC, ("Instituto Tecnológico y de Estudios Superiores de Monterrey")),
+        (IBERO, ("Universidad Iberoamericana")),
         (OTHER, ('other'))
     ]
     university=models.CharField(max_length=100, choices=UNIVERSITIES, blank=True)

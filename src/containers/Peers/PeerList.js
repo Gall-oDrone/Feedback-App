@@ -1,22 +1,39 @@
 import React from 'react';
-import { List, Avatar, Button, Card, Input, Skeleton, Checkbox, Row, Col } from 'antd';
+import { List, Avatar, Button, Select, Icon, Cascader, Collapse, Card, Input, Tag, Tabs, Skeleton, Checkbox, Row, Col } from 'antd';
 import axios from 'axios';
 import { connect } from 'react-redux';
-
+import countryList from 'react-select-country-list'
+import peerDetail from "./PeerDetail";
 const { Search } = Input;
+const { Panel } = Collapse;
+const { TabPane } = Tabs;
+const { Option } = Select;
+const countries = countryList().getData()
+function callback(key) {
+  console.log(key);
+}
+
+const children = [];
+for (let i = 10; i < 36; i++) {
+  children.push(<Option key={i.toString(36) + i}>{i.toString(36) + i}</Option>);
+}
+
+function handleChange(value) {
+  console.log(`selected ${value}`);
+}
 
 const data = [
   {
-    title: 'Ant Design Title 1',
+    title: 'Need help with Econometrics homework',
   },
   {
-    title: 'Ant Design Title 2',
+    title: 'University admissions for foreigners',
   },
   {
-    title: 'Ant Design Title 3',
+    title: 'Need tester for product Beta',
   },
   {
-    title: 'Ant Design Title 4',
+    title: 'Respond this survey an get a $100 Amazon Gift Card',
   },
 ];
 
@@ -29,8 +46,17 @@ class ProductList extends React.Component {
     state = {
         loading: false,
         error: null,
-        data: []
+        data: [],
+        country: null,
+        visible: false
     }
+
+    showModal = () => {
+      this.setState({
+        visible: true,
+      });
+    };
+
     componentDidMount() {
         this.setState({loading:true})
         axios.get("/some-url")
@@ -45,33 +71,75 @@ class ProductList extends React.Component {
             this.setState({error: err, loading: false})
         })
     }
+
+    onChangeCountry = value => {
+      console.log('Country changed', value);
+      this.setState({ country: value[0] })
+    }
+
         render () {
+
+          const callModal = () => {
+            return([
+            <peerDetail/>
+            ])
+          }
                 return(
 
                   <div>
                     <Search placeholder="input search text" onSearch={value => console.log(value)} enterButton />
                     
                     <br />
-
-                    <Checkbox.Group style={{ width: '100%' }} onChange={onChange}>
-                      <Row>
-                        <Col span={8}>
-                          <Checkbox value="A">A</Checkbox>
-                        </Col>
-                        <Col span={8}>
-                          <Checkbox value="B">B</Checkbox>
-                        </Col>
-                        <Col span={8}>
-                          <Checkbox value="C">C</Checkbox>
-                        </Col>
-                        <Col span={8}>
-                          <Checkbox value="D">D</Checkbox>
-                        </Col>
-                        <Col span={8}>
-                          <Checkbox value="E">E</Checkbox>
-                        </Col>
-                      </Row>
-                    </Checkbox.Group>
+                    <Collapse defaultActiveKey={['1']} onChange={callback}>
+                      <Panel header="Filter by" key="1">
+                        <Tabs type="card">
+                          <TabPane tab="University" key="1">
+                        <Checkbox.Group style={{ width: '100%' }} onChange={onChange}>
+                          <Row>
+                            <Col span={8}>
+                              <Checkbox value="A">MIT</Checkbox>
+                            </Col>
+                            <Col span={8}>
+                              <Checkbox value="B">Standford</Checkbox>
+                            </Col>
+                            <Col span={8}>
+                              <Checkbox value="C">Duke</Checkbox>
+                            </Col>
+                            <Col span={8}>
+                              <Checkbox value="D">CIDE</Checkbox>
+                            </Col>
+                            <Col span={8}>
+                              <Checkbox value="E">ITAM</Checkbox>
+                            </Col>
+                          </Row>
+                        </Checkbox.Group>
+                        </TabPane>
+                        <TabPane tab="Country" key="2">
+                          <div>
+                            <Cascader options={countries} onChange={this.onChangeCountry} placeholder="Please select" />
+                          </div>
+                        </TabPane>
+                        <TabPane tab="Assignment Type" key="3">
+                          <Row>
+                              <Col span={8}>
+                                <Checkbox value="A">Homework Review</Checkbox>
+                              </Col>
+                              <Col span={8}>
+                                <Checkbox value="B">Informative Session</Checkbox>
+                              </Col>
+                              <Col span={8}>
+                                <Checkbox value="C">Product Test</Checkbox>
+                              </Col>
+                            </Row>
+                        </TabPane>
+                        <TabPane tab="Language" key="4">
+                          <div>
+                            <Cascader options={countries} onChange={this.onChangeCountry} placeholder="Please select" />
+                          </div>
+                        </TabPane>
+                        </Tabs>
+                      </Panel>
+                    </Collapse>
 
                     <br/>
                     <List
@@ -81,15 +149,48 @@ class ProductList extends React.Component {
                     <List.Item
                     >
                         <List.Item.Meta
-                        avatar={<Card > <img
-                          width={170}
+                        avatar={<Card size={"small"}> <img
+                          width={100}
                           alt="logo"
                           src="https://gw.alipayobjects.com/zos/rmsportal/mqaQswcyDLcXyDKnZfES.png"
                         /></Card>}
-                        title={<a href="https://ant.design">{item.title}</a>}
-                        description="Ant Design, a design language for background applications, is refined by Ant UED Team"
+                        title={
+                          <Row>
+                            <Col span={8}>
+                              <a href="https://ant.design">{item.title}</a>
+                            </Col>
+                            <Col span={8} offset={8}>
+                              <Tag>
+                                MIT
+                              </Tag>
+                            </Col>
+                          </Row>
+                      }
+                        description={
+                          <div>
+                            <Row>
+                              <Col>
+                                "Ant Design, a design language for background applications, is refined by Ant UED Team"
+                              </Col>
+                            </Row>
+                            <Row justify="center">
+                              <Col span={4}>
+                                <h5>Category:</h5>
+                                <Tag>
+                                  Homework Review
+                                </Tag>
+                              </Col>
+                              <Col span={4}>
+                                  <span>Reviews: </span>
+                              </Col>
+                              <Col span={4}>
+                                  <span>Views: </span>
+                              </Col>
+                            </Row>
+                          </div>
+                        }
                         />
-                        <Button type="primary">Reach out</Button>
+                        <Button onClick={()=> callModal()}type="primary">Reach out</Button>
                     </List.Item>
                     )}
                     />

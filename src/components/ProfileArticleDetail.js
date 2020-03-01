@@ -379,10 +379,10 @@ class ProfileArticleDetail extends React.Component {
             <Checkbox.Group style={{ width: '100%' }}>
               <Row>
                 <Col span={8}>
-                  <Checkbox value="3">Phone Call</Checkbox>
+                  <Checkbox disable value="3">Phone Call</Checkbox>
                 </Col>
                 <Col span={8}>
-                  <Checkbox value="2">Chat session</Checkbox>
+                  <Checkbox disable value="2">Chat session</Checkbox>
                 </Col>
                 <Col span={8}>
                   <Checkbox value="1">Live chat sessions</Checkbox>

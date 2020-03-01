@@ -37,7 +37,7 @@ class Brand(models.Model):
 class Incentive(models.Model):
     buyer = models.ForeignKey(User, on_delete=models.CASCADE, related_name="incentive_buyer")
     # gifter
-    recipient = models.ForeignKey(User, on_delete=models.CASCADE, related_name="incentive_recipient")
+    recipient = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, related_name="incentive_recipient")
     created = models.DateTimeField(auto_now_add=False)
     activated = models.BooleanField(default=False)
     claimed = models.BooleanField(default=False)

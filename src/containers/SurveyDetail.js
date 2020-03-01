@@ -1,10 +1,10 @@
 import React from "react";
 import { connect } from "react-redux";
 import { Card, Skeleton, message } from "antd";
-import Questions from "./Questions";
+import Questions from "./SurveyQuestions";
 import Choices from "../components/Choices";
-import { getASNTSDetail } from "../store/actions/assignments";
-import { createGradedASNT } from "../store/actions/gradedAssignments";
+import { getSurveySDetail } from "../store/actions/survey";
+import { createGradedSurvey } from "../store/actions/gradedSurvey";
 import Hoc from "../hoc/hoc";
 
 const cardStyle = {
@@ -19,27 +19,31 @@ class AssignmentDetail extends React.Component {
 
   componentDidMount() {
     if (this.props.token !== undefined && this.props.token !== null) {
-      this.props.getASNTSDetail1(this.props.token, this.props.match.params.id, this.props.match.params.userId);
+      const articleID = this.props.arId;
+      this.props.getSurveySDetail1(this.props.token, articleID);
+      // this.props.getSurveySDetail1(this.props.token, this.props.match.params.id, this.props.match.params.userId);
     }
   }
 
   componentWillReceiveProps(newProps) {
     if (newProps.token !== this.props.token) {
       if (newProps.token !== undefined && newProps.token !== null) {
-        this.props.getASNTSDetail1(newProps.token, this.props.match.params.id, this.props.match.params.userId);
+        const articleID = this.props.arId;
+        this.props.getSurveySDetail1(newProps.token, articleID);
+        // this.props.getSurveySDetail1(newProps.token, this.props.match.params.id, this.props.match.params.userId);
       }
     }
   }
 
-  handleSubmit() {
+  async handleSubmit() {
     message.success("Submitting your assignment!");
     const { usersAnswers } = this.state;
     const asnt = {
       username: this.props.username,
-      asntId: this.props.currentAssignment.id,
-      answers: usersAnswers
+      asntId: this.props.currentSurvey.id,
+      respondent_answers: usersAnswers
     };
-    this.props.createGradedASNT(
+    this.props.createGradedSurvey(
       this.props.token,
       asnt
     )
@@ -53,21 +57,21 @@ class AssignmentDetail extends React.Component {
   };
 
   render() {
-    const { currentAssignment } = this.props;
-    console.log(currentAssignment);
-    const { title } = currentAssignment;
+    const { currentSurvey } = this.props;
+    console.log("this.props: ", JSON.stringify(this.props))
+    const { title } = currentSurvey;
     const { usersAnswers } = this.state;
     return (
       <Hoc>
-        {Object.keys(currentAssignment).length > 0 ? (
+        {Object.keys(currentSurvey).length > 0 ? (
           <Hoc>
             {this.props.loading ? (
               <Skeleton active />
             ) : (
               <Card title={title}>
                 <Questions
-                submit={this.handleSubmit()}
-                  questions={currentAssignment.questions.map(q => {
+                submit={() => this.handleSubmit()}
+                  questions={currentSurvey.survey_questions.map(q => {
                     return (
                       <Card
                         style={cardStyle}
@@ -95,18 +99,19 @@ class AssignmentDetail extends React.Component {
 }
 
 const mapStateToProps = state => {
+  console.log("mapStateToProps: ", JSON.stringify(state))
   return {
     token: state.auth.token,
     username: state.auth.username,
-    currentAssignment: state.assignments.currentAssignment,
+    currentSurvey: state.survey.currentSurvey,
     loading: state.assignments.loading
   };
 };
 
 const mapDispatchToProps = dispatch => {
   return {
-    getASNTSDetail1: (token, id, userId) => dispatch(getASNTSDetail(token, id, userId)),
-    createGradedASNT: (token, asnt) => dispatch(createGradedASNT(token, asnt)),
+    getSurveySDetail1: (token, id) => dispatch(getSurveySDetail(token, id)),
+    createGradedSurvey: (token, asnt) => dispatch(createGradedSurvey(token, asnt)),
   };
 };
 

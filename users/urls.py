@@ -8,6 +8,7 @@ from .views import (
     UserLCRequestsView,
     UserProfileView,
     UserProfileInfoView,
+    UserMeetingInfoView,
     UserViewSet
 	)
 
@@ -26,5 +27,6 @@ urlpatterns = [
     # path('friendrequest/?P<slug>[\w-]+)/$', UserFriendRequestsView.as_view()),
     path('profile/account/user/info/<username>', UserProfileInfoView.as_view()),
     path('profile/account/info/<userid>', UserProfileView.as_view()),
+    path('profile/info/<username>', UserMeetingInfoView.as_view()),
     path('profile/account/user/info/update/<username>', UserProfileInfoView.as_view()),
 ]

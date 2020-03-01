@@ -255,21 +255,9 @@ class RegistrationForm extends React.Component {
 
       return (
         (ProfileAccount !== undefined ? (
-
         <Form onSubmit={this.handleSubmit}>
-          <p style={pStyle}>Username</p>
-          <FormItem label="usernamee">
-            {getFieldDecorator("usernamee", {
-              initialValue: "corso",
-              rules: [{ required: true, message: "Please input your first name!" }]
-            })(
-              <Input
-                prefix={<Icon type="user" style={{ color: "rgba(0,0,0,.25)" }} />}
-                placeholder="First name"
-              />
-            )}
-          </FormItem>
-
+          <h3>My Account</h3>
+          <h4>Username: {this.props.username}</h4>
           <Form.Item label="Upload a Profile Image" extra="2.5 MB Image">
           {getFieldDecorator('upload', {
             initialValue: this.handleFileList(ProfileAccount.profile_avatar, fileList),

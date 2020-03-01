@@ -110,19 +110,24 @@ class ArticleDetailView(RetrieveAPIView):
 
 
 class ArticleCreateView(CreateAPIView):
+    parser_classes = (MultiPartParser, FormParser)
     queryset = Article.objects.all()
     print("queryset Create view")
     print(queryset)
     serializer_class = ArticleSerializer
     permission_classes = (permissions.IsAuthenticated,)
 
-    def post(self, request):
+    def post(self, request, *args, **kwargs):
         print("request from ArticleCreateView")
-        print(request.data)
-        serializer = ArticleSerializer(data=request.data)
+        print("request", request)
+        print("req.data",request.data)
+        print("req.Files",request.FILES)
+        request_data = json.loads((self.request.data["data"]))
+        request_files = (self.request.FILES)
+        serializer = ArticleSerializer(data=request_data)
         serializer.is_valid()
         print(serializer.is_valid())
-        create_article = serializer.create(request)
+        create_article = serializer.create(request_data, request_files)
         if create_article:
             return Response(status=HTTP_201_CREATED)
         return Response(status=HTTP_400_BAD_REQUEST)
@@ -369,17 +374,18 @@ class ProfileArticleDetailView(RetrieveUpdateDestroyAPIView):
                     else:
                         print("None")
                         return
-
-    # def index(request):
-    # if request.method == "POST":
-    #     article = request.POST['article']
-    #     tag = request.POST['tag']
-    #     articles = Article.objects.create(post=article)
-    #     tags, created = Tag.objects.get_or_create(tag=tag)
-    #     tp = Tagging(posts=articles, taggings=tags)
-    #     tp.save()
-    #     return redirect('index')
-    # return render(request, 'index.html')
+    def delete(self, *args, **kwargs):
+        try:
+            print("ProfileArticleDetailView")
+            userId = self.kwargs.get('username')
+            articleId = self.kwargs.get('pk')
+            user = User.objects.get(username=userId)
+            profile_article_detail = Article.objects.delete(author=user.id, id=articleId)
+            ArticleSerializer(profile_article_detail)
+            return profile_article_detail
+        except ObjectDoesNotExist:
+            raise Http404("You do not have an active order")
+            return Response({"message": "You do not have an active order"}, status=HTTP_400_BAD_REQUEST)
 
 
 class LikeListView(RetrieveUpdateDestroyAPIView):
@@ -541,9 +547,17 @@ class CommentDetailView(RetrieveUpdateDestroyAPIView):
     print("queryset from CoomentDetail View")
     print(queryset)
     serializer_class = CommentSerializer
-    lookup_url_kwarg = "id"
     permission_classes = (permissions.IsAuthenticated,)
-    
+
+    def get_object(self, *args, **kwargs):
+        try:
+            articleID = self.kwargs.get('pk')
+            commentID = self.kwargs.get('id')
+            comment = Comment.objects.get(article=articleID, id=commentID)
+            return comment
+        except ObjectDoesNotExist:
+            raise Http404("You do not have an active order")
+            return Response({"message": "You do not have an active order"}, status=HTTP_400_BAD_REQUEST)
 
 class CreateComment(CreateAPIView):
     queryset = Comment.objects.all()
