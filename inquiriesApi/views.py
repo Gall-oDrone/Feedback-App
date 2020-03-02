@@ -12,9 +12,9 @@ from rest_framework.status import(
     HTTP_400_BAD_REQUEST
 )
 from rest_framework import permissions
-from articlesApi.models import Article, Tag, Tagging, Category, ArticleView, Like, Rating, Comment, Video, Image, FeedbackTypes
+from inquiriesApi.models import Inquiry, Tag, Tagging, InquiryType, InquiryView, Like, Rating, Comment, Video, Image, FeedbackTypes
 from users.models import User
-from .serializers import ArticleSerializer, ArticleFeatureSerializer, VideoFormSerializer, CommentSerializer, LikeSerializer, LikeListSerializer, RatingSerializer, CommentListSerializer, ImageFormSerializer, ProfileArticleListSerializer
+from .serializers import InquirySerializer, InquiryFeatureSerializer, VideoFormSerializer, CommentSerializer, LikeSerializer, LikeListSerializer, RatingSerializer, CommentListSerializer, ImageFormSerializer, ProfileInquiryListSerializer
 from analytics.models import View
 from django.http import Http404
 from rest_framework import viewsets
@@ -31,15 +31,15 @@ from rest_framework.generics import (
 import json
 
 
-class ArticleFeatureView():
-    # queryset = Article.objects.all()
-    serializer_class = ArticleFeatureSerializer
-    queryset = Article.objects.all()
+class InquiryFeatureView():
+    # queryset = Inquiry.objects.all()
+    serializer_class = InquiryFeatureSerializer
+    queryset = Inquiry.objects.all()
     permission_classes = (permissions.AllowAny,)
 
     def index(request):
-        queryset = Article.objects.all()
-        featured = Article.objects.filter(featured=True)
+        queryset = Inquiry.objects.all()
+        featured = Inquiry.objects.filter(featured=True)
         latest = Post.objects.order_by("-timestamp")[0:3]
 
         context = {
@@ -49,37 +49,37 @@ class ArticleFeatureView():
         return
 
 
-class ArticleListView(ListAPIView):
-    # model = Article
-    queryset = Article.objects.all()
+class InquiryListView(ListAPIView):
+    # model = Inquiry
+    queryset = Inquiry.objects.all()
     print("queryset List view")
     print(queryset)
-    serializer_class = ArticleSerializer
+    serializer_class = InquirySerializer
     permission_classes = (permissions.AllowAny,)
 
     def category_count():
-        queryset = Article \
+        queryset = Inquiry \
             .objects \
-            .values("categories__title") \
-            .annotate(Count("categories__title"))
+            .values("inquiry_type__title") \
+            .annotate(Count("inquiry_type__title"))
         return queryset
 
     def tags_count():
-        queryset = Article \
+        queryset = Inquiry \
             .objects \
             .values("tags__tag") \
             .annotate(Count("tags__tag"))
         return queryset
 
     def likes_count():
-        queryset = Article \
+        queryset = Inquiry \
             .objects \
             .values("tags__tag") \
             .annotate(Count("tags__tag"))
         return queryset
 
     def stars_count():
-        queryset = Article \
+        queryset = Inquiry \
             .objects \
             .values("tags__tag") \
             .annotate(Count("tags__tag"))
@@ -103,94 +103,94 @@ class ArticleListView(ListAPIView):
         return None
 
 
-class ArticleDetailView(RetrieveAPIView):
-    queryset = Article.objects.all()
-    serializer_class = ArticleSerializer
+class InquiryDetailView(RetrieveAPIView):
+    queryset = Inquiry.objects.all()
+    serializer_class = InquirySerializer
     permission_classes = (permissions.AllowAny,)
 
 
-class ArticleCreateView(CreateAPIView):
+class InquiryCreateView(CreateAPIView):
     parser_classes = (MultiPartParser, FormParser)
-    queryset = Article.objects.all()
+    queryset = Inquiry.objects.all()
     print("queryset Create view")
     print(queryset)
-    serializer_class = ArticleSerializer
+    serializer_class = InquirySerializer
     permission_classes = (permissions.IsAuthenticated,)
 
     def post(self, request, *args, **kwargs):
-        print("request from ArticleCreateView")
+        print("request from InquiryCreateView")
         print("request", request)
         print("req.data",request.data)
         print("req.Files",request.FILES)
         request_data = json.loads((self.request.data["data"]))
         request_files = (self.request.FILES)
-        serializer = ArticleSerializer(data=request_data)
+        serializer = InquirySerializer(data=request_data)
         serializer.is_valid()
         print(serializer.is_valid())
-        create_article = serializer.create(request_data, request_files)
-        if create_article:
+        create_inquiry = serializer.create(request_data, request_files)
+        if create_inquiry:
             return Response(status=HTTP_201_CREATED)
         return Response(status=HTTP_400_BAD_REQUEST)
 
     # def post(self, request):
     #     print(request.data)
-    #     serializer = ArticleSerializer(data=request.data)
+    #     serializer = InquirySerializer(data=request.data)
     #     serializer.is_valid()
-    #     creating_Article = serializer.create(request)
-    #     if creating_Article:
+    #     creating_Inquiry = serializer.create(request)
+    #     if creating_Inquiry:
     #         return Response(status=HTTP_201_CREATED)
     #     return Response(status=HTTP_400_BAD_REQUEST)
 
 
-class ArticleDeleteView(DestroyAPIView):
-    queryset = Article.objects.all()
-    serializer_class = ArticleSerializer
+class InquiryDeleteView(DestroyAPIView):
+    queryset = Inquiry.objects.all()
+    serializer_class = InquirySerializer
     permission_classes = (permissions.IsAuthenticated,)
 
 
-class ArticleUpdateView(UpdateAPIView):
-    queryset = Article.objects.all()
-    print("queryset from ArticleUpdateView")
+class InquiryUpdateView(UpdateAPIView):
+    queryset = Inquiry.objects.all()
+    print("queryset from InquiryUpdateView")
     print(queryset)
-    serializer_class = ArticleSerializer
+    serializer_class = InquirySerializer
     permission_classes = (permissions.IsAuthenticated,)
 
     def update_likes_count(self, request):
-        print("request from ArticleUpdateView")
+        print("request from InquiryUpdateView")
         print(request.data)
-        Like.objects.filter(article_id=self.request.data.get("article_id")).filter(
+        Like.objects.filter(inquiry_id=self.request.data.get("inquiry_id")).filter(
             user_id=self.request.data.get("user_id")).values("liked")[0]["liked"]
-        Like.objects.filter(article_id=self.request.data.get(
-            "article")).filter(liked=True).Count()
-        serializer = ArticleSerializer(data=request.data)
+        Like.objects.filter(inquiry_id=self.request.data.get(
+            "inquiry")).filter(liked=True).Count()
+        serializer = InquirySerializer(data=request.data)
         serializer.is_valid()
         print(serializer.is_valid())
-        update_article = serializer.update_likes(request)
-        if update_article:
+        update_inquiry = serializer.update_likes(request)
+        if update_inquiry:
             return Response(status=HTTP_201_CREATED)
         return Response(status=HTTP_400_BAD_REQUEST)
 
-class ProfileArticleListView(RetrieveAPIView):
-    queryset = Article.objects.all()
-    print("queryset from ProfileArticleListView")
+class ProfileInquiryListView(RetrieveAPIView):
+    queryset = Inquiry.objects.all()
+    print("queryset from ProfileInquiryListView")
     print(queryset)
-    serializer_class = ProfileArticleListSerializer
+    serializer_class = ProfileInquiryListSerializer
     permission_classes = (permissions.IsAuthenticated,)
 
     def get_object(self, *args, **kwargs):
         try:
-            print("ProfileArticleListView")
+            print("ProfileInquiryListView")
             userId = self.kwargs.get('username')
             user = User.objects.get(username=userId)
-            # articleId = Article.objects.get(title=article).id
-            profile_article_list = Article.objects.filter(author=user.id)
+            # inquiryId = Inquiry.objects.get(title=inquiry).id
+            profile_inquiry_list = Inquiry.objects.filter(author=user.id)
             print("FILTER")
-            print(profile_article_list)
-            ProfileArticleListSerializer(profile_article_list)
-            if len(profile_article_list) == 0:
+            print(profile_inquiry_list)
+            ProfileInquiryListSerializer(profile_inquiry_list)
+            if len(profile_inquiry_list) == 0:
                 return None
             else:
-                return profile_article_list
+                return profile_inquiry_list
         except ObjectDoesNotExist:
             raise Http404("You do not have an active order")
             return Response({"message": "You do not have an active order"}, status=HTTP_400_BAD_REQUEST)
@@ -198,43 +198,43 @@ class ProfileArticleListView(RetrieveAPIView):
 
     # def index(request):
     # if request.method == "POST":
-    #     article = request.POST['article']
+    #     inquiry = request.POST['inquiry']
     #     tag = request.POST['tag']
-    #     articles = Article.objects.create(post=article)
+    #     inquiries = Inquiry.objects.create(post=inquiry)
     #     tags, created = Tag.objects.get_or_create(tag=tag)
-    #     tp = Tagging(posts=articles, taggings=tags)
+    #     tp = Tagging(posts=inquiries, taggings=tags)
     #     tp.save()
     #     return redirect('index')
     # return render(request, 'index.html')
 
-class ProfileArticleDetailView(RetrieveUpdateDestroyAPIView):
+class ProfileInquiryDetailView(RetrieveUpdateDestroyAPIView):
     parser_classes = (MultiPartParser, FormParser)
-    queryset = Article.objects.all()
-    print("queryset from ProfileArticleDetailView")
+    queryset = Inquiry.objects.all()
+    print("queryset from ProfileInquiryDetailView")
     print(queryset)
-    serializer_class = ArticleSerializer
+    serializer_class = InquirySerializer
     permission_classes = (permissions.IsAuthenticated,)
 
     def get_object(self, *args, **kwargs):
         try:
-            print("ProfileArticleDetailView")
+            print("ProfileInquiryDetailView")
             userId = self.kwargs.get('username')
-            articleId = self.kwargs.get('pk')
+            inquiryId = self.kwargs.get('pk')
             user = User.objects.get(username=userId)
-            profile_article_detail = Article.objects.get(author=user.id, id=articleId)
-            ArticleSerializer(profile_article_detail)
-            return profile_article_detail
+            profile_inquiry_detail = Inquiry.objects.get(author=user.id, id=inquiryId)
+            InquirySerializer(profile_inquiry_detail)
+            return profile_inquiry_detail
         except ObjectDoesNotExist:
             raise Http404("You do not have an active order")
             return Response({"message": "You do not have an active order"}, status=HTTP_400_BAD_REQUEST)
     
     def update(self, request, *args, **kwargs):
-        serializer = ArticleSerializer(data=request.data)
+        serializer = InquirySerializer(data=request.data)
         serializer.is_valid()
         print("On update method")
         userId = self.kwargs.get('username')
-        articleId = self.kwargs.get('pk')
-        article = Article.objects.get(id=articleId)
+        inquiryId = self.kwargs.get('pk')
+        inquiry = Inquiry.objects.get(id=inquiryId)
         print("self.request.FILES")
         print(self.request.FILES)
         # print("myfile")
@@ -249,13 +249,13 @@ class ProfileArticleDetailView(RetrieveUpdateDestroyAPIView):
         print("type(self.request.data[data])")
         print(type(self.request.data["data"]))
         request_data = json.loads((self.request.data["data"]))
-        print("request_data.get(categories)")
-        print(request_data.get("categories"))
-        categories_var = article.categories.values()
-        article.title = request_data.get("title")
-        article.content = request_data.get("content")
-        article_engagement = self.add_engagement(request_data.get("feedback_type"), article)
-        article_categories = self.add_categories(request_data.get("categories"), article)
+        print("request_data.get(inquiry_type)")
+        print(request_data.get("inquiry_type"))
+        inquiry_type_var = inquiry.inquiry_type.values()
+        inquiry.title = request_data.get("title")
+        inquiry.content = request_data.get("content")
+        inquiry_engagement = self.add_engagement(request_data.get("feedback_type"), inquiry)
+        inquiry_inquiry_type = self.add_inquiry_type(request_data.get("inquiry_type"), inquiry)
         print("before myfile")
         myfile = request.FILES['file']
         print("myFile: ")
@@ -275,7 +275,7 @@ class ProfileArticleDetailView(RetrieveUpdateDestroyAPIView):
             videoD.save()
             print("videoD, ", videoD)
             print("videoD.id, ", videoD.id)
-            article.video= Video(id=videoD.id)
+            inquiry.video= Video(id=videoD.id)
             # raise ValidationError('Unsupported file extension.')
         else: 
             print("myfile.name is image")
@@ -285,74 +285,75 @@ class ProfileArticleDetailView(RetrieveUpdateDestroyAPIView):
             print(uploaded_file_url)
             # with open(uploaded_file_url) as f:
             #     data = f.read()
-            #     article.thumbnail.save("images/"+myfile.name, ContentFile(data))
+            #     inquiry.thumbnail.save("images/"+myfile.name, ContentFile(data))
             print(myfile.name)
             print(myfile.name)
             # print(os.path.basename(uploaded_file_url))
-            print(article.thumbnail)
-            article.thumbnail = "images/"+myfile.name
-            print("article.thumbnail")
-            print(article.thumbnail)
-        article.save()
-        # article.thumbnail = self.request.data["file"]get("thumbnail")
-        # article.update(
+            print(inquiry.thumbnail)
+            inquiry.thumbnail = "images/"+myfile.name
+            print("inquiry.thumbnail")
+            print(inquiry.thumbnail)
+        inquiry.save()
+        # inquiry.thumbnail = self.request.data["file"]get("thumbnail")
+        # inquiry.update(
         #         title=self.request.data.get("title"),
         #         content=self.request.data.get("content"),
-        #         categories= self.add_categories(self.request.data.get("categories"), article),
-        #         engagement= self.add_engagement(self.request.data.get("feedback_type"), article),
+        #         inquiry_type= self.add_inquiry_type(self.request.data.get("inquiry_type"), inquiry),
+        #         engagement= self.add_engagement(self.request.data.get("feedback_type"), inquiry),
         #         thumbnail=self.request.data.get("file"))
         
         return Response(serializer.data)
     
-    def add_engagement(self, engagement, article):
+    def add_engagement(self, engagement, inquiry):
         print("ENGAGEMENTS")
         print(engagement)
-        print("article_engagement")
-        print(article.engagement.values())
-        engagement_id_list = [x["id"] for x in (article.engagement.values())]
+        print("inquiry_engagement")
+        print(inquiry.engagement.values())
+        engagement_id_list = [x["id"] for x in (inquiry.engagement.values())]
         print(engagement_id_list)
-        for i in article.engagement.values():
+        for i in inquiry.engagement.values():
             print(i)
             print(i["id"])
             print(type(i["id"]))
             if str(i["id"]) not in engagement:
                 print("removing")
                 oldE = FeedbackTypes.objects.get(id=i["id"])
-                article.engagement.remove(oldE.id)
+                inquiry.engagement.remove(oldE.id)
             else:
                 for e in engagement:
-                    print("e:", e)
+                    print("e:")
+                    print(e)
                     if int(e) not in engagement_id_list:        
                         print("adding")
                         print(e)
                         newE = FeedbackTypes.objects.get(id=e)
-                        # newC = Category()
+                        # newC = InquiryType()
                         print(newE)
                         print(newE.id)
                         # newC.id = c
                         print("WHAT ?")
-                        # print(article.categories.category_id)
-                        article.engagement.add(newE.id)
+                        # print(inquiry.inquiry_type.category_id)
+                        inquiry.engagement.add(newE.id)
                         print("WHAT 2?")
                     else:
                         None
 
-    def add_categories(self, categoriesD, article):
+    def add_inquiry_type(self, inquiry_typeD, inquiry):
         print("CATEGORIES")
-        print(categoriesD)
-        print("article_categories")
-        print(article.categories.values())
-        category_id_list = [x["id"] for x in (article.categories.values())]
-        for i in article.categories.values():
+        print(inquiry_typeD)
+        print("inquiry_inquiry_type")
+        print(inquiry.inquiry_type.values())
+        category_id_list = [x["id"] for x in (inquiry.inquiry_type.values())]
+        for i in inquiry.inquiry_type.values():
             print(i)
             print(i["id"])
             print(type(i["id"]))
-            if str(i["id"]) not in categoriesD:
+            if str(i["id"]) not in inquiry_typeD:
                 print("removing")
-                oldC = Category.objects.get(id=i["id"])
-                article.categories.remove(oldC.id)
+                oldC = InquiryType.objects.get(id=i["id"])
+                inquiry.inquiry_type.remove(oldC.id)
             else:
-                for c in categoriesD:
+                for c in inquiry_typeD:
                     print("c:")
                     print(c)
                     print(type(c))
@@ -360,28 +361,28 @@ class ProfileArticleDetailView(RetrieveUpdateDestroyAPIView):
                         print("adding")
                         print(c)
                         print(type(c))
-                        newC = Category.objects.get(id=c)
-                        # newC = Category()
+                        newC = InquiryType.objects.get(id=c)
+                        # newC = InquiryType()
                         print(newC)
                         print(newC.id)
                         print(newC.title)
                         # newC.id = c
                         print("WHAT ?")
-                        # print(article.categories.category_id)
-                        article.categories.add(newC.id)
+                        # print(inquiry.inquiry_type.category_id)
+                        inquiry.inquiry_type.add(newC.id)
                         print("WHAT 2?")
                     else:
                         print("None")
                         return
     def delete(self, *args, **kwargs):
         try:
-            print("ProfileArticleDetailView")
+            print("ProfileInquiryDetailView")
             userId = self.kwargs.get('username')
-            articleId = self.kwargs.get('pk')
+            inquiryId = self.kwargs.get('pk')
             user = User.objects.get(username=userId)
-            profile_article_detail = Article.objects.delete(author=user.id, id=articleId)
-            ArticleSerializer(profile_article_detail)
-            return profile_article_detail
+            profile_inquiry_detail = Inquiry.objects.delete(author=user.id, id=inquiryId)
+            InquirySerializer(profile_inquiry_detail)
+            return profile_inquiry_detail
         except ObjectDoesNotExist:
             raise Http404("You do not have an active order")
             return Response({"message": "You do not have an active order"}, status=HTTP_400_BAD_REQUEST)
@@ -394,8 +395,8 @@ class LikeListView(RetrieveUpdateDestroyAPIView):
 
     def get_object(self):
         try:
-            articleID = self.kwargs.get('pk')
-            like = Like.objects.filter(article_id=articleID)
+            inquiryID = self.kwargs.get('pk')
+            like = Like.objects.filter(inquiry_id=inquiryID)
             return like
         except ObjectDoesNotExist:
             raise Http404("You do not have an active order")
@@ -410,13 +411,13 @@ class LikeDetailView(RetrieveUpdateDestroyAPIView):
 
     def get_queryset(self):
         userId = self.kwargs.get(self.lookup_url_kwarg)
-        articleId = self.kwargs.get("pk")
+        inquiryId = self.kwargs.get("pk")
         # userId = User.objects.get(username=username).id
         userId = User.objects.get(id=userId)
         print("user EHRENO")
         print(self.lookup_url_kwarg)
         print(userId)
-        queryset = Like.objects.filter(user_id=userId).filter(article_id=articleId)
+        queryset = Like.objects.filter(user_id=userId).filter(inquiry_id=inquiryId)
         print(queryset.values())
         return queryset
     
@@ -425,19 +426,19 @@ class LikeDetailView(RetrieveUpdateDestroyAPIView):
         serializer.is_valid()
         print("On update method")
         print(self.request.data)
-        print(self.request.data.get("article"))
-        Like.objects.filter(user_id=self.request.data.get("user_id")).filter(article_id=self.request.data.get("article")).update(liked=self.request.data.get("liked"))
-        Article.objects.update_or_create(
-            id=self.request.data.get("article"),
+        print(self.request.data.get("inquiry"))
+        Like.objects.filter(user_id=self.request.data.get("user_id")).filter(inquiry_id=self.request.data.get("inquiry")).update(liked=self.request.data.get("liked"))
+        Inquiry.objects.update_or_create(
+            id=self.request.data.get("inquiry"),
             defaults={"likes_count": Like.objects.filter(
-            article_id=self.request.data.get("article")).filter(liked=True).count()}
+            inquiry_id=self.request.data.get("inquiry")).filter(liked=True).count()}
             )
         return Response(serializer.data)
 
 
 class CreateLike(CreateAPIView):
     queryset = Like.objects.all()
-    queryset2 = Article.objects.all().values()
+    queryset2 = Inquiry.objects.all().values()
     print("UpdateLike queryset")
     print(queryset)
     print(queryset2)
@@ -460,32 +461,32 @@ class CreateLike(CreateAPIView):
         serializer.is_valid()
         print("Valid Update Like Serializer?")
         print(serializer.is_valid())
-        print(self.request.data.get("article"))
-        print(Like.objects.filter(article_id=self.request.data.get(
-            "article")).filter(liked=True).count())
-        if Like.objects.filter(article_id=self.request.data.get("article")).filter(user_id=self.request.data.get("user_id")).exists():
-            if Like.objects.filter(article_id=self.request.data.get("article")).filter(user_id=self.request.data.get("user_id")).values("liked")[0]["liked"] == self.request.data.get("liked"):
-                print("A?: User tries to like the article when is already liked")
-                return Response({"message": "Article author can't liked its own articles"}, status=HTTP_400_BAD_REQUEST)
+        print(self.request.data.get("inquiry"))
+        print(Like.objects.filter(inquiry_id=self.request.data.get(
+            "inquiry")).filter(liked=True).count())
+        if Like.objects.filter(inquiry_id=self.request.data.get("inquiry")).filter(user_id=self.request.data.get("user_id")).exists():
+            if Like.objects.filter(inquiry_id=self.request.data.get("inquiry")).filter(user_id=self.request.data.get("user_id")).values("liked")[0]["liked"] == self.request.data.get("liked"):
+                print("A?: User tries to like the inquiry when is already liked")
+                return Response({"message": "Inquiry author can't liked its own inquiries"}, status=HTTP_400_BAD_REQUEST)
             else:
                 obj = Like.objects.update_or_create(
-                    article_id=self.request.data.get("article"),
+                    inquiry_id=self.request.data.get("inquiry"),
                     user_id=self.request.data.get("user_id"),
                     defaults={"liked": self.request.data.get("liked")})
-                art = Article.objects.update_or_create(
-                    id=self.request.data.get("article"),
+                art = Inquiry.objects.update_or_create(
+                    id=self.request.data.get("inquiry"),
                     defaults={"likes_count": Like.objects.filter(
-                        article_id=self.request.data.get("article")).filter(liked=True).count()}
+                        inquiry_id=self.request.data.get("inquiry")).filter(liked=True).count()}
                 )
                 return Response(status=HTTP_201_CREATED)
 
         else:
             create_like = serializer.create_like(request)
             if create_like:
-                art = Article.objects.update_or_create(
-                    id=self.request.data.get("article"),
+                art = Inquiry.objects.update_or_create(
+                    id=self.request.data.get("inquiry"),
                     defaults={"likes_count": Like.objects.filter(
-                        article_id=self.request.data.get("article")).filter(liked=True).count()}
+                        inquiry_id=self.request.data.get("inquiry")).filter(liked=True).count()}
                 )
                 return Response(status=HTTP_201_CREATED)
             print("B?")
@@ -501,7 +502,7 @@ class CreateRating(CreateAPIView):
         serializer = RatingSerializer(data=request.data)
         whg_val = [1, 2, 3, 4, 5]
         serializer.is_valid()
-        if Rating.objects.filter(article_id=self.request.data.get("articleID")).filter(user__username=self.request.data.get("username")).exists():
+        if Rating.objects.filter(inquiry_id=self.request.data.get("inquiryID")).filter(user__username=self.request.data.get("username")).exists():
             return Response(status=HTTP_400_BAD_REQUEST)
         else:
             create_rate = serializer.create_rate(request)
@@ -510,15 +511,15 @@ class CreateRating(CreateAPIView):
                 wgh_den = 0
                 for val in whg_val:
                     wgh_mean += val * \
-                        Rating.objects.filter(article_id=self.request.data.get(
-                            "articleID")).filter(rate=val).count()
+                        Rating.objects.filter(inquiry_id=self.request.data.get(
+                            "inquiryID")).filter(rate=val).count()
                     wgh_den += Rating.objects.filter(
-                        article_id=self.request.data.get("articleID")).filter(rate=val).count()
+                        inquiry_id=self.request.data.get("inquiryID")).filter(rate=val).count()
 
-                art = Article.objects.update_or_create(
-                    id=self.request.data.get("articleID"),
+                art = Inquiry.objects.update_or_create(
+                    id=self.request.data.get("inquiryID"),
                     defaults={"rating_count": Rating.objects.filter(
-                        article_id=self.request.data.get("articleID"))
+                        inquiry_id=self.request.data.get("inquiryID"))
                         .aggregate(Sum('rate'))['rate__sum'],
                         "avg_rating": round(wgh_mean/wgh_den, 1)}
                 )
@@ -534,8 +535,8 @@ class CommentListView(RetrieveAPIView):
     def get_object(self):
         try:
             print("Comment filter")
-            articleID = self.kwargs.get('pk')
-            comment = Comment.objects.filter(article_id=articleID)
+            inquiryID = self.kwargs.get('pk')
+            comment = Comment.objects.filter(inquiry_id=inquiryID)
             return comment
         except ObjectDoesNotExist:
             raise Http404("You do not have an active order")
@@ -550,9 +551,9 @@ class CommentDetailView(RetrieveUpdateDestroyAPIView):
 
     def get_object(self, *args, **kwargs):
         try:
-            articleID = self.kwargs.get('pk')
+            inquiryID = self.kwargs.get('pk')
             commentID = self.kwargs.get('id')
-            comment = Comment.objects.get(article=articleID, id=commentID)
+            comment = Comment.objects.get(inquiry=inquiryID, id=commentID)
             return comment
         except ObjectDoesNotExist:
             raise Http404("You do not have an active order")
@@ -570,10 +571,10 @@ class CreateComment(CreateAPIView):
         if create_comment:
             print("data at create Commnet")
             print(self.request.data)
-            art = Article.objects.update_or_create(
-                id=self.request.data.get("articleID"),
+            art = Inquiry.objects.update_or_create(
+                id=self.request.data.get("inquiryID"),
                 defaults={"comment_count": Comment.objects.filter(
-                    article=self.request.data.get("articleID"))
+                    inquiry=self.request.data.get("inquiryID"))
                     .count(),
                 }
             )
@@ -593,17 +594,17 @@ class UpdateComment(UpdateAPIView):
         serializer = CommentSerializer(data=request.data)
         serializer.is_valid()
         upload_comment = serializer.upload_comment(request)
-        print(Comment.objects.filter(id=self.request.data.get("id")).filter(article_id=self.request.data.get("article_id")).filter(
+        print(Comment.objects.filter(id=self.request.data.get("id")).filter(inquiry_id=self.request.data.get("inquiry_id")).filter(
             user_id=self.request.data.get("user_id")).values())
-        Comment.objects.filter(id=self.request.data.get("id")).filter(article_id=self.request.data.get("article_id")).filter(
+        Comment.objects.filter(id=self.request.data.get("id")).filter(inquiry_id=self.request.data.get("inquiry_id")).filter(
             user_id=self.request.data.get("user_id")).values("liked")[0]["liked"]
-        Comment.objects.filter(article_id=self.request.data.get(
-            "article")).filter(liked=True).Count()
-        serializer = ArticleSerializer(data=request.data)
+        Comment.objects.filter(inquiry_id=self.request.data.get(
+            "inquiry")).filter(liked=True).Count()
+        serializer = InquirySerializer(data=request.data)
         serializer.is_valid()
         print(serializer.is_valid())
-        update_article = serializer.update_likes(request)
-        if update_article:
+        update_inquiry = serializer.update_likes(request)
+        if update_inquiry:
             return Response(status=HTTP_201_CREATED)
         return Response(status=HTTP_400_BAD_REQUEST)
 

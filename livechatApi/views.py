@@ -161,9 +161,57 @@ class LCRequestListDetailView(RetrieveUpdateDestroyAPIView):
                 scheduled=self.request.data.get("scheduled"))
             print("MMM")
             post_lc_room_view(self, request, room_participants, target_request, date_to_appointment, articleId)
+            
+            #NOTIFICATION
+            userId = User.objects.get(username=request.data["sender"]).id
+            print("userId after validation")
+            print(userId)
+            print(self.request.data.get("sender"))
+            notify = Notification()
+            notify.user = User.objects.get(id=userId)
+            notify.actor = self.request.data.get("recipient")[0]
+            notify.verb = "Sent"
+            notify.action = "Scheduled Meeting"
+            notify.target = "1"
+            print("WHERE")
+            notify.description = "Scheduled Meeting Accepted NTFN"
+            notify.save()
+            print("WHERE II")
+            notification_counter = Profile.objects.update_or_create(
+                user_id=userId,
+                defaults={"notification_counter": MeetingRequest.objects.filter(
+                    to_user=userId)
+                    .count(),
+                }
+            )
+
         elif (self.request.data.get("canceled") == True):
             Request.objects.filter(recipient=uId[0]).filter(
                 article=articleId).update(canceled=self.request.data.get("canceled"))
+            
+            #NOTIFICATION
+            userId = User.objects.get(username=request.data["sender"]).id
+            print("userId after validation")
+            print(userId)
+            print(self.request.data.get("sender"))
+            notify = Notification()
+            notify.user = User.objects.get(id=userId)
+            notify.actor = self.request.data.get("recipient")[0]
+            notify.verb = "Sent"
+            notify.action = "Scheduled Meeting"
+            notify.target = "1"
+            print("WHERE")
+            notify.description = "Scheduled Meeting Canceled NTFN"
+            notify.save()
+            print("WHERE II")
+            notification_counter = Profile.objects.update_or_create(
+                user_id=userId,
+                defaults={"notification_counter": MeetingRequest.objects.filter(
+                    to_user=userId)
+                    .count(),
+                }
+            )
+
         else:
             print("M 5X")
             post_lc_room_view(self, request, room_participants, target_request, date_to_appointment)

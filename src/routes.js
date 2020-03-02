@@ -16,6 +16,7 @@ import ArticleDetailMenu from "./containers/ArticleDetailMenu";
 import PeerList from "./containers/Peers/PeerList"
 import PeerList2 from "./containers/Peers/PeerList2"
 import PeerList3 from "./containers/Peers/PeerDetail"
+import InquiryCreate from "./containers/InquiryCreate";
 
 import Test from "./components/test"
 // import Corso from "./components/VideoChatFrame"
@@ -56,6 +57,7 @@ const BaseRouter = () => (
     <Route exact path="/peers/" component={PeerList} />
     <Route exact path="/peers2/" component={PeerList2} />
     <Route exact path="/peers3/" component={PeerList3} />
+    <Route exact path="/create-inquiry/" component={InquiryCreate} />
 
     <Route exact path="/frameTest/:roomID" component={Test} />
     <Route exact path="/create-article/" component={ArticleCreate} />

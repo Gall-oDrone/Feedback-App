@@ -70,7 +70,7 @@ class MeetingReviewTester extends React.Component {
                   attendance: values[peer].attendance,
                   recommendation: values[peer].recommendation,
                   issues: values[peer].issues,
-                  issue_type: values[peer].issues,
+                  issue_type: values[peer].issue,
                   worthiness: values[peer].worthiness,
                   meeting_rate: values[peer].rate,
                   comment: values[peer].comment

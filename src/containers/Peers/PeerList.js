@@ -30,10 +30,10 @@ const data = [
     title: 'University admissions for foreigners',
   },
   {
-    title: 'Need tester for product Beta',
+    title: 'Scholarships for European Universities',
   },
   {
-    title: 'Respond this survey an get a $100 Amazon Gift Card',
+    title: 'Working position for graduate',
   },
 ];
 

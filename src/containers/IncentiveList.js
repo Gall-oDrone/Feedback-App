@@ -150,7 +150,7 @@ class Incentives extends React.Component {
       amount: amountD,
       country: countryD,
       currency: currencyD,
-      incentive_brand: brand,
+      incentive_brand: [brand],
       created: moment()
     }
     this.props.postIncentive(this.props.token, data)
@@ -171,7 +171,7 @@ class Incentives extends React.Component {
           <div>
             <Row type="flex" justify="center" align="top">
             <Content style={{ padding: '24px 0px 500px 0px' }}>
-                <Col span={10} onClick={() =>{this.onChangeBrand("1", brand)}}>
+                <Col span={10} onClick={() =>{this.onChangeBrand("Amazon.com Gift Card", brand)}}>
               <Collapse
                     bordered={false}
                     defaultActiveKey={['1']}

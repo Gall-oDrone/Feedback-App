@@ -3,23 +3,23 @@ import { Cascader, Col, Row } from 'antd';
 
 const options = [
   {
-    value: '1',
+    value: 'product UI',
     label: 'Product UI'
   },
   {
-    value: '2',
+    value: 'venture capital',
     label: 'Venture Capital'
   },
   {
-    value: '3',
+    value: 'information',
     label: 'Information'
   },
   {
-    value: '4',
+    value: 'bugs and fixes',
     label: 'Bugs and Fixes'
   },
   {
-    value: '5',
+    value: 'other',
     label: 'Other'
   },
 ];

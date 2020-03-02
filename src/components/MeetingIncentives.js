@@ -176,7 +176,7 @@ class MeetingListIncentives extends React.Component {
       amount: amountD,
       country: countryD,
       currency: currencyD,
-      incentive_brand: brand,
+      incentive_brand: [brand],
       created: moment()
     }
     this.props.createIncentive(this.props.token, data)
@@ -321,7 +321,7 @@ class MeetingListIncentives extends React.Component {
               <Row type="flex" justify="center">
                 <Col >
                   <div>
-                    <Button onClick={() => { this.handlerBuy(participant, amount, country, currency, "1") }} style={{ marginTop: "2rem" }}>
+                    <Button onClick={() => { this.handlerBuy(participant, amount, country, currency, "Amazon.com Gift Card") }} style={{ marginTop: "2rem" }}>
                       Buy
                     </Button>
                   </div>

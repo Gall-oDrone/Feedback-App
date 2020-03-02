@@ -47,6 +47,30 @@ class IncentiveCreateView(CreateAPIView):
         post_data["iid"] = create_lcrequest.id
         if create_lcrequest:
             post_incentive(self, request.data)
+
+            #NOTIFICATION
+            userId = User.objects.get(username=request.data["recipient"]).id
+            print("userId after validation")
+            print(userId)
+            print(self.request.data.get(recipient))
+            notify = Notification()
+            notify.user = User.objects.get(id=userId)
+            notify.actor = self.request.data.get("buyer")[0]
+            notify.verb = "Sent"
+            notify.action = "Incentive Offered"
+            notify.target = "1"
+            print("WHERE")
+            notify.description = "Incentive Offered NTFN"
+            notify.save()
+            print("WHERE II")
+            notification_counter = Profile.objects.update_or_create(
+                user_id=userId,
+                defaults={"notification_counter": MeetingRequest.objects.filter(
+                    to_user=userId)
+                    .count(),
+                }
+            )
+
             return Response(status=HTTP_201_CREATED)
         return Response(status=HTTP_400_BAD_REQUEST)
 

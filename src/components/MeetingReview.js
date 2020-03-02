@@ -41,15 +41,15 @@ function handleMenuClick(e) {
 
 const issue_type = [
     {
-      value: '1',
+      value: 'User',
       label: 'User',
     },
     {
-      value: '3',
+      value: 'Network and Connection',
       label: 'Network and Connection',
     },
     {
-      value: '4',
+      value: 'Other',
       label: 'Other',
     }
 ];
@@ -110,7 +110,7 @@ class ArticleCustomForm extends React.Component {
   }
 
   onChangeIssueType = value => {
-    console.log('onChangeIssueType changed', value);
+    console.log('onChangeIssueType changed', JSON.stringify(value));
     this.setState({ issue: value[0] })
   }
 
@@ -124,7 +124,7 @@ class ArticleCustomForm extends React.Component {
       const issues =
         values["issues"] === undefined ? null : values["issues"];
       const issueType =
-        values["issues"] === undefined ? null : values["issues"];
+        values["issue"] === undefined ? null : values["issue"];
       const worthiness =
         values["worthiness"] === undefined ? null : values["worthiness"];
       const rate =
@@ -139,7 +139,7 @@ class ArticleCustomForm extends React.Component {
         meeting_rate: values.rate,
         recommendation: values.recommendation,
         issues: this.state.issues,
-        issue_type: this.state.issue,
+        issue_type: values.issue,
         worthiness: values.worthiness,
         comment: values.comment,
       }
@@ -245,26 +245,30 @@ class ArticleCustomForm extends React.Component {
 
             <h4 style={{display: 'flex', justifyContent: 'center'}}>Issues during meeting?</h4>
               <Form.Item key={`${id} issues`} style={{display: 'flex', justifyContent: 'center'}} wrapperCol={{ justifyContent: 'center' }}>
-            {getFieldDecorator(`${pa[id]}.issues`, {
-              // initialValue: ['A', 'B'],
-            })(
-              <Radio.Group>
-                <Radio.Button value={true} onClick={() => {this.handlerIssues("Y")}}>
-                  Yes
-                </Radio.Button>
-                <Radio.Button value={false} onClick={() => {this.handlerIssues("N")}}>No</Radio.Button>
+                {getFieldDecorator(`${pa[id]}.issues`, {
+                  // initialValue: ['A', 'B'],
+                })(
+                  <Radio.Group>
+                    <Radio.Button value={true} onClick={() => {this.handlerIssues("Y")}}>
+                      Yes
+                    </Radio.Button>
+                    <Radio.Button value={false} onClick={() => {this.handlerIssues("N")}}>No</Radio.Button>
+                    </Radio.Group>
+                )}
+              </Form.Item>
                 {this.state.issues === true ? (
-                  <div>
-                  <Cascader options={issue_type} onChange={this.onChangeIssueType} placeholder="Issue">
-                    <Button>
-                      Issue type <Icon type="down" />
-                    </Button>
-                  </Cascader>
-                  </div>
+                  <Form.Item key={`${id} issue`} style={{display: 'flex', justifyContent: 'center'}} wrapperCol={{ justifyContent: 'center' }}>
+                      {getFieldDecorator(`${pa[id]}.issue`, {
+                      })(
+                          <Cascader options={issue_type} onChange={this.onChangeIssueType} placeholder="Issue">
+                            <Button>
+                              Issue type <Icon type="down" />
+                            </Button>
+                          </Cascader>
+                      )}
+                  </Form.Item>
                 ):(null)}
-              </Radio.Group>
-            )}
-          </Form.Item>
+           
 
             <h4 style={{display: 'flex', justifyContent: 'center'}}>Conversation fluency</h4>
               <Form.Item key={`${id} fluency`} style={{display: 'flex', justifyContent: 'center'}} wrapperCol={{ justifyContent: 'center' }}>

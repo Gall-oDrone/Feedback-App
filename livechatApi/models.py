@@ -68,7 +68,7 @@ class LCRoom(models.Model):
 class MeetingReviewChoice(models.Model):
     USER = 'User'
     NETWORK_AND_CONNECTION = 'Network and Connection'
-    OTHER = 'other'
+    OTHER = 'Other'
     CATEGORIES = [
         (USER, ('User')),
         (NETWORK_AND_CONNECTION, ('Network and Connection')),

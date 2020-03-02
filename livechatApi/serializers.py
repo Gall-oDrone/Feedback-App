@@ -47,7 +47,9 @@ class LCRequestSerializer(serializers.ModelSerializer):
                 print(c)
                 newC = Category()
                 categories = Category.CATEGORIES
-                newC.category = categories[int(c)][0]
+                for cgs in categories:
+                    if(c == cgs[0]):
+                        newC.category = c
                 print(newC.category)
                 print(newC)
                 cat = Category.objects.get(category=newC)
@@ -57,13 +59,10 @@ class LCRequestSerializer(serializers.ModelSerializer):
             except:
                 print("except")
                 print(c)
-                print(Category.objects.get(id=1))
                 print(Category.CATEGORIES)
                 newC = Category()
                 categories = Category.CATEGORIES
-                print(Category.CATEGORIES[int(c)])
-                print(categories[int(c)][0])
-                newC.category = categories[int(c)][0]
+                newC.category = c
                 newC.save()
                 print("End except")
                 print(newC.category)
@@ -186,7 +185,7 @@ class LCMeetingReviewSerializer(serializers.ModelSerializer):
         print("worked 3")
         meeting_review.meeting_rate = data["meeting_rate"]
         meeting_review.conversation_rate = data["worthiness"]
-        meeting_review.attendace = data["attendace"]
+        meeting_review.attendace = data["attendance"]
         meeting_review.accept_working_with = data["recommendation"]
         print("worked 4")
         meeting_review.issues = data["issues"]
@@ -194,7 +193,33 @@ class LCMeetingReviewSerializer(serializers.ModelSerializer):
         print("worked 6")
         meeting_review.comment = data["comment"]
         if data["issues"] == True:
-            meeting_review.issue_type = MeetingReviewChoice.objects.get(id=data["issue_type"])
+            for i in data["issue_type"]:
+                try:
+                    print("try")
+                    print(i)
+                    newI = MeetingReviewChoice()
+                    issues = MeetingReviewChoice.CATEGORIES
+                    print("issues", issues)
+                    for j in issues:
+                        if(i == j[0]):
+                            newI.issues = i
+                    print(newI.issues)
+                    print(newI)
+                    itype = MeetingReviewChoice.objects.get(issues=newI)
+                    print("ftype.id", itype.id)
+                    meeting_review.issue_type = MeetingReviewChoice.objects.get(id=itype.id)
+                except:
+                    print("except")
+                    print(i)
+                    newI = MeetingReviewChoice()
+                    issues = MeetingReviewChoice.issues
+                    newI.issues = i
+                    newI.save()
+                    print("End except")
+                    itype = MeetingReviewChoice.objects.get(issues=newI)
+                    print("ftype.id", itype.id)
+                    meeting_review.issue_type = MeetingReviewChoice.objects.get(id=itype.id)
+        print("live her alo")
         meeting_review.save()
         n_par = []
         if data["attendance"] == True:
@@ -202,7 +227,7 @@ class LCMeetingReviewSerializer(serializers.ModelSerializer):
                 if i == (data["user"] or data["participant"]):
                     meeting_review.attended.add(User.objects.get(username=i)) 
                 else:
-                    n.parh.add(i)
+                    n_par.append(i)
             meeting_review.save()
         else:
             for i in n_par:

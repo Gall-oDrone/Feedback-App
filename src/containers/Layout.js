@@ -1,5 +1,5 @@
 import React from "react";
-import { Layout, Menu, Breadcrumb, Button, Icon, Avatar, Badge, Dropdown } from "antd";
+import { Layout, Menu, Breadcrumb, Button, Icon, Avatar, Input, Dropdown } from "antd";
 import { Link, withRouter } from "react-router-dom";
 import { connect } from "react-redux";
 import * as actions from "../store/actions/auth";
@@ -7,6 +7,7 @@ import ProfileHeaderMenu from "../components/ProfileHeaderMenu"
 import NotificationHeaderMenu from "../components/NotificationHeaderMenu"
 import {getProfileAccountDetail} from "../store/actions/profileAccountInfo"
 
+const { Search } = Input;
 const { Header, Content, Footer, Sider } = Layout;
 
 const text = (avatar) => (<span>User Account <div style={{left: '50%'}}><Avatar src={avatar} /></div></span>);
@@ -150,6 +151,9 @@ class CustomLayout extends React.Component {
                 <Menu.Item key="6" style= {{float: 'right'}}>
                     <ProfileHeaderMenu logout={this.props.logout} userId={this.props.userId}/>
                 </Menu.Item>
+                <Menu.Item key="3">
+                <Search placeholder="input search text" onSearch={value => console.log(value)} enterButton />
+                </Menu.Item>
 
               {/* <Menu.Item key="3" onClick={this.props.logout} style= {{float: 'right'}}>
                 <Icon type="message" />
@@ -165,10 +169,10 @@ class CustomLayout extends React.Component {
                     <Icon type="user" />
                   </Popover>
               </Menu.Item> */}
-          </Menu>
-          
+          </Menu>  
         </Header>
-        <Content style={{ padding: "0 50px" }}>
+
+        <Content style={{ padding: "0 50px" }}>        
           <Breadcrumb style={{ margin: "16px 0" }}>
             <Breadcrumb.Item>
               <Link to="/articles/">Home</Link>
@@ -193,6 +197,9 @@ class CustomLayout extends React.Component {
             </Breadcrumb.Item>
             <Breadcrumb.Item>
                 <Link to={"/survey/"}>Survey Questions</Link>
+            </Breadcrumb.Item>
+            <Breadcrumb.Item>
+                <Link to={"/create-inquiry/"}>Post an Inquiry</Link>
             </Breadcrumb.Item>
             {this.props.token !== null ? (
               <Breadcrumb.Item>

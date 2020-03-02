@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from articlesApi.models import Article, Video, Comment, Category, Like, Rating, Image, CommentReply
+from inquiriesApi.models import Inquiry, Video, Comment, InquiryType, Like, Rating, Image, CommentReply
 from users.models import User
 from django.core.files.storage import FileSystemStorage
 import json
@@ -15,17 +15,17 @@ class CommentReplySerializer(serializers.ModelSerializer):
         model = CommentReply
         fields = ("id", "comment")
 
-class ArticleSerializer(serializers.ModelSerializer):
+class InquirySerializer(serializers.ModelSerializer):
     engagement = StringSerializer(many=True)
-    categories = StringSerializer(many=True)
+    inquiry_type = StringSerializer(many=True)
     author = StringSerializer(many=False)
     video = StringSerializer(many=False)
     
 
     class Meta:
-        model = Article
+        model = Inquiry
         fields = ('id', 'title', 'content', 'timestamp',
-                  'engagement', 'categories', 'author',
+                  'engagement', 'inquiry_type', 'author',
                   "comment_count", "view_count", "rating_count",
                     "likes_count", "view_count", "rating_count", "avg_rating",
                     "video", "thumbnail"
@@ -36,9 +36,9 @@ class ArticleSerializer(serializers.ModelSerializer):
         #choices = AssignmentChoiceSerializer(obj, many=False).data
         # print(choices)
         # return choices
-        print("ArticleSerializer object")
-        print(ArticleSerializer(obj, many=True).data)
-        # return (ArticleSerializer(obj.choices.assignment_choices, many=True).data)
+        print("InquirySerializer object")
+        print(InquirySerializer(obj, many=True).data)
+        # return (InquirySerializer(obj.choices.assignment_choices, many=True).data)
 
     def create(self, request, *args):
         data = request
@@ -47,11 +47,11 @@ class ArticleSerializer(serializers.ModelSerializer):
         print("args: ", args)
         # print(self.args)
         files = args[0]
-        article = Article()
-        article.save()
-        article.title = data["title"]
-        article.content = data["content"]
-        # article.author = data["user"]
+        inquiry = Inquiry()
+        inquiry.save()
+        inquiry.title = data["title"]
+        inquiry.content = data["content"]
+        # inquiry.author = data["user"]
         print("FILES I: ", files['file'])
         print("FILES II: ", files['media'])
         for f in files:
@@ -69,7 +69,7 @@ class ArticleSerializer(serializers.ModelSerializer):
                 videoD.save()
                 print("videoD, ", videoD)
                 print("videoD.id, ", videoD.id)
-                article.video= Video(id=videoD.id)
+                inquiry.video= Video(id=videoD.id)
                 # raise ValidationError('Unsupported file extension.')
         else: 
             print("myfile.name is image")
@@ -78,70 +78,51 @@ class ArticleSerializer(serializers.ModelSerializer):
             print("uploaded_file_url")
             print(uploaded_file_url)
             print(myfile.name)
-            print(article.thumbnail)
-            article.thumbnail = "images/"+myfile.name
-            print("article.thumbnail")
-            print(article.thumbnail)
+            print(inquiry.thumbnail)
+            inquiry.thumbnail = "images/"+myfile.name
+            print("inquiry.thumbnail")
+            print(inquiry.thumbnail)
 
         for e in data['engagement']:
-            try:
-                print("try")
-                print(e)
-                newE = FeedbackTypes()
-                fts = FeedbackTypes.CHOICES
-                for f in fts:
-                    if(e == f[0]):
-                        newE.feedback_type = e
-                print(newE.feedback_type)
-                print(newE)
-                ftype = FeedbackTypes.objects.get(feedback_type=newE)
-                print("ftype.id", ftype.id)
-                article.engagement.add(ftype.id)
-            except:
-                print("except")
-                print(e)
-                newE = FeedbackTypes()
-                fts = FeedbackTypes.CHOICES
-                newE.feedback_type = e
-                newE.save()
-                print("End except")
-                ftype = FeedbackTypes.objects.get(feedback_type=newE)
-                print("ftype.id", ftype.id)
-                article.engagement.add(ftype.id)
-        print("live her alo")
-        for c in data['categories']:
-            print(c)
-            newC = Category()
-            newC.title = c
-            article.categories.add(newC.title)
+            # "2" phone call
+            # "3" email 
+            # "4" survey
 
-        article.save()
-        return article
+            inquiry.engagement.add(e)
+        print("live her alo")
+        for c in data['inquiry_type']:
+            print(c)
+            newC = InquiryType()
+            newC.title = c
+            inquiry.inquiry_type.add(newC.title)
+
+        inquiry.save()
+        return inquiry
 
     def update_likes(self, request):
         data = request.data
         print('update_likes data: ')
         print(data)
-        article = Article(pk='id')
-        article.likes_count += data
-        article.save()
-        return article
+        inquiry = Inquiry(pk='id')
+        inquiry.likes_count += data
+        inquiry.save()
+        return inquiry
     
     def add_star(self, request):
-        add_star = Article.rating_count + 1
+        add_star = Inquiry.rating_count + 1
     
     def add_comment(self, request):
-        add_comment = Article.comment_count + 1
+        add_comment = Inquiry.comment_count + 1
 
     def count_likes(self, request):
-        add_like = Article \
+        add_like = Inquiry \
             .objects \
             .values("tags__tag") \
             .annotate(Count("tags__tag"))        
         return queryset
 
     def stars_count(self, request):
-        queryset = Article \
+        queryset = Inquiry \
             .objects \
             .values("tags__tag") \
             .annotate(Count("tags__tag"))        
@@ -157,22 +138,22 @@ class ArticleSerializer(serializers.ModelSerializer):
         # print(data2)
         # print(data3)
 
-        # article = Article.objects.all()
-        # categories = Category.objects.all()
+        # inquiry = Inquiry.objects.all()
+        # inquiry_type = InquiryType.objects.all()
         # ac = AssignmentChoices.objects.all()
         # print("Engagement choices")
         # print(ac)
         # print("Categories")
-        # print(categories)
+        # print(inquiry_type)
         # print("Categories filter ")
-        # print(Category.objects.filter(title="AI"))
-        # print("Article Obj all")
-        # print(article)
-        # print(Article.objects.get(id="13"))
-        # ar2 = Article.objects.get(id="13")
-        # # for c in request['categories']:
+        # print(InquiryType.objects.filter(title="AI"))
+        # print("Inquiry Obj all")
+        # print(inquiry)
+        # print(Inquiry.objects.get(id="13"))
+        # ar2 = Inquiry.objects.get(id="13")
+        # # for c in request['inquiry_type']:
         # #     print(c)
-        # #     ar2.categories.add(c)
+        # #     ar2.inquiry_type.add(c)
 
         # print("engagement")
         # print(ar2.engagement.all())
@@ -183,31 +164,31 @@ class ArticleSerializer(serializers.ModelSerializer):
         #     # "4" survey
         #     ar2.engagement.add(e)
         # print("ar2 Categories")
-        # print(ar2.categories.all())
-        # print(ar2.categories.get(title="AI"))
-        # article.title = request['title']
-        # article.content = request['content']
-        # article.save()
-        # print("articleObject")
+        # print(ar2.inquiry_type.all())
+        # print(ar2.inquiry_type.get(title="AI"))
+        # inquiry.title = request['title']
+        # inquiry.content = request['content']
+        # inquiry.save()
+        # print("inquiryObject")
         # print("acObject")
-        # # print(article.objects)
-        # for c in request['categories']:
-        #     newC = Category()
+        # # print(inquiry.objects)
+        # for c in request['inquiry_type']:
+        #     newC = InquiryType()
         #     newC.objects.get("__all__")
         #     print("cacascsacdas")
         #     print(newC.title.objects.get("__all__"))
         #     newC.title = c
-        #     article.categories.add(newC.title)
-        # article.engagement.set(request['engagement'])
-        # article.categories.set(request['categories'])
+        #     inquiry.inquiry_type.add(newC.title)
+        # inquiry.engagement.set(request['engagement'])
+        # inquiry.inquiry_type.set(request['inquiry_type'])
 
         # for i in data:
         #     print(i)
         #     if (i == "engagement"):
 
     #     # engagement = data[]
-    #     article = Article()
-        # article.engagement
+    #     inquiry = Inquiry()
+        # inquiry.engagement
         # student = User.objects.get(username=data['username'])
 
         # graded_asnt = GradedAssignment()
@@ -226,8 +207,8 @@ class ArticleSerializer(serializers.ModelSerializer):
         # grade = answered_correct_count / len(questions)
         # graded_asnt.grade = gradegraded_asnt.save()
         # return graded_asnt
-class ProfileArticleListSerializer(serializers.ListSerializer):
-    child = ArticleSerializer()
+class ProfileInquiryListSerializer(serializers.ListSerializer):
+    child = InquirySerializer()
     allow_null = True
     many = True
 
@@ -236,7 +217,7 @@ class LikeSerializer(serializers.ModelSerializer):
     # user_name = serializers.CharField(source='user.username', read_only=True)
     class Meta:
         model = Like
-        fields = ("id", 'user', "liked", "article")
+        fields = ("id", 'user', "liked", "inquiry")
     
     def create_like(self, request):
         data = request.data
@@ -245,7 +226,7 @@ class LikeSerializer(serializers.ModelSerializer):
         like = Like()
         like.user = User.objects.get(username=data["username"])
         like.liked = data["liked"]
-        like.article = Article.objects.get(id=data["article"])
+        like.inquiry = Inquiry.objects.get(id=data["inquiry"])
         like.save()
         return like
 
@@ -258,7 +239,7 @@ class RatingSerializer(serializers.ModelSerializer):
     user = StringSerializer(many=False)
     class Meta:
         model = Rating
-        fields = ('user', "rate", "article")
+        fields = ('user', "rate", "inquiry")
 
     def create_rate(self, request):
         data = request.data
@@ -267,13 +248,13 @@ class RatingSerializer(serializers.ModelSerializer):
         rating = Rating()
         rating.user = User.objects.get(username=data["username"])
         rating.rate = data["rate"]
-        rating.article = Article.objects.get(id=data["articleID"])
+        rating.inquiry = Inquiry.objects.get(id=data["inquiryID"])
         rating.save()
         return rating
 
 class CommentSerializer(serializers.ModelSerializer):
     user = StringSerializer(many=False)
-    article = StringSerializer(many=False)
+    inquiry = StringSerializer(many=False)
     content = StringSerializer(many=False)
     liked = StringSerializer(many=False)
     disliked = StringSerializer(many=False)
@@ -283,7 +264,7 @@ class CommentSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Comment
-        fields = ("id", 'user', "article", "content", "liked", "disliked", "like_counter", "dislike_counter", "reply_to", "replies", "comment_reply")
+        fields = ("id", 'user', "inquiry", "content", "liked", "disliked", "like_counter", "dislike_counter", "reply_to", "replies", "comment_reply")
     
     def get_comment_reply(self, obj):
         # obj is an survey
@@ -302,7 +283,7 @@ class CommentSerializer(serializers.ModelSerializer):
         comment.liked = data["like"]
         comment.disliked = data["dislike"]
         comment.reply_to = Comment.objects.get(id=data["reply_to"])
-        comment.article = Article.objects.get(id=data["articleID"])
+        comment.inquiry = Inquiry.objects.get(id=data["inquiryID"])
         comment.save()
         if data["reply_to"] != None:
             replyC = Comment(id=data["reply_to"])
@@ -321,9 +302,9 @@ class CommentListSerializer(serializers.ListSerializer):
     allow_null = True
     many = True
 
-class ArticleFeatureSerializer(serializers.ModelSerializer):
+class InquiryFeatureSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Article
+        model = Inquiry
         fields = ("__all__")
 
 

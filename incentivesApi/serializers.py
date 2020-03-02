@@ -50,12 +50,31 @@ class IncentiveListSerializer(serializers.ModelSerializer):
         
         incentive.save()
         for b in data['incentive_brand']:
-            print(b)
-            newB = Brand()
-            newB.brand = b
-            print(newB.brand)
-            incentive.incentive_brand.set(newB.brand)
-
+            try:
+                print("try")
+                print(b)
+                newB = Brand()
+                brands = Brand.BRANDS
+                for bs in brands:
+                    if(b == bs[0]):
+                        newB.brand = b
+                print(newB.brand)
+                print(newB)
+                btype = Brand.objects.get(brand=newB)
+                print("ftype.id", btype.id)
+                incentive.incentive_brand.add(btype.id)
+            except:
+                print("except")
+                print(b)
+                newB = Brand()
+                brands = Brand.BRANDS
+                newB.brand = b
+                newB.save()
+                print("End except")
+                btype = Brand.objects.get(brand=newB)
+                print("ftype.id", btype.id)
+                incentive.incentive_brand.add(btype.id)
+        print("live her alo")
         incentive.save()
         
         # userNotification = MeetingRequest()

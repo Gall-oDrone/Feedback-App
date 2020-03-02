@@ -98,16 +98,51 @@ class PeerDetail extends React.Component {
                     onCancel={this.handleCancel}>
                         <div>
                         <Layout>
-                        <Content style={{ padding: '0 50px' }}>
-                          <div className="site-card-border-less-wrapper">
-                            <Card title="Request title" bordered={false} >
-                              <p>Description</p>
-                              <p>Instructions</p>
-                              <p>Rewards</p>
-                            </Card>
-                          </div>
-                        </Content>
-                        <Footer style={{ textAlign: 'center' }}>Ant Design ©2018 Created by Ant UED</Footer>
+                          <Content style={{ padding: '0 50px' }}>
+                            <div className="site-card-border-less-wrapper">
+                              <Card title="Request title" bordered={false} >
+                                <Row>
+                                  <Col>
+                                    <p>Description</p>
+                                  </Col>
+                                </Row>
+                                <Row>
+                                  <Col>
+                                    <p>Universities</p>
+                                  </Col>
+                                  <Col>
+                                    <Tag>
+                                      MIT
+                                    </Tag>
+                                    <Tag>
+                                      Stanford
+                                    </Tag>
+                                  </Col>
+                                </Row>
+                                <Row>
+                                  <Col>
+                                    <p>Experienced</p>
+                                  </Col>
+                                </Row>
+                                <Row>
+                                  <Col>
+                                    <p>Language</p>
+                                  </Col>
+                                </Row>
+                                <Row>
+                                  <Col>
+                                    <p>Contact options</p>
+                                  </Col>
+                                </Row>
+                                <Row>
+                                  <Col>
+                                    <p>Rewards</p>
+                                  </Col>
+                                </Row>
+                              </Card>
+                            </div>
+                          </Content>
+                          <Footer style={{ textAlign: 'center' }}>Ant Design ©2018 Created by Ant UED</Footer>
                     </Layout>
                         </div>
                     </Modal>

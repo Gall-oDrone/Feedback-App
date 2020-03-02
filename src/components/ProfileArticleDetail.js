@@ -36,6 +36,10 @@ const categories = [
   {
     value: '3',
     label: 'B2B'
+  },
+  {
+    value: '4',
+    label: 'C1'
   }
 ]
 
@@ -45,15 +49,15 @@ const engagements = [
     label: 'phone call'
   },
   {
-    value: '2',
+    value: '4',
     label: 'chat'
   },
   {
-    value: '1',
+    value: '2',
     label: 'live chat'
   },
   {
-    value: '5',
+    value: '1',
     label: 'survey'
   }
 ]
@@ -368,6 +372,7 @@ class ProfileArticleDetail extends React.Component {
               <Option value="1">Data Science</Option>
               <Option value="2">AI</Option>
               <Option value="3">Business to Business (B2B)</Option>
+              <Option value="4">C1</Option>
             </Select>,
           )}
         </Form.Item>

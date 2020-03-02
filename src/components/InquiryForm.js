@@ -9,14 +9,38 @@ import {
   Icon,
   Input,
   Checkbox,
-  Card,
+  Radio,
   Row,
   Col,
+  DatePicker, TimePicker
 } from 'antd';
 import axios from 'axios';
 
 const { Option } = Select;
-
+const { MonthPicker, RangePicker } = DatePicker;
+const rangeConfig = {
+  rules: [{ type: 'array', required: true, message: 'Please select time!' }],
+};
+const TimeRelatedForm = () => {
+  const onFinish = fieldsValue => {
+    // Should format date value before submit.
+    const rangeValue = fieldsValue['range-picker'];
+    const rangeTimeValue = fieldsValue['range-time-picker'];
+    const values = {
+      ...fieldsValue,
+      'date-picker': fieldsValue['date-picker'].format('YYYY-MM-DD'),
+      'date-time-picker': fieldsValue['date-time-picker'].format('YYYY-MM-DD HH:mm:ss'),
+      'month-picker': fieldsValue['month-picker'].format('YYYY-MM'),
+      'range-picker': [rangeValue[0].format('YYYY-MM-DD'), rangeValue[1].format('YYYY-MM-DD')],
+      'range-time-picker': [
+        rangeTimeValue[0].format('YYYY-MM-DD HH:mm:ss'),
+        rangeTimeValue[1].format('YYYY-MM-DD HH:mm:ss'),
+      ],
+      'time-picker': fieldsValue['time-picker'].format('HH:mm:ss'),
+    };
+    console.log('Received values of form: ', values);
+  };
+}
 function getBase64(file) {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
@@ -160,8 +184,11 @@ class ArticleCustomForm extends React.Component {
 
   render() {
     console.log("this.props: "+ JSON.stringify(this.props))
+    const { form } = this.props;
     const { getFieldDecorator, getFieldValue } = this.props.form;
     const { fileList } = this.state;
+    const contact_option = form.getFieldValue(`contact_options`);
+    console.log("contact_option  I: "+ JSON.stringify(contact_option))
     const fields = getFieldValue("upload")
     const fields2 = getFieldValue("uploadV")
     console.log("upload  I: "+ JSON.stringify(fields))
@@ -175,21 +202,21 @@ class ArticleCustomForm extends React.Component {
         event,
         this.props.requestType,
         this.props.articleID)}>
-        <Form.Item label="Article Name" hasFeedback>
+        <Form.Item label="Post Title" hasFeedback>
           {getFieldDecorator('title', {
-            rules: [{ required: true, message: 'Please enter your project/product name!' }],
+            rules: [{ required: true, message: 'Please enter title!' }],
           })(<Input name="title" />
           )}
         </Form.Item>
         <Form.Item label="Content" hasFeedback>
           {getFieldDecorator('content', {
             rules: [{ required: true, message: 'Please enter a content' }],
-          })(<Input name="content" />
+          })(<Input.TextArea />
           )}
         </Form.Item>
 
-        <Form.Item label="Related fields">
-          {getFieldDecorator('categories', {
+        <Form.Item label="Inquiry Type">
+          {getFieldDecorator('inquiry_type', {
             rules: [
               { required: true, message: 'Please select a field for your project!', type: 'array' },
             ],
@@ -201,36 +228,96 @@ class ArticleCustomForm extends React.Component {
             </Select>,
           )}
         </Form.Item>
-
-        <Form.Item label="Feedback type">
-          {getFieldDecorator('feedback_type', {
-            initialValue: ['1'],
+        <Form.Item label="Topic">
+          {getFieldDecorator('topic', {
+            rules: [
+              { required: true, message: 'Please select a field for your project!', type: 'array' },
+            ],
+          })(
+            <Select name="categories" mode="multiple" placeholder="Please select a field">
+              <Option value="1">Data Science</Option>
+              <Option value="2">AI</Option>
+              <Option value="3">Business to Business (B2B)</Option>
+            </Select>,
+          )}
+        </Form.Item>
+        <Form.Item label="Select a target University">
+          {getFieldDecorator('university', {
+            rules: [
+              { required: true, message: 'Please select a field for your project!', type: 'array' },
+            ],
+          })(
+            <Select name="categories" mode="multiple" placeholder="Please select a field">
+              <Option value="1">Data Science</Option>
+              <Option value="2">AI</Option>
+              <Option value="3">Business to Business (B2B)</Option>
+            </Select>,
+          )}
+        </Form.Item>
+          {/* <Form.Item label="Experienced Users?">
+        {getFieldDecorator(`experienced`)(
+              <Radio.Group >
+                <Radio.Button value={true}>Yes</Radio.Button>
+                <Radio.Button value={false}>No</Radio.Button>
+                <Radio.Button value={"Indifferent"}>Indifferent</Radio.Button>
+              </Radio.Group>,
+            )}
+          </Form.Item> */}
+          <Form.Item label="Offer Rewards">
+        {getFieldDecorator(`attendance`)(
+              <Radio.Group >
+                <Radio.Button value={true}>Yes</Radio.Button>
+                <Radio.Button value={false}>No</Radio.Button>
+              </Radio.Group>,
+            )}
+          </Form.Item>
+        <Form.Item label="Prefer Contact options">
+          {getFieldDecorator('contact_options', {
+            initialValue: [],
           })(
             <Checkbox.Group style={{ width: '100%' }}>
               <Row>
                 <Col span={8}>
-                  <Checkbox value='live chat' disabled>Live Video Chat Session</Checkbox>
+                  <Checkbox value="3" disabled>Phone Call</Checkbox>
                 </Col>
                 <Col span={8}>
-                  <Checkbox value='chat' disabled>Chat Session</Checkbox>
+                  <Checkbox value="2" disabled>
+                    Email
+                    </Checkbox>
                 </Col>
                 <Col span={8}>
-                  <Checkbox value='phone call' disabled>Phone Call</Checkbox>
+                  <Checkbox value="4" disabled>Chat Session</Checkbox>
                 </Col>
                 <Col span={8}>
-                  <Checkbox value='email'>Email</Checkbox>
-                </Col>
-                <Col span={8}>
-                  <Checkbox value='survey'>Survey</Checkbox>
+                  <Checkbox value="5">Live Video Chat Session</Checkbox>
                 </Col>
               </Row>
             </Checkbox.Group>,
           )}
         </Form.Item>
-        <Row gutter={16} type="flex" justify="center">
-          <Col span={8}>
-            <Card title="Upload an Image" bordered={false}>
-              <Form.Item extra="2.5 MB Image">
+        { contact_option !== undefined ? (
+          contact_option.some(el => el === "5") ? (
+            <div>
+            <Form.Item label="Prefered Spoken Languagues">
+              {getFieldDecorator('categories', {
+                rules: [
+                  { required: true, message: 'Please select a field for your project!', type: 'array' },
+                ],
+              })(
+                <Select name="categories" mode="multiple" placeholder="Please select a field">
+                  <Option value="1">Data Science</Option>
+                  <Option value="2">AI</Option>
+                  <Option value="3">Business to Business (B2B)</Option>
+                </Select>,
+              )}
+            </Form.Item>,
+            <Form.Item name="range-time-picker" label="RangePicker[showTime]" {...rangeConfig}>
+              <RangePicker showTime format="YYYY-MM-DD HH:mm:ss" />
+          </Form.Item>
+            </div>
+          ):null
+        ):(null)}
+        <Form.Item label="Upload File" extra="2.5 MB Field">
                 {getFieldDecorator('upload', {
                   initialValue: this.handleFileList(null, null),
                   valuePropName: 'fileList',
@@ -243,29 +330,7 @@ class ArticleCustomForm extends React.Component {
                       </Button>
                   </Upload>,
                 )}
-              </Form.Item>
-            </Card>
-          </Col>
-          <Col span={8}>
-            <Card title="Upload a Video" bordered={false}>
-              <Form.Item extra="2.5 MB Image">
-                  {getFieldDecorator('uploadV', {
-                    initialValue: this.handleFileList(null, null),
-                    valuePropName: 'fileList',
-                    getValueFromEvent: this.normFile,
-                    setFieldsValue: "fileList"
-                  })(
-                    <Upload name="logo" key="Video" onPreview={this.handlePreview} listType="picture" customRequest={this.dummyRequest}>
-                      <Button>
-                        <Icon type="upload" /> Click to upload
-                        </Button>
-                    </Upload>,
-                  )}
-              </Form.Item>
-            </Card>
-          </Col>
-        </Row>   
-
+        </Form.Item>
         <Form.Item wrapperCol={{ span: 12, offset: 6 }}>
           <Button type="primary" htmlType="submit">
             {this.props.btnText}
