@@ -12,7 +12,7 @@ from rest_framework.status import(
     HTTP_400_BAD_REQUEST
 )
 from rest_framework import permissions
-from inquiriesApi.models import Inquiry, Tag, Tagging, InquiryType, InquiryView, Like, Rating, Comment, Video, Image, FeedbackTypes
+from .models import Inquiry, Tag, Tagging, InquiryType, InquiryView, Like, Rating, Comment, Video, Image, ContactOption
 from users.models import User
 from .serializers import InquirySerializer, InquiryFeatureSerializer, VideoFormSerializer, CommentSerializer, LikeSerializer, LikeListSerializer, RatingSerializer, CommentListSerializer, ImageFormSerializer, ProfileInquiryListSerializer
 from analytics.models import View
@@ -317,7 +317,7 @@ class ProfileInquiryDetailView(RetrieveUpdateDestroyAPIView):
             print(type(i["id"]))
             if str(i["id"]) not in engagement:
                 print("removing")
-                oldE = FeedbackTypes.objects.get(id=i["id"])
+                oldE = ContactOption.objects.get(id=i["id"])
                 inquiry.engagement.remove(oldE.id)
             else:
                 for e in engagement:
@@ -326,7 +326,7 @@ class ProfileInquiryDetailView(RetrieveUpdateDestroyAPIView):
                     if int(e) not in engagement_id_list:        
                         print("adding")
                         print(e)
-                        newE = FeedbackTypes.objects.get(id=e)
+                        newE = ContactOption.objects.get(id=e)
                         # newC = InquiryType()
                         print(newE)
                         print(newE.id)

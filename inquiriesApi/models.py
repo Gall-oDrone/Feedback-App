@@ -43,17 +43,37 @@ class TargetAudience(models.Model):
     def __str__(self):
         return self.target_audience
 
+class Topic(models.Model):
+    G = 'graduates'
+    U = 'undergraduates'
+    PHD = 'pHD'
+    MBA = 'MBA'
+    MS = 'MS'
+    OTHER = 'other'
+    TOPICS = [
+        (G, ('graduates')),
+        (U, ('undergraduates')),
+        (PHD, ('pHD')),
+        (MBA, ('MBA')),
+        (MS, ('MS')),
+        (OTHER, ('other')),
+    ]
+    topic=models.CharField(max_length=25, choices=TOPICS, blank=True)
+
+    def __str__(self):
+        return self.topic
+
 class Tag(models.Model):
     tag = models.CharField(max_length=10)
 
     def __str__(self):
         return self.tag
 
-class Image(models.Model):
-    image = models.ImageField(upload_to="images/", blank=True)
+class File(models.Model):
+    file = models.ImageField(upload_to="images/", blank=True)
 
     def __str__(self):
-        return str(self.image)
+        return str(self.file)
 
 class Comment(models.Model):
     user = models.ForeignKey(User, related_name="inquiry_comment", on_delete=models.CASCADE)
@@ -76,7 +96,7 @@ class CommentReply(models.Model):
     reply = models.ManyToManyField(Comment, related_name="comment_reply")
     
 
-class FeedbackTypes(models.Model):
+class ContactOption(models.Model):
     LIVE_CHAT_SESSION = 'live chat'
     CHAT_SESSION = 'chat'
     PHONE_CALL = 'phone call'
@@ -89,26 +109,27 @@ class FeedbackTypes(models.Model):
         (SEND_EMAIL, ('email')),
         (SURVEY, ('survey')),
     ]
-    feedback_type=models.CharField(max_length=15, choices=CHOICES, blank=True)
+    contact_option=models.CharField(max_length=15, choices=CHOICES, blank=True)
 
     def __str__(self):
-        return self.feedback_type
+        return self.contact_option
 
 class Inquiry(models.Model):
     title = models.CharField(max_length=60)
-    content = models.TextField()
-    overview = models.TextField()
-    description = models.TextField(max_length=30, blank=True)
+    content = models.TextField(max_length=30, blank=True)
     comment_count = models.IntegerField(default=0)
     view_count = models.IntegerField(default=0)
     rating_count = models.IntegerField(default=0)
     avg_rating = models.IntegerField(default=0)
     likes_count = models.IntegerField(default=0)
     tag = models.ManyToManyField(Tag, related_name="inquiry_tags")
-    engagement = models.ManyToManyField(FeedbackTypes)
+    contact = models.ManyToManyField(ContactOption)
     author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="inquiry_author", null=True)
     timestamp = models.DateTimeField(auto_now_add=True, null=True)
-    thumbnail = models.ImageField(upload_to="images/", blank=True)
+    start = models.DateTimeField(auto_now_add=False, null=True)
+    end = models.DateTimeField(auto_now_add=False, null=True)
+    ufile = models.ImageField(upload_to="images/", blank=True)
+    rewards = models.BooleanField(default=False)
     inquiry_type = models.ManyToManyField(InquiryType)
     inquiry_audience = models.ManyToManyField(TargetAudience)
     previous_inquiry = models.ForeignKey("self", related_name='previous',on_delete=models.SET_NULL,blank=True, null=True)

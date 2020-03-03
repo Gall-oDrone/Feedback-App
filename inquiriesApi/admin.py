@@ -3,7 +3,7 @@ from django.contrib import admin
 from .models import(
     Inquiry, Tag, Tagging, InquiryType, 
     Comment, InquiryView,
-    FeedbackTypes, Like,
+    ContactOption, Like,
     Rating, Comment, CommentReply
 ) 
 
@@ -15,7 +15,7 @@ admin.site.register(Tag)
 admin.site.register(Tagging)
 admin.site.register(InquiryType)
 admin.site.register(InquiryView)
-admin.site.register(FeedbackTypes)
+admin.site.register(ContactOption)
 admin.site.register(Like)
 admin.site.register(Rating)
 admin.site.register(Comment)

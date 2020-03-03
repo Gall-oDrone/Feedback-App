@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from inquiriesApi.models import Inquiry, Video, Comment, InquiryType, Like, Rating, Image, CommentReply
+from .models import Inquiry, Video, Comment, InquiryType, Like, Rating, Image, CommentReply
 from users.models import User
 from django.core.files.storage import FileSystemStorage
 import json
