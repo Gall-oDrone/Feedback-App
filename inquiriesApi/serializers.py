@@ -1,6 +1,6 @@
 from rest_framework import serializers
-from .models import Inquiry, Video, Comment, InquiryType, Like, Rating, Image, CommentReply
-from users.models import User
+from .models import Inquiry, Comment, InquiryType, Like, Rating, File, CommentReply,InquiryType, TargetAudience, Topic, ContactOption, PreferLanguage
+from users.models import User, ProfileInfo, Universities
 from django.core.files.storage import FileSystemStorage
 import json
 
@@ -16,20 +16,16 @@ class CommentReplySerializer(serializers.ModelSerializer):
         fields = ("id", "comment")
 
 class InquirySerializer(serializers.ModelSerializer):
-    engagement = StringSerializer(many=True)
     inquiry_type = StringSerializer(many=True)
+    inquiry_topic = StringSerializer(many=True)
     author = StringSerializer(many=False)
-    video = StringSerializer(many=False)
+    user_university = StringSerializer(many=False)
+    opened = StringSerializer(many=False)
     
 
     class Meta:
         model = Inquiry
-        fields = ('id', 'title', 'content', 'timestamp',
-                  'engagement', 'inquiry_type', 'author',
-                  "comment_count", "view_count", "rating_count",
-                    "likes_count", "view_count", "rating_count", "avg_rating",
-                    "video", "thumbnail"
-                  )
+        fields = ("__all__")
 
     def get_feedback_forms(self, obj):
         # obj is an assignment
@@ -48,53 +44,46 @@ class InquirySerializer(serializers.ModelSerializer):
         # print(self.args)
         files = args[0]
         inquiry = Inquiry()
-        inquiry.save()
         inquiry.title = data["title"]
         inquiry.content = data["content"]
-        # inquiry.author = data["user"]
-        print("FILES I: ", files['file'])
-        print("FILES II: ", files['media'])
-        for f in files:
-            myfile = files[f]
-            print("file type: ", myfile.content_type.split('/')[0])
-            file_type = myfile.content_type.split('/')[0]
-            fs = FileSystemStorage()
-            valid_extensions = ['.pdf', '.doc', '.docx', '.jpg', '.png', '.xlsx', '.xls']
-            if file_type == "video":
-                print("myfile.name is video")
-                videoD = Video()
-                filename = fs.save("videos/"+myfile.name, myfile)
+        userId = User.objects.get(username=data["user"]).id
+        print("userId: ", userId)
+        userUniversity = ProfileInfo.objects.get(profile_username_id=userId)
+        print("userUniversity: ", userUniversity)
+        print("userUniversity 2: ", userUniversity.university_id)
+        print("userUniversity 3: ", userUniversity.university)
+        inquiry.user_university = Universities.objects.get(university=userUniversity.university)
+        inquiry.save()
+        #inquiry.author = data["user"]
+        if files:
+            print("FILES -I: ", files)
+            print("FILES -II: ", files is dict)
+            print("FILES I: ", files['file'])
+            for f in files:
+                myfile = files[f]
+                print("file type: ", myfile.content_type.split('/')[0])
+                file_type = myfile.content_type.split('/')[0]
+                fs = FileSystemStorage()
+                valid_extensions = ['.pdf', '.doc', '.docx', '.jpg', '.png', '.xlsx', '.xls']
+                print("myfile.name is doc")
+                filename = fs.save("files/"+myfile.name, myfile)
                 uploaded_file_url = fs.url(filename)
-                videoD.videofile = "videos/"+myfile.name
-                videoD.save()
-                print("videoD, ", videoD)
-                print("videoD.id, ", videoD.id)
-                inquiry.video= Video(id=videoD.id)
-                # raise ValidationError('Unsupported file extension.')
-        else: 
-            print("myfile.name is image")
-            filename = fs.save("images/"+myfile.name, myfile)
-            uploaded_file_url = fs.url(filename)
-            print("uploaded_file_url")
-            print(uploaded_file_url)
-            print(myfile.name)
-            print(inquiry.thumbnail)
-            inquiry.thumbnail = "images/"+myfile.name
-            print("inquiry.thumbnail")
-            print(inquiry.thumbnail)
-
-        for e in data['engagement']:
-            # "2" phone call
-            # "3" email 
-            # "4" survey
-
-            inquiry.engagement.add(e)
-        print("live her alo")
-        for c in data['inquiry_type']:
-            print(c)
-            newC = InquiryType()
-            newC.title = c
-            inquiry.inquiry_type.add(newC.title)
+                print("uploaded_file_url")
+                print(uploaded_file_url)
+                print(myfile.name)
+                print(inquiry.ufile)
+                inquiry.ufile = "files/"+myfile.name
+                print("inquiry.ufile")
+                print(inquiry.ufile)
+        
+        # self.add_fields(data["inquiry_type"],0)
+        self.add_fields(data["audience"],1, inquiry)
+        if "language" in data:
+            self.add_fields(data["language"],4, inquiry)
+        self.add_fields(data["topic"],2,inquiry)
+        if "contact" in data:
+            self.add_fields(data["contact"],3,inquiry)
+        self.add_fields(data["inquiry_type"],0,inquiry)
 
         inquiry.save()
         return inquiry
@@ -127,86 +116,113 @@ class InquirySerializer(serializers.ModelSerializer):
             .values("tags__tag") \
             .annotate(Count("tags__tag"))        
         return queryset
+    
+    def add_fields(self, field, i, inquiry):
+        for f in field:
+            try:
+                print("try")
+                print(f)
+                print(i)
+                newM = self.scher3(i)
+                print("newM I: ", newM)
+                ms = self.scher2(i)
+                shh = self.scher6(newM, i, f)
+                for m in ms:
+                    if(f == m[0]):
+                        self.scher6(newM, i, f)
+                print("newM II: ", newM)
+                mtype = self.scher5(i, newM, inquiry)
+            except:
+                print("except")
+                print(f)
+                newM = self.scher3(i)
+                ms = self.scher2(i)
+                shh = self.scher6(newM, i, f)
+                newM.save()
+                print("End except")
+                print("newM: ", newM)
+                mtype = self.scher5(i, newM, inquiry)
+        print("live her alo")
 
+    def scher2(self, i):
+        switcher={
+                0:InquiryType.CHOICES,
+                1:TargetAudience.CHOICES,
+                2:Topic.TOPICS,
+                3:ContactOption.CHOICES,
+                4:PreferLanguage.CHOICES,
+            }
+        return switcher.get(i,"Invalid day of week")
 
-        # data2 = request.data.keys()
-        # # data = request.GET.get('engagement')
-        # data3 = request.data.values()
-        # print("data create")
-        # print(data)
-        # print(data['engagement'])
-        # print(data2)
-        # print(data3)
+    def scher3(self, i):
+        it = InquiryType()
+        ta =TargetAudience()
+        t =Topic()
+        co = ContactOption()
+        pl =PreferLanguage()
+        switcher={
+                0:it,
+                1:ta,
+                2:t ,
+                3:co,
+                4:pl,
+            }
+        print("switcher: ", switcher.get(i))
+        return switcher.get(i,"Invalid day of week")
+    
+    def scher6(self, m, i, f):
+        if(i == 0):
+            m.inquiry_type = f            
+            return m
+        elif(i == 1):
+            m.target_audience = f
+            return m
+        elif(i == 2):
+            m.topic = f
+            return m
+        elif(i == 3):
+            m.contact_option = f
+            return m
+        elif(i == 4):
+            m.language = f
+            return m
+        else:
+            return "Invalid day of week"
 
-        # inquiry = Inquiry.objects.all()
-        # inquiry_type = InquiryType.objects.all()
-        # ac = AssignmentChoices.objects.all()
-        # print("Engagement choices")
-        # print(ac)
-        # print("Categories")
-        # print(inquiry_type)
-        # print("Categories filter ")
-        # print(InquiryType.objects.filter(title="AI"))
-        # print("Inquiry Obj all")
-        # print(inquiry)
-        # print(Inquiry.objects.get(id="13"))
-        # ar2 = Inquiry.objects.get(id="13")
-        # # for c in request['inquiry_type']:
-        # #     print(c)
-        # #     ar2.inquiry_type.add(c)
-
-        # print("engagement")
-        # print(ar2.engagement.all())
-        # for e in request.data['engagement']:
-        #     print(e)
-        #     # "2" phone call
-        #     # "3" email 
-        #     # "4" survey
-        #     ar2.engagement.add(e)
-        # print("ar2 Categories")
-        # print(ar2.inquiry_type.all())
-        # print(ar2.inquiry_type.get(title="AI"))
-        # inquiry.title = request['title']
-        # inquiry.content = request['content']
-        # inquiry.save()
-        # print("inquiryObject")
-        # print("acObject")
-        # # print(inquiry.objects)
-        # for c in request['inquiry_type']:
-        #     newC = InquiryType()
-        #     newC.objects.get("__all__")
-        #     print("cacascsacdas")
-        #     print(newC.title.objects.get("__all__"))
-        #     newC.title = c
-        #     inquiry.inquiry_type.add(newC.title)
-        # inquiry.engagement.set(request['engagement'])
-        # inquiry.inquiry_type.set(request['inquiry_type'])
-
-        # for i in data:
-        #     print(i)
-        #     if (i == "engagement"):
-
-    #     # engagement = data[]
-    #     inquiry = Inquiry()
-        # inquiry.engagement
-        # student = User.objects.get(username=data['username'])
-
-        # graded_asnt = GradedAssignment()
-        # graded_asnt.assignment = assignment
-        # graded_asnt.student = student
-
-        # questions = [q for q in assignments.questions.all()]
-        # answers = [data['answers'][a] for a in data['answers']]
-
-        # answered_correct_count = 0
-        # for i in range(len(questions)):
-        #     if questions[i].answer.title == answers[i]:
-        #         answered_correct_count += 1
-        #     i += 1
-
-        # grade = answered_correct_count / len(questions)
-        # graded_asnt.grade = gradegraded_asnt.save()
-        # return graded_asnt
+    def scher4(self, i):
+        switcher={
+                0:InquiryType,
+                1:TargetAudience,
+                2:Topic,
+                3:ContactOption,
+                4:PreferLanguage,
+            }
+        return switcher.get(i,"Invalid day of week")
+    def scher5(self, i, m, inquiry):
+        sch = self.scher4(i)
+        if(i == 0):
+            mt = sch.objects.get(inquiry_type=m)    
+            inquiry.inquiry_type.add(mt.id)
+            return 
+        elif(i == 1):
+            mt = sch.objects.get(target_audience=m)
+            inquiry.inquiry_audience.add(mt.id)
+            return 
+        elif(i == 2):
+            mt = sch.objects.get(topic=m)
+            inquiry.inquiry_topic.add(mt.id)
+            return 
+        elif(i == 3):
+            mt = sch.objects.get(contact_option=m)
+            inquiry.contact_option.add(mt.id)
+            return 
+        elif(i == 4):
+            mt = sch.objects.get(language=m)
+            inquiry.language.add(mt.id)
+            return 
+        else:
+            return "Invalid day of week"
+         
 class ProfileInquiryListSerializer(serializers.ListSerializer):
     child = InquirySerializer()
     allow_null = True
@@ -308,13 +324,13 @@ class InquiryFeatureSerializer(serializers.ModelSerializer):
         fields = ("__all__")
 
 
-class VideoFormSerializer(serializers.ModelSerializer):
+class FormSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Video
+        model = File
         fields = ("__all__")
 
 
-class ImageFormSerializer(serializers.ModelSerializer):
+class FileFormSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Image
+        model = File
         fields = ("__all__")

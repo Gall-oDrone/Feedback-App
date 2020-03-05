@@ -8,6 +8,7 @@ import thunk from "redux-thunk";
 
 import authReducer from "./store/reducers/auth";
 import assignmentReducer from "./store/reducers/assignments";
+import inquiryReducer from "./store/reducers/inquiry"
 import surveyReducer from "./store/reducers/survey";
 import surveyChoiceReduce from "./store/reducers/surveyChoices";
 import gradedSurveyReducer from "./store/reducers/gradedSurvey";
@@ -21,11 +22,13 @@ import incetivesReducer from "./store/reducers/incentives"
 import reviewMeetingReducer from "./store/reducers/reviewMeetings"
 import profileReducer from "./store/reducers/profile"
 import profileInfoReducer from "./store/reducers/profileUserInfo"
+import profileInquiryReducer from "./store/reducers/profileInquiry"
 import profileSurveyReducer from "./store/reducers/profileSurvey"
 import dailyRoomReducer from "./store/reducers/dailyRooms"
 import profileUserInfoReducer from "./store/reducers/profileAccountUserInfo"
 import profileAccountDetailReducer from "./store/reducers/profileAccountInfo"
 import profileNTFNListReducer from "./store/reducers/profileNTFN"
+
 
 const composeEnhances = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
@@ -41,6 +44,7 @@ const rootReducer = combineReducers({
   profile: profileReducer,
   profileInfo: profileInfoReducer,
   incentives: incetivesReducer,
+  inquiry : inquiryReducer,
   roomDetail: dailyRoomReducer,
   profileUserInfo: profileUserInfoReducer,
   profileAccountInfo: profileAccountDetailReducer,
@@ -49,7 +53,8 @@ const rootReducer = combineReducers({
   gradedSurvey: gradedSurveyReducer,
   surveyChoices: surveyChoiceReduce,
   profileSurvey: profileSurveyReducer,
-  profileNTFN: profileNTFNListReducer
+  profileNTFN: profileNTFNListReducer,
+  profileInquiry: profileInquiryReducer
 
 });
 

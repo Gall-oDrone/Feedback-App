@@ -1,9 +1,11 @@
 import React from 'react';
 import { List, Avatar, Button, Select, Icon, Cascader, Collapse, Card, Input, Tag, Tabs, Skeleton, Checkbox, Row, Col } from 'antd';
 import axios from 'axios';
+import Hoc from "../../hoc/hoc";
 import { connect } from 'react-redux';
 import countryList from 'react-select-country-list'
 import peerDetail from "./PeerDetail";
+import PeerDetail from './PeerDetail';
 const { Search } = Input;
 const { Panel } = Collapse;
 const { TabPane } = Tabs;
@@ -48,7 +50,8 @@ class ProductList extends React.Component {
         error: null,
         data: [],
         country: null,
-        visible: false
+        visible: false,
+        index: null
     }
 
     showModal = () => {
@@ -77,18 +80,25 @@ class ProductList extends React.Component {
       this.setState({ country: value[0] })
     }
 
-        render () {
+    handleOpenModal = (i) => {
+      this.setState({ visible: true, index: i })
+    }
 
-          const callModal = () => {
-            return([
-            <peerDetail/>
-            ])
+        render () {
+          console.log('this.props', JSON.stringify(this.props));
+          console.log('this.state', JSON.stringify(this.state));
+          const inquiries = [];
+          for (let i=0; i < data.length; i+= 1) {
+            inquiries.push(
+              <Hoc key= {i}>
+                <PeerDetail id={i} visible={this.state.visible} {...this.props} />
+              </Hoc>
+              );
           }
                 return(
 
                   <div>
                     <Search placeholder="input search text" onSearch={value => console.log(value)} enterButton />
-                    
                     <br />
                     <Collapse defaultActiveKey={['1']} onChange={callback}>
                       <Panel header="Filter by" key="1">
@@ -140,12 +150,11 @@ class ProductList extends React.Component {
                         </Tabs>
                       </Panel>
                     </Collapse>
-
                     <br/>
                     <List
                     itemLayout="horizontal"
-                    dataSource={data}
-                    renderItem={item => (
+                    dataSource={this.props.data}
+                    renderItem={(item, index) => (
                     <List.Item
                     >
                         <List.Item.Meta
@@ -161,39 +170,64 @@ class ProductList extends React.Component {
                             </Col>
                             <Col span={8} offset={8}>
                               <Tag>
-                                MIT
+                                {item.user_university}
                               </Tag>
                             </Col>
                           </Row>
                       }
                         description={
-                          <div>
-                            <Row>
-                              <Col>
-                                "Ant Design, a design language for background applications, is refined by Ant UED Team"
+                          <div style={{display: 'block',  justifyContent:'center'}}>
+                            <Row justify="start">
+                              <Col span={24}>
+                                <h4>{item.content}</h4>
                               </Col>
                             </Row>
                             <Row justify="center">
                               <Col span={4}>
+                                <ul>
                                 <h5>Category:</h5>
                                 <Tag>
-                                  Homework Review
+                                  {item.inquiry_type}
                                 </Tag>
+                                </ul>
+                              </Col>
+                              <Col span={5}>
+                                <ul>
+                                <h5>Topic:</h5>
+                                <Tag>
+                                  {item.inquiry_topic}
+                                </Tag>
+                                </ul>
+                              </Col>
+                              <Col span={5}>
+                                  <span>Reviews: {item.rating_count}</span>
+                              </Col>
+                              <Col span={5}>
+                                  <span>Views: {item.view_count}</span>
                               </Col>
                               <Col span={4}>
-                                  <span>Reviews: </span>
-                              </Col>
-                              <Col span={4}>
-                                  <span>Views: </span>
+                                  <span>Status: </span>
+                                  <br/>
+                                  {item.opened === "True"? 
+                                    <Tag color="green">Opened</Tag>:<Tag color="red">Closed</Tag>}
                               </Col>
                             </Row>
                           </div>
                         }
                         />
-                        <Button onClick={()=> callModal()}type="primary">Reach out</Button>
+                        <Button onClick={()=> this.handleOpenModal(index)}type="primary">Reach out</Button>
+                        {/* {this.state.visible === true ?
+                        inquiries[index]
+                        :null
+                        } */}
                     </List.Item>
+                    
                     )}
                     />
+                    {this.state.visible === true ?
+                        inquiries[this.state.index]
+                        :null
+                        }
                 </div>
                 )
             }

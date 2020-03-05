@@ -1,5 +1,5 @@
 import React from 'react';
-import { List, Avatar, Button, Layout, Menu, Modal, Select, Icon, Cascader, Collapse, Card, Input, Tag, Tabs, Skeleton, Checkbox, Row, Col } from 'antd';
+import { List, Avatar, Button, Layout, Menu, Modal, Select, Icon, Cascader, Collapse, Card, Input, Tag, Tabs, Skeleton, Checkbox, Upload, Row, Col } from 'antd';
 import axios from 'axios';
 import { connect } from 'react-redux';
 import countryList from 'react-select-country-list'
@@ -49,7 +49,16 @@ class PeerDetail extends React.Component {
         error: null,
         data: [],
         country: null,
-        visible: true
+        visible: this.props.visible,
+        fileList: [
+          {
+            uid: '-1',
+            name: 'xxx.png',
+            status: 'done',
+            url: "http://127.0.0.1:8000/media/files/AyudaPagoVentanilla.pdf",
+            thumbUrl: "http://127.0.0.1:8000/media/files/AyudaPagoVentanilla.pdf",
+          },
+        ]
     }
     componentDidMount() {
         this.setState({loading:true})
@@ -58,7 +67,6 @@ class PeerDetail extends React.Component {
             this.setState.setState({
                 data: res.data,
                 loading: false
-
             });
         })
         .catch(err => {
@@ -66,8 +74,18 @@ class PeerDetail extends React.Component {
         })
     }
 
+    handleFileList = (thumbnail, fileList) => {
+      console.log("IUOIU")
+      console.log(JSON.stringify(thumbnail))
+      console.log(JSON.stringify(fileList[0].thumbUrl))
+      fileList[0].thumbUrl = thumbnail
+      console.log(JSON.stringify(fileList[0].thumbUrl))
+      return fileList
+    }
+
     handleOk = e => {
         console.log(e);
+        // this.props.visible = false
         this.setState({
           visible: false,
         });
@@ -75,6 +93,7 @@ class PeerDetail extends React.Component {
     
       handleCancel = e => {
         console.log(e);
+        // this.props.visible = false
         this.setState({
           visible: false,
         });
@@ -86,24 +105,28 @@ class PeerDetail extends React.Component {
     }
 
         render () {
+          console.log('this.props', JSON.stringify(this.props));
+          console.log('this.state', JSON.stringify(this.state));
+          const { previewVisible, previewImage, fileList, imageThumbUrl, imageUrl } = this.state;
                 return(
                   <div>
-                     <Button type="primary" onClick={this.showModal}>
+                     {/* <Button type="primary" onClick={this.showModal}>
           Open Modal
-        </Button>
+        </Button> */}
                     <Modal  title="Basic Modal"
                     width={820}
                     visible={this.state.visible}
                     onOk={this.handleOk}
-                    onCancel={this.handleCancel}>
+                    onCancel={this.handleCancel}
+                    key={`Modal:${this.props.id}`}>
                         <div>
-                        <Layout>
-                          <Content style={{ padding: '0 50px' }}>
+                        <Layout key={this.props.id}>
+                          <Content style={{ padding: '0 50px' }} key={this.props.id}>
                             <div className="site-card-border-less-wrapper">
-                              <Card title="Request title" bordered={false} >
+                              <Card title={this.props.data[this.props.id].title} bordered={false} key={this.props.id}>
                                 <Row>
                                   <Col>
-                                    <p>Description</p>
+                                    <p>{this.props.data[this.props.id].content}</p>
                                   </Col>
                                 </Row>
                                 <Row>
@@ -126,7 +149,7 @@ class PeerDetail extends React.Component {
                                 </Row>
                                 <Row>
                                   <Col>
-                                    <p>Language</p>
+                                    <p>{this.props.data[this.props.id].language}</p>
                                   </Col>
                                 </Row>
                                 <Row>
@@ -137,6 +160,14 @@ class PeerDetail extends React.Component {
                                 <Row>
                                   <Col>
                                     <p>Rewards</p>
+                                  </Col>
+                                  <Col>
+                                  <p>Upload</p>
+                                    <Upload name="logo" customRequest={this.dummyRequest}//action="http://localhost:8001/media/images" //fileList={fileList} showUploadList={true}
+                                      // onPreview={this.handleFileList(this.props.data[this.props.id].ufile, fileList)} 
+                                      listType="picture"
+                                      defaultFileList= {fileList} //onChange={this.handleFileChange} >
+                                    />
                                   </Col>
                                 </Row>
                               </Card>

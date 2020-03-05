@@ -181,7 +181,7 @@ class CustomLayout extends React.Component {
               <Link to="/peers/">Peers</Link>
             </Breadcrumb.Item>
             <Breadcrumb.Item>
-              <Link to="/peers2/">Peers2</Link>
+              <Link to="/inquiries/">Inquiries</Link>
             </Breadcrumb.Item>
             <Breadcrumb.Item>
               <Link to="/peers3/">Peers3</Link>

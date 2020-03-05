@@ -9,11 +9,11 @@ WSGI_APPLICATION = 'home.wsgi.prod.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'djangogirls',
-        'USER': 'name',
-        'PASSWORD': '',
-        'HOST': 'localhost',
-        'PORT': '',
+        'NAME': 'd2sgdtgibmkt3q',
+        'USER': 'wvbpaxtwmpwkue',
+        'PASSWORD': 'e922621b08ee02a41439f60c23844a9bee221e556f3f12a8823bfb3b1d29a4e6',
+        'HOST': 'ec2-18-213-176-229.compute-1.amazonaws.com',
+        'PORT': '5432',
     }
 }
 

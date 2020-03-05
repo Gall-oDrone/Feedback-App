@@ -109,7 +109,7 @@ class ProfileInfo(models.Model):
     profile_username = models.ForeignKey(User, on_delete=models.CASCADE)
     name = models.CharField(max_length=100, blank=True, null=True)
     country = CountryField(blank_label='(select country)')
-    university = models.ForeignKey(Universities, on_delete=models.CASCADE)
+    university = models.ForeignKey(Universities, on_delete=models.CASCADE, related_name="profile_university")
     graduate = models.BooleanField(default=False)
     undergraduate = models.BooleanField(default=False)
     work_experience = models.BooleanField(default=False)

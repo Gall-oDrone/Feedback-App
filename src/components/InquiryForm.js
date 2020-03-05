@@ -11,13 +11,15 @@ import {
   Checkbox,
   Radio,
   Row,
+  Cascader,
   Col,
-  DatePicker, TimePicker
+  DatePicker
 } from 'antd';
+import moment from "moment";
 import axios from 'axios';
 
 const { Option } = Select;
-const { MonthPicker, RangePicker } = DatePicker;
+const { RangePicker } = DatePicker;
 const rangeConfig = {
   rules: [{ type: 'array', required: true, message: 'Please select time!' }],
 };
@@ -50,6 +52,92 @@ function getBase64(file) {
   });
 }
 
+const i_type = [
+  {
+    value: 'homework review',
+    label: 'Homework Review'
+  },
+  {
+    value: 'admissions',
+    label: 'Admissions'
+  },
+  {
+    value: 'college information',
+    label: 'College Information'
+  },
+  {
+    value: 'scholarships',
+    label: 'Scholarships'
+  },
+  {
+    value: 'class review',
+    label: 'Class Review'
+  },
+  {
+    value: 'other',
+    label: 'Other'
+  }
+]
+const language = [
+  {
+    value: 'spanish',
+    label: 'Spanish'
+  },
+  {
+    value: 'english',
+    label: 'English'
+  },
+]
+const topic = [
+  {
+    value: 'Economics',
+    label: 'Economics'
+  },
+  {
+    value: 'Finance',
+    label: 'Finance'
+  },
+  {
+    value: 'Econometrics',
+    label: 'Econometrics'
+  },
+  {
+    value: 'Machine Learning',
+    label: 'Machine Learning'
+  },
+  {
+    value: 'AI',
+    label: 'AI'
+  }
+]
+
+const universities = [
+  {
+    value: 'ITAM',
+    label: 'Instituto Autónomo Tecnológico de México (ITAM)'
+  },
+  {
+    value: 'CIDE',
+    label: 'Centro de Investigación y Docencias Económicas (CIDE)'
+  },
+  {
+    value: 'COLMEX',
+    label: 'El Colegio de México (COLMEX)'
+  },
+  {
+    value: 'TEC_MONTERREY',
+    label: 'Instituto Tecnológico y de Estudios Superiores de Monterrey (ITESM)'
+  },
+  {
+    value: 'IBERO',
+    label: 'Universidad Iberoamericana (IBERO)'
+  },
+  {
+    value: 'Massachusetts Institute of Technology',
+    label: 'Massachusetts Institute of Technology (MIT)'
+  }
+]
+
 class ArticleCustomForm extends React.Component {
 
   state = { 
@@ -59,6 +147,9 @@ class ArticleCustomForm extends React.Component {
     previewImage: '',
     imageThumbUrl: null,
     imageUrl: null,
+    topic: null,
+    inquirty_type: null,
+    language: null,
     fileList: [
       {
         uid: '-1',
@@ -76,6 +167,19 @@ class ArticleCustomForm extends React.Component {
       onSuccess("ok");
     }, 5000);
   };
+
+  handleTopic = value => {
+    console.log('handleTopic', value);
+    this.setState({ topic: value[0] })
+  }
+  handleInquiryType = value => {
+    console.log('handleInquiryType', value);
+    this.setState({ inquirty_type: value[0] })
+  }
+  handleLanguage = value => {
+    console.log('handleLanguage', value);
+    this.setState({ language: value[0] })
+  }
 
   normFile = e => {
     let fileList = [...e.fileList];
@@ -127,45 +231,62 @@ class ArticleCustomForm extends React.Component {
     });
   };
 
-  handleFormSubmit = async (event, requestType, articleID) => {
+  handleFormSubmit = async (event) => {
     event.preventDefault();
+    console.log("handleFormSubmit")
     let formData = new FormData();
     await this.props.form.validateFields((err, values) => {
+      console.log("handleFormSubmit values: ", JSON.stringify(values));
       const title =
         values["title"] === undefined ? null : values["title"];
       const content =
         values["content"] === undefined ? null : values["content"];
-      const categories =
-        values["categories"] === undefined ? null : values["categories"];
-      const engagement =
-        values["feedback_type"] === undefined ? null : values["feedback_type"];
+      const topic =
+        values["topic"] === undefined ? null : values["topic"];
+      const inquiry =
+        values["inquiry_type"] === undefined ? null : values["inquiry_type"];
+      const university =
+        values["university"] === undefined ? null : values["university"];
+      const language =
+        values["language"] === undefined ? null : values["language"];
+        const rewards =
+        values["rewards"] === undefined ? null : values["rewards"];
+      const contact =
+        values["contact_options"] === undefined ? null : values["contact_options"];
+        const audience =
+        values["audience"] === undefined ? null : values["audience"];
       const file = 
         values["upload"] === undefined ? null : values["upload"];
-      const file2 = 
-        values["uploadV"] === undefined ? null : values["uploadV"];
+      console.log("CCS")
       const postObj = {
-        user: this.props.username,
+        user: "q",
         title: values.title,
-        room: "1",
         content: values.content,
-        engagement: values.feedback_type,
-        categories: values.categories,
+        inquiry_type: values.inquiry_type,
+        university: values.university,
+        language: values.language,
+        topic: values.topic,
+        contact: values.contact_options,
+        audience: values.audience,
+        rewards: values.rewards,
+        // ufile: values.upload
       }
+      console.log("postObj: ", JSON.stringify(postObj))
       formData.append("file", file[0].originFileObj)
-      formData.append("media", file2[0].originFileObj)
       formData.append("data", JSON.stringify(postObj))
+      console.log("formData: ", JSON.stringify(formData))
+      console.log("postObj: ", JSON.stringify(postObj))
       if (!err) {
         // axios.defaults.xsrfHeaderName = "X-CSRFTOKEN";
         // axios.defaults.xsrfCookieName = "csrftoken";
         axios.defaults.headers = {
           "content-type": "multipart/form-data",
+          // "Content-Type": "application/json",
           Authorization: `Token ${this.props.token}`
         };
-        console.log("formData: ", JSON.stringify(formData))
-        if (requestType === "post") {
-          console.log("params: " + title + " " + content + " "+ engagement)
-          console.log("before posting article")
-          axios.post("http://127.0.0.1:8000/articles/create/", 
+        console.log("formData: ", JSON.stringify(postObj))
+        console.log("before posting article")
+          axios.post("http://127.0.0.1:8000/inquiries/create/", 
           formData
           )
             .then(res => {
@@ -175,9 +296,10 @@ class ArticleCustomForm extends React.Component {
             })
             .catch(error => console.error(error))
             console.log('Error');
-        }
-
+        
         console.log('Received values of form: ', values);
+      } else{
+        console.log('Received error: ', err);
       }
     });
   }
@@ -204,12 +326,14 @@ class ArticleCustomForm extends React.Component {
         this.props.articleID)}>
         <Form.Item label="Post Title" hasFeedback>
           {getFieldDecorator('title', {
+            initialValue: "C",
             rules: [{ required: true, message: 'Please enter title!' }],
           })(<Input name="title" />
           )}
         </Form.Item>
         <Form.Item label="Content" hasFeedback>
           {getFieldDecorator('content', {
+            initialValue: "C",
             rules: [{ required: true, message: 'Please enter a content' }],
           })(<Input.TextArea />
           )}
@@ -217,54 +341,52 @@ class ArticleCustomForm extends React.Component {
 
         <Form.Item label="Inquiry Type">
           {getFieldDecorator('inquiry_type', {
+            initialValue: ["homework review"],
             rules: [
-              { required: true, message: 'Please select a field for your project!', type: 'array' },
+              { type:"array", required: true, message: 'Please select a field for your project!', type: 'array' },
             ],
           })(
-            <Select name="categories" mode="multiple" placeholder="Please select a field">
-              <Option value="1">Data Science</Option>
-              <Option value="2">AI</Option>
-              <Option value="3">Business to Business (B2B)</Option>
-            </Select>,
+            <Cascader options={i_type} />
           )}
         </Form.Item>
         <Form.Item label="Topic">
           {getFieldDecorator('topic', {
+            initialValue: ["Econometrics"],
             rules: [
-              { required: true, message: 'Please select a field for your project!', type: 'array' },
+              { type: "array", required: true, message: 'Please select a field for your project!', type: 'array' },
             ],
           })(
-            <Select name="categories" mode="multiple" placeholder="Please select a field">
-              <Option value="1">Data Science</Option>
-              <Option value="2">AI</Option>
-              <Option value="3">Business to Business (B2B)</Option>
-            </Select>,
+            <Cascader options={topic} />
           )}
         </Form.Item>
         <Form.Item label="Select a target University">
           {getFieldDecorator('university', {
+            initialValue: ["TEC_MONTERREY"],
+            rules: [
+              { required: true, message: 'Please select a field for your project!', type: 'array' },
+            ],
+          })(
+            <Cascader options={universities} />
+          )}
+        </Form.Item>
+        <Form.Item label="Select a target Audience">
+          {getFieldDecorator('audience', {
+            initialValue: ["undergraduates"],
             rules: [
               { required: true, message: 'Please select a field for your project!', type: 'array' },
             ],
           })(
             <Select name="categories" mode="multiple" placeholder="Please select a field">
-              <Option value="1">Data Science</Option>
-              <Option value="2">AI</Option>
-              <Option value="3">Business to Business (B2B)</Option>
+              <Option value="'graduates'">'Graduates'</Option>
+              <Option value="'undergraduates'">'Undergraduates'</Option>
+              <Option value="'pHD'">'pHD'</Option>
+              <Option value="'MBA'">'MBA'</Option>
+              <Option value="'MS'">'MS'</Option>
             </Select>,
           )}
         </Form.Item>
-          {/* <Form.Item label="Experienced Users?">
-        {getFieldDecorator(`experienced`)(
-              <Radio.Group >
-                <Radio.Button value={true}>Yes</Radio.Button>
-                <Radio.Button value={false}>No</Radio.Button>
-                <Radio.Button value={"Indifferent"}>Indifferent</Radio.Button>
-              </Radio.Group>,
-            )}
-          </Form.Item> */}
           <Form.Item label="Offer Rewards">
-        {getFieldDecorator(`attendance`)(
+        {getFieldDecorator(`rewards`)(
               <Radio.Group >
                 <Radio.Button value={true}>Yes</Radio.Button>
                 <Radio.Button value={false}>No</Radio.Button>
@@ -299,20 +421,23 @@ class ArticleCustomForm extends React.Component {
           contact_option.some(el => el === "5") ? (
             <div>
             <Form.Item label="Prefered Spoken Languagues">
-              {getFieldDecorator('categories', {
+              {getFieldDecorator('language', {
                 rules: [
-                  { required: true, message: 'Please select a field for your project!', type: 'array' },
+                  { type: "array", required: true, message: 'Please select a field for your project!', type: 'array' },
                 ],
               })(
-                <Select name="categories" mode="multiple" placeholder="Please select a field">
-                  <Option value="1">Data Science</Option>
-                  <Option value="2">AI</Option>
-                  <Option value="3">Business to Business (B2B)</Option>
-                </Select>,
+                <Cascader options={language} />
               )}
             </Form.Item>,
-            <Form.Item name="range-time-picker" label="RangePicker[showTime]" {...rangeConfig}>
-              <RangePicker showTime format="YYYY-MM-DD HH:mm:ss" />
+            <Form.Item name="range-time-picker" label="RangePicker" {...rangeConfig}>
+              <RangePicker 
+                showTime 
+                format="YYYY-MM-DD HH:mm:ss" 
+                disabledDate={(current) => {
+                  return moment().add(-1, 'days')  >= current ||
+                       moment().add(1, 'month')  <= current;
+                  }}
+              />
           </Form.Item>
             </div>
           ):null
@@ -332,8 +457,8 @@ class ArticleCustomForm extends React.Component {
                 )}
         </Form.Item>
         <Form.Item wrapperCol={{ span: 12, offset: 6 }}>
-          <Button type="primary" htmlType="submit">
-            {this.props.btnText}
+          <Button type="primary" htmlType="submit" >
+            Post
           </Button>
         </Form.Item>
       </Form>

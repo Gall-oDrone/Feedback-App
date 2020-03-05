@@ -1,7 +1,7 @@
 from django.contrib.auth import get_user_model
 from django.conf import settings
 from django.db import models
-from users.models import User
+from users.models import User, ProfileInfo, Universities
 
 class InquiryType(models.Model):
     HR = 'homework review'
@@ -44,18 +44,18 @@ class TargetAudience(models.Model):
         return self.target_audience
 
 class Topic(models.Model):
-    G = 'graduates'
-    U = 'undergraduates'
-    PHD = 'pHD'
-    MBA = 'MBA'
-    MS = 'MS'
+    G = 'Economics'
+    U = 'Finance'
+    PHD = 'Econometrics'
+    MBA = 'Machine Learning'
+    MS = 'AI'
     OTHER = 'other'
     TOPICS = [
-        (G, ('graduates')),
-        (U, ('undergraduates')),
-        (PHD, ('pHD')),
-        (MBA, ('MBA')),
-        (MS, ('MS')),
+        (G, ('Economics')),
+        (U, ('Finance')),
+        (PHD, ('Econometrics')),
+        (MBA, ('Machine Learning')),
+        (MS, ('AI')),
         (OTHER, ('other')),
     ]
     topic=models.CharField(max_length=25, choices=TOPICS, blank=True)
@@ -114,6 +114,18 @@ class ContactOption(models.Model):
     def __str__(self):
         return self.contact_option
 
+class PreferLanguage(models.Model):
+    SPANISH = 'spanish'
+    ENGLISH = 'english'
+    CHOICES = [
+        (SPANISH, ('spanish')),
+        (ENGLISH, ('english')),
+    ]
+    language=models.CharField(max_length=15, choices=CHOICES, blank=True)
+
+    def __str__(self):
+        return self.languages
+
 class Inquiry(models.Model):
     title = models.CharField(max_length=60)
     content = models.TextField(max_length=30, blank=True)
@@ -123,15 +135,24 @@ class Inquiry(models.Model):
     avg_rating = models.IntegerField(default=0)
     likes_count = models.IntegerField(default=0)
     tag = models.ManyToManyField(Tag, related_name="inquiry_tags")
-    contact = models.ManyToManyField(ContactOption)
+
+    user_university = models.ForeignKey(Universities, on_delete=models.CASCADE)
+    
     author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="inquiry_author", null=True)
     timestamp = models.DateTimeField(auto_now_add=True, null=True)
-    start = models.DateTimeField(auto_now_add=False, null=True)
+    start = models.DateTimeField(auto_now_add=True, null=True)
     end = models.DateTimeField(auto_now_add=False, null=True)
-    ufile = models.ImageField(upload_to="images/", blank=True)
+    opened = models.BooleanField(default=True)
+    closed = models.DateTimeField(auto_now_add=False, null=True)
+    ufile = models.ImageField(upload_to="files/", blank=True)
     rewards = models.BooleanField(default=False)
+
     inquiry_type = models.ManyToManyField(InquiryType)
     inquiry_audience = models.ManyToManyField(TargetAudience)
+    inquiry_topic = models.ManyToManyField(Topic)
+    contact_option = models.ManyToManyField(ContactOption)
+    language = models.ManyToManyField(PreferLanguage)
+    
     previous_inquiry = models.ForeignKey("self", related_name='previous',on_delete=models.SET_NULL,blank=True, null=True)
     next_inquiry = models.ForeignKey("self", related_name='next', on_delete=models.SET_NULL,blank=True, null=True)
 

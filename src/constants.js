@@ -74,3 +74,13 @@ export const notificationListURL = username => `${endpoint}/notifications/list/$
 export const notificationDetailURL = (notificationID, username)=> `${endpoint}/notifications/${notificationID}/detail/${username}/`
 export const notificationCreateURL = (notificationID, username)=> `${endpoint}/notifications/${notificationID}/detail/update/${username}/`
 export const notificationURL = (notificationID, username)=> `${endpoint}/notifications/${notificationID}/detail/delete/${username}/`
+
+export const inquiryListURL = `${endpoint}/notifications/list/`
+export const inquiryDetailURL = (notificationID)=> `${endpoint}/notifications/${notificationID}/detail/`
+export const inquiryCreateURL = `${endpoint}inquiries/create/`
+export const inquiryURL = (notificationID, username)=> `${endpoint}/notifications/${notificationID}/detail/delete/${username}/`
+
+export const inquiryListURL = username => `${endpoint}/notifications/list/${username}/`
+export const inquiryDetailURL = (notificationID, username)=> `${endpoint}/notifications/${notificationID}/detail/${username}/`
+export const inquiryCreateURL = (notificationID, username)=> `${endpoint}/notifications/${notificationID}/detail/update/${username}/`
+export const inquiryURL = (notificationID, username)=> `${endpoint}/notifications/${notificationID}/detail/delete/${username}/`

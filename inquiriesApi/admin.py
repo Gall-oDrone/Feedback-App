@@ -4,7 +4,8 @@ from .models import(
     Inquiry, Tag, Tagging, InquiryType, 
     Comment, InquiryView,
     ContactOption, Like,
-    Rating, Comment, CommentReply
+    Rating, Comment, CommentReply,
+    TargetAudience, Topic
 ) 
 
 # class RatingAdmin(admin.ModelAdmin):
@@ -16,6 +17,8 @@ admin.site.register(Tagging)
 admin.site.register(InquiryType)
 admin.site.register(InquiryView)
 admin.site.register(ContactOption)
+admin.site.register(TargetAudience)
+admin.site.register(Topic)
 admin.site.register(Like)
 admin.site.register(Rating)
 admin.site.register(Comment)

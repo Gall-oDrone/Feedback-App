@@ -25,12 +25,23 @@ class App2 extends React.Component {
     minutes: 1,
     seconds: 0,
     disabledB:false,
-    disabledA:true
+    disabledA:true,
+    caller:false
   };
 
   handleModeChange = e => {
     const mode = e.target.value;
     this.setState({ mode });
+  };
+
+  handleCaller = (par) => {
+    par.forEach(el => {
+      if(this.props.username !== el){
+        this.setState({
+          caller:true
+        })
+      }
+    })
   };
 
   componentDidMount() {
@@ -87,10 +98,25 @@ componentWillUnmount() {
           this.state.defaultKey = "2"
         }
       }
+      const start = moment();
+      let minuteReminder = 5 - start.minute() % 5;
+      const end = moment().add('m', 5); 
+      const duration = moment.duration(end.diff(start))
       const duration2 = moment().utcOffset(0).set({ minute: minutes, second: seconds}).format("mm:ss")
+      const duration3 = moment().utcOffset(0).set({ minute: minutes, second: seconds}).format("mm:ss")
       var ss = moment(duration2, 'mm:ss: A').diff(moment().startOf('day'), 'seconds');
+      var ss2 = moment(duration3, 'mm:ss: A').diff(moment().startOf('day'), 'seconds');
+      var ss3 = moment(minuteReminder, 'mm:ss: A').diff(moment().startOf('day'), 'seconds');
       var totalSec = moment("30:00", 'mm:ss: A').diff(moment().startOf('day'), 'seconds');
+      var totalSec2 = moment("05:00", 'mm:ss: A').diff(moment().startOf('day'), 'seconds');
+      const dateTime = moment(start).add(minuteReminder, "minutes").format("DD.MM.YYYY, h:mm:ss a");
       console.log("this.state: "+ JSON.stringify(this.state))
+      console.log("start: "+ JSON.stringify(start))
+      console.log("end: "+ JSON.stringify(end))
+      console.log("duration: "+ JSON.stringify(duration))
+      console.log("start.minute(): "+ JSON.stringify(start.minute()))
+      console.log("minuteReminder: "+ JSON.stringify(minuteReminder))
+      console.log("ss3: "+ JSON.stringify(ss3))
       return (
         <div>
           {this.props.roomDetails.RoomDetail !== undefined ? (
@@ -99,9 +125,12 @@ componentWillUnmount() {
                 <Col span={3} pull={3}>
                     <div>
                       
-                      { timeNow2 > this.props.roomDetails.RoomDetail.date_to_appointment
+                      { timeNow2 < this.props.roomDetails.RoomDetail.date_to_appointment
                           ? <Button disabled icon="user"> Call user</Button>
-                          : <Button icon="user" onClick={()=>{this.decline()}}> Call user</Button>
+                          : 
+                            this.state.caller === true ? (
+                              <Progress percent={ss3/totalSec2 * 100} format={() => `${duration3}`}/>
+                            ):(<Button icon="user" onClick={()=>{this.handleCaller(this.props.roomDetails.RoomDetail.participants)}}> Call user</Button>)
                       }
                     </div>
                   </Col>

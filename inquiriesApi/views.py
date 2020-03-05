@@ -12,9 +12,9 @@ from rest_framework.status import(
     HTTP_400_BAD_REQUEST
 )
 from rest_framework import permissions
-from .models import Inquiry, Tag, Tagging, InquiryType, InquiryView, Like, Rating, Comment, Video, Image, ContactOption
+from .models import Inquiry, Tag, Tagging, InquiryType, InquiryView, Like, Rating, Comment, File, ContactOption
 from users.models import User
-from .serializers import InquirySerializer, InquiryFeatureSerializer, VideoFormSerializer, CommentSerializer, LikeSerializer, LikeListSerializer, RatingSerializer, CommentListSerializer, ImageFormSerializer, ProfileInquiryListSerializer
+from .serializers import InquirySerializer, InquiryFeatureSerializer, FormSerializer, CommentSerializer, LikeSerializer, LikeListSerializer, RatingSerializer, CommentListSerializer, FileFormSerializer, ProfileInquiryListSerializer
 from analytics.models import View
 from django.http import Http404
 from rest_framework import viewsets
@@ -85,17 +85,6 @@ class InquiryListView(ListAPIView):
             .annotate(Count("tags__tag"))
         return queryset
 
-    def showvideo(request):
-        lastvideo = Video.objects.last()
-        videofile = lastvideo.videofile
-        form = VideoFormSerializer(request.POST or None, request.FILES or None)
-        if form.is_valid():
-            form.save()
-        context = {'videofile': videofile,
-                   'form': form
-                   }
-        return render(request, 'Blog/videos.html', context)
-
     def get_author(user):
         qs = Author.objects.filter(user=user)
         if qs.exists():
@@ -131,16 +120,6 @@ class InquiryCreateView(CreateAPIView):
         if create_inquiry:
             return Response(status=HTTP_201_CREATED)
         return Response(status=HTTP_400_BAD_REQUEST)
-
-    # def post(self, request):
-    #     print(request.data)
-    #     serializer = InquirySerializer(data=request.data)
-    #     serializer.is_valid()
-    #     creating_Inquiry = serializer.create(request)
-    #     if creating_Inquiry:
-    #         return Response(status=HTTP_201_CREATED)
-    #     return Response(status=HTTP_400_BAD_REQUEST)
-
 
 class InquiryDeleteView(DestroyAPIView):
     queryset = Inquiry.objects.all()
@@ -266,33 +245,21 @@ class ProfileInquiryDetailView(RetrieveUpdateDestroyAPIView):
         file_type = myfile.content_type.split('/')[0]
         fs = FileSystemStorage()
         valid_extensions = ['.pdf', '.doc', '.docx', '.jpg', '.png', '.xlsx', '.xls']
-        if file_type == "video":
-            print("myfile.name is video")
-            videoD = Video()
-            filename = fs.save("videos/"+myfile.name, myfile)
-            uploaded_file_url = fs.url(filename)
-            videoD.videofile = "videos/"+myfile.name
-            videoD.save()
-            print("videoD, ", videoD)
-            print("videoD.id, ", videoD.id)
-            inquiry.video= Video(id=videoD.id)
-            # raise ValidationError('Unsupported file extension.')
-        else: 
-            print("myfile.name is image")
-            filename = fs.save("images/"+myfile.name, myfile)
-            uploaded_file_url = fs.url(filename)
-            print("uploaded_file_url")
-            print(uploaded_file_url)
-            # with open(uploaded_file_url) as f:
-            #     data = f.read()
-            #     inquiry.thumbnail.save("images/"+myfile.name, ContentFile(data))
-            print(myfile.name)
-            print(myfile.name)
-            # print(os.path.basename(uploaded_file_url))
-            print(inquiry.thumbnail)
-            inquiry.thumbnail = "images/"+myfile.name
-            print("inquiry.thumbnail")
-            print(inquiry.thumbnail)
+        print("myfile.name is image")
+        filename = fs.save("images/"+myfile.name, myfile)
+        uploaded_file_url = fs.url(filename)
+        print("uploaded_file_url")
+        print(uploaded_file_url)
+        # with open(uploaded_file_url) as f:
+        #     data = f.read()
+        #     inquiry.thumbnail.save("images/"+myfile.name, ContentFile(data))
+        print(myfile.name)
+        print(myfile.name)
+        # print(os.path.basename(uploaded_file_url))
+        print(inquiry.thumbnail)
+        inquiry.thumbnail = "images/"+myfile.name
+        print("inquiry.thumbnail")
+        print(inquiry.thumbnail)
         inquiry.save()
         # inquiry.thumbnail = self.request.data["file"]get("thumbnail")
         # inquiry.update(
@@ -608,54 +575,40 @@ class UpdateComment(UpdateAPIView):
             return Response(status=HTTP_201_CREATED)
         return Response(status=HTTP_400_BAD_REQUEST)
 
-# class VideoViewSet(viewsets.ModelViewSet):
-class VideoViewSet(viewsets.ModelViewSet):
-    queryset = Video.objects.all()
-    serializer_class = VideoFormSerializer
-    parser_classes = (MultiPartParser, FileUploadParser, FormParser,)
-    permission_classes = (permissions.IsAuthenticated,)
-
-    def createVideo(self, request, *args, **kwargs):
-        file_serializer = VideoFormSerializer(data=request.data)
-        if file_serializer.is_valid():
-          file_serializer.save()
-          return Response(file_serializer.data, status=status.HTTP_201_CREATED)
-        else:
-          return Response(file_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-class ImageCreateView(CreateAPIView):
+# class ViewSet(viewsets.ModelViewSet):
+class FileCreateView(CreateAPIView):
     parser_classes = (MultiPartParser, FormParser, FileUploadParser)
-    queryset = Image.objects.all()
-    serializer_class = ImageFormSerializer
+    queryset = File.objects.all()
+    serializer_class = FileFormSerializer
     permission_classes = (permissions.AllowAny,)
 
     @csrf_exempt
     def post(self, request, *args, **kwargs):
-        print("createImage at ImageViewSet")
+        print("createFile at FileViewSet")
         print(request.data)
         myfile = request.FILES['file']
         fs = FileSystemStorage()
         filename = fs.save(myfile.name, myfile)
         uploaded_file_url = fs.url(filename)
-        imageSerializer = ImageFormSerializer(data=request.data)
+        imageSerializer = FileFormSerializer(data=request.data)
         if imageSerializer.is_valid():
           imageSerializer.save()
           return Response(imageSerializer.data, status=status.HTTP_201_CREATED)
         else:
           return Response(imageSerializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-class ImageDestroyView(DestroyAPIView):
+class FileDestroyView(DestroyAPIView):
     parser_classes = (MultiPartParser, FormParser, FileUploadParser, JSONParser)
-    queryset = Image.objects.all()
-    serializer_class = ImageFormSerializer
+    queryset = File.objects.all()
+    serializer_class = FileFormSerializer
     permission_classes = (permissions.IsAuthenticated,)
 
     def delete(self, request, *args, **kwargs):
-        print("createImage at ImageViewSet")
+        print("createFile at FileViewSet")
         print("self.request.FILES")
         print(self.request.FILES)
         print(request.objects.all())
-        imageSerializer = ImageFormSerializer(data=request.data)
+        imageSerializer = FileFormSerializer(data=request.data)
         if imageSerializer.is_valid():
           imageSerializer.save()
           return Response(imageSerializer.data, status=status.HTTP_201_CREATED)

@@ -16,16 +16,15 @@ from inquiriesApi.views import (
     CommentDetailView,
     CreateComment,
     UpdateComment,
-    VideoViewSet,
-    ImageCreateView,
-    ImageDestroyView,
+    FileCreateView,
+    FileDestroyView,
     CommentListView
 )
 
 # from inquiriesApi.views import InquiryViewSet
 
 router = DefaultRouter()
-router.register(r'', VideoViewSet, base_name='video')
+# router.register(r'', VideoViewSet, base_name='video')
 # router.register(r'', CommentViewSet, base_name='comment')
 # urlpatterns = router.urls
 urlpatterns = [
@@ -47,8 +46,8 @@ urlpatterns = [
     path('<pk>/update-comment/<id>/', UpdateComment.as_view()),
     path('<pk>/comment/<id>/', CommentDetailView.as_view()),
     #path('<pk>/video/', VideoViewSet.as_view()),
-    path('create/images/', ImageCreateView.as_view),
-    path('destroy/images/', ImageDestroyView.as_view),
+    path('create/images/', FileCreateView.as_view),
+    path('destroy/images/', FileDestroyView.as_view),
     url(r'^video/', include(router.urls)),
     # url(r'^comment/', include(router.urls))
 
