@@ -20,7 +20,7 @@ urlpatterns = [
     # path('inquiries/', include('inquiriesApi.inquiries.urls')),
     # path('notifications/', include('notificationsApi.notifications.urls')),
     # path('live-chat/', include('livechatApi.livechat.urls')),
-    path('users/', include('users.urls')),
+    # path('users/', include('users.urls')),
     path('accounts/', include('allauth.urls')),
     # path('', TemplateView.as_view(template_name='index.html'))
     # re_path(r'^.*', TemplateView.as_view(template_name='index.html'))
