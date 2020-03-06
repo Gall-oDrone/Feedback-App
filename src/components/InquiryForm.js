@@ -253,8 +253,10 @@ class ArticleCustomForm extends React.Component {
         values["rewards"] === undefined ? null : values["rewards"];
       const contact =
         values["contact_options"] === undefined ? null : values["contact_options"];
-        const audience =
+      const audience =
         values["audience"] === undefined ? null : values["audience"];
+      const range =
+        values["rangePicker"] === undefined ? null : values["rangePicker"];
       const file = 
         values["upload"] === undefined ? null : values["upload"];
       console.log("CCS")
@@ -267,6 +269,7 @@ class ArticleCustomForm extends React.Component {
         language: values.language,
         topic: values.topic,
         contact: values.contact_options,
+        range: values.rangePicker,
         audience: values.audience,
         rewards: values.rewards,
         // ufile: values.upload
@@ -377,11 +380,11 @@ class ArticleCustomForm extends React.Component {
             ],
           })(
             <Select name="categories" mode="multiple" placeholder="Please select a field">
-              <Option value="'graduates'">'Graduates'</Option>
-              <Option value="'undergraduates'">'Undergraduates'</Option>
-              <Option value="'pHD'">'pHD'</Option>
-              <Option value="'MBA'">'MBA'</Option>
-              <Option value="'MS'">'MS'</Option>
+              <Option value="'graduates'">Graduates</Option>
+              <Option value="'undergraduates'">Undergraduates</Option>
+              <Option value="'pHD'">pHD</Option>
+              <Option value="'MBA'">MBA</Option>
+              <Option value="'MS'">MS</Option>
             </Select>,
           )}
         </Form.Item>
@@ -423,21 +426,28 @@ class ArticleCustomForm extends React.Component {
             <Form.Item label="Prefered Spoken Languagues">
               {getFieldDecorator('language', {
                 rules: [
-                  { type: "array", required: true, message: 'Please select a field for your project!', type: 'array' },
+                  { type: "array", required: true, message: 'Please select a field for your project!' },
                 ],
               })(
                 <Cascader options={language} />
               )}
             </Form.Item>,
             <Form.Item name="range-time-picker" label="RangePicker" {...rangeConfig}>
-              <RangePicker 
-                showTime 
-                format="YYYY-MM-DD HH:mm:ss" 
-                disabledDate={(current) => {
-                  return moment().add(-1, 'days')  >= current ||
-                       moment().add(1, 'month')  <= current;
-                  }}
-              />
+              {getFieldDecorator('rangePicker', {
+                  rules: [
+                    { type: "array", required: true, message: 'Please select an availability range!'},
+                  ],
+                })(
+                  <RangePicker 
+                    showTime 
+                    format="YYYY-MM-DD HH:mm:ss" 
+                    disabledDate={(current) => {
+                      return moment().add(-1, 'days')  >= current ||
+                          moment().add(1, 'month')  <= current;
+                      }}
+                  />
+                )}
+              
           </Form.Item>
             </div>
           ):null

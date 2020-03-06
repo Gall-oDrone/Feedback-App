@@ -118,7 +118,7 @@ class PeerDetail extends React.Component {
                     visible={this.state.visible}
                     onOk={this.handleOk}
                     onCancel={this.handleCancel}
-                    key={`Modal:${this.props.id}`}>
+                    key={this.props.id}>
                         <div>
                         <Layout key={this.props.id}>
                           <Content style={{ padding: '0 50px' }} key={this.props.id}>
@@ -149,17 +149,17 @@ class PeerDetail extends React.Component {
                                 </Row>
                                 <Row>
                                   <Col>
-                                    <p>{this.props.data[this.props.id].language}</p>
+                                    <p>Spoken Language: {this.props.data[this.props.id].language}</p>
                                   </Col>
                                 </Row>
                                 <Row>
                                   <Col>
-                                    <p>Contact options</p>
+                                    <p>Contact options: {this.props.data[this.props.id].contact_option[0]}</p>
                                   </Col>
                                 </Row>
                                 <Row>
                                   <Col>
-                                    <p>Rewards</p>
+                                    <p>Rewards: {this.props.data[this.props.id].rewards === false ? "No":"Yes"}</p>
                                   </Col>
                                   <Col>
                                   <p>Upload</p>

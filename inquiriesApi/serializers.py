@@ -21,7 +21,8 @@ class InquirySerializer(serializers.ModelSerializer):
     author = StringSerializer(many=False)
     user_university = StringSerializer(many=False)
     opened = StringSerializer(many=False)
-    
+    contact_option = StringSerializer(many=True)
+    language = StringSerializer(many=True)
 
     class Meta:
         model = Inquiry
@@ -48,6 +49,8 @@ class InquirySerializer(serializers.ModelSerializer):
         inquiry.content = data["content"]
         userId = User.objects.get(username=data["user"]).id
         print("userId: ", userId)
+        inquiry.author = User.objects.get(username=data["user"])
+        inquiry.end = data["range"][1]
         userUniversity = ProfileInfo.objects.get(profile_username_id=userId)
         print("userUniversity: ", userUniversity)
         print("userUniversity 2: ", userUniversity.university_id)

@@ -124,7 +124,7 @@ class PreferLanguage(models.Model):
     language=models.CharField(max_length=15, choices=CHOICES, blank=True)
 
     def __str__(self):
-        return self.languages
+        return self.language
 
 class Inquiry(models.Model):
     title = models.CharField(max_length=60)
