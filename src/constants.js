@@ -1,5 +1,5 @@
-const localhost = 'http://127.0.0.1:8000'
-
+// const localhost = 'http://127.0.0.1:8000'
+const localhost = "http://ec2-54-210-128-153.compute-1.amazonaws.com"
 const apiURL = '/api'
 const apiArticlesURL = '/api/articles'
 const imageURL = '/media'
