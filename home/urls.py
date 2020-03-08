@@ -22,8 +22,7 @@ urlpatterns = [
     path('api/live-chat/', include('livechatApi.livechat.urls')),
     path('api/users/', include('users.urls')),
     path('accounts/', include('allauth.urls')),
-    # path('', TemplateView.as_view(template_name='index.html'))
-    # re_path(r'^.*', TemplateView.as_view(template_name='index.html'))
+    re_path(r'^.*', TemplateView.as_view(template_name='index.html'))
     
 ]
 
