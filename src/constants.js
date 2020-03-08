@@ -1,5 +1,4 @@
-// const localhost = 'http://127.0.0.1:8000'
-const localhost = "https://py3-test-app.herokuapp.com"
+const localhost = 'http://127.0.0.1:8000'
 const apiURL = '/api'
 const apiArticlesURL = '/api/articles'
 const imageURL = '/media'
