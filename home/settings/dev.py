@@ -57,6 +57,6 @@ CORS_ORIGIN_WHITELIST = (
     "http://localhost:8001",
     "http://localhost:8000",
     "http://localhost:5432",
-    "http://ec2-54-210-128-153.compute-1.amazonaws.com",
+    "https://ec2-54-210-128-153.compute-1.amazonaws.com",
     'http://localhost:5432',
 )
