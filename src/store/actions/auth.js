@@ -1,5 +1,9 @@
 import axios from "axios";
 import * as actionTypes from "./actionTypes";
+import {
+  authLogInURL,
+  authSignUpURL
+} from "../../constants"
 
 export const authStart = () => {
   return {
@@ -40,7 +44,7 @@ export const authLogin = (username, password) => {
   return dispatch => {
     dispatch(authStart());
     axios
-      .post("http://127.0.0.1:8000/rest-auth/login/", {
+      .post(authLogInURL, {
         username: username,
         password: password
       })
@@ -86,7 +90,7 @@ export const authSignup = (
       is_teacher: !is_student
     };
     axios
-      .post("http://127.0.0.1:8000/rest-auth/registration/", user)
+      .post(authSignUpURL, user)
       .then(res => {
         const user = {
           token: res.data.key,

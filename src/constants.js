@@ -1,4 +1,5 @@
-const localhost = 'http://127.0.0.1:8000'
+// const localhost = 'http://127.0.0.1:8000'
+const localhost = 'https://py3-test-app.herokuapp.com'
 const apiURL = '/api'
 const apiArticlesURL = '/api/articles'
 const imageURL = '/media'
@@ -29,6 +30,9 @@ export const orderItemUpdateQuantityURL = `${endpoint}/order-item/update-quantit
 // export const articleURL = articleID => `${endpoint}/articles/${articleID}/comments/`
 // export const articleCreateURL = data => `${endpoint}/articles/${data.articleID}/create-comment/`
 // export const articleUpdateURL = data => `${endpoint}/articles/${data.articleID}/update-comment/${data.id}/`
+
+export const authLogInURL = `${endpoint}/rest-auth/login/`;
+export const authSignUpURL = `${endpoint}/rest-auth/registration/`;
 
 export const articleCommentsURL = articleID => `${endpoint}/articles/${articleID}/comments/`
 export const articleCommentURL = (articleID, commentID) => `${endpoint}/articles/${articleID}/comment/${commentID}/`
