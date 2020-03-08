@@ -8,6 +8,14 @@ import {
   GET_GRADED_SURVEYS_DETAIL_FAIL,
 } from "./actionTypes";
 
+import {
+  gradedsurveyURL,
+  gradedSurveyListURL,
+  gradedSurveyDetailURL,
+  gradedSurveyCreateURL
+} from "../../constants"
+
+
 const getGradedSurveyListStart = () => {
   return {
     type: GET_GRADED_SURVEY_LIST_START
@@ -36,7 +44,7 @@ export const getGradedSurveyS = (username, token) => {
       Authorization: `Token ${token}`
     };
     axios
-      .get(`http://127.0.0.1:8000/graded-survey/?username=${username}`)
+      .get(gradedsurveyURL(username))
       .then(res => {
         const surveys = res.data;
         dispatch(getGradedSurveyListSuccess(surveys));
@@ -55,7 +63,7 @@ export const createGradedSurvey = (token, survey) => {
       Authorization: `Token ${token}`
     };
     axios
-      .post(`http://127.0.0.1:8000/graded-survey/create/`, survey)
+      .post(gradedSurveyCreateURL, survey)
       .then(res => {
         console.log("success");
         //   dispatch(createSurveySuccess());
@@ -94,7 +102,7 @@ export const getGradedSurveyDetail = (token, articleId) => {
       Authorization: `Token ${token}`
     };
     axios
-      .get(`http://127.0.0.1:8000/graded-survey/${articleId}/`)
+      .get(gradedSurveyDetailURL(articleId))
       .then(res => {
         const gsurvey = res.data;
         dispatch(getGradedSurveyDetailSuccess(gsurvey));

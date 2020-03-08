@@ -4,6 +4,11 @@ import {
   GET_SURVEYS_CHOICES_FAIL,
   GET_SURVEYS_CHOICES_SUCCESS
 } from "./actionTypes";
+import {
+  incentivesCreateURL,
+  incentivesListURL,
+  incentivesDetailURL
+} from "../../constants"
 
 export const getSurveyChoiceStart = () => {
   return {

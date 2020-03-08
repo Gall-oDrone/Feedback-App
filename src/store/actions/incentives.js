@@ -11,6 +11,12 @@ import {
   GET_INCENTIVE_DETAIL_SUCCESS,
 } from "./actionTypes";
 
+import {
+  incentivesCreateURL,
+  incentivesListURL,
+  incentivesDetailURL
+} from "../../constants"
+
 export const createIncentiveStart = () => {
   console.log("createIncentiveStart")  
   return {
@@ -43,7 +49,7 @@ export const createIncentive = (token, data) => {
       Authorization: `Token ${token}`
     };
     axios
-      .post(`http://127.0.0.1:8000/incentives/create/`, data)
+      .post(incentivesCreateURL, data)
       .then(res => {
         if (res.status === 201) {
           console.log("success");
@@ -88,7 +94,7 @@ export const getUserIncentiveList = (username, token) => {
       Authorization: `Token ${token}`
     };
     axios
-      .get(`http://127.0.0.1:8000/incentives/userlist/${username}`)
+      .get(incentivesListURL(username))
       .then(res => {
         console.log("EHRENO")
         const userIncentiveList = res.data;
@@ -175,7 +181,7 @@ export const getDetailIncentiveList = (token, userID) => {
             "Content-Type": "application/json",
             Authorization: `Token ${token}`
         }
-        axios.get(`http://127.0.0.1:8000/incentives/listdetail/${userID}`)
+        axios.get(incentivesDetailURL(userID))
         .then(res => {
             const data = res.data;
             console.log("data: "+ JSON.stringify(data))

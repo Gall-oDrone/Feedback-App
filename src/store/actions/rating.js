@@ -7,6 +7,10 @@ import {
     CREATE_RATING_FAIL,
     CREATE_RATING_SUCCESS,
 } from "./actionTypes";
+import {
+  articleRatingURL,
+  fetchRatingURL,
+} from "../../constants"
 
 export const createRatingStart = () => {
   console.log("Actions ratingstart data")  
@@ -66,7 +70,7 @@ export const createRating = (token, data) => {
       Authorization: `Token ${token}`
     };
     axios
-        .post(`http://127.0.0.1:8000/articles/${data.articleID}/rating/`, data)
+        .post(articleRatingURL(data), data)
         .then(res => {
             dispatch(createRatingSuccess());
         })
@@ -87,7 +91,7 @@ export const fetchRating = (token, articleID) => {
         // Authorization: `Token ${token}`
       };
       axios
-        .get(`http://127.0.0.1:8000/articles/${articleID}`)
+        .get(fetchRatingURL(articleID))
         .then(res => {
           dispatch(ratingSuccess(res.data.rating_count, res.data.avg_rating));
         })

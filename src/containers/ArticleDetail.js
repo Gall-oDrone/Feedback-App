@@ -27,7 +27,7 @@ class ArticleDetail extends React.Component {
         console.log("componentDidMount THIPROPS: " + JSON.stringify(this.props))
         const articleID = this.props.match.params.articleID;
         //const articleID = 11
-        axios.get(`http://127.0.0.1:8000/articles/${articleID}`)
+        axios.get(`http://127.0.0.1:8000/api/articles/${articleID}`)
             .then(res => {
                 console.log("res: " + JSON.stringify(res.data))
                 this.setState({
@@ -102,9 +102,8 @@ class ArticleDetail extends React.Component {
             // </Menu>
             <div>
                 <Card title={this.state.article.title}>
-                    <p>{this.state.article.content}</p>
-                    <p>{this.state.article.description}</p>
-                    <p>{this.state.article.engagement}</p>
+                    <p>Content: {this.state.article.content}</p>
+                    <p>Descroption: {this.state.article.description}</p>
                     {/* <div>
                         <h3 align="center"> Feedback options</h3>
                         <div>
@@ -126,7 +125,7 @@ class ArticleDetail extends React.Component {
                         </div>
                     </div> */}
                 </Card>
-                <br />
+                {/* <br />
                 {this.props.token !== null ? (
                     <div>
                             <form onSubmit={this.handleUpdate}>
@@ -143,7 +142,7 @@ class ArticleDetail extends React.Component {
                     </div>
                 ) : (
                         null
-                    )}
+                    )} */}
             </div>
         )
     }

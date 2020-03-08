@@ -28,7 +28,7 @@ router = DefaultRouter()
 # router.register(r'', CommentViewSet, base_name='comment')
 # urlpatterns = router.urls
 urlpatterns = [
-    path('', InquiryListView.as_view()),
+    path('list/', InquiryListView.as_view()),
     path('create/', InquiryCreateView.as_view()),
     path('<pk>', InquiryDetailView.as_view()),
     path('<pk>/update/', InquiryUpdateView.as_view()),

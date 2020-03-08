@@ -11,6 +11,12 @@ import {
   CREATE_INQUIRY_SUCCESS
 } from "./actionTypes";
 
+import {
+  inquiryListURL,
+  inquiryDetailURL,
+  inquiryCreateURL
+} from "../../constants"
+
 const getInquiryListStart = () => {
   console.log("1) Actions getInquiryListStart")
   return {
@@ -41,7 +47,7 @@ export const getInquiry = token => {
             "Content-Type": "application/json",
             Authorization: `Token ${token}`
         }
-        axios.get("http://127.0.0.1:8000/inquiry/")
+        axios.get(inquiryListURL)
         .then(res => {
             const inquiries = res.data;
             dispatch(getInquiryListSuccess(inquiries));
@@ -79,7 +85,7 @@ export const getInquirySDetail = (token, id) => {
             "Content-Type": "application/json",
             Authorization: `Token ${token}`
         }
-        axios.get(`http://127.0.0.1:8000/inquiry/${id}`)
+        axios.get(inquiryDetailURL(ID))
         .then(res => {
             const inquiry = res.data;
             dispatch(getInquiryDetailSuccess(inquiry));
@@ -118,7 +124,7 @@ export const createInquiry = (token, asnt) => {
             Authorization: `Token ${token}`
         }
         console.log("SOMETHING",JSON.stringify(asnt))
-        axios.post(`http://127.0.0.1:8000/inquiry/create/`, asnt)
+        axios.post(inquiryCreateURL, asnt)
         .then(res => {
             
             dispatch(createInquirySuccess());

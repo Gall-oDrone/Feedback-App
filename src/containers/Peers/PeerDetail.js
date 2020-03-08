@@ -1,8 +1,9 @@
 import React from 'react';
-import { List, Avatar, Button, Layout, Menu, Modal, Select, Icon, Cascader, Collapse, Card, Input, Tag, Tabs, Skeleton, Checkbox, Upload, Row, Col } from 'antd';
+import { List, Avatar, Button, Layout, Divider, Menu, Modal, Select, Icon, Cascader, Collapse, Card, Input, Tag, Tabs, Skeleton, Checkbox, Upload, Row, Col } from 'antd';
 import axios from 'axios';
 import { connect } from 'react-redux';
 import countryList from 'react-select-country-list'
+import Comments from "../InquiryComment"
 
 const { Search } = Input;
 const { Panel } = Collapse;
@@ -131,7 +132,7 @@ class PeerDetail extends React.Component {
                                 </Row>
                                 <Row>
                                   <Col>
-                                    <p>Universities</p>
+                                    <p>Target Universities</p>
                                   </Col>
                                   <Col>
                                     <Tag>
@@ -172,6 +173,10 @@ class PeerDetail extends React.Component {
                                 </Row>
                               </Card>
                             </div>
+                            <Divider/>
+                              <Card>
+                                <Comments/>
+                              </Card>
                           </Content>
                           <Footer style={{ textAlign: 'center' }}>Ant Design ©2018 Created by Ant UED</Footer>
                     </Layout>

@@ -14,7 +14,7 @@ class ArticleList extends React.Component {
 
 
     fetchArticles = () => {
-        axios.get("http://127.0.0.1:8000/articles/")
+        axios.get("http://127.0.0.1:8000/api/articles/")
         .then(res => {
             this.setState({
                 articles: res.data

@@ -112,8 +112,8 @@ class Comments extends React.Component {
     console.log(JSON.stringify(this.props))
     if (this.props.token !== undefined && this.props.token !== null) {
       console.log("ComponentDidMount after 1: " + JSON.stringify(this.props.token))
-      console.log("ComponentDidMount after 2: " + JSON.stringify(this.props.match.params.articleID))
-      this.props.getComment(this.props.token, this.props.match.params.articleID)
+      console.log("ComponentDidMount after 2: " + JSON.stringify(this.props.match.params.inquiryID))
+      this.props.getComment(this.props.token, this.props.match.params.inquiryID)
       console.log("ComponentDidMount after 4: " + JSON.stringify(this.props))
     }
   }
@@ -122,7 +122,7 @@ class Comments extends React.Component {
     if (newProps.token !== this.props.token) {
       if (newProps.token !== undefined && newProps.token !== null) {
         console.log("componentWillReceiveProps 1: " + JSON.stringify(this.props))
-        this.props.getComment(newProps.token, newProps.match.params.articleID).then(res => {
+        this.props.getComment(newProps.token, newProps.match.params.inquiryID).then(res => {
           console.log(JSON.stringify(res))
           this.setState({
             comments: res.commentData,
@@ -139,12 +139,12 @@ class Comments extends React.Component {
       const commentID = data.id;
       console.log("commentID: " + JSON.stringify(commentID))
       console.log("data: " + JSON.stringify(data))
-      const articleID = this.props.match.params.articleID;
+      const inquiryID = this.props.match.params.inquiryID;
       axios.defaults.headers = {
         "Content-Type": "application/json",
         Authorization: `Token ${this.props.token}`
       }
-      await axios.put(`http://127.0.0.1:8000/api/articles/${articleID}/update-comment/${commentID}/`, data)
+      await axios.put(`http://127.0.0.1:8000/inquiries/${inquiryID}/update-comment/${commentID}/`, data)
         .then((res) => {
           console.log("MR CROSO: " + JSON.stringify(res.data))
           // if (res.status === 200) {
@@ -154,7 +154,7 @@ class Comments extends React.Component {
           console.log("error: ")
           console.log(error);
         })
-      await this.props.getComment(this.props.token, this.props.match.params.articleID)
+      await this.props.getComment(this.props.token, this.props.match.params.inquiryID)
     } else {
       // Could not update 
     }
@@ -178,7 +178,7 @@ class Comments extends React.Component {
     if (!this.state.value) {
       return;
     } else {
-      const articleID = this.props.match.params.articleID;
+      const inquiryID = this.props.match.params.inquiryID;
       const username = this.props.username;
       const likes = this.props.likes;
       const dislikes = this.props.dislikes;
@@ -197,7 +197,7 @@ class Comments extends React.Component {
       }
       const data = {
         username: username,
-        articleID: articleID,
+        inquiryID: inquiryID,
         content: content,
         like: liked,
         dislike: disliked,
@@ -377,8 +377,8 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    getComment: (token, articleID) => dispatch(getComment(token, articleID)),
-    createComment: (token, username, articleId, comments) => dispatch(createComment(token, username, articleId, comments)),
+    getComment: (token, inquiryID) => dispatch(getComment(token, inquiryID)),
+    createComment: (token, username, inquiryId, comments) => dispatch(createComment(token, username, inquiryId, comments)),
   };
 };
 

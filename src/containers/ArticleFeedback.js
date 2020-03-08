@@ -58,7 +58,7 @@ class ArticleFeedback extends React.Component {
                 //     console.log("Article Detail res data: " + JSON.stringify(res.data));
                 // });
         }
-        axios.get(`http://127.0.0.1:8000/articles/${articleID}`)
+        axios.get(`http://127.0.0.1:8000/api/articles/${articleID}`)
             .then(res => {
                 console.log("res: " + JSON.stringify(res.data))
                 this.setState({
@@ -68,7 +68,7 @@ class ArticleFeedback extends React.Component {
                 console.log("Article Detail res data: " + JSON.stringify(res.data));
             });
         // if(!(articleID === "create")){
-        // axios.get(`http://127.0.0.1:8000/articles/${articleID}`)
+        // axios.get(`http://127.0.0.1:8000/api/articles/${articleID}`)
         //     .then(res => {
         //         console.log("res: " + JSON.stringify(res.data))
         //         this.setState({
@@ -86,7 +86,7 @@ class ArticleFeedback extends React.Component {
                 Authorization: newProps.token
             }
             const articleID = this.props.match.params.articleID;
-            axios.get(`http://127.0.0.1:8000/articles/${articleID}/`)
+            axios.get(`http://127.0.0.1:8000/api/articles/${articleID}/`)
                 .then(res => {
                     this.setState({
                         article: res.data
@@ -104,7 +104,7 @@ class ArticleFeedback extends React.Component {
     //             "Content-Type": "aplication/json",
     //             Authorization: `Token ${this.props.token}`
     //         }
-    //         axios.post(`http://127.0.0.1:8000/articles/${articleID}/update/`);
+    //         axios.post(`http://127.0.0.1:8000/api/articles/${articleID}/update/`);
     //         this.props.history.push('/');
     //         this.forceUpdate();
     //     } else {

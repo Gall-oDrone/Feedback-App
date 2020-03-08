@@ -1,7 +1,9 @@
 import {
     GET_ROOM_DETAIL_START,
     GET_ROOM_DETAIL_FAIL,
-    GET_ROOM_DETAIL_SUCCESS,
+    GET_ROOM_DETAIL_SUCCESS,    
+    PUT_ROOM_DETAIL_FAIL,
+    PUT_ROOM_DETAIL_SUCCESS,
     GET_MEETING_LIST_START,
     GET_MEETINGS_LIST_FAIL,
     GET_MEETINGS_LIST_SUCCESS,
@@ -180,6 +182,23 @@ import {
       loading: false
     });
   };
+
+  const putRoomFail = (state, action) => {
+    return updateObject(state, {
+      error: action.error,
+      loading: false
+    });
+  };
+
+  const putRoomSuccess = (state, action) => {
+    console.log("2) Reducers putRoomSuccess")
+    console.log(JSON.stringify(action))
+    return updateObject(state, {
+      putData: action.data,
+      error: null,
+      loading: false
+    });
+  };
   
   const reducer = (state = initialState, action) => {
     switch (action.type) {
@@ -219,6 +238,10 @@ import {
         return createRoomFail(state, action);
       case GET_ROOM_DETAIL_SUCCESS:
         return createRoomSuccess(state, action);
+      case PUT_ROOM_DETAIL_FAIL:
+        return putRoomFail(state, action);
+      case PUT_ROOM_DETAIL_SUCCESS:
+        return putRoomSuccess(state, action);
       default:
         return state;
     }

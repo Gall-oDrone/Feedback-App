@@ -4,9 +4,12 @@ from django.db.models import Count, Q, Sum
 from django.shortcuts import get_object_or_404, redirect, reverse
 from django.core import serializers
 from django.core.exceptions import ObjectDoesNotExist
+from django.utils.dateparse import parse_datetime
+from datetime import datetime
 from rest_framework.response import Response
 from rest_framework.parsers import MultiPartParser, FileUploadParser, FormParser
 from rest_framework.status import(
+    HTTP_200_OK,
     HTTP_201_CREATED,
     HTTP_400_BAD_REQUEST
 )
@@ -323,6 +326,51 @@ class LCRoomDetailView(RetrieveUpdateDestroyAPIView):
         except ObjectDoesNotExist:
             raise Http404("You do not have an active order")
             return Response({"message": "You do not have an active order"}, status=HTTP_400_BAD_REQUEST)
+
+    def update(self, request, *args, **kwargs):
+        try:
+            print("LCRoomDetailView Update")
+            roomName = self.kwargs.get('roomName')
+            # roomName = request.data["room_name"]
+            meetingDetail = LCRoom.objects.get(room_name=roomName)
+            LCRoomListDetailSerializer(meetingDetail)
+            print(meetingDetail)
+            print("parse datetime: ", parse_datetime(request.data.get("called")))
+            parsed_date = parse_datetime(request.data.get("called"))
+            # print("datetime.strptime: ",datetime.strptime(request.data.get("called"), "%Y-%m-%dT%H:%M:%S.%fZ").date())
+            LCRoom.objects.filter(room_name=roomName).update(
+                called_time=parsed_date)
+            print("MMM")
+
+            #NOTIFICATION
+            userId = User.objects.get(username=request.data["called_user"]).id
+            print("userId after validation")
+            print(userId)
+            print(self.request.data.get("called_user"))
+            notify = Notification()
+            notify.user = User.objects.get(id=userId)
+            notify.actor = self.request.data.get("caller")[0]
+            notify.verb = "Sent"
+            notify.action = "Calling User"
+            notify.target = "1"
+            print("WHERE")
+            notify.description = "User wants you to join the meeting"
+            notify.save()
+            print("WHERE II")
+            notification_counter = Profile.objects.update_or_create(
+                user_id=userId,
+                defaults={"notification_counter": MeetingRequest.objects.filter(
+                    to_user=userId)
+                    .count(),
+                }
+            )
+
+            # post_lc_room_view(self, request, room_participants, target_request, date_to_appointment, articleId)
+            return Response({"message": "Update Succesfully"}, status=HTTP_200_OK)
+        except ObjectDoesNotExist:
+            raise Http404("You do not have an active order")
+            return Response({"message": "You do not have an active order"}, status=HTTP_400_BAD_REQUEST)
+
 
     def delete(self, *args, **kwargs):
         try:

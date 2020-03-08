@@ -6,6 +6,7 @@ import { connect } from 'react-redux';
 import countryList from 'react-select-country-list'
 import peerDetail from "./PeerDetail";
 import PeerDetail from './PeerDetail';
+var moment = require('moment');
 const { Search } = Input;
 const { Panel } = Collapse;
 const { TabPane } = Tabs;
@@ -158,11 +159,16 @@ class ProductList extends React.Component {
                     <List.Item
                     >
                         <List.Item.Meta
-                        avatar={<Card size={"small"}> <img
-                          width={100}
-                          alt="logo"
-                          src="https://gw.alipayobjects.com/zos/rmsportal/mqaQswcyDLcXyDKnZfES.png"
-                        /></Card>}
+                        avatar={
+                          <Card title={item.author} size={"small"}> 
+                           {item.ufile !== null ? (
+                             <img
+                                width={100}
+                                alt={item.ufile}
+                                src="https://gw.alipayobjects.com/zos/rmsportal/mqaQswcyDLcXyDKnZfES.png"
+                            />
+                           ):(null)}
+                          </Card>}
                         title={
                           <Row>
                             <Col span={8}>
@@ -176,7 +182,7 @@ class ProductList extends React.Component {
                           </Row>
                       }
                         description={
-                          <div style={{display: 'block',  justifyContent:'center'}}>
+                          <div className="Description" style={{display: 'block',  justifyContent:'center'}}>
                             <Row justify="start">
                               <Col span={24}>
                                 <h4>{item.content}</h4>

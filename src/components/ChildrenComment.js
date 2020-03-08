@@ -104,7 +104,7 @@ class ChildrenComment extends React.Component {
         "Content-Type": "application/json",
         Authorization: `Token ${this.props.token}`
       }
-      await axios.put(`http://127.0.0.1:8000/articles/${articleID}/update-comment/${commentID}/`, data)
+      await axios.put(`http://127.0.0.1:8000/api/articles/${articleID}/update-comment/${commentID}/`, data)
         .then((res) => {
           console.log("MR CROSO: " + JSON.stringify(res.data))
           // if (res.status === 200) {

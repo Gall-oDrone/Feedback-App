@@ -10,6 +10,11 @@ import {
   CREATE_SURVEY_FAIL,
   CREATE_SURVEY_SUCCESS
 } from "./actionTypes";
+import {
+  surveyListURL,
+  surveyDetailURL,
+  surveyCreateURL
+} from "../../constants"
 
 const getSurveyListStart = () => {
   console.log("1) Actions getSurveyListStart")
@@ -41,7 +46,7 @@ export const getSurvey = token => {
             "Content-Type": "application/json",
             Authorization: `Token ${token}`
         }
-        axios.get("http://127.0.0.1:8000/survey/")
+        axios.get(surveyListURL)
         .then(res => {
             const surveys = res.data;
             dispatch(getSurveyListSuccess(surveys));
@@ -79,7 +84,7 @@ export const getSurveySDetail = (token, id) => {
             "Content-Type": "application/json",
             Authorization: `Token ${token}`
         }
-        axios.get(`http://127.0.0.1:8000/survey/${id}`)
+        axios.get(surveyDetailURL(id))
         .then(res => {
             const survey = res.data;
             dispatch(getSurveyDetailSuccess(survey));
@@ -118,7 +123,7 @@ export const createSurvey = (token, asnt) => {
             Authorization: `Token ${token}`
         }
         console.log("SOMETHING",JSON.stringify(asnt))
-        axios.post(`http://127.0.0.1:8000/survey/create/`, asnt)
+        axios.post(surveyCreateURL, asnt)
         .then(res => {
             
             dispatch(createSurveySuccess());

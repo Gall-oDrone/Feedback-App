@@ -6,6 +6,7 @@ import * as actions from "../store/actions/auth";
 import ProfileHeaderMenu from "../components/ProfileHeaderMenu"
 import NotificationHeaderMenu from "../components/NotificationHeaderMenu"
 import {getProfileAccountDetail} from "../store/actions/profileAccountInfo"
+import CreateHeaderMenu from "../components/CreateHeaderMenu";
 
 const { Search } = Input;
 const { Header, Content, Footer, Sider } = Layout;
@@ -90,12 +91,12 @@ class CustomLayout extends React.Component {
                   <span> Meetings </span>
                 </Link>
               </Menu.Item>
-              <Menu.Item key="4">
+              {/* <Menu.Item key="4">
                 <Link to={`/userProfile`}>
                   <Icon type="eye"/>
                   <span> Review </span>
                 </Link>
-              </Menu.Item>
+              </Menu.Item> */}
               <Menu.Item key="5">
                 <Link to={`/profile/${this.props.userId}/menu`}>
                   <Icon type="user"/>
@@ -145,14 +146,17 @@ class CustomLayout extends React.Component {
                 {/* <Menu.Item key="3" onClick={this.props.logout} style= {{float: 'right'}}>
                   <Icon type="message" />
                 </Menu.Item> */}
+                <Menu.Item key="3" style= {{height: 40}}>
+                <Search placeholder="input search text" onSearch={value => console.log(value)} enterButton />
+                </Menu.Item>
                 <Menu.Item key="4" style= {{float: 'right'}}>
                   <NotificationHeaderMenu/>
                 </Menu.Item>
                 <Menu.Item key="6" style= {{float: 'right'}}>
-                    <ProfileHeaderMenu logout={this.props.logout} userId={this.props.userId}/>
+                    <ProfileHeaderMenu auth={this.props.isAuthenticated} logout={this.props.logout} userId={this.props.userId}/>
                 </Menu.Item>
-                <Menu.Item key="3">
-                <Search placeholder="input search text" onSearch={value => console.log(value)} enterButton />
+                <Menu.Item key="7" style= {{float: 'right'}}>
+                    <CreateHeaderMenu/>
                 </Menu.Item>
 
               {/* <Menu.Item key="3" onClick={this.props.logout} style= {{float: 'right'}}>
@@ -206,7 +210,7 @@ class CustomLayout extends React.Component {
                 <Link to={`/profile/${this.props.userId}`}>Profile</Link>
               </Breadcrumb.Item>
             ) : null}
-            {this.props.token !== null && this.props.is_student ? (
+            {/* {this.props.token !== null && this.props.is_student ? (
               <Breadcrumb.Item>
                 <Link to={"/assignments/"}>Assignments</Link>
               </Breadcrumb.Item>
@@ -215,7 +219,7 @@ class CustomLayout extends React.Component {
               <Breadcrumb.Item>
                 <Link to={"/create"}>Create</Link>
               </Breadcrumb.Item>
-            ) : null}
+            ) : null} */}
           </Breadcrumb>
           <div style={{ background: "#fff", padding: 24, minHeight: 280 }}>
             {this.props.children}

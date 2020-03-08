@@ -56,6 +56,10 @@ class LCRoom(models.Model):
     room_name = models.CharField(max_length=60, null=True)
     api_created = models.BooleanField(default=False)
     privacy = models.CharField(max_length=60, null=True)
+
+    user_called = models.ManyToManyField(User, related_name="user_called")
+    called_time = models.DateTimeField(auto_now_add=False, null=True)
+
     url = models.CharField(max_length=60, null=True)
     created_at = models.DateTimeField(auto_now_add=False, null=True)
     date_to_appointment = models.DateTimeField(auto_now_add=False, null=True)
@@ -108,6 +112,12 @@ class MeetingReview(models.Model):
     # participants_attendace = models.ManyToManyRel()
     comment = models.TextField(blank=True, null=True)
 
+# class Caller(models.Model):
+#     room = models.ForeignKey(LCRoom, null=True, on_delete=models.CASCADE, related_name='calling_action_room')
+#     user = models.ForeignKey(User, null=True, on_delete=models.CASCADE)
+#     user_called = models.ManyToManyField(User, related_name="user_called")
+#     called_counter = models.SmallIntegerField()
+#     time_when_called = models.DateTimeField(auto_now_add=False, null=True)
 # class Meeting(models.Model):
 #     title = models.CharField(max_length=60)
 #     sender = models.ForeignKey(Sender, on_delete=models.CASCADE)

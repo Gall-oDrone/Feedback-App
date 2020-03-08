@@ -3,10 +3,10 @@ import axios from "axios";
 import { Menu, Icon, Tabs, List } from 'antd';
 import { connect } from 'react-redux';
 import { Link, withRouter } from "react-router-dom";
-import ArticleDetail from "./ArticleDetail";
-import ArticleFeedback from "./ArticleFeedback";
-import ArticleRating from "./ArticleRating";
-import ArticleComment from "../containers/ArticleComment";
+import InquiryDetail from "./InquiryDetail";
+import InquiryFeedback from "./InquiryFeedback";
+import InquiryRating from "./InquiryRating";
+import InquiryComment from "../containers/InquiryComment";
 import Comments from "../components/Comments";
 import { fetchLikeCounter, getLiked } from "../store/actions/likes";
 import { fetchRating } from "../store/actions/rating";
@@ -24,11 +24,11 @@ const IconText = ({ type, text, onClick }) => (
   </span>
 );
 
-class ArticleDetailMenu extends React.Component {
+class InquiryDetailMenu extends React.Component {
   state = {
     current: 'mail',
     loading: false,
-    article: {},
+    inquiry: {},
     likes: null,
     feedback_types: {},
     updated: false
@@ -42,7 +42,7 @@ class ArticleDetailMenu extends React.Component {
   };
 
   handleClickLike = async (like_counter) => {
-    const articleID = this.props.match.params.articleID;
+    const inquiryID = this.props.match.params.inquiryID;
     const username = this.props.username
     const userId = this.props.userId
     let likedVal = this.props.liked.liked
@@ -66,19 +66,19 @@ class ArticleDetailMenu extends React.Component {
     console.log("likedVal after clic: "+ likedVal)
     console.log("like_counter: "+ JSON.stringify(like_counter))
     if(likedVal !== null){
-      await axios.put(`http://127.0.0.1:8000/api/articles/${articleID}/likes/${userId}/`, { user_id: userId, user: username, article: articleID, liked: likedVal })
-      this.props.getLikeCounter(this.props.token, this.props.match.params.articleID)
-      this.props.getLiked(this.props.token, this.props.match.params.articleID, this.props.userId)
+      await axios.put(`http://127.0.0.1:8000/inquiries/${inquiryID}/likes/${userId}/`, { user_id: userId, user: username, inquiry: inquiryID, liked: likedVal })
+      this.props.getLikeCounter(this.props.token, this.props.match.params.inquiryID)
+      this.props.getLiked(this.props.token, this.props.match.params.inquiryID, this.props.userId)
     } else {
-      await axios.post(`http://127.0.0.1:8000/api/articles/${articleID}/likes/`, { user_id: userId, user: username, article: articleID, liked: true })
+      await axios.post(`http://127.0.0.1:8000/inquiries/${inquiryID}/likes/`, { user_id: userId, user: username, inquiry: inquiryID, liked: true })
       .then(res => {
         console.log(JSON.stringify(res));
         console.log("Receive data from res.data");
         console.log(res.data);
-        console.log(articleID, this.props.token);
+        console.log(inquiryID, this.props.token);
         console.log("After gettingLikes");
-        this.props.getLikeCounter(this.props.token, this.props.match.params.articleID)
-        this.props.getLiked(this.props.token, this.props.match.params.articleID, this.props.userId)
+        this.props.getLikeCounter(this.props.token, this.props.match.params.inquiryID)
+        this.props.getLiked(this.props.token, this.props.match.params.inquiryID, this.props.userId)
       })
       .catch(err => {
         this.setState({ error: err, loading: false });
@@ -89,12 +89,12 @@ class ArticleDetailMenu extends React.Component {
 
   handleUpdate = event => {
     if (this.props.token !== null) {
-      const articleID = this.props.match.params.articleID;
+      const inquiryID = this.props.match.params.inquiryID;
       axios.defaults.headers = {
         "Content-Type": "aplication/json",
         Authorization: `Token ${this.props.token}`
       }
-      axios.post(`http://127.0.0.1:8000/api/articles/${articleID}/update/`);
+      axios.post(`http://127.0.0.1:8000/inquiries/${inquiryID}/update/`);
       this.props.history.push('/');
       this.forceUpdate();
     } else {
@@ -124,18 +124,18 @@ class ArticleDetailMenu extends React.Component {
     if (this.props.token !== undefined && this.props.token !== null) {
     this.setState({ loading: true });
     console.log("CDM passed conditional ");
-    const articleID = this.props.match.params.articleID;
-    //this.props.getLikeCounter(this.props.token, articleID)
-    this.props.getLikeCounter(this.props.token, this.props.match.params.articleID)
+    const inquiryID = this.props.match.params.inquiryID;
+    //this.props.getLikeCounter(this.props.token, inquiryID)
+    this.props.getLikeCounter(this.props.token, this.props.match.params.inquiryID)
       // .then(res => {
       //   console.log("getLikeCounter res: " + JSON.stringify(res.data))
       //   this.setState({
-      //     article: res.data,
+      //     inquiry: res.data,
       //     loading: false
       //   });
-      //   console.log("Article Detail Menu res data AFTER: " + res.data);
+      //   console.log("Inquiry Detail Menu res data AFTER: " + res.data);
       // })
-    //   }).then(this.props.getLiked(this.props.token, this.props.match.params.articleID)
+    //   }).then(this.props.getLiked(this.props.token, this.props.match.params.inquiryID)
     //   .then(res => {
     //     if(res.liked === true){
     //       this.setState({
@@ -158,17 +158,17 @@ class ArticleDetailMenu extends React.Component {
         console.log("componentWillReceiveProps 1): " + JSON.stringify(this.props))
         console.log("componentWillReceiveProps 2): " + JSON.stringify(newProps))
         console.log("componentWillReceiveProps 3): " + JSON.stringify(newProps.token))
-        console.log("componentWillReceiveProps 4): " + JSON.stringify(newProps.match.params.articleID))
-        console.log("componentWillReceiveProps 5): " + JSON.stringify(this.props.getLikeCounter(newProps.token, newProps.match.params.articleID)))
-        this.props.getLikeCounter(newProps.token, newProps.match.params.articleID)
-        this.props.getRatingCounter(newProps.token, newProps.match.params.articleID)
-        this.props.getLiked(newProps.token, newProps.match.params.articleID, newProps.userId)
+        console.log("componentWillReceiveProps 4): " + JSON.stringify(newProps.match.params.inquiryID))
+        console.log("componentWillReceiveProps 5): " + JSON.stringify(this.props.getLikeCounter(newProps.token, newProps.match.params.inquiryID)))
+        this.props.getLikeCounter(newProps.token, newProps.match.params.inquiryID)
+        this.props.getRatingCounter(newProps.token, newProps.match.params.inquiryID)
+        this.props.getLiked(newProps.token, newProps.match.params.inquiryID, newProps.userId)
         // .then(res => {
         //   console.log("componentWillReceiveProps before assigning res: " + JSON.stringify(this.props))
         //   console.log(JSON.stringify(res))
         //   console.log("getLikeCounter res: " + JSON.stringify(res.data))
         //   this.setState({
-        //     article: res.data,
+        //     inquiry: res.data,
         //     loading: false
         //   });
         //   console.log("componentWillReceiveProps after : " + JSON.stringify(this.props))
@@ -178,11 +178,11 @@ class ArticleDetailMenu extends React.Component {
   }
 
   render() {
-    const articleID = this.state.article
+    const inquiryID = this.state.inquiry
     const {liked, rating_counter} = this.props
     let {like_counter} = this.props
     console.log("CORSO")
-    console.log(JSON.stringify(articleID))
+    console.log(JSON.stringify(inquiryID))
     console.log(JSON.stringify(like_counter))
     console.log("this.props: "+ JSON.stringify(this.props))
     console.log("this.state: "+ JSON.stringify(this.state))
@@ -195,16 +195,16 @@ class ArticleDetailMenu extends React.Component {
 
         <Tabs defaultActiveKey="1" onChange={callback}>
           <TabPane tab="Info" key="1" >
-            <ArticleDetail />
+            <InquiryDetail />
           </TabPane>
           <TabPane tab="Feedback" key="2">
-            <ArticleFeedback />
+            <InquiryFeedback />
           </TabPane>
           <TabPane tab="Rating" key="3">
-            <ArticleRating />
+            <InquiryRating />
           </TabPane>
           <TabPane tab="Comments" key="4">
-            <ArticleComment/>
+            <InquiryComment/>
           </TabPane>
           <TabPane tab="Comments List" key="5">
             <Comments/>
@@ -231,10 +231,10 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
   console.log("AR")
   return {
-    getLikeCounter: (token, articleID) => dispatch(fetchLikeCounter(token, articleID)),
-    getLiked: (token, articleID, userID) => dispatch(getLiked(token, articleID, userID)),
-    getRatingCounter: (token, articleID) => dispatch(fetchRating(token, articleID))
+    getLikeCounter: (token, inquiryID) => dispatch(fetchLikeCounter(token, inquiryID)),
+    getLiked: (token, inquiryID, userID) => dispatch(getLiked(token, inquiryID, userID)),
+    getRatingCounter: (token, inquiryID) => dispatch(fetchRating(token, inquiryID))
   };
 };
 
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(ArticleDetailMenu));
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(InquiryDetailMenu));

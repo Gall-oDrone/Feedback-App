@@ -10,6 +10,11 @@ import {
     GET_LIKE_DETAIL_SUCCESS,
     GET_LIKE_DETAIL_FAIL
 } from "./actionTypes";
+import {
+  articleLikeURL,
+  fetchLikeURL,
+  fetchLikeCounterURL,
+} from "../../constants"
 
 export const likeStart = () => {
   console.log("Actions likestart data")  
@@ -46,7 +51,7 @@ export const fetchLikeCounter = (token, articleID) => {
         Authorization: `Token ${token}`
       };
       axios
-        .get(`http://127.0.0.1:8000/articles/${articleID}`)
+        .get(fetchLikeCounterURL(articleID))
         .then(res => {
           dispatch(likeSuccess(res.data.likes_count));
         })
@@ -86,7 +91,7 @@ export const fetchLikeCounter = (token, articleID) => {
               "Content-Type": "application/json",
               Authorization: `Token ${token}`
           }
-          axios.get(`http://127.0.0.1:8000/articles/${articleID}/likes/${userID}/`)
+          axios.get(articleLikeURL(articleID, userID))
           .then(res => {
               const data = res.data;
               dispatch(getLikeDetailSuccess(data));

@@ -100,7 +100,7 @@ class ProfileArticleDetail extends React.Component {
   //     Authorization: `Token ${this.props.token}`
   //   };
   //   axios
-  //     .post(`http://127.0.0.1:8000/articles/create/images/`, fd)
+  //     .post(`http://127.0.0.1:8000/api/articles/create/images/`, fd)
   //     .then(res => {
   //       if (res.status === 201) {
   //         console.log("success");
@@ -141,7 +141,7 @@ class ProfileArticleDetail extends React.Component {
     //   Authorization: `Token ${this.props.token}`
     // };
     // axios
-    //   .post(`http://127.0.0.1:8000/media/images/`, fd)
+    //   .post(`http://127.0.0.1:8000/api/media/images/`, fd)
     //   .then(res => {
     //     if (res.status === 201) {
     //       console.log("success");

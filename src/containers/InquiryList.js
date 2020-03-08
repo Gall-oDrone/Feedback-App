@@ -14,7 +14,7 @@ class InquiryList extends React.Component {
 
 
     fetchInquirys = () => {
-        axios.get("http://127.0.0.1:8000/inquiries/")
+        axios.get("http://127.0.0.1:8000/api/inquiries/list/")
         .then(res => {
             this.setState({
                 inquiries: res.data

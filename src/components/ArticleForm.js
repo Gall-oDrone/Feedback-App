@@ -141,7 +141,7 @@ class ArticleCustomForm extends React.Component {
         if (requestType === "post") {
           console.log("params: " + title + " " + content + " "+ engagement)
           console.log("before posting article")
-          axios.post("http://127.0.0.1:8000/articles/create/", 
+          axios.post("http://127.0.0.1:8000/api/articles/create/", 
           formData
           )
             .then(res => {

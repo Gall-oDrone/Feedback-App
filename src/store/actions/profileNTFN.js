@@ -15,6 +15,14 @@ import {
   DELETE_PROFILE_NOTIFICATION_DETAIL_SUCCESS,
   DELETE_PROFILE_NOTIFICATION_DETAIL_FAIL
 } from "./actionTypes";
+import {
+  notificationListURL,
+  notificationDetailURL,
+  notificationUpdateURL,
+  notificationUpdateListURL,
+  notificationCreateURL,
+  notificationURL
+} from "../../constants"
 
 const getProfileNotificationListStart = () => {
   console.log("1) Actions getMeetingDetailStart")
@@ -40,13 +48,14 @@ const getProfileNotificationListFail = error => {
 
 export const getProfileNotificationList = (token, username) => {
     return dispatch => {
-      console.log(" getDetailMeetingList ")
+      console.log(" getProfileNotificationList ")
         // dispatch(getMeetingDetailStart());
         axios.defaults.headers = {
             "Content-Type": "application/json",
             Authorization: `Token ${token}`
         }
-        axios.get(`http://127.0.0.1:8000/notifications/list/${username}/`)
+        axios.get(notificationListURL(username))
+        // axios.get(`http://127.0.0.1:8000/notifications/list/${username}/`)
         .then(res => {
             const data = res.data;
             console.log("data: "+ JSON.stringify(data))
@@ -88,7 +97,7 @@ export const getProfileNotificationDetail = (token, notificationID, username) =>
             "Content-Type": "application/json",
             Authorization: `Token ${token}`
         }
-        axios.get(`http://127.0.0.1:8000/notifications/${notificationID}/detail/${username}/`)
+        axios.get(notificationDetailURL(notificationID,username))
         .then(res => {
             const data = res.data;
             console.log("data: "+ JSON.stringify(data))
@@ -132,7 +141,7 @@ export const putProfileNotificationList = (token, username, data) => {
             // "Content-Type": "application/json",
             Authorization: `Token ${token}`
         }
-        axios.put(`http://127.0.0.1:8000/notifications/list/update/${username}/`, data)
+        axios.put(notificationUpdateListURL(username), data)
         .then(res => {
             const data = res.data;
             console.log("data: "+ JSON.stringify(data))
@@ -177,7 +186,7 @@ export const putProfileNotificationDetail = (token, notificationID, username, da
             // "Content-Type": "application/json",
             Authorization: `Token ${token}`
         }
-        axios.put(`http://127.0.0.1:8000/notifications/${notificationID}/detail/update/${username}/`, data)
+        axios.put(notificationUpdateURL(notificationID, username), data)
         .then(res => {
             const data = res.data;
             console.log("data: "+ JSON.stringify(data))

@@ -4,6 +4,9 @@ import {
   GET_ROOM_DETAIL_START,
   GET_ROOM_DETAIL_FAIL,
   GET_ROOM_DETAIL_SUCCESS,
+  PUT_ROOM_DETAIL_START,
+  PUT_ROOM_DETAIL_SUCCESS,
+  PUT_ROOM_DETAIL_FAIL,
   GET_MEETING_LIST_START,
   GET_MEETINGS_LIST_FAIL,
   GET_MEETINGS_LIST_SUCCESS,
@@ -23,6 +26,15 @@ import {
   PUT_MEETING_DETAIL_SUCCESS,
   PUT_MEETING_DETAIL_FAIL
 } from "./actionTypes";
+
+import {
+  lcroomCreateURL,
+  lcroomDetailURL,
+  lcroomListURL,
+  lcroomUserMeetingReceivedURL,
+  lcroomBookedURL,
+  lcroomListDetailURL
+} from "../../constants"
 
 export const getDetailRoomStart = () => {
   console.log("Actions getDetailRoomStart")  
@@ -57,7 +69,7 @@ return dispatch => {
     Authorization: `Token ${token}`
   };
   axios
-    .get(`http://127.0.0.1:8000/live-chat/lcrequest/lcroom/detail/${roomName}`)
+    .get(lcroomDetailURL(roomName))
     .then(res => {
       console.log("RES After axios.get.then")
       const meetingDetailRoom = res.data;
@@ -100,7 +112,7 @@ export const getUserMeeting = (username, token) => {
       Authorization: `Token ${token}`
     };
     axios
-      .get(`http://127.0.0.1:8000/live-chat/lcrequest/userlist/${username}`)
+      .get(lcroomListURL(username))
       .then(res => {
         console.log("EHRENO")
         const meetingList = res.data;
@@ -143,7 +155,7 @@ export const getUserReceivedMeeting = (username, token) => {
       Authorization: `Token ${token}`
     };
     axios
-      .get(`http://127.0.0.1:8000/live-chat/lcrequest/received/userlist/${username}`)
+      .get(lcroomUserMeetingReceivedURL(username))
       .then(res => {
         console.log("EHRENO")
         const meetingList = res.data;
@@ -186,7 +198,7 @@ export const getUserBookedMeeting = (username, token) => {
       Authorization: `Token ${token}`
     };
     axios
-      .get(`http://127.0.0.1:8000/live-chat/lcrequest/booked/userlist/${username}`)
+      .get(lcroomBookedURL(username))
       .then(res => {
         console.log("EHRENO")
         const meetingList = res.data;
@@ -230,7 +242,7 @@ export const getDetailMeetingList = (token, articleID, userID) => {
             "Content-Type": "application/json",
             Authorization: `Token ${token}`
         }
-        axios.get(`http://127.0.0.1:8000/live-chat/lcrequest/listdetail/${articleID}/${userID}`)
+        axios.get(lcroomListDetailURL(articleID, userID))
         .then(res => {
             const data = res.data;
             console.log("data: "+ JSON.stringify(data))
@@ -271,13 +283,45 @@ export const updateMeeting = (token, articleID, userID, data) => {
             "Content-Type": "application/json",
             Authorization: `Token ${token}`
         }
-        axios.put(`http://127.0.0.1:8000/live-chat/lcrequest/listdetail/${articleID}/${userID}`, data)
+        axios.put(lcroomListDetailURL(articleID, userID), data)
         .then(res => {
             
             dispatch(updateMeetingSuccess());
         })
         .catch(err => {
             dispatch(updateMeetingFail());
+        })
+    }
+}
+
+const updateRoomSuccess = () => {
+  return {
+    type: PUT_ROOM_DETAIL_SUCCESS    
+  };
+};
+
+const updateRoomFail = error => {
+  return {
+    type: PUT_ROOM_DETAIL_FAIL,
+    error: error
+  };
+};
+
+export const updateRoom = (token, roomName, data) => {
+  console.log(JSON.stringify(data))
+    return dispatch => {
+        // dispatch(updateMeetingStart());
+        axios.defaults.headers = {
+            "Content-Type": "application/json",
+            Authorization: `Token ${token}`
+        }
+        axios.put(lcroomDetailURL(roomName), data)
+        .then(res => {
+            
+            dispatch(updateRoomSuccess());
+        })
+        .catch(err => {
+            dispatch(updateRoomFail());
         })
     }
 }

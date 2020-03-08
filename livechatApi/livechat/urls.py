@@ -15,7 +15,7 @@ from livechatApi.views import (
     LCRoomListDetailView,
     LCRoomDetailView,
     LCMeetingReviewCreateView,
-    LCMeetingReviewlistView
+    LCMeetingReviewlistView,
 )
 
 router = DefaultRouter()

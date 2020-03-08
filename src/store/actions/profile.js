@@ -15,6 +15,11 @@ import {
   DELETE_PROFILE_ARTICLE_DETAIL_FAIL,
   DELETE_PROFILE_ARTICLE_DETAIL_SUCCESS
 } from "./actionTypes";
+import {
+  profileMeetingRequestURL,
+  profileArticleListURL,
+  profileArticleDetailURL
+} from "../../constants"
 
 const getProfileMeetingRequestsStart = () => {
   return {
@@ -46,7 +51,7 @@ export const getProfileMeetingRequests = (username, token) => {
       Authorization: `Token ${token}`
     };
     axios
-      .get(`http://127.0.0.1:8000/users/lcrequest/${username}`)
+      .get(profileMeetingRequestURL(username))
       .then(res => {
         console.log("EHRENO")
         const meetingList = res.data;
@@ -132,7 +137,7 @@ export const getProfileArticleList = (token, username) => {
             "Content-Type": "application/json",
             Authorization: `Token ${token}`
         }
-        axios.get(`http://127.0.0.1:8000/articles/list/${username}/`)
+        axios.get(profileArticleListURL(username))
         .then(res => {
             const data = res.data;
             console.log("data: "+ JSON.stringify(data))
@@ -174,7 +179,7 @@ export const getProfileArticleDetail = (token, articleID, username) => {
             "Content-Type": "application/json",
             Authorization: `Token ${token}`
         }
-        axios.get(`http://127.0.0.1:8000/articles/${articleID}/detail/${username}/`)
+        axios.get(profileArticleDetailURL(articleID, username))
         .then(res => {
             const data = res.data;
             console.log("data: "+ JSON.stringify(data))
@@ -219,7 +224,7 @@ export const putProfileArticleDetail = (token, articleID, username, data) => {
             // "Content-Type": "application/json",
             Authorization: `Token ${token}`
         }
-        axios.put(`http://127.0.0.1:8000/articles/${articleID}/detail/${username}/`, data)
+        axios.put(profileArticleDetailURL(articleID, username), data)
         .then(res => {
             const data = res.data;
             console.log("data: "+ JSON.stringify(data))
@@ -255,7 +260,7 @@ export const deleteProfileArticleDetail = (token, articleID, username) => {
             // "Content-Type": "application/json",
             Authorization: `Token ${token}`
         }
-        axios.delete(`http://127.0.0.1:8000/articles/${articleID}/detail/${username}/`)
+        axios.delete(profileArticleDetailURL(articleID, username))
         .then(res => {
             dispatch(deleteProfileArticleDetailSuccess());
         })

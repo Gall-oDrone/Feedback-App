@@ -4,6 +4,11 @@ import {
   CREATE_MEETING_REVIEW_DETAIL_SUCCESS,
   CREATE_MEETING_REVIEW_DETAIL_FAIL
 } from "./actionTypes";
+import {
+  incentivesCreateURL,
+  incentivesListURL,
+  incentivesDetailURL
+} from "../../constants"
 
 const postMeetingReviewStart = () => {
   return {

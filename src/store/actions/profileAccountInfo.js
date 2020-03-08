@@ -7,6 +7,16 @@ import {
   PUT_PROFILE_ACCOUNT_DETAIL_FAIL,
   PUT_PROFILE_ACCOUNT_DETAIL_SUCCESS
 } from "./actionTypes";
+import {
+  profileAccountUserInfoURL,
+  profileAccountUserInfoUpdateURL,
+  profileAccountUserSurveyListURL,
+  profileAccountUserSurveyDetailURL,
+  profileAccountUserSurveyUpdateURL,
+  profileArticleListURL,
+  profileArticleDetailURL,
+  profileAccountInfoURL
+} from "../../constants"
 
 const getProfileAccountListStart = () => {
   console.log("1) Actions getMeetingDetailStart")
@@ -38,7 +48,7 @@ export const getProfileAccountList = (token, username) => {
             "Content-Type": "application/json",
             Authorization: `Token ${token}`
         }
-        axios.get(`http://127.0.0.1:8000/articles/list/${username}`)
+        axios.get(profileArticleListURL(username))
         .then(res => {
             const data = res.data;
             console.log("data: "+ JSON.stringify(data))
@@ -80,7 +90,7 @@ export const getProfileAccountDetail = (token, userId) => {
             "Content-Type": "application/json",
             Authorization: `Token ${token}`
         }
-        axios.get(`http://127.0.0.1:8000/users/profile/account/info/${userId}`)
+        axios.get(profileAccountInfoURL(userId))
         .then(res => {
             const data = res.data;
             console.log("data: "+ JSON.stringify(data))
@@ -125,7 +135,7 @@ export const putProfileAccountDetail = (token, articleID, username, data) => {
             // "Content-Type": "application/json",
             Authorization: `Token ${token}`
         }
-        axios.put(`http://127.0.0.1:8000/articles/${articleID}/detail/${username}/`, data)
+        axios.put(profileArticleDetailURL(articleID, username), data)
         .then(res => {
             const data = res.data;
             console.log("data: "+ JSON.stringify(data))

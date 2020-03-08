@@ -10,6 +10,11 @@ import {
   PUT_PROFILE_INFO_SUCCESS,
   PUT_PROFILE_INFO_FAIL
 } from "./actionTypes";
+import {
+  profileUserInfoURL,
+  profileAccountUserInfoURL,
+  profileAccountUserInfoUpdateURL
+} from "../../constants"
 
 const getProfileMeetingInfoStart = () => {
   console.log("getProfileMeetingInfoStart")  
@@ -45,7 +50,7 @@ export const getProfileMeetingInfo = (username, token) => {
       Authorization: `Token ${token}`
     };
     axios
-      .get(`http://127.0.0.1:8000/users/profile/info/${username}`)
+      .get(profileUserInfoURL(username))
       .then(res => {
         console.log("getProfileMeetingInfo data")
         const userInfo = res.data;
@@ -89,7 +94,7 @@ export const getProfileAccountInfo = (token, userID) => {
             "Content-Type": "application/json",
             Authorization: `Token ${token}`
         }
-        axios.get(`http://127.0.0.1:8000/users/profile/account/user/info/${userID}`)
+        axios.get(profileAccountUserInfoURL(userID))
         .then(res => {
             const data = res.data;
             console.log("data: "+ JSON.stringify(data))
@@ -131,7 +136,7 @@ export const putProfileAccountInfo = (token, username, data) => {
             "Content-Type": "application/json",
             Authorization: `Token ${token}`
         }
-        axios.put(`http://127.0.0.1:8000/users/profile/account/user/info/update/${username}`, data)
+        axios.put(profileAccountUserInfoUpdateURL(username), data)
         .then(res => {
             const data = res.data;
             console.log("data: "+ JSON.stringify(data))

@@ -10,6 +10,11 @@ import {
   PUT_PROFILE_SURVEY_DETAIL_FAIL,
   PUT_PROFILE_SURVEY_DETAIL_SUCCESS,
 } from "./actionTypes";
+import {
+  profileAccountUserSurveyListURL,
+  profileAccountUserSurveyDetailURL,
+  profileAccountUserSurveyUpdateURL
+} from "../../constants"
 
 const getProfileSurveyListStart = () => {
   console.log("1) Actions getMeetingDetailStart")
@@ -41,7 +46,7 @@ export const getProfileSurveyList = (token, username) => {
             "Content-Type": "application/json",
             Authorization: `Token ${token}`
         }
-        axios.get(`http://127.0.0.1:8000/survey/profile/survey/list/${username}`)
+        axios.get(profileAccountUserSurveyListURL(username))
         .then(res => {
             const data = res.data;
             console.log("data: "+ JSON.stringify(data))
@@ -83,7 +88,7 @@ export const getProfileSurveyDetail = (token, surveyID, username) => {
             "Content-Type": "application/json",
             Authorization: `Token ${token}`
         }
-        axios.get(`http://127.0.0.1:8000/survey/profile/survey/detail/${username}/${surveyID}`)
+        axios.get(profileAccountUserSurveyDetailURL(username, surveyID))
         .then(res => {
             const data = res.data;
             console.log("data: "+ JSON.stringify(data))
@@ -128,7 +133,7 @@ export const putProfileSurveyDetail = (token, surveyID, username, data) => {
             // "Content-Type": "application/json",
             Authorization: `Token ${token}`
         }
-        axios.put(`http://127.0.0.1:8000/survey/profile/survey/detail/${username}/${surveyID}`, data)
+        axios.put(profileAccountUserSurveyUpdateURL(username, surveyID), data)
         .then(res => {
             const data = res.data;
             console.log("data: "+ JSON.stringify(data))

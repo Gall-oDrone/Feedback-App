@@ -23,6 +23,14 @@ import {
   PUT_MEETING_DETAIL_FAIL
 } from "./actionTypes";
 
+import {
+  lcroomCreateMeetingURL,
+  lcroomUserListMeetingURL,
+  lcroomUserMeetingReceivedURL,
+  lcroomListDetailURL,
+  lcroomBookedURL
+} from "../../constants"
+
 export const createMeetingStart = () => {
   console.log("Actions ratingstart data")  
   return {
@@ -58,7 +66,7 @@ export const createMeeting = (token, meeting) => {
       Authorization: `Token ${token}`
     };
     axios
-      .post(`http://127.0.0.1:8000/live-chat/lcrequest/create/`, meeting)
+      .post(lcroomCreateMeetingURL, meeting)
       .then(res => {
         if (res.status === 201) {
           console.log("success");
@@ -103,7 +111,7 @@ export const getUserMeeting = (username, token) => {
       Authorization: `Token ${token}`
     };
     axios
-      .get(`http://127.0.0.1:8000/live-chat/lcrequest/userlist/${username}`)
+      .get(lcroomUserListMeetingURL(username))
       .then(res => {
         console.log("EHRENO")
         const meetingList = res.data;
@@ -146,7 +154,7 @@ export const getUserReceivedMeeting = (username, token) => {
       Authorization: `Token ${token}`
     };
     axios
-      .get(`http://127.0.0.1:8000/live-chat/lcrequest/received/userlist/${username}`)
+      .get(lcroomUserMeetingReceivedURL(username))
       .then(res => {
         console.log("EHRENO")
         const meetingList = res.data;
@@ -189,7 +197,7 @@ export const getUserBookedMeeting = (username, token) => {
       Authorization: `Token ${token}`
     };
     axios
-      .get(`http://127.0.0.1:8000/live-chat/lcrequest/booked/userlist/${username}`)
+      .get(lcroomBookedURL(username))
       .then(res => {
         console.log("EHRENO")
         const meetingList = res.data;
@@ -233,7 +241,7 @@ export const getDetailMeetingList = (token, articleID, userID) => {
             "Content-Type": "application/json",
             Authorization: `Token ${token}`
         }
-        axios.get(`http://127.0.0.1:8000/live-chat/lcrequest/listdetail/${articleID}/${userID}`)
+        axios.get(lcroomListDetailURL(articleID, userID))
         .then(res => {
             const data = res.data;
             console.log("data: "+ JSON.stringify(data))
@@ -274,7 +282,7 @@ export const updateMeeting = (token, articleID, userID, data) => {
             "Content-Type": "application/json",
             Authorization: `Token ${token}`
         }
-        axios.put(`http://127.0.0.1:8000/live-chat/lcrequest/listdetail/${articleID}/${userID}`, data)
+        axios.put(lcroomListDetailURL(articleID, userID), data)
         .then(res => {
             
             dispatch(updateMeetingSuccess());

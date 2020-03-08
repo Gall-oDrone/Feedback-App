@@ -73,7 +73,7 @@ TEMPLATES = [
 ]
 
 LANGUAGE_CODE = 'en-us'
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'America/Mexico_City'
 USE_I18N = True
 USE_L10N = True
 USE_TZ = True
@@ -124,6 +124,6 @@ REST_AUTH_SERIALIZERS = {
 REST_AUTH_REGISTER_SERIALIZERS = {
     'REGISTER_SERIALIZER': 'users.serializers.CustomRegisterSerializer',
 }
-
+CORS_ORIGIN_ALLOW_ALL = True
 # Activate Django-Heroku
 django_heroku.settings(locals())

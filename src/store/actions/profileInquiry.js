@@ -10,6 +10,12 @@ import {
   PUT_PROFILE_INQUIRY_DETAIL_FAIL,
   PUT_PROFILE_INQUIRY_DETAIL_SUCCESS,
 } from "./actionTypes";
+import {
+  inquiryListURL,
+  inquiryDetailURL,
+  inquiryCreateURL,
+  inquiryURL
+} from "../../constants"
 
 const getProfileInquiryListStart = () => {
   console.log("1) Actions getMeetingDetailStart")
@@ -41,7 +47,7 @@ export const getProfileInquiryList = (token, username) => {
             "Content-Type": "application/json",
             Authorization: `Token ${token}`
         }
-        axios.get(`http://127.0.0.1:8000/inquiry/profile/inquiry/list/${username}`)
+        axios.get(inquiryListURL(usernme))
         .then(res => {
             const data = res.data;
             console.log("data: "+ JSON.stringify(data))
@@ -83,7 +89,7 @@ export const getProfileInquiryDetail = (token, inquiryID, username) => {
             "Content-Type": "application/json",
             Authorization: `Token ${token}`
         }
-        axios.get(`http://127.0.0.1:8000/inquiry/profile/inquiry/detail/${username}/${inquiryID}`)
+        axios.get(inquiryDetailURL(notificationID, username))
         .then(res => {
             const data = res.data;
             console.log("data: "+ JSON.stringify(data))
@@ -128,7 +134,7 @@ export const putProfileInquiryDetail = (token, inquiryID, username, data) => {
             // "Content-Type": "application/json",
             Authorization: `Token ${token}`
         }
-        axios.put(`http://127.0.0.1:8000/inquiry/profile/inquiry/detail/${username}/${inquiryID}`, data)
+        axios.put(inquiryDetailURL(notificationID, username), data)
         .then(res => {
             const data = res.data;
             console.log("data: "+ JSON.stringify(data))

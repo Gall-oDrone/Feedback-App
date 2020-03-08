@@ -14,7 +14,18 @@ from rest_framework.status import(
 from rest_framework import permissions
 from .models import Inquiry, Tag, Tagging, InquiryType, InquiryView, Like, Rating, Comment, File, ContactOption
 from users.models import User
-from .serializers import InquirySerializer, InquiryFeatureSerializer, FormSerializer, CommentSerializer, LikeSerializer, LikeListSerializer, RatingSerializer, CommentListSerializer, FileFormSerializer, ProfileInquiryListSerializer
+from .serializers import (
+    InquirySerializer, 
+    InquiryFeatureSerializer, 
+    FormSerializer, 
+    CommentSerializer, 
+    LikeSerializer, 
+    LikeListSerializer, 
+    RatingSerializer, 
+    CommentListSerializer, 
+    FileFormSerializer, 
+    ProfileInquiryListSerializer
+    )
 from analytics.models import View
 from django.http import Http404
 from rest_framework import viewsets
@@ -614,3 +625,86 @@ class FileDestroyView(DestroyAPIView):
           return Response(imageSerializer.data, status=status.HTTP_201_CREATED)
         else:
           return Response(imageSerializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class CommentListView(RetrieveAPIView):
+    queryset = Comment.objects.all()
+    serializer_class = CommentListSerializer
+    permission_classes = (permissions.AllowAny,)
+    print("Comment Detial queryset")
+    print(queryset.values())
+    def get_object(self):
+        try:
+            print("Comment filter")
+            inquiryID = self.kwargs.get('pk')
+            comment = Comment.objects.filter(inquiry_id=inquiryID)
+            return comment
+        except ObjectDoesNotExist:
+            raise Http404("You do not have an active order")
+            return Response({"message": "You do not have an active order"}, status=HTTP_400_BAD_REQUEST)
+
+class CommentDetailView(RetrieveUpdateDestroyAPIView):
+    queryset = Comment.objects.all()
+    print("queryset from CoomentDetail View")
+    print(queryset)
+    serializer_class = CommentSerializer
+    permission_classes = (permissions.IsAuthenticated,)
+
+    def get_object(self, *args, **kwargs):
+        try:
+            inquiryID = self.kwargs.get('pk')
+            commentID = self.kwargs.get('id')
+            comment = Comment.objects.get(inquiry=inquiryID, id=commentID)
+            return comment
+        except ObjectDoesNotExist:
+            raise Http404("You do not have an active order")
+            return Response({"message": "You do not have an active order"}, status=HTTP_400_BAD_REQUEST)
+
+class CreateComment(CreateAPIView):
+    queryset = Comment.objects.all()
+    serializer_class = CommentSerializer
+    permission_classes = (permissions.IsAuthenticated,)
+
+    def create(self, request, *args, **kwargs):
+        serializer = CommentSerializer(data=request.data)
+        serializer.is_valid()
+        create_comment = serializer.create_comment(request)
+        if create_comment:
+            print("data at create Commnet")
+            print(self.request.data)
+            art = Inquiry.objects.update_or_create(
+                id=self.request.data.get("inquiryID"),
+                defaults={"comment_count": Comment.objects.filter(
+                    inquiry=self.request.data.get("inquiryID"))
+                    .count(),
+                }
+            )
+            return Response(status=HTTP_201_CREATED)
+        return Response(status=HTTP_400_BAD_REQUEST)
+
+class UpdateComment(UpdateAPIView):
+    queryset = Comment.objects.all()
+    serializer_class = CommentSerializer
+    permission_classes = (permissions.IsAuthenticated,)
+    lookup_url_kwarg = "id"
+    print("request from UpdateComment 1")
+
+    def update_likes_count(self, request, *args, **kwargs):
+        print("request from UpdateComment 2")
+        print(request.data)
+        serializer = CommentSerializer(data=request.data)
+        serializer.is_valid()
+        upload_comment = serializer.upload_comment(request)
+        print(Comment.objects.filter(id=self.request.data.get("id")).filter(inquiry_id=self.request.data.get("inquiry_id")).filter(
+            user_id=self.request.data.get("user_id")).values())
+        Comment.objects.filter(id=self.request.data.get("id")).filter(inquiry_id=self.request.data.get("inquiry_id")).filter(
+            user_id=self.request.data.get("user_id")).values("liked")[0]["liked"]
+        Comment.objects.filter(inquiry_id=self.request.data.get(
+            "inquiry")).filter(liked=True).Count()
+        serializer = InquirySerializer(data=request.data)
+        serializer.is_valid()
+        print(serializer.is_valid())
+        update_inquiry = serializer.update_likes(request)
+        if update_inquiry:
+            return Response(status=HTTP_201_CREATED)
+        return Response(status=HTTP_400_BAD_REQUEST)

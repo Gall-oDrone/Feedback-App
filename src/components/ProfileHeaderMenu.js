@@ -2,7 +2,7 @@ import React from 'react';
 import Hoc from "../hoc/hoc";
 import { connect } from 'react-redux';
 import * as actions from "../store/actions/auth";
-import { withRouter } from "react-router-dom";
+import { Link, withRouter } from "react-router-dom";
 import {getProfileAccountDetail} from "../store/actions/profileAccountInfo"
 import { Avatar, Popover, Icon, Menu, Dropdown, Button, Col, Row} from 'antd';
 
@@ -60,9 +60,18 @@ class ProfileHeaderMenu extends React.Component {
             </a>
           </Menu.Item>
           <Menu.Item>
-            <a target="_blank" rel="noopener noreferrer" onClick={logout}>
+          {this.props.auth ? (
+              <Menu.Item key="2" onClick={this.props.logout}>
+                Logout
+              </Menu.Item>
+            ) : (
+                <Menu.Item key="2">
+                  <Link to="/login">Login</Link>
+                </Menu.Item>
+          )}
+            {/* <a target="_blank" rel="noopener noreferrer" onClick={logout}>
               Log out
-            </a>
+            </a> */}
           </Menu.Item>
         </Menu>
       </div>

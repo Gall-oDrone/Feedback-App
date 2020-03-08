@@ -10,20 +10,20 @@ urlpatterns = [
     path('rest-auth/registration/', include('rest_auth.registration.urls')),
     path('admin/', admin.site.urls),
     path('accounts/', include("allauth.urls")),
-    path('articles/', include('articlesApi.articles.urls')),
+    path('api/articles/', include('articlesApi.articles.urls')),
     path('assignments/', include('assignmentApi.assignments.urls')),
-    path('survey/', include('surveyApi.survey.urls')),
+    path('api/survey/', include('surveyApi.survey.urls')),
     # path('assignmentsChoices/', include('assignmentApi.assignments.survey.urls')),
     path('graded-assignments/', include('assignmentApi.graded_assignments.urls')),
-    path('graded-survey/', include('surveyApi.graded_survey.urls')),
-    path('incentives/', include('incentivesApi.incentives.urls')),
-    path('inquiries/', include('inquiriesApi.inquiries.urls')),
-    path('notifications/', include('notificationsApi.notifications.urls')),
-    path('live-chat/', include('livechatApi.livechat.urls')),
-    path('users/', include('users.urls')),
+    path('api/graded-survey/', include('surveyApi.graded_survey.urls')),
+    path('api/incentives/', include('incentivesApi.incentives.urls')),
+    path('api/inquiries/', include('inquiriesApi.inquiries.urls')),
+    path('api/notifications/', include('notificationsApi.notifications.urls')),
+    path('api/live-chat/', include('livechatApi.livechat.urls')),
+    path('api/users/', include('users.urls')),
     path('accounts/', include('allauth.urls')),
     # path('', TemplateView.as_view(template_name='index.html'))
-    re_path(r'^.*', TemplateView.as_view(template_name='index.html'))
+    # re_path(r'^.*', TemplateView.as_view(template_name='index.html'))
     
 ]
 
