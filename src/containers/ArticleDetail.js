@@ -2,13 +2,14 @@ import React from 'react';
 import Articles from '../components/Articles';
 import axios from 'axios';
 import { connect } from 'react-redux';
-import { Menu, Card, Button, Skeleton, message, List, Icon} from "antd";
+import { Menu, Card, Button, Skeleton, message, Divider, List, Tabs, Row, Col, Icon} from "antd";
 import { Link, withRouter } from "react-router-dom";
 import ArticleCreate from '../containers/ArticleCreate';
 import { configConsumerProps } from 'antd/lib/config-provider';
 import * as actions from "../store/actions/auth";
 
 const { SubMenu } = Menu;
+const { TabPane } = Tabs;
 class ArticleDetail extends React.Component {
 
     state = {
@@ -102,8 +103,33 @@ class ArticleDetail extends React.Component {
             // </Menu>
             <div>
                 <Card title={this.state.article.title}>
-                    <p>Content: {this.state.article.content}</p>
-                    <p>Descroption: {this.state.article.description}</p>
+                    <Row type="flex" justify="center">
+                        <Button>
+                            Open Call To Join Project
+                        </Button>
+                    </Row>
+                    <Row>
+                        <Col span={18}>
+                            <p>Content: {this.state.article.content}</p>
+                            <p>Description: {this.state.article.description}</p>
+                        </Col>
+                        <Col span={6}>
+                            <Tabs defaultActiveKey="1" tabPosition={"right"} style={{ height: 220 }}>
+                                  <TabPane tab="Members" key="1">
+                                    Members
+                                  </TabPane>
+                                  {/* <TabPane tab="Requirements" key="2">
+                                    What we are looking for
+                                  </TabPane>
+                                  <TabPane tab="Restrictions" key="3">
+                                    Call Restrictions
+                                  </TabPane> */}
+                                  <TabPane tab="Product" key="4">
+                                    Web Page or Product Demo
+                                  </TabPane>
+                            </Tabs>
+                        </Col>
+                    </Row>
                     {/* <div>
                         <h3 align="center"> Feedback options</h3>
                         <div>
