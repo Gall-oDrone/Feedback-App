@@ -87,7 +87,7 @@ class CustomLayout extends React.Component {
               </Menu.Item>
               <Menu.Item key="3">
                 <Link to={`/profile/${this.props.userId}/meetings`}>
-                  <Icon type="contacts"/>
+                  <Icon type="book" />
                   <span> Meetings </span>
                 </Link>
               </Menu.Item>
@@ -105,7 +105,7 @@ class CustomLayout extends React.Component {
               </Menu.Item>
               <Menu.Item key="6">
                 <Link to={`/rm`}>
-                  <Icon type="user"/>
+                  <Icon type="camera"/>
                   <span> meetingRoom </span>
                 </Link>
               </Menu.Item>
@@ -181,15 +181,15 @@ class CustomLayout extends React.Component {
             <Breadcrumb.Item>
               <Link to="/articles/">Home</Link>
             </Breadcrumb.Item>
-            <Breadcrumb.Item>
+            {/* <Breadcrumb.Item>
               <Link to="/peers/">Peers</Link>
-            </Breadcrumb.Item>
+            </Breadcrumb.Item> */}
             <Breadcrumb.Item>
               <Link to="/inquiries/">Inquiries</Link>
             </Breadcrumb.Item>
-            <Breadcrumb.Item>
+            {/* <Breadcrumb.Item>
               <Link to="/peers3/">Peers3</Link>
-            </Breadcrumb.Item>
+            </Breadcrumb.Item> */}
             <Breadcrumb.Item>
               <Link to="/articles/">Rewards</Link>
             </Breadcrumb.Item>
@@ -205,11 +205,11 @@ class CustomLayout extends React.Component {
             <Breadcrumb.Item>
                 <Link to={"/create-inquiry/"}>Post an Inquiry</Link>
             </Breadcrumb.Item>
-            {this.props.token !== null ? (
+            {/* {this.props.token !== null ? (
               <Breadcrumb.Item>
                 <Link to={`/profile/${this.props.userId}`}>Profile</Link>
               </Breadcrumb.Item>
-            ) : null}
+            ) : null} */}
             {/* {this.props.token !== null && this.props.is_student ? (
               <Breadcrumb.Item>
                 <Link to={"/assignments/"}>Assignments</Link>

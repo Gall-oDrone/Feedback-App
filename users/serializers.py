@@ -49,10 +49,74 @@ class CustomRegisterSerializer(RegisterSerializer):
         profile_info = ProfileInfo()
         profile_info.profile_username = User.objects.get(username=user.username)
         print("self.cleaned_data.get('university')", self.cleaned_data.get('university'))
-        profile_info.university = Universities.objects.get(university=self.cleaned_data.get('university'))
+        self.add_fields(self.cleaned_data.get('university'),0, profile_info)
+        # profile_info.university = Universities.objects.get(university=self.cleaned_data.get('university'))
         profile_info.save()
 
         return user
+    
+    def add_fields(self, field, i, university):
+        for f in field:
+            try:
+                print("try")
+                print(f)
+                print(i)
+                newM = self.scher3(i)
+                print("newM I: ", newM)
+                ms = self.scher2(i)
+                shh = self.scher6(newM, i, f)
+                for m in ms:
+                    if(f == m[0]):
+                        self.scher6(newM, i, f)
+                print("newM II: ", newM)
+                mtype = self.scher5(i, newM, university)
+            except:
+                print("except")
+                print(f)
+                newM = self.scher3(i)
+                ms = self.scher2(i)
+                shh = self.scher6(newM, i, f)
+                newM.save()
+                print("End except")
+                print("newM: ", newM)
+                mtype = self.scher5(i, newM, university)
+        print("live her alo")
+
+    def scher2(self, i):
+        switcher={
+                0:Universities.UNIVERSITIES,
+            }
+        return switcher.get(i,"Invalid day of week")
+
+    def scher3(self, i):
+        u = Universities()
+        switcher={
+                0:u,
+            }
+        print("switcher: ", switcher.get(i))
+        return switcher.get(i,"Invalid day of week")
+ 
+    def scher6(self, m, i, f):
+        if(i == 0):
+            m.university = f            
+            return m
+        else:
+            return "Invalid day of week"
+    
+    def scher4(self, i):
+        switcher={
+                0:Universities,
+            }
+        return switcher.get(i,"Invalid day of week")
+
+    def scher5(self, i, m, university):
+        sch = self.scher4(i)
+        if(i == 0):
+            mt = sch.objects.get(university=m)    
+            university.university = mt
+            return 
+        else:
+            return "Invalid day of week"
 
 
 class TokenSerializer(serializers.ModelSerializer):
@@ -135,3 +199,4 @@ class ProfileInfoListSerializer(serializers.ListSerializer):
     child = ProfileInfoSerializer()
     allow_null = True
     many = True
+

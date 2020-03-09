@@ -31,8 +31,8 @@ export const orderItemUpdateQuantityURL = `${endpoint}/order-item/update-quantit
 // export const articleCreateURL = data => `${endpoint}/articles/${data.articleID}/create-comment/`
 // export const articleUpdateURL = data => `${endpoint}/articles/${data.articleID}/update-comment/${data.id}/`
 
-export const authLogInURL = `${endpoint}/rest-auth/login/`;
-export const authSignUpURL = `${endpoint}/rest-auth/registration/`;
+export const authLogInURL = `${localhost}/rest-auth/login/`;
+export const authSignUpURL = `${localhost}/rest-auth/registration/`;
 
 export const articleCommentsURL = articleID => `${endpoint}/articles/${articleID}/comments/`
 export const articleCommentURL = (articleID, commentID) => `${endpoint}/articles/${articleID}/comment/${commentID}/`

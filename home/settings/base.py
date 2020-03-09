@@ -124,6 +124,6 @@ REST_AUTH_SERIALIZERS = {
 REST_AUTH_REGISTER_SERIALIZERS = {
     'REGISTER_SERIALIZER': 'users.serializers.CustomRegisterSerializer',
 }
-CORS_ORIGIN_ALLOW_ALL = True
+# CORS_ORIGIN_ALLOW_ALL = True
 # Activate Django-Heroku
 django_heroku.settings(locals())

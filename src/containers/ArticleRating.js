@@ -123,16 +123,16 @@ class ArticleRating extends React.Component {
             <Skeleton active />
           ) : (
               < Card //title={title}> 
-              >
-                <Row type="flex" justify="center">
-                  <Col span={4}>
+              style={{display: 'flex',  justifyContent:'center', alignItems:'center'}}>
+                <Row >
+                  <Col span={12}>
                     <Statistic title="Average" value={ratingAvg} />
                   </Col>
-                  <Col span={4}>
+                  <Col span={12}>
                     <Statistic title="Total" value={ratingCount} />
                   </Col>
                 </Row>
-                <Row type="flex" justify="center">
+                <Row >
                   <Col >
                     {this.props.username !== null && this.props.username !== undefined ? (
                       <span>

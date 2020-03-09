@@ -50,13 +50,12 @@ if in_heroku:
     H_DATABASES = {'default': dj_database_url.config()}
 else:
     print("POSTGRES DB")
-    H_DATABASES
+    DATABASES
 
 CORS_ORIGIN_WHITELIST = (
     'http://localhost:3000',
     "http://localhost:8001",
     "http://localhost:8000",
-    "http://localhost:5432",
     "https://py3-test-app.herokuapp.com",
     'http://localhost:5432',
 )

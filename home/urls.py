@@ -6,9 +6,9 @@ from django.conf.urls.static import static
 
 urlpatterns = [
     path('api-auth/', include('rest_framework.urls')),
-    path('api/rest-auth/', include('rest_auth.urls')),
-    path('api/rest-auth/registration/', include('rest_auth.registration.urls')),
-    path('api/admin/', admin.site.urls),
+    path('rest-auth/', include('rest_auth.urls')),
+    path('rest-auth/registration/', include('rest_auth.registration.urls')),
+    path('admin/', admin.site.urls),
     path('accounts/', include("allauth.urls")),
     path('api/articles/', include('articlesApi.articles.urls')),
     path('assignments/', include('assignmentApi.assignments.urls')),
@@ -21,7 +21,6 @@ urlpatterns = [
     path('api/notifications/', include('notificationsApi.notifications.urls')),
     path('api/live-chat/', include('livechatApi.livechat.urls')),
     path('api/users/', include('users.urls')),
-    path('accounts/', include('allauth.urls')),
     re_path(r'^.*', TemplateView.as_view(template_name='index.html'))
     
 ]

@@ -8,7 +8,7 @@ from django_countries.fields import CountryField
 class User(AbstractUser):
     is_student = models.BooleanField()
     is_teacher = models.BooleanField()
-    university = models.CharField(max_length=50, blank=True)
+    university = models.CharField(max_length=70, blank=True)
     partners = models.CharField(max_length=30, blank=True, null=True)
     website = models.CharField(max_length=60, blank=True, null=True)
 
