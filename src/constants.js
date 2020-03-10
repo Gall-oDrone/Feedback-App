@@ -1,12 +1,15 @@
 let localhost = null
+const publicUrl = new URL(process.env.PUBLIC_URL, window.location);
 if (process.env.NODE_ENV === "production"){
   localhost = 'https://py3-test-app.herokuapp.com'
   console.log("process.env.PUBLIC_URL", JSON.stringify(process.env.PUBLIC_URL))
   console.log("window.location", JSON.stringify(window.location))
+  console.log("publicUrl", JSON.stringify(publicUrl))
 } else {
   localhost = 'http://127.0.0.1:8000'
   console.log("process.env.PUBLIC_URL", JSON.stringify(process.env.PUBLIC_URL))
   console.log("window.location", JSON.stringify(window.location))
+  console.log("publicUrl", JSON.stringify(publicUrl))
 }
 
 const apiURL = '/api'
