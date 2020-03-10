@@ -82,11 +82,12 @@ class ProfileHeaderMenu extends React.Component {
           <Hoc>
             <div className="demo">
                 <Popover placement="bottomRight" title={text(this.props.username, this.props.profileAI.ProfileAccount.profile_avatar)} content={content(logout, userId)}>
-                  <Icon type="user" />
+                  <Icon type="user"/>
                 </Popover>
             </div>
         </Hoc>
-        : null
+        : 
+              <Link to="/login">Login</Link>
         )
     }
   }

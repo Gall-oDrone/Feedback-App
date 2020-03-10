@@ -1,5 +1,6 @@
 from django.contrib import admin
 from django.urls import path, include, re_path
+from filterApi.views import ReactFilterView
 from django.views.generic import TemplateView
 from django.conf import settings
 from django.conf.urls.static import static
@@ -20,6 +21,7 @@ urlpatterns = [
     path('api/inquiries/', include('inquiriesApi.inquiries.urls')),
     path('api/notifications/', include('notificationsApi.notifications.urls')),
     path('api/live-chat/', include('livechatApi.livechat.urls')),
+    # path('api/filter', ReactFilterView.as_view(), name='react'),
     path('api/users/', include('users.urls')),
     re_path(r'^.*', TemplateView.as_view(template_name='index.html'))
     

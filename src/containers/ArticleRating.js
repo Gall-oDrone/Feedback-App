@@ -15,21 +15,6 @@ const cardStyle = {
   marginBottom: "20px"
 };
 
-const data = [
-  {
-    title: 'UI',
-  },
-  {
-    title: 'Landing Page',
-  },
-  {
-    title: 'Buttons',
-  },
-  {
-    title: 'User friendly',
-  },
-];
-
 const desc = ['terrible', 'bad', 'normal', 'good', 'wonderful'];
 
 class ArticleRating extends React.Component {
@@ -45,6 +30,7 @@ class ArticleRating extends React.Component {
 
   componentDidMount() {
     console.log(JSON.stringify(this.props))
+    this.props.fetchRating("this.props.token", this.props.match.params.articleID)
     if (this.props.token !== undefined && this.props.token !== null) {
       // this.props.getASNTSDetail(this.props.token, this.props.match.params.id, this.props.match.params.userId);
       console.log("ComponentDidMount after 1: " + JSON.stringify(this.props.fetchRating(this.props.token, this.props.match.params.articleID)))
@@ -55,6 +41,7 @@ class ArticleRating extends React.Component {
   }
 
   componentWillReceiveProps(newProps) {
+    this.props.fetchRating("newProps.token", newProps.match.params.articleID)
     if (newProps.token !== this.props.token) {
       if (newProps.token !== undefined && newProps.token !== null) {
         // this.props.getASNTSDetail(newProps.token, this.props.match.params.id, this.props.match.params.userId);
@@ -134,7 +121,7 @@ class ArticleRating extends React.Component {
                 </Row>
                 <Row >
                   <Col >
-                    {this.props.username !== null && this.props.username !== undefined ? (
+                    {this.props.username !== null && this.props.token !== undefined ? (
                       <span>
                         <Rate tooltips={desc} onChange={this.handleChange} value={value} />
                         {value ? <span className="ant-rate-text">{desc[value - 1]}</span> : ''}

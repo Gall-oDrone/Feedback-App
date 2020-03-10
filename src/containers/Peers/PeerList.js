@@ -4,7 +4,7 @@ import axios from 'axios';
 import Hoc from "../../hoc/hoc";
 import { connect } from 'react-redux';
 import countryList from 'react-select-country-list'
-import peerDetail from "./PeerDetail";
+import Filter from "../FilterForm";
 import PeerDetail from './PeerDetail';
 var moment = require('moment');
 const { Search } = Input;
@@ -99,59 +99,7 @@ class ProductList extends React.Component {
                 return(
 
                   <div>
-                    <Search placeholder="input search text" onSearch={value => console.log(value)} enterButton />
-                    <br />
-                    <Collapse defaultActiveKey={['1']} onChange={callback}>
-                      <Panel header="Filter by" key="1">
-                        <Tabs type="card">
-                          <TabPane tab="University" key="1">
-                        <Checkbox.Group style={{ width: '100%' }} onChange={onChange}>
-                          <Row>
-                            <Col span={8}>
-                              <Checkbox value="A">MIT</Checkbox>
-                            </Col>
-                            <Col span={8}>
-                              <Checkbox value="B">Standford</Checkbox>
-                            </Col>
-                            <Col span={8}>
-                              <Checkbox value="C">Duke</Checkbox>
-                            </Col>
-                            <Col span={8}>
-                              <Checkbox value="D">CIDE</Checkbox>
-                            </Col>
-                            <Col span={8}>
-                              <Checkbox value="E">ITAM</Checkbox>
-                            </Col>
-                          </Row>
-                        </Checkbox.Group>
-                        </TabPane>
-                        <TabPane tab="Country" key="2">
-                          <div>
-                            <Cascader options={countries} onChange={this.onChangeCountry} placeholder="Please select" />
-                          </div>
-                        </TabPane>
-                        <TabPane tab="Assignment Type" key="3">
-                          <Row>
-                              <Col span={8}>
-                                <Checkbox value="A">Homework Review</Checkbox>
-                              </Col>
-                              <Col span={8}>
-                                <Checkbox value="B">Informative Session</Checkbox>
-                              </Col>
-                              <Col span={8}>
-                                <Checkbox value="C">Product Test</Checkbox>
-                              </Col>
-                            </Row>
-                        </TabPane>
-                        <TabPane tab="Language" key="4">
-                          <div>
-                            <Cascader options={countries} onChange={this.onChangeCountry} placeholder="Please select" />
-                          </div>
-                        </TabPane>
-                        </Tabs>
-                      </Panel>
-                    </Collapse>
-                    <br/>
+                    <Filter/>
                     <List
                     itemLayout="horizontal"
                     dataSource={this.props.data}

@@ -56,30 +56,30 @@ class CustomRegisterSerializer(RegisterSerializer):
         return user
     
     def add_fields(self, field, i, university):
-        for f in field:
-            try:
-                print("try")
-                print(f)
-                print(i)
-                newM = self.scher3(i)
-                print("newM I: ", newM)
-                ms = self.scher2(i)
-                shh = self.scher6(newM, i, f)
-                for m in ms:
-                    if(f == m[0]):
-                        self.scher6(newM, i, f)
-                print("newM II: ", newM)
-                mtype = self.scher5(i, newM, university)
-            except:
-                print("except")
-                print(f)
-                newM = self.scher3(i)
-                ms = self.scher2(i)
-                shh = self.scher6(newM, i, f)
-                newM.save()
-                print("End except")
-                print("newM: ", newM)
-                mtype = self.scher5(i, newM, university)
+        f = field
+        try:
+            print("try")
+            print(f)
+            print(i)
+            newM = self.scher3(i)
+            print("newM I: ", newM)
+            ms = self.scher2(i)
+            shh = self.scher6(newM, i, f)
+            for m in ms:
+                if(f == m[0]):
+                    self.scher6(newM, i, f)
+            print("newM II: ", newM)
+            mtype = self.scher5(i, newM, university)
+        except:
+            print("except")
+            print(f)
+            newM = self.scher3(i)
+            ms = self.scher2(i)
+            shh = self.scher6(newM, i, f)
+            newM.save()
+            print("End except")
+            print("newM: ", newM)
+            mtype = self.scher5(i, newM, university)
         print("live her alo")
 
     def scher2(self, i):

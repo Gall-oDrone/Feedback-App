@@ -45,7 +45,7 @@ export const getInquiry = token => {
         dispatch(getInquiryListStart());
         axios.defaults.headers = {
             "Content-Type": "application/json",
-            Authorization: `Token ${token}`
+            // Authorization: `Token ${token}`
         }
         axios.get(inquiryListURL)
         .then(res => {
@@ -83,7 +83,7 @@ export const getInquirySDetail = (token, id) => {
         dispatch(getInquiryDetailStart());
         axios.defaults.headers = {
             "Content-Type": "application/json",
-            Authorization: `Token ${token}`
+            // Authorization: `Token ${token}`
         }
         axios.get(inquiryDetailURL(ID))
         .then(res => {

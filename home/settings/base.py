@@ -32,6 +32,7 @@ INSTALLED_APPS = [
     'articlesApi',
     'assignmentApi',
     'analytics',
+    'filterApi',
     'incentivesApi',
     'livechatApi',
     'users',
