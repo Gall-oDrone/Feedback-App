@@ -32,7 +32,7 @@ INSTALLED_APPS = [
     'articlesApi',
     'assignmentApi',
     'analytics',
-    'filterApi',
+    # 'filterApi',
     'incentivesApi',
     'livechatApi',
     'users',
