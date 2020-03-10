@@ -73,8 +73,10 @@ const BaseRouter = () => (
     <Route exact path="/create/assignment/" component={AssignmentCreate} />
     <Route exact path="/meeting/" component={Meeting} />
     <Route exact path="/meetingReview2/" component={MeetingReviewP} />
+
     <Route exact path="/login/" component={Login} />
     <Route exact path="/signup/" component={Signup} />
+    
     <Route exact path="/profile/:id" component={Profile} />
     <Route exact path="/profile/:id/menu/" component={ProfileMainMenu} />
     <Route exact path="/userProfile/" component={MeetingReview} />
