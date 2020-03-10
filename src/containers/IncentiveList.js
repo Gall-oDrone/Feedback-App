@@ -141,7 +141,7 @@ class Incentives extends React.Component {
     });
   }
   
-  handlerBuy = async (amountD, countryD, currencyD, brand) => {
+  handlerBuy = async (amountD, countryD, currencyD, brandD) => {
     this.toggle(true)
     console.log("this.props.error: " + JSON.stringify(this.props.err1))
     console.log("In handlerBuy")
@@ -150,8 +150,8 @@ class Incentives extends React.Component {
       amount: amountD,
       country: countryD,
       currency: currencyD,
-      incentive_brand: [brand],
-      created: moment()
+      incentive_brand: [brandD],
+      created: moment().format()
     }
     this.props.postIncentive(this.props.token, data)
     console.log("POSTING")
@@ -223,7 +223,7 @@ class Incentives extends React.Component {
                         </Col>
                         <Col xs={{ span: 4, offset: 1 }} lg={{ span: 4, offset: 2 }}>
                         <div>
-                          <Button onClick={() => { this.handlerBuy(amount, country, currency, "1", brand) }} style={{marginTop: "2rem", marginLeft: "-3rem"}}>
+                          <Button onClick={() => { this.handlerBuy(amount, country, currency, "Amazon.com Gift Card") }} style={{marginTop: "2rem", marginLeft: "-3rem"}}>
                             Buy
                           </Button>   
                         </div>

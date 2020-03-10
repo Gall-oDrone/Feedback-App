@@ -14,6 +14,7 @@ from livechatApi.models import Sender, Recipient, Category, LCRoom
 from users.models import User, MeetingRequest, Profile
 from articlesApi.models import Article
 from incentivesApi.models import Incentive
+from notificationsApi.models import Notification
 from .serializers import IncentiveListSerializer, IncentiveUserListSerializer, IncentiveListDetailSerializer
 from django.http import Http404, JsonResponse, HttpResponse
 from rest_framework.views import APIView
@@ -49,10 +50,13 @@ class IncentiveCreateView(CreateAPIView):
             post_incentive(self, request.data)
 
             #NOTIFICATION
-            userId = User.objects.get(username=request.data["recipient"]).id
+            if "recipient" in request.data:
+                userId = User.objects.get(username=request.data["recipient"]).id
+                print(self.request.data.get(recipient))
+            else:
+                userId = User.objects.get(username=request.data["buyer"]).id
             print("userId after validation")
             print(userId)
-            print(self.request.data.get(recipient))
             notify = Notification()
             notify.user = User.objects.get(id=userId)
             notify.actor = self.request.data.get("buyer")[0]
@@ -180,7 +184,7 @@ def post_incentive(self, data):
     local_url = "http://127.0.0.1:7000/incentives/data/create/"
     heroku_url = "https://py2-incentives.herokuapp.com/incentives/data/create/"
     headers = {'content-type': "application/json"}
-    url = heroku_url
+    url = local_url
     r = requests.post(url, data=json.dumps(data), headers=headers)
     print(r.status_code)
     if r.status_code == 200:
