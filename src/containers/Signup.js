@@ -197,12 +197,12 @@ class RegistrationForm extends React.Component {
           )}
         </FormItem>
 
-        {formItems}
+        {/* {formItems}
           <Form.Item {...formItemLayoutWithOutLabel}>
             <Button type="dashed" onClick={this.add} style={{ width: '60%' }}>
               <Icon type="plus" /> Add field
             </Button>
-          </Form.Item>
+          </Form.Item> */}
 
         <FormItem>
           {getFieldDecorator("email", {
@@ -329,6 +329,7 @@ class RegistrationForm extends React.Component {
             Signup
           </Button>
           Or
+          {" "}
           <NavLink style={{ marginRight: "10px" }} to="/login/">
             Login
           </NavLink>

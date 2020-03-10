@@ -116,9 +116,9 @@ class App2 extends React.Component {
         }
         const newData = Object.assign(adding, data)
         console.log("newData at handleCaller: ", JSON.stringify(newData))
-        this.props.updateDetailRoom(this.props.token, data.room_name, newData)
-        Promise.resolve(this.handlerCallerTimeCounter(data.called_time)).then(() => {
-          
+        let waiter = Promise.resolve(this.props.updateDetailRoom(this.props.token, data.room_name, newData))
+        waiter.then(() => {
+          this.handlerCallerTimeCounter(data.called_time)
         })
         Promise.resolve(this.props.getDetailRoom(this.props.token, "wzzGwAyE9f7e4CawhzZm")).then(() => {
           this.setState({

@@ -31,6 +31,7 @@ export default function register() {
 
     window.addEventListener("load", () => {
       const swUrl = `${process.env.PUBLIC_URL}/service-worker.js`;
+      console.log("sURL: ", JSON.stringify(swUrl))
 
       if (isLocalhost) {
         // This is running on localhost. Lets check if a service worker still exists or not.
@@ -92,8 +93,7 @@ function checkValidServiceWorker(swUrl) {
       ) {
         // No service worker found. Probably a different app. Reload the page.
         navigator.serviceWorker.ready.then(registration => {
-          // registration.unregister().then(() => {
-          registration.register().then(() => {
+          registration.unregister().then(() => {
             window.location.reload();
           });
         });
