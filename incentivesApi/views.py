@@ -184,7 +184,7 @@ def post_incentive(self, data):
     local_url = "http://127.0.0.1:7000/incentives/data/create/"
     heroku_url = "https://py2-incentives.herokuapp.com/incentives/data/create/"
     headers = {'content-type': "application/json"}
-    url = local_url
+    url = heroku_url
     r = requests.post(url, data=json.dumps(data), headers=headers)
     print(r.status_code)
     if r.status_code == 200:
