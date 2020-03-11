@@ -41,32 +41,52 @@ class FilterForm extends React.Component {
   handleSubmit = e => {
     e.preventDefault();
     this.props.form.validateFields((err, values) => {
-      const audience =
-      values["university"] === undefined ? null : values["university"];
+      const category =
+      values["category"] === undefined ? null : values["category"];
     const view_count_max =
-      values["country"] === undefined ? null : values["country"];
-    const itype =
-      values["assignment_type"] === undefined ? null : values["assignment_type"];
+      values["maximum-views"] === undefined ? null : values["maximum-views"];
+    const view_count_min =
+      values["minimum-views"] === undefined ? null : values["minimum-views"];
     let notReviewed = null;
     let reviewed =
-      values["language"] === undefined ? null : values["language"];
+      values["reviewed"] === undefined ? null : values["reviewed"];
+    if (reviewed === "reviewed") {
+      reviewed = "on";
+      notReviewed = null;
+    } else if (reviewed === "notReviewed") {
+      reviewed = null;
+      notReviewed = "on";
+    }
     const title_contains =
       values["searchTitle"] === undefined ? null : values["searchTitle"];
+    const id_exact =
+      values["searchTitleID"] === undefined ? null : values["searchTitleID"];
     const title_or_author =
       values["searchTitleOrAuthor"] === undefined
         ? null
         : values["searchTitleOrAuthor"];
+    const rangeValue = values["date-range"];
+    const date_min =
+      rangeValue === undefined ? null : rangeValue[0].format("YYYY-MM-DD");
+    const date_max =
+      rangeValue === undefined ? null : rangeValue[1].format("YYYY-MM-DD");
 
     this.setState({ loading: true });
 
     if (!err) {
       axios
-        .get("http://127.0.0.1:8000/api/filter", {
+        .get("http://127.0.0.1:8000/api/", {
           params: {
             title_contains,
-            audience,
-            itype
-            
+            id_exact,
+            title_or_author,
+            view_count_min,
+            view_count_max,
+            date_min,
+            date_max,
+            category,
+            reviewed,
+            notReviewed
           }
         })
         .then(res => {
@@ -120,7 +140,7 @@ class FilterForm extends React.Component {
                         <Checkbox value="C">Duke</Checkbox>
                       </Col>
                       <Col span={8}>
-                        <Checkbox value="Center of Teaching and Research in Economics">CIDE</Checkbox>
+                        <Checkbox value="D">CIDE</Checkbox>
                       </Col>
                       <Col span={8}>
                         <Checkbox value="E">ITAM</Checkbox>
@@ -141,19 +161,17 @@ class FilterForm extends React.Component {
             <TabPane tab="Assignment Type" key="3">
             <Form.Item hasFeedback>
                 {getFieldDecorator("assignment_type")( 
-                  <Checkbox.Group>
-                    <Row>
-                      <Col span={8}>
-                        <Checkbox value="Homework Review">Homework Review</Checkbox>
-                      </Col>
-                      <Col span={8}>
-                        <Checkbox value="B">Informative Session</Checkbox>
-                      </Col>
-                      <Col span={8}>
-                        <Checkbox value="C">Product Test</Checkbox>
-                      </Col>
-                    </Row>
-                  </Checkbox.Group>
+                  <Row>
+                    <Col span={8}>
+                      <Checkbox value="A">Homework Review</Checkbox>
+                    </Col>
+                    <Col span={8}>
+                      <Checkbox value="B">Informative Session</Checkbox>
+                    </Col>
+                    <Col span={8}>
+                      <Checkbox value="C">Product Test</Checkbox>
+                    </Col>
+                  </Row>
                 )}
               </Form.Item>
             </TabPane>

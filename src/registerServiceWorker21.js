@@ -22,7 +22,10 @@ export default function register() {
   if (process.env.NODE_ENV === "production" && "serviceWorker" in navigator) {
     // The URL constructor is available in all browsers that support SW.
     const publicUrl = new URL(process.env.PUBLIC_URL, window.location);
+    console.log("publicUrl.origin: ", JSON.stringify(publicUrl.origin))
+    console.log("window.location.origin: ", JSON.stringify(window.location.origin))
     if (publicUrl.origin !== window.location.origin) {
+      console.log("WONT WORK")
       // Our service worker won't work if PUBLIC_URL is on a different origin
       // from what our page is served on. This might happen if a CDN is used to
       // serve assets; see https://github.com/facebookincubator/create-react-app/issues/2374
@@ -31,6 +34,7 @@ export default function register() {
 
     window.addEventListener("load", () => {
       const swUrl = `${process.env.PUBLIC_URL}/service-worker.js`;
+      console.log("sURL: ", JSON.stringify(swUrl))
 
       if (isLocalhost) {
         // This is running on localhost. Lets check if a service worker still exists or not.
