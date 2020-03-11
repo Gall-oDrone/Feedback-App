@@ -105,7 +105,7 @@ export const notificationURL = (notificationID, username)=> `${endpoint}/notific
 
 export const inquiryListURL = `${endpoint}/inquiries/list/`
 export const inquiryDetailURL = (ID)=> `${endpoint}/inquiries/${ID}`
-export const inquiryCreateURL = `${endpoint}inquiries/create/`
+export const inquiryCreateURL = `${endpoint}/inquiries/create/`
 export const inquiryURL = (notificationID, username)=> `${endpoint}/notifications/${notificationID}/detail/delete/${username}/`
 
 export const inquiryCommentsURL = inquiryID => `${endpoint}/inquiries/${inquiryID}/comments/`

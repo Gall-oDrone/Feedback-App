@@ -116,15 +116,30 @@ class App2 extends React.Component {
         }
         const newData = Object.assign(adding, data)
         console.log("newData at handleCaller: ", JSON.stringify(newData))
-        let waiter = Promise.resolve(this.props.updateDetailRoom(this.props.token, data.room_name, newData))
-        waiter.then(() => {
-          this.handlerCallerTimeCounter(data.called_time)
-        })
-        Promise.resolve(this.props.getDetailRoom(this.props.token, "wzzGwAyE9f7e4CawhzZm")).then(() => {
-          this.setState({
-            caller:true
+        new Promise((resolve, reject) => { 
+          console.log("1)")
+          resolve(this.props.updateDetailRoom(this.props.token, data.room_name, newData)).then(() => {
+            console.log("1.1)", data.called_time)
           })
-        })
+          }).then(() => { 
+            console.log("2)")
+            console.log("2.1)", data.called_time)
+            new Promise((resolve, reject) => { resolve(this.handlerCallerTimeCounter(data.called_time))})
+            console.log("3)")
+            this.setState({
+              caller:true
+            })
+          }); 
+          
+        // let waiter = Promise.resolve(this.props.updateDetailRoom(this.props.token, data.room_name, newData))
+        // waiter.then(() => {
+        //   this.handlerCallerTimeCounter(data.called_time)
+        // })
+        // Promise.resolve(this.props.getDetailRoom(this.props.token, "wzzGwAyE9f7e4CawhzZm")).then(() => {
+        //   this.setState({
+        //     caller:true
+        //   })
+        // })
         
       }
     })
@@ -210,7 +225,7 @@ componentWillUnmount() {
                <Row type="flex" justify="center" align="top">
                 <Col span={3} pull={3}>
                     <div>
-                      { timeNow2 > "2020-03-06T00:30:00Z"//this.props.roomDetails.RoomDetail.date_to_appointment
+                      { timeNow2 < "2020-03-06T00:30:00Z"//this.props.roomDetails.RoomDetail.date_to_appointment
                           ? <Button disabled icon="user"> Call user</Button>
                           : 
                             this.state.caller === true ? (

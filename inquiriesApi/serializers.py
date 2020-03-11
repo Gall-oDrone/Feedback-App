@@ -50,7 +50,8 @@ class InquirySerializer(serializers.ModelSerializer):
         userId = User.objects.get(username=data["user"]).id
         print("userId: ", userId)
         inquiry.author = User.objects.get(username=data["user"])
-        inquiry.end = data["range"][1]
+        if "range" in data:
+            inquiry.end = data["range"][1]
         userUniversity = ProfileInfo.objects.get(profile_username_id=userId)
         print("userUniversity: ", userUniversity)
         print("userUniversity 2: ", userUniversity.university_id)

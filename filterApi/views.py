@@ -6,7 +6,7 @@ from inquiriesApi.models import Inquiry, InquiryType, TargetAudience, Topic, Pre
 from .serializers import JournalSerializer
 from articlesApi.serializers import ArticleSerializer
 from inquiriesApi.serializers import InquirySerializer
-from rest_framework import generics
+from rest_framework import generics, permissions
 
 def is_valid_queryparam(param):
     return param != '' and param is not None
@@ -42,15 +42,16 @@ def article_filter(request):
     return qs
 
 def inquiry_filter(request):
+    print("IN METHOD inquiry_filter")
     qs = Inquiry.objects.all()
     # categories = Category.objects.all()
     types = InquiryType.objects.all()
     audiences = TargetAudience.objects.all()
-    topics = Topic.objects.all()
-    languages = PreferLanguage.objects.all()
+    # topics = Topic.objects.all()
+    # languages = PreferLanguage.objects.all()
     title_contains_query = request.GET.get("title_contains")
-    content_contains_query = request.GET.get("content_contains")
-    title_or_author_query = request.GET.get("title_or_author")
+    # content_contains_query = request.GET.get("content_contains")
+    # title_or_author_query = request.GET.get("title_or_author")
     itype = request.GET.get("itype")
     audience = request.GET.get("audience")
     # topic = request.GET.get("topic")
@@ -59,10 +60,10 @@ def inquiry_filter(request):
     if is_valid_queryparam(title_contains_query):
         qs = qs.inquiry_filter(title__icontains=title_contains_query)
 
-    elif is_valid_queryparam(title_or_author_query):
-        qs = qs.inquiry_filter(Q(title__icontains=title_or_author_query)
-                        | Q(author__name__icontains=title_or_author_query)
-                        ).distinct()
+    # elif is_valid_queryparam(title_or_author_query):
+    #     qs = qs.inquiry_filter(Q(title__icontains=title_or_author_query)
+    #                     | Q(author__name__icontains=title_or_author_query)
+    #                     ).distinct()
 
     if is_valid_queryparam(itype) and tag != "Choose...":
         qs = qs.inquiry_filter(types__name=itype)
@@ -85,9 +86,11 @@ def BootstrapFilterView(request):
 
 class ReactFilterView(generics.ListAPIView):
     serializer_class = InquirySerializer
+    permission_classes = (permissions.AllowAny,)
 
     def get_queryset(self):
         qs1 = article_filter(self.request)
         qs = inquiry_filter(self.request)
+        print("qs: ",qs)
         return qs
         

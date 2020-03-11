@@ -261,7 +261,7 @@ class ArticleCustomForm extends React.Component {
         values["upload"] === undefined ? null : values["upload"];
       console.log("CCS")
       const postObj = {
-        user: "q",
+        user: this.props.username,
         title: values.title,
         content: values.content,
         inquiry_type: values.inquiry_type,
@@ -275,7 +275,9 @@ class ArticleCustomForm extends React.Component {
         // ufile: values.upload
       }
       console.log("postObj: ", JSON.stringify(postObj))
-      formData.append("file", file[0].originFileObj)
+      if (file !== null){
+        formData.append("file", file[0].originFileObj)
+      }
       formData.append("data", JSON.stringify(postObj))
       console.log("formData: ", JSON.stringify(formData))
       console.log("postObj: ", JSON.stringify(postObj))
@@ -289,7 +291,7 @@ class ArticleCustomForm extends React.Component {
         };
         console.log("formData: ", JSON.stringify(postObj))
         console.log("before posting article")
-          axios.post("http://127.0.0.1:8000/inquiries/create/", 
+          axios.post("http://127.0.0.1:8000/api/inquiries/create/", 
           formData
           )
             .then(res => {
@@ -480,7 +482,8 @@ const WrappedArticleCreate = Form.create()(ArticleCustomForm);
 
 const mapStateToProps = state => {
   return {
-    token: state.auth.token
+    token: state.auth.token,
+    username: state.auth.username
   }
 }
 export default connect(mapStateToProps)(WrappedArticleCreate);

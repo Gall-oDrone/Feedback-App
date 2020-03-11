@@ -117,7 +117,7 @@ class FilterForm extends React.Component {
                         <Checkbox value="B">Standford</Checkbox>
                       </Col>
                       <Col span={8}>
-                        <Checkbox value="C">Duke</Checkbox>
+                        <Checkbox value="El Colegio de México">COLMEX</Checkbox>
                       </Col>
                       <Col span={8}>
                         <Checkbox value="Center of Teaching and Research in Economics">CIDE</Checkbox>
@@ -144,10 +144,10 @@ class FilterForm extends React.Component {
                   <Checkbox.Group>
                     <Row>
                       <Col span={8}>
-                        <Checkbox value="Homework Review">Homework Review</Checkbox>
+                        <Checkbox value="homework review">Homework Review</Checkbox>
                       </Col>
                       <Col span={8}>
-                        <Checkbox value="B">Informative Session</Checkbox>
+                        <Checkbox value="class review">Class Review</Checkbox>
                       </Col>
                       <Col span={8}>
                         <Checkbox value="C">Product Test</Checkbox>
