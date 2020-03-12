@@ -110,6 +110,7 @@ class Comments extends React.Component {
 
   componentDidMount() {
     console.log(JSON.stringify(this.props))
+    this.props.getComment("this.props.token", this.props.match.params.articleID)
     if (this.props.token !== undefined && this.props.token !== null) {
       console.log("ComponentDidMount after 1: " + JSON.stringify(this.props.token))
       console.log("ComponentDidMount after 2: " + JSON.stringify(this.props.match.params.articleID))
@@ -261,8 +262,8 @@ class Comments extends React.Component {
               }
               key={chl_match[i].id}
               datetime={
-                <Tooltip title={moment().format('YYYY-MM-DD HH:mm:ss')}>
-                  <span>{moment().fromNow()}</span>
+                <Tooltip title={moment(new Date(chl_match[i].timestamp)).format('YYYY-MM-DD HH:mm')}>
+                  <span>{moment(new Date(chl_match[i].timestamp)).fromNow()}</span>
                 </Tooltip>
               }
             />
@@ -332,8 +333,8 @@ class Comments extends React.Component {
                     />
                   }
                   datetime={
-                    <Tooltip title={moment().format('YYYY-MM-DD HH:mm:ss')}>
-                      <span>{moment().fromNow()}</span>
+                    <Tooltip title={moment(new Date(props.timestamp)).format('YYYY-MM-DD HH:mm')}>
+                      <span>{moment(new Date(props.timestamp)).fromNow()}</span>
                     </Tooltip>
                   }
                 >

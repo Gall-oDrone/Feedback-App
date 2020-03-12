@@ -55,6 +55,8 @@ class CommentForm extends React.Component {
 
   componentDidMount() {
     console.log(JSON.stringify(this.props))
+    //This assures that everyone can see the comments
+    this.props.getComment("this.props.token", this.props.match.params.articleID)
     if (this.props.token !== undefined && this.props.token !== null) {
       // this.props.getASNTSDetail(this.props.token, this.props.match.params.id, this.props.match.params.userId);
       console.log("1) ComponentDidMount after: " + JSON.stringify(this.props.token))
@@ -112,7 +114,7 @@ class CommentForm extends React.Component {
     this.setState({
       submitting: true,
     });
-    await this.props.getComment(this.props.token, this.props.match.params.articleID)
+    await this.props.getComment("this.props.token", this.props.match.params.articleID)
     setTimeout(() => {
       this.setState({
         submitting: false,

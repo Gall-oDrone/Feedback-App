@@ -274,6 +274,7 @@ class RatingSerializer(serializers.ModelSerializer):
 class CommentSerializer(serializers.ModelSerializer):
     user = StringSerializer(many=False)
     article = StringSerializer(many=False)
+    # timestamp = StringSerializer(many=False)
     content = StringSerializer(many=False)
     liked = StringSerializer(many=False)
     disliked = StringSerializer(many=False)
@@ -283,7 +284,7 @@ class CommentSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Comment
-        fields = ("id", 'user', "article", "content", "liked", "disliked", "like_counter", "dislike_counter", "reply_to", "replies", "comment_reply")
+        fields = ("id", 'user', "timestamp", "article", "content", "liked", "disliked", "like_counter", "dislike_counter", "reply_to", "replies", "comment_reply")
     
     def get_comment_reply(self, obj):
         # obj is an survey

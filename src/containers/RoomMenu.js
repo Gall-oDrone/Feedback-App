@@ -104,32 +104,41 @@ class App2 extends React.Component {
         defaultKey: "2"
      });
   };
+  handleC(data, newData){
+    new Promise((resolve, reject) => {
+      resolve(this.props.updateDetailRoom(this.props.token, data.room_name, newData))
+      // Promise.resolve(this.props.getDetailRoom(this.props.token, data.room_name)
+      // .then(() => {
+      //   console.log("2.0)", data.called_time)
+      //   this.handlerCallerTimeCounter(data.called_time)
+      //     console.log("2)")
+      //     console.log("2.1)", data.called_time)
+      //     console.log("3)")
+      //     this.setState({
+      //       caller:true
+      //     })
+      //   })
+      //   ))
+    })
+  }
 
   handleCaller = (data) => {
     const par = data.participants
-    par.forEach(el => {
+    const data1 = data
+    par.forEach(async el => {
       if(this.props.username !== el){
         const adding = {
           called: moment().format(),
           called_user:el,
           caller:this.props.username,
         }
-        const newData = Object.assign(adding, data)
+        const newData = Object.assign(adding, data1)
         console.log("newData at handleCaller: ", JSON.stringify(newData))
-        new Promise((resolve, reject) => { 
-          console.log("1)")
-          resolve(this.props.updateDetailRoom(this.props.token, data.room_name, newData)).then(() => {
-            console.log("1.1)", data.called_time)
-          })
-          }).then(() => { 
-            console.log("2)")
-            console.log("2.1)", data.called_time)
-            new Promise((resolve, reject) => { resolve(this.handlerCallerTimeCounter(data.called_time))})
-            console.log("3)")
-            this.setState({
-              caller:true
-            })
-          }); 
+        Promise.resolve(this.handleC(data1, newData)).then(() => {this.props.getDetailRoom(this.props.token, data.room_name).then(res =>{console.log(res)})})
+        // console.log("2)")
+        // console.log("2.1)", data1.called_time)
+        // this.handlerCallerTimeCounter(data1.called_time);
+       
           
         // let waiter = Promise.resolve(this.props.updateDetailRoom(this.props.token, data.room_name, newData))
         // waiter.then(() => {

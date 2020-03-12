@@ -43,7 +43,10 @@ def article_filter(request):
 
 def inquiry_filter(request):
     print("IN METHOD inquiry_filter")
+    print(" request.data: ",  request.data)
+    print(" request.GET.get(title_contains): ",  request.GET.get("itype"))
     qs = Inquiry.objects.all()
+    qs = qs.inquiry_filter(types__name="class review")
     # categories = Category.objects.all()
     types = InquiryType.objects.all()
     audiences = TargetAudience.objects.all()
@@ -53,12 +56,15 @@ def inquiry_filter(request):
     # content_contains_query = request.GET.get("content_contains")
     # title_or_author_query = request.GET.get("title_or_author")
     itype = request.GET.get("itype")
+    print("itype: ", itype)
     audience = request.GET.get("audience")
     # topic = request.GET.get("topic")
     # langauge = request.GET.get("language")
 
     if is_valid_queryparam(title_contains_query):
+        print("TCQ: ", title_contains_query)
         qs = qs.inquiry_filter(title__icontains=title_contains_query)
+        print("qs: ", qs)
 
     # elif is_valid_queryparam(title_or_author_query):
     #     qs = qs.inquiry_filter(Q(title__icontains=title_or_author_query)
@@ -66,7 +72,10 @@ def inquiry_filter(request):
     #                     ).distinct()
 
     if is_valid_queryparam(itype) and tag != "Choose...":
+        print("TN: ", itype)
         qs = qs.inquiry_filter(types__name=itype)
+        print("qs: ", qs)
+
     if is_valid_queryparam(audience) and tag != "Choose...":
         qs = qs.inquiry_filter(audiences__name=audience)
     # if is_valid_queryparam(topic) and tag != "Choose...":
@@ -89,8 +98,10 @@ class ReactFilterView(generics.ListAPIView):
     permission_classes = (permissions.AllowAny,)
 
     def get_queryset(self):
+        print("get_queryset request.data: ",  self.request.data)
+        print("get_queryset self.request: ",  self.request)
         qs1 = article_filter(self.request)
         qs = inquiry_filter(self.request)
-        print("qs: ",qs)
+        print("ReactFilterView qs: ",qs)
         return qs
         

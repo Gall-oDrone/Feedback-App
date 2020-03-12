@@ -103,11 +103,11 @@ class ArticleDetail extends React.Component {
             // </Menu>
             <div>
                 <Card title={this.state.article.title}>
-                    <Row type="flex" justify="center">
+                    {/* <Row type="flex" justify="center">
                         <Button>
                             Open Call To Join Project
                         </Button>
-                    </Row>
+                    </Row> */}
                     <Row>
                         <Col span={18}>
                             <p>Content: {this.state.article.content}</p>
@@ -116,7 +116,8 @@ class ArticleDetail extends React.Component {
                         <Col span={6}>
                             <Tabs defaultActiveKey="1" tabPosition={"right"} style={{ height: 220 }}>
                                   <TabPane tab="Members" key="1">
-                                    Members
+                                    <p>Members</p>
+                                    <ul>{this.state.article.author}</ul>
                                   </TabPane>
                                   {/* <TabPane tab="Requirements" key="2">
                                     What we are looking for

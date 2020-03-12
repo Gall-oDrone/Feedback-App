@@ -60,6 +60,7 @@ class FilterForm extends React.Component {
     this.setState({ loading: true });
 
     if (!err) {
+      console.log("DATA: ", JSON.stringify(itype))
       axios
         .get("http://127.0.0.1:8000/api/filter", {
           params: {

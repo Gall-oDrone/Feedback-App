@@ -39,16 +39,16 @@ class ProfileHeaderMenu extends React.Component {
     const {logout, userId} = this.props
     const text = (username, avatar) => {return(
       <div>
-        <li>
+        <Row>
         <Avatar src={avatar}>
           <span>
             {username[0].toUpperCase()}
           </span>
         </Avatar>
-        </li>
-        <li>
+        </Row>
+        <Row>
         <span>Hi {username}</span>
-        </li>
+        </Row>
       </div>
       )};
     const content = (logout, uId) => {return(

@@ -49,7 +49,7 @@ export const getComment = (token, articleID) => {
         dispatch(getCommentListStart());
         axios.defaults.headers = {
             "Content-Type": "application/json",
-            Authorization: `Token ${token}`
+            // Authorization: `Token ${token}`
         }
         axios.get(articleCommentsURL(articleID))
         .then(res => {
@@ -87,7 +87,7 @@ export const getCommentDetail = (token, articleID, commentID) => {
         dispatch(getCommentDetailStart());
         axios.defaults.headers = {
             "Content-Type": "application/json",
-            Authorization: `Token ${token}`
+            // Authorization: `Token ${token}`
         }
         axios.get(articleCommentURL(articleID, commentID))
         .then(res => {
