@@ -1,6 +1,7 @@
 import React from 'react';
 import Articles from '../components/Articles';
 import axios from 'axios';
+import {articleDetailURL} from "../constants";
 import { connect } from 'react-redux';
 import { Menu, Card, Button, Skeleton, message, Divider, List, Tabs, Row, Col, Icon} from "antd";
 import { Link, withRouter } from "react-router-dom";
@@ -28,7 +29,7 @@ class ArticleDetail extends React.Component {
         console.log("componentDidMount THIPROPS: " + JSON.stringify(this.props))
         const articleID = this.props.match.params.articleID;
         //const articleID = 11
-        axios.get(`http://127.0.0.1:8000/api/articles/${articleID}`)
+        axios.get(articleDetailURL(articleID))
             .then(res => {
                 console.log("res: " + JSON.stringify(res.data))
                 this.setState({

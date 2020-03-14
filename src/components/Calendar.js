@@ -53,7 +53,7 @@ const CalendarComponent = ({date_to_appointment}) => {
                        moment().add(1, 'month')  <= current;
                   }}
                 onOk={(value, dateString) => {
-        date_to_appointment.date = value._d;
+        date_to_appointment.date = moment(value._d).format();
         console.log("3) date_to_appointment: "+JSON.stringify(value._d.valueOf()))
         console.log("4) date_to_appointment: "+JSON.stringify(date_to_appointment))
     }} />

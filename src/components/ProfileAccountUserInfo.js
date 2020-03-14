@@ -157,6 +157,26 @@ class UserProfileInfo extends React.Component {
     return this.lab
   };
 
+  handleAcademicStatus = val => {
+    var academic_s = null
+    if(val === "True"){
+      this.academic_s = "undergraduate"
+    } else {
+      this.academic_s = "graduate"
+    }
+    return this.academic_s
+  }
+
+  handleWorkExperience = val => {
+    var work_e = null
+    if(val === "True"){
+      this.work_e = "True"
+    } else {
+      this.work_e = "False"
+    }
+    return this.work_e
+  }
+
   componentDidMount() {
     if (this.props.token !== undefined && this.props.token !== null) {
       if(this.props.username !== null){
@@ -279,7 +299,9 @@ class UserProfileInfo extends React.Component {
           </Form.Item>
 
           <Form.Item label="Academic status">
-          {getFieldDecorator('attendace')(
+          {getFieldDecorator('attendace', {
+            initialValue: this.handleAcademicStatus(UserAccountInfo.graduate)
+          })(
             <Radio.Group >
               <Radio.Button value="undergraduate">Undergraduate</Radio.Button>
               <Radio.Button value="graduate">Graduate</Radio.Button>
@@ -311,7 +333,9 @@ class UserProfileInfo extends React.Component {
           <p style={pStyle}>Company</p>
 
           <Form.Item label="Working experience">
-            {getFieldDecorator('work-experience')(
+            {getFieldDecorator('work-experience', {
+              initialValue: this.handleWorkExperience(UserAccountInfo.work_experience)
+            })(
               <Radio.Group >
                 <Radio.Button value="True">Yes</Radio.Button>
                 <Radio.Button value="False">No</Radio.Button>

@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from articlesApi.models import Article, Video, Comment, Category, Like, Rating, Image, CommentReply
+from articlesApi.models import Article, Video, Comment, Category, Like, Rating, Image, CommentReply, FeedbackTypes
 from users.models import User
 from django.core.files.storage import FileSystemStorage
 import json
@@ -51,37 +51,38 @@ class ArticleSerializer(serializers.ModelSerializer):
         article.save()
         article.title = data["title"]
         article.content = data["content"]
-        # article.author = data["user"]
-        print("FILES I: ", files['file'])
-        print("FILES II: ", files['media'])
-        for f in files:
-            myfile = files[f]
-            print("file type: ", myfile.content_type.split('/')[0])
-            file_type = myfile.content_type.split('/')[0]
-            fs = FileSystemStorage()
-            valid_extensions = ['.pdf', '.doc', '.docx', '.jpg', '.png', '.xlsx', '.xls']
-            if file_type == "video":
-                print("myfile.name is video")
-                videoD = Video()
-                filename = fs.save("videos/"+myfile.name, myfile)
+        article.author = User.objects.get(username=data["user"])
+        if files is dict:
+            print("FILES I: ", files['file'])
+            print("FILES II: ", files['media'])
+            for f in files:
+                myfile = files[f]
+                print("file type: ", myfile.content_type.split('/')[0])
+                file_type = myfile.content_type.split('/')[0]
+                fs = FileSystemStorage()
+                valid_extensions = ['.pdf', '.doc', '.docx', '.jpg', '.png', '.xlsx', '.xls']
+                if file_type == "video":
+                    print("myfile.name is video")
+                    videoD = Video()
+                    filename = fs.save("videos/"+myfile.name, myfile)
+                    uploaded_file_url = fs.url(filename)
+                    videoD.videofile = "videos/"+myfile.name
+                    videoD.save()
+                    print("videoD, ", videoD)
+                    print("videoD.id, ", videoD.id)
+                    article.video= Video(id=videoD.id)
+                    # raise ValidationError('Unsupported file extension.')
+            else: 
+                print("myfile.name is image")
+                filename = fs.save("images/"+myfile.name, myfile)
                 uploaded_file_url = fs.url(filename)
-                videoD.videofile = "videos/"+myfile.name
-                videoD.save()
-                print("videoD, ", videoD)
-                print("videoD.id, ", videoD.id)
-                article.video= Video(id=videoD.id)
-                # raise ValidationError('Unsupported file extension.')
-        else: 
-            print("myfile.name is image")
-            filename = fs.save("images/"+myfile.name, myfile)
-            uploaded_file_url = fs.url(filename)
-            print("uploaded_file_url")
-            print(uploaded_file_url)
-            print(myfile.name)
-            print(article.thumbnail)
-            article.thumbnail = "images/"+myfile.name
-            print("article.thumbnail")
-            print(article.thumbnail)
+                print("uploaded_file_url")
+                print(uploaded_file_url)
+                print(myfile.name)
+                print(article.thumbnail)
+                article.thumbnail = "images/"+myfile.name
+                print("article.thumbnail")
+                print(article.thumbnail)
 
         for e in data['engagement']:
             try:
@@ -110,11 +111,26 @@ class ArticleSerializer(serializers.ModelSerializer):
                 article.engagement.add(ftype.id)
         print("live her alo")
         for c in data['categories']:
-            print(c)
-            newC = Category()
-            newC.title = c
-            article.categories.add(newC.title)
-
+            try:
+                print("try")
+                print(c)
+                print(Category.objects.all())
+                titles = []
+                for cs in Category.objects.all():
+                    titles.append(cs.title)
+                    if cs.title == c:
+                        article.categories.add(cs.id)
+                if c not in titles:
+                    newC = Category()
+                    newC.title = c
+                    newC.save()
+                    article.categories.add(newC.id)
+            except:
+                print("except")
+                newC = Category()
+                newC.title = c
+                newC.save()
+                article.categories.add(newC.id)
         article.save()
         return article
 

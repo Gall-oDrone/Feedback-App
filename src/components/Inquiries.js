@@ -1,6 +1,6 @@
 import React from 'react';
 import { List, Avatar, Icon } from 'antd';
-
+import {media_endpoint} from "../constants"
 const IconText = ({ type, text }) => (
     <span>
         <Icon type={type} style={{ marginRight: 8 }} />
@@ -43,7 +43,7 @@ const Inquiries = (props) => {
                             //     src="https://gw.alipayobjects.com/zos/rmsportal/mqaQswcyDLcXyDKnZfES.png"
                             // />
                             <video width="250" controls >
-                                <source src={`http://127.0.0.1:8000/media/${item.video}`} type="video/mp4"/>
+                                <source src={`${media_endpoint}/${item.video}`} type="video/mp4"/>
                                 Your browser does not support HTML5 video.
                             </video>
                         }

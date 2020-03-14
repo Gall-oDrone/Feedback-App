@@ -153,7 +153,7 @@ const mapStateToProps = state => {
   return {
     token: state.auth.token,
     username: state.auth.username,
-    loading: state.assignments.loading,
+    // loading: state.assignments.loading,
     err1: state.reviewMeeting.error
   };
 };

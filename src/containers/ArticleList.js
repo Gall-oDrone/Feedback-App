@@ -1,9 +1,8 @@
 import React from 'react';
 import Articles from '../components/Articles';
 import axios from 'axios';
-import { connect } from 'react-redux';
-import ArticleCustomForm from "../containers/ArticleCreate"
-import { Button } from 'antd';
+import {articleListURL} from "../constants";
+
 
 class ArticleList extends React.Component {
 
@@ -14,7 +13,7 @@ class ArticleList extends React.Component {
 
 
     fetchArticles = () => {
-        axios.get("http://127.0.0.1:8000/api/articles/")
+        axios.get(articleListURL)
         .then(res => {
             this.setState({
                 articles: res.data

@@ -20,7 +20,7 @@ const mediaURL = imageURL
 // export const endpoint = `${localhost}`
 export const endpoint = `${localhost}${apiURL}`
 const image_endpoint = `${localhost}${imageURL}`
-const media_endpoint = `${localhost}${mediaURL}`
+export const media_endpoint = `${localhost}${mediaURL}`
 
 export const productListURL = `${endpoint}/products/`;
 export const productDetailURL = id => `${endpoint}/products/${id}/`;
@@ -39,9 +39,10 @@ export const addressDeleteURL = id => `${endpoint}/addresses/${id}/delete/`;
 export const orderItemDeleteURL = id => `${endpoint}/order-items/${id}/delete/`;
 export const orderItemUpdateQuantityURL = `${endpoint}/order-item/update-quantity/`;
 
-// export const articleURL = articleID => `${endpoint}/articles/${articleID}/comments/`
-// export const articleCreateURL = data => `${endpoint}/articles/${data.articleID}/create-comment/`
-// export const articleUpdateURL = data => `${endpoint}/articles/${data.articleID}/update-comment/${data.id}/`
+export const articleListURL = `${endpoint}/articles/`
+export const articleCreateURL = `${endpoint}/articles/create/`
+export const articleDetailURL = (articleID) => `${endpoint}/articles/${articleID}`
+export const articleUpdateURL = (articleID) => `${endpoint}/articles/${articleID}/update/`
 
 export const authLogInURL = `${localhost}/rest-auth/login/`;
 export const authSignUpURL = `${localhost}/rest-auth/registration/`;
@@ -50,6 +51,7 @@ export const articleCommentsURL = articleID => `${endpoint}/articles/${articleID
 export const articleCommentURL = (articleID, commentID) => `${endpoint}/articles/${articleID}/comment/${commentID}/`
 export const articleCreateCommentURL = data => `${endpoint}/articles/${data.articleID}/create-comment/`
 export const articleUpdateCommentURL = data => `${endpoint}/articles/${data.articleID}/update-comment/${data.id}/`
+export const articleUpdateCommentURL3 = (articleID, commentID) => `${endpoint}/articles/${articleID}/update-comment/${commentID}/`
 
 export const lcroomCreateMeetingURL = `${endpoint}/live-chat/lcrequest/create/`
 export const lcroomListURL = username => `${endpoint}/live-chat/lcrequest/lcroom/list/${username}`
@@ -62,7 +64,7 @@ export const lcroomListDetailURL =  (articleID, userID) => `${endpoint}/live-cha
 export const incentivesCreateURL = `${endpoint}/incentives/create/`
 export const incentivesListURL = username => `${endpoint}/incentives/userlist/${username}`
 export const incentivesDetailURL = userID => `${endpoint}/incentives/listdetail/${userID}`
-export const articleDetailURL = articleID => `${endpoint}/articles/${articleID}`
+// export const articleDetailURL = articleID => `${endpoint}/articles/${articleID}`
 
 export const profileMeetingRequestURL = username => `${endpoint}/users/lcrequest/${username}`
 export const profileArticleListURL = username => `${endpoint}/articles/list/${username}/`
@@ -72,6 +74,7 @@ export const profileURL = (articleID, username) => `${endpoint}/articles/${artic
 export const profileUserInfoURL = username => `${endpoint}/users/profile/info/${username}`
 
 export const profileAccountUserInfoURL = userID => `${endpoint}/users/profile/account/user/info/${userID}`
+export const profileAccountUserUpdateInfoURL = userID => `${endpoint}/users/profile/account/info/${userID}`
 export const profileAccountUserInfoUpdateURL = username => `${endpoint}/users/profile/account/user/info/update/${username}`
 export const profileAccountUserSurveyListURL = username => `${endpoint}/survey/profile/survey/list/${username}`
 export const profileAccountUserSurveyDetailURL = (username, surveyID) => `${endpoint}/survey/profile/survey/detail/${username}/${surveyID}`
@@ -79,9 +82,10 @@ export const profileAccountUserSurveyUpdateURL = (username, surveyID) => `${endp
 
 export const articleRatingURL = data => `${endpoint}/articles/${data.articleID}/rating/`
 export const fetchRatingURL = articleID => `${endpoint}/articles/${articleID}`
-export const articleLikeURL = (articleID, userID) => `${endpoint}/articles/${articleID}/likes/${userID}/`
+export const articleLikeUpdateURL = (articleID, userID) => `${endpoint}/articles/${articleID}/likes/${userID}/`
+export const articleLikeCreateURL = (articleID) => `${endpoint}/articles/${articleID}/likes/`
 export const fetchLikeCounterURL = (articleID) => `${endpoint}/articles/${articleID}`
-export const articleListURL = articleID => `${endpoint}/articles/${articleID}`
+// export const articleListURL = articleID => `${endpoint}/articles/${articleID}`
 
 export const lcroomReviewURL = `${endpoint}/live-chat/lcrequest/lcroom/review/create/`
 
@@ -105,10 +109,22 @@ export const notificationURL = (notificationID, username)=> `${endpoint}/notific
 
 export const inquiryListURL = `${endpoint}/inquiries/list/`
 export const inquiryDetailURL = (ID)=> `${endpoint}/inquiries/${ID}`
+export const inquiryUpdateURL = (inquiryID)=> `${endpoint}/inquiries/${inquiryID}`
 export const inquiryCreateURL = `${endpoint}/inquiries/create/`
 export const inquiryURL = (notificationID, username)=> `${endpoint}/notifications/${notificationID}/detail/delete/${username}/`
+
+export const inquiryRatingURL = data => `${endpoint}/inquiries/${data.inquiryID}/rating/`
+export const fetchInquiryRatingURL = inquiryID => `${endpoint}/inquiries/${inquiryID}`
+export const inquiryLikeUpdateURL = (inquiryID, userID) => `${endpoint}/inquiries/${inquiryID}/likes/${userID}/`
+export const inquiryLikeCreateURL = (inquiryID) => `${endpoint}/inquiries/${inquiryID}/likes/`
+export const fetchInquiryLikeCounterURL = (inquiryID) => `${endpoint}/inquiries/${inquiryID}`
+// export const inquiryListURL = inquiryID => `${endpoint}/inquiries/${inquiryID}`
 
 export const inquiryCommentsURL = inquiryID => `${endpoint}/inquiries/${inquiryID}/comments/`
 export const inquiryCommentURL = (inquiryID, commentID) => `${endpoint}/inquiries/${inquiryID}/comment/${commentID}/`
 export const inquiryCreateCommentURL = data => `${endpoint}/inquiries/${data.inquiryID}/create-comment/`
 export const inquiryUpdateCommentURL = data => `${endpoint}/inquiries/${data.inquiryID}/update-comment/${data.id}/`
+export const inquiryUpdateCommentURL2 = (inquiryID, commentID) => `${endpoint}/inquiries/${inquiryID}/update-comment/${commentID}/`
+
+export const filterURL = `${endpoint}/`
+export const filterGetURL = `${endpoint}/filter`

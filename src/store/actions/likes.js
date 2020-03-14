@@ -11,7 +11,7 @@ import {
     GET_LIKE_DETAIL_FAIL
 } from "./actionTypes";
 import {
-  articleLikeURL,
+  articleLikeUpdateURL,
   fetchLikeURL,
   fetchLikeCounterURL,
 } from "../../constants"
@@ -91,7 +91,7 @@ export const fetchLikeCounter = (token, articleID) => {
               "Content-Type": "application/json",
               Authorization: `Token ${token}`
           }
-          axios.get(articleLikeURL(articleID, userID))
+          axios.get(articleLikeUpdateURL(articleID, userID))
           .then(res => {
               const data = res.data;
               dispatch(getLikeDetailSuccess(data));

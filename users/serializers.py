@@ -4,6 +4,7 @@ from rest_framework import serializers
 from rest_framework.authtoken.models import Token
 
 from .models import User, MeetingRequest, ProfileInfo, Profile, Universities
+from django.core.files.storage import FileSystemStorage
 
 class StringSerializer(serializers.StringRelatedField):
     def to_internal_value(self, value):
@@ -152,6 +153,31 @@ class ProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = Profile
         fields = ("__all__" )
+    
+    def update_profile_info(self, request, *args):
+        data = request
+        print('update_profile_info data: ', data)
+        profile = Profile.objects.get(user=data["user_id"])
+        files = args[0]
+        if files:
+            print("FILES -I: ", files)
+            print("FILES -II: ", files is dict)
+            print("FILES I: ", files['file'])
+            for f in files:
+                myfile = files[f]
+                print("file type: ", myfile.content_type.split('/')[0])
+                file_type = myfile.content_type.split('/')[0]
+                fs = FileSystemStorage()
+                valid_extensions = ['.pdf', '.doc', '.docx', '.jpg', '.png', '.xlsx', '.xls']
+                print("myfile.name is doc")
+                filename = fs.save("files/"+myfile.name, myfile)
+                uploaded_file_url = fs.url(filename)
+                print("uploaded_file_url")
+                print(uploaded_file_url)
+                print(myfile.name)
+                profile.profile_avatar = "files/"+myfile.name
+        profile.save()
+        return profile
 
 
 class UserProfileLCRequestSerializer(serializers.ModelSerializer):

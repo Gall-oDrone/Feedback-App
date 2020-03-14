@@ -18,6 +18,8 @@ class CommentReplySerializer(serializers.ModelSerializer):
 class InquirySerializer(serializers.ModelSerializer):
     inquiry_type = StringSerializer(many=True)
     inquiry_topic = StringSerializer(many=True)
+    inquiry_audience = StringSerializer(many=True)
+    contact_option = StringSerializer(many=True)
     author = StringSerializer(many=False)
     user_university = StringSerializer(many=False)
     opened = StringSerializer(many=False)

@@ -15,6 +15,7 @@ import {
   Col,
   DatePicker
 } from 'antd';
+import {inquiryCreateURL} from "../constants";
 import moment from "moment";
 import axios from 'axios';
 
@@ -291,7 +292,7 @@ class ArticleCustomForm extends React.Component {
         };
         console.log("formData: ", JSON.stringify(postObj))
         console.log("before posting article")
-          axios.post("http://127.0.0.1:8000/api/inquiries/create/", 
+          axios.post(inquiryCreateURL, 
           formData
           )
             .then(res => {
@@ -382,11 +383,11 @@ class ArticleCustomForm extends React.Component {
             ],
           })(
             <Select name="categories" mode="multiple" placeholder="Please select a field">
-              <Option value="'graduates'">Graduates</Option>
-              <Option value="'undergraduates'">Undergraduates</Option>
-              <Option value="'pHD'">pHD</Option>
-              <Option value="'MBA'">MBA</Option>
-              <Option value="'MS'">MS</Option>
+              <Option value="graduates">Graduates</Option>
+              <Option value="undergraduates">Undergraduates</Option>
+              <Option value="pHD">pHD</Option>
+              <Option value="MBA">MBA</Option>
+              <Option value="MS">MS</Option>
             </Select>,
           )}
         </Form.Item>
@@ -454,7 +455,7 @@ class ArticleCustomForm extends React.Component {
             </div>
           ):null
         ):(null)}
-        <Form.Item label="Upload File" extra="2.5 MB Field">
+        <Form.Item label="Upload File (Optional)" extra="2.5 MB Field">
                 {getFieldDecorator('upload', {
                   initialValue: this.handleFileList(null, null),
                   valuePropName: 'fileList',

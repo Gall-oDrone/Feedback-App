@@ -34,9 +34,9 @@ const composeEnhances = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
 const rootReducer = combineReducers({
   auth: authReducer,
-  assignments: assignmentReducer,
-  gradedAssignments: gradedAssignmentReducer,
-  assignmentsChoices: assignmentChoiceReduce,
+  // assignments: assignmentReducer,
+  // gradedAssignments: gradedAssignmentReducer,
+  // assignmentsChoices: assignmentChoiceReduce,
   like: likeReducer,
   rating: ratingReducer,
   comments: commentReducer,
@@ -51,7 +51,7 @@ const rootReducer = combineReducers({
   reviewMeeting: reviewMeetingReducer,
   survey: surveyReducer,
   gradedSurvey: gradedSurveyReducer,
-  surveyChoices: surveyChoiceReduce,
+  // surveyChoices: surveyChoiceReduce,
   profileSurvey: profileSurveyReducer,
   profileNTFN: profileNTFNListReducer,
   profileInquiry: profileInquiryReducer

@@ -16,6 +16,7 @@ import {
   Row
 } from "antd";
 import axios from "axios";
+import {filterGetURL} from "../constants";
 import Results from './InquiryResults';
 import countryList from 'react-select-country-list'
 const countries = countryList().getData()
@@ -62,7 +63,7 @@ class FilterForm extends React.Component {
     if (!err) {
       console.log("DATA: ", JSON.stringify(itype))
       axios
-        .get("http://127.0.0.1:8000/api/filter", {
+        .get(filterGetURL, {
           params: {
             title_contains,
             audience,
@@ -103,7 +104,7 @@ class FilterForm extends React.Component {
             enterButton
           />
         </Form.Item>
-        <Collapse defaultActiveKey={['1']} onChange={callback}>
+        <Collapse defaultActiveKey={['0']} onChange={callback}>
           <Panel header="Filter by" key="1">
             <Tabs type="card">
               <TabPane tab="University" key="1">

@@ -14,6 +14,7 @@ import {
   Col,
 } from 'antd';
 import axios from 'axios';
+import {articleCreateURL} from "../constants"
 
 const { Option } = Select;
 
@@ -127,8 +128,11 @@ class ArticleCustomForm extends React.Component {
         engagement: values.feedback_type,
         categories: values.categories,
       }
-      formData.append("file", file[0].originFileObj)
-      formData.append("media", file2[0].originFileObj)
+      if(file !== null){
+        formData.append("file", file[0].originFileObj)
+      } else if (file2 !== null){
+        formData.append("media", file2[0].originFileObj)
+      }
       formData.append("data", JSON.stringify(postObj))
       if (!err) {
         // axios.defaults.xsrfHeaderName = "X-CSRFTOKEN";
@@ -141,7 +145,7 @@ class ArticleCustomForm extends React.Component {
         if (requestType === "post") {
           console.log("params: " + title + " " + content + " "+ engagement)
           console.log("before posting article")
-          axios.post("http://127.0.0.1:8000/api/articles/create/", 
+          axios.post(articleCreateURL, 
           formData
           )
             .then(res => {
@@ -195,9 +199,9 @@ class ArticleCustomForm extends React.Component {
             ],
           })(
             <Select name="categories" mode="multiple" placeholder="Please select a field">
-              <Option value="1">Data Science</Option>
-              <Option value="2">AI</Option>
-              <Option value="3">Business to Business (B2B)</Option>
+              <Option value="Data Science">Data Science</Option>
+              <Option value="AI">AI</Option>
+              <Option value="Business to Business">Business to Business (B2B)</Option>
             </Select>,
           )}
         </Form.Item>
@@ -209,7 +213,7 @@ class ArticleCustomForm extends React.Component {
             <Checkbox.Group style={{ width: '100%' }}>
               <Row>
                 <Col span={8}>
-                  <Checkbox value='live chat' disabled>Live Video Chat Session</Checkbox>
+                  <Checkbox value='live chat'>Live Video Chat Session</Checkbox>
                 </Col>
                 <Col span={8}>
                   <Checkbox value='chat' disabled>Chat Session</Checkbox>
@@ -218,7 +222,7 @@ class ArticleCustomForm extends React.Component {
                   <Checkbox value='phone call' disabled>Phone Call</Checkbox>
                 </Col>
                 <Col span={8}>
-                  <Checkbox value='email'>Email</Checkbox>
+                  <Checkbox value='email' disabled>Email</Checkbox>
                 </Col>
                 <Col span={8}>
                   <Checkbox value='survey'>Survey</Checkbox>
@@ -229,7 +233,7 @@ class ArticleCustomForm extends React.Component {
         </Form.Item>
         <Row gutter={16} type="flex" justify="center">
           <Col span={8}>
-            <Card title="Upload an Image" bordered={false}>
+            <Card title="Upload an Image (Optional)" bordered={false}>
               <Form.Item extra="2.5 MB Image">
                 {getFieldDecorator('upload', {
                   initialValue: this.handleFileList(null, null),
@@ -247,7 +251,7 @@ class ArticleCustomForm extends React.Component {
             </Card>
           </Col>
           <Col span={8}>
-            <Card title="Upload a Video" bordered={false}>
+            <Card title="Upload a Video (Optional)" bordered={false}>
               <Form.Item extra="2.5 MB Image">
                   {getFieldDecorator('uploadV', {
                     initialValue: this.handleFileList(null, null),
@@ -280,7 +284,8 @@ const WrappedArticleCreate = Form.create()(ArticleCustomForm);
 
 const mapStateToProps = state => {
   return {
-    token: state.auth.token
+    token: state.auth.token,
+    username: state.auth.username
   }
 }
 export default connect(mapStateToProps)(WrappedArticleCreate);

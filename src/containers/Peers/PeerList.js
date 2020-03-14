@@ -108,14 +108,17 @@ class ProductList extends React.Component {
                     >
                         <List.Item.Meta
                         avatar={
-                          <Card title={item.author} size={"small"}> 
-                           {item.ufile !== null ? (
-                             <img
-                                width={100}
-                                alt={item.ufile}
-                                src="https://gw.alipayobjects.com/zos/rmsportal/mqaQswcyDLcXyDKnZfES.png"
-                            />
-                           ):(null)}
+                          <Card size={"small"}> 
+                          <p>{item.author}</p>
+                           {
+                            // item.ufile !== null ? (
+                            //   <img
+                            //       width={100}
+                            //       alt={item.ufile}
+                            //       src="https://gw.alipayobjects.com/zos/rmsportal/mqaQswcyDLcXyDKnZfES.png"
+                            //   />
+                            // ):(null)
+                           }
                           </Card>}
                         title={
                           <Row>

@@ -61,7 +61,7 @@ const BaseRouter = () => (
     <Route exact path="/create-inquiry/" component={InquiryCreate} />
     <Route exact path="/inquiries/" component={InquiryList} />
 
-    <Route exact path="/frameTest/:roomID" component={Test} />
+    <Route exact path="/frameTest/:roomID" component={RoomMenu} />
     <Route exact path="/create-article/" component={ArticleCreate} />
     <Route exact path="/articles/update/" component={ArticleUpdate} />
     <Route exact path="/articles/:articleID/feedback/" component={ArticleFeedback} />

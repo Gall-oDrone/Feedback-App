@@ -10,6 +10,7 @@ import InquiryComment from "../containers/InquiryComment";
 import Comments from "../components/Comments";
 import { fetchLikeCounter, getLiked } from "../store/actions/likes";
 import { fetchRating } from "../store/actions/rating";
+import {inquiryLikeUpdateURL, inquiryLikeCreateURL, inquiryUpdateURL} from "../constants";
 const { SubMenu } = Menu;
 const { TabPane } = Tabs;
 
@@ -66,11 +67,11 @@ class InquiryDetailMenu extends React.Component {
     console.log("likedVal after clic: "+ likedVal)
     console.log("like_counter: "+ JSON.stringify(like_counter))
     if(likedVal !== null){
-      await axios.put(`http://127.0.0.1:8000/inquiries/${inquiryID}/likes/${userId}/`, { user_id: userId, user: username, inquiry: inquiryID, liked: likedVal })
+      await axios.put(inquiryLikeUpdateURL(inquiryID, userID), { user_id: userId, user: username, inquiry: inquiryID, liked: likedVal })
       this.props.getLikeCounter(this.props.token, this.props.match.params.inquiryID)
       this.props.getLiked(this.props.token, this.props.match.params.inquiryID, this.props.userId)
     } else {
-      await axios.post(`http://127.0.0.1:8000/inquiries/${inquiryID}/likes/`, { user_id: userId, user: username, inquiry: inquiryID, liked: true })
+      await axios.post(inquiryLikeCreateUR(inquiryID), { user_id: userId, user: username, inquiry: inquiryID, liked: true })
       .then(res => {
         console.log(JSON.stringify(res));
         console.log("Receive data from res.data");
@@ -94,7 +95,7 @@ class InquiryDetailMenu extends React.Component {
         "Content-Type": "aplication/json",
         Authorization: `Token ${this.props.token}`
       }
-      axios.post(`http://127.0.0.1:8000/inquiries/${inquiryID}/update/`);
+      axios.post(inquiryUpdateURL(inquiryID));
       this.props.history.push('/');
       this.forceUpdate();
     } else {

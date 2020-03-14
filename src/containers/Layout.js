@@ -78,13 +78,15 @@ class CustomLayout extends React.Component {
             <div className="logo" />
             <Menu theme="dark" mode="inline" defaultSelectedKeys={['1']}>
               <Menu.Item key="1">
-                <Icon type="project" />
-                <span>My articles</span>
+                <Link to={`profile/${this.props.userId}/account/articles/list/`}>
+                  <Icon type="project" />
+                  <span>My articles</span>
+                </Link>
               </Menu.Item>
-              <Menu.Item key="2" >
+              {/* <Menu.Item key="2" >
                 <Icon type="solution" />
                 <span>Testers</span>
-              </Menu.Item>
+              </Menu.Item> */}
               <Menu.Item key="3">
                 <Link to={`/profile/${this.props.userId}/meetings`}>
                   <Icon type="book" />
@@ -106,7 +108,7 @@ class CustomLayout extends React.Component {
               <Menu.Item key="6">
                 <Link to={`/rm`}>
                   <Icon type="camera"/>
-                  <span> meetingRoom </span>
+                  <span> meetingRoom Demo</span>
                 </Link>
               </Menu.Item>
             </Menu>
@@ -114,7 +116,7 @@ class CustomLayout extends React.Component {
         ) : (
             null
           )}
-          <Layout >
+          <Layout className="children layout">
         <Header style={{ height: "50px", padding: "0 15px"}}>
           {/* <div className="logo" /> */}
           <Menu
@@ -194,7 +196,7 @@ class CustomLayout extends React.Component {
               <Link to="/articles/">Rewards</Link>
             </Breadcrumb.Item>
             <Breadcrumb.Item>
-              <Link to="/articles/">Reviews</Link>
+              <Link to="/incentives/">Gift Card Shop</Link>
             </Breadcrumb.Item>
             <Breadcrumb.Item>
                 <Link to={"/create/survey/"}>Create Survey</Link>
@@ -221,13 +223,13 @@ class CustomLayout extends React.Component {
               </Breadcrumb.Item>
             ) : null} */}
           </Breadcrumb>
-          <div style={{ background: "#fff", padding: 24, minHeight: 280 }}>
+          <div style={{ background: "#fff", padding: 24, minHeight: 480 }}>
             {this.props.children}
           </div>
 
         </Content>
         <Footer style={{ textAlign: "center" }}>
-          Ant Design ©2016 Created by Ant UED
+          Ant Design ©2019 Created by Ant UED
         </Footer>
         </Layout>
       </Layout>

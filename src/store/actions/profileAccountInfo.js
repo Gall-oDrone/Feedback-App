@@ -13,6 +13,7 @@ import {
   profileAccountUserSurveyListURL,
   profileAccountUserSurveyDetailURL,
   profileAccountUserSurveyUpdateURL,
+  profileAccountUserUpdateInfoURL,
   profileArticleListURL,
   profileArticleDetailURL,
   profileAccountInfoURL
@@ -124,18 +125,18 @@ const putProfileAccountDetailFail = error => {
   };
 };
 
-export const putProfileAccountDetail = (token, articleID, username, data) => {
+export const putProfileAccountDetail = (token, userID, data) => {
     return dispatch => {
       console.log(" putProfileAccountDetail ")
       console.log(" putProfileAccountDetail data: "+JSON.stringify(data))
         // dispatch(getMeetingDetailStart());
         axios.defaults.headers = {
           //'Accept': 'application/json, application/pdf, application/xml, text/plain, text/html, *.*',
-          'content-type': 'multipart/form-data',
+          'Content-Type': 'multipart/form-data',
             // "Content-Type": "application/json",
             Authorization: `Token ${token}`
         }
-        axios.put(profileArticleDetailURL(articleID, username), data)
+        axios.put(profileAccountUserUpdateInfoURL(userID), data)
         .then(res => {
             const data = res.data;
             console.log("data: "+ JSON.stringify(data))

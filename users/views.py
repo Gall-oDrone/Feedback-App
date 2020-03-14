@@ -4,9 +4,11 @@ from django.contrib.auth import get_user_model
 from django.http import HttpResponseRedirect, Http404, JsonResponse, HttpResponse
 from django.shortcuts import render, get_object_or_404
 from django.core.exceptions import ObjectDoesNotExist
+from rest_framework.response import Response
 from rest_framework import viewsets, permissions
-from rest_framework.status import HTTP_200_OK, HTTP_400_BAD_REQUEST
-
+from rest_framework.status import HTTP_200_OK, HTTP_400_BAD_REQUEST, HTTP_201_CREATED, HTTP_400_BAD_REQUEST
+from rest_framework.parsers import MultiPartParser, FileUploadParser, FormParser, JSONParser
+import json
 from .models import User, Profile, FriendRequest, MeetingRequest, ProfileInfo
 from .serializers import (
     UserSerializer, 
@@ -136,6 +138,7 @@ class UserLCRequestsView(ListAPIView):
         return HttpResponseRedirect('/users/{}'.format(request.user.profile.slug))
 
 class UserProfileView(RetrieveUpdateDestroyAPIView):
+    parser_classes = (MultiPartParser, FormParser)
     serializer_class = ProfileSerializer
     permission_classes = (permissions.IsAuthenticated,)
 
@@ -153,6 +156,19 @@ class UserProfileView(RetrieveUpdateDestroyAPIView):
         except ObjectDoesNotExist:
             raise Http404("You do not have an active order")
             return Response({"message": "You do not have an active order"}, status=HTTP_400_BAD_REQUEST)
+    
+    def update(self, request, *args, **kwargs):
+        request_data = json.loads((self.request.data["data"]))
+        request_files = (self.request.FILES)
+        print(request_data)
+        print(request_files)
+        serializer = ProfileSerializer(data=request_data)
+        serializer.is_valid()
+        print("On update method UserProfileView")
+        update_profile_info = serializer.update_profile_info(request_data, request_files)
+        if update_profile_info:
+            return Response(status=HTTP_201_CREATED)
+        return Response(status=HTTP_400_BAD_REQUEST)
 
     def profile_view(self, request, slug):
         serializer = ProfileSerializer(data=request.data)

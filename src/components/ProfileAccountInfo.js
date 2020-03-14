@@ -3,15 +3,18 @@ import { Form, Input, Icon, Button, Select, Radio, Upload, AutoComplete, Cascade
 import { connect } from "react-redux";
 import { NavLink } from "react-router-dom";
 import {getProfileAccountDetail, putProfileAccountDetail} from "../store/actions/profileAccountInfo";
-import countryList from 'react-select-country-list'
+import countryList from 'react-select-country-list';
+import axios from 'axios';
+import {profileAccountUserUpdateInfoURL} from "../constants";
 
-const pStyle = {
-  fontSize: 16,
-  color: 'rgba(0,0,0,0.85)',
-  lineHeight: '24px',
-  display: 'block',
-  marginBottom: 16,
-};
+function getBase64(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = error => reject(error);
+  });
+}
 
 let id = 0;
 const FormItem = Form.Item;
@@ -51,15 +54,7 @@ class RegistrationForm extends React.Component {
     autoCompleteResult: [],
     university: null,
     country: options2,
-    fileList: [
-      {
-        uid: '-1',
-        name: 'xxx.png',
-        status: 'done',
-        url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
-        thumbUrl: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
-      },
-    ],
+    fileList: null
   };
 
   dummyRequest = ({ file, onSuccess }) => {
@@ -68,134 +63,94 @@ class RegistrationForm extends React.Component {
     }, 0);
   };
 
+  handlePreview = async file => {
+    console.log("CORSO 555555")
+    console.log(JSON.stringify(file))
+    // if (!file.url && !file.preview) {
+    //   file.preview = await getBase64(file.originFileObj);
+    // }
+
+    // this.setState({
+    //   previewImage: file.url || file.preview,
+    //   previewVisible: true,
+    // });
+  };
+
   normFile = e => {
-    // e.preventDefault();
     let fileList = [...e.fileList];
     fileList = fileList.slice(-1);
     console.log('Upload event:', e);
-    console.log('Upload fileList:', JSON.stringify(fileList));
-    console.log('Upload file.name:', fileList[0].name);
+    // console.log('Upload fileList:', JSON.stringify(fileList));
+    // console.log('Upload file.name:', fileList[0].name);
     if (Array.isArray(e)) {
       return e;
     }
-  }
+    return e && fileList;
+  };
 
   handleFileList = (thumbnail, fileList) => {
     console.log("IUOIU")
     console.log(JSON.stringify(thumbnail))
-    console.log(JSON.stringify(fileList[0].thumbUrl))
-    fileList[0].thumbUrl = thumbnail
-    console.log(JSON.stringify(fileList[0].thumbUrl))
-    return fileList
+    if (fileList !== null){
+      console.log(JSON.stringify(fileList[0].thumbUrl))
+      fileList[0].thumbUrl = thumbnail
+      console.log(JSON.stringify(fileList[0].thumbUrl))
+      return fileList
+    } else if (thumbnail !== null){
+      this.setState({
+        fileList: [
+        {
+          uid: '-1',
+          name: 'xxx.png',
+          status: 'done',
+          url: thumbnail,
+          thumbUrl: thumbnail,
+        },
+      ]})
+    } else {
+      return
+    }
   }
 
-  remove = k => {
-    const { form } = this.props;
-    const keys = form.getFieldValue('keys');
-    if (keys.length === 1) {
-      return;
-    }
-
-    form.setFieldsValue({
-      keys: keys.filter(key => key !== k),
-    });
-  };
-
-  add = () => {
-    const { form } = this.props;
-    const keys = form.getFieldValue('keys');
-    const nextKeys = keys.concat(id++);
-    form.setFieldsValue({
-      keys: nextKeys,
-    });
-  };
-
-  handleSubmit = e => {
-    e.preventDefault();
-    this.props.form.validateFieldsAndScroll((err, values) => {
+  handleSubmit = async (event) => {
+    event.preventDefault();
+    console.log("handleFormSubmit")
+    let formData = new FormData();
+    await this.props.form.validateFields((err, values) => {
+      console.log("handleFormSubmit values: ", JSON.stringify(values));
+      const file = 
+        values["upload"] === undefined ? null : values["upload"];
+      console.log("CCS")
+      const postObj = {
+        user_id: this.props.userId,
+        profile_avatar: file
+      }
+      const putObj = Object.assign(postObj, this.props.profileIA.ProfileAccount)
+      console.log("postObj: ", JSON.stringify(postObj))
+      console.log("file: ", JSON.stringify(file))
+      if (file !== null){
+        formData.append("file", file[0].originFileObj)
+        console.log("formData I: ", JSON.stringify(formData))
+        console.log("formData II: ", JSON.stringify(file[0].originFileObj))
+      }
+        formData.append("data", JSON.stringify(putObj))
+      // console.log("formData: ", JSON.stringify(formData))
+      // console.log("postObj: ", JSON.stringify(postObj))
       if (!err) {
-        let is_student = false;
-        if (values.userType === "student") is_student = true;
-        this.props.onAuth(
-          values.userName,
-          values.email,
-          values.university,
-          values.password,
-          values.confirm,
-          is_student
-        );
-        // this.props.history.push("/");
+        console.log("formData III: ", JSON.stringify(formData))
+        console.log("before posting article")
+        this.props.putProfileInfo(this.props.token, this.props.username, formData)
+        console.log('Received values of form: ', values);
+      } else{
+        console.log('Received error: ', err);
       }
     });
-  };
-
-  handleConfirmBlur = e => {
-    const value = e.target.value;
-    this.setState({ confirmDirty: this.state.confirmDirty || !!value });
-  };
-
-  compareToFirstPassword = (rule, value, callback) => {
-    const form = this.props.form;
-    if (value && value !== form.getFieldValue("password")) {
-      callback("Two passwords that you enter is inconsistent!");
-    } else {
-      callback();
-    }
-  };
-
-  validateToNextPassword = (rule, value, callback) => {
-    const form = this.props.form;
-    if (value && this.state.confirmDirty) {
-      form.validateFields(["confirm"], { force: true });
-    }
-    callback();
-  };
-
-  handleCountryChange = value => {
-    console.log('Country changed', value);
-    // this.setState({ country: value[0] })
-    Object.values(options2).map((k) => {
-      console.log(JSON.stringify(k))
-      if(k.value === value){
-        return
-      } 
-    })
-    return value
   }
-
-  handleWebsiteChange = value => {
-    let autoCompleteResult;
-    if (!value) {
-      autoCompleteResult = [];
-    } else {
-      autoCompleteResult = ['.com', '.org', '.net'].map(domain => `${value}${domain}`);
-    }
-    this.setState({ autoCompleteResult });
-  };
-
-  handleUniversityChange = val => {
-    var lab = null
-    Object.values(universities).map((k, i) => {
-      if(k.value === val){
-        this.lab = val
-        return
-      } 
-    })
-    return this.lab
-  };
 
   componentDidMount() {
     if (this.props.token !== undefined && this.props.token !== null) {
       if(this.props.username !== null){
         this.props.getProfileAccountDetail(this.props.token, this.props.userId)
-        // .then(res => {
-        //   console.log("6) componentWillReceiveProps before assigning res to dataList: " + JSON.stringify(this.props))
-        //   console.log(JSON.stringify(res))
-        //   this.setState({
-        //     dataList: res.BookedMeetingList
-        //   });
-        //   console.log("componentWillReceiveProps after : " + JSON.stringify(this.props))
-        // });
       } else {
         console.log("this.props.getMeetings was undefined at CDM")
       }
@@ -265,8 +220,8 @@ class RegistrationForm extends React.Component {
             getValueFromEvent: this.normFile,
             setFieldsValue: "fileList"
           })(
-            <Upload name="logo" customRequest={this.dummyRequest}
-            onPreview={this.handlePreview} listType="picture"
+            <Upload name="logo" onPreview={this.handlePreview} customRequest={this.dummyRequest}
+            listType="picture"
             >
               <Button>
                 <Icon type="upload" /> Click to Upload
@@ -274,100 +229,6 @@ class RegistrationForm extends React.Component {
             </Upload>
           )}
         </Form.Item>
-
-          {/* <Form.Item label="Country">
-            {getFieldDecorator("university", {
-              initialValue: [this.handleCountryChange(ProfileAccount.country)],
-              rules: [
-                { type: 'array', required: true, message: 'Please select your University' },
-              ],
-            })(<Cascader options={options2} />)}
-          </Form.Item>
-
-          <Form.Item label="Greeting Message">
-            {getFieldDecorator("message", {
-              initialValue: ProfileAccount.message,
-              rules: [
-                { type: 'string', required: true, message: 'Please type a welcome message' },
-              ],
-            })(<Input
-              prefix={<Icon type="message" style={{ color: "rgba(0,0,0,.25)" }} />}
-              placeholder="Message"
-            />)}
-          </Form.Item>
-
-          <Divider />
-          <p style={pStyle}>Academy</p>
-
-          <Form.Item label="College Institution">
-            {getFieldDecorator("university", {
-              initialValue: [this.handleUniversityChange(ProfileAccount.university)],
-              rules: [
-                { type: 'array', required: true, message: 'Please select your University' },
-              ],
-            })(<Cascader options={universities} />)}
-          </Form.Item>
-
-          <Form.Item label="Academic status">
-          {getFieldDecorator('attendace')(
-            <Radio.Group >
-              <Radio.Button value="undergraduate">Undergraduate</Radio.Button>
-              <Radio.Button value="graduate">Graduate</Radio.Button>
-            </Radio.Group>,
-          )}
-        </Form.Item>
-
-          <Form.Item label="Website">
-            {getFieldDecorator('website', {
-              initialValue: [`${ProfileAccount.website}`],
-              rules: [
-                {
-                  required: false,
-                  message: 'Please input website!'
-                }
-              ],
-            })(
-              <AutoComplete
-                dataSource={websiteOptions}
-                onChange={this.handleWebsiteChange}
-                placeholder="website"
-              >
-                <Input />
-              </AutoComplete>,
-            )}
-          </Form.Item>
-
-          <Divider />
-          <p style={pStyle}>Company</p>
-
-          <Form.Item label="Working experience">
-            {getFieldDecorator('work-experience')(
-              <Radio.Group >
-                <Radio.Button value="True">Yes</Radio.Button>
-                <Radio.Button value="False">No</Radio.Button>
-              </Radio.Group>,
-            )}
-          </Form.Item>
-
-          <Form.Item label="Github">
-            {getFieldDecorator('github', {
-              initialValue: [`${ProfileAccount.github}`],
-              rules: [
-                {
-                  required: false,
-                  message: 'Please input website!'
-                }
-              ],
-            })(
-              <AutoComplete
-                dataSource={websiteOptions}
-                onChange={this.handleWebsiteChange}
-                placeholder="website"
-              >
-                <Input />
-              </AutoComplete>,
-            )}
-          </Form.Item> */}
 
           <FormItem>
             <Button

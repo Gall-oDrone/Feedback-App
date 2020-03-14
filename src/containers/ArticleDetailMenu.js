@@ -1,5 +1,6 @@
 import React from 'react';
 import axios from "axios";
+import {articleLikeUpdateURL, articleUpdateURL, articleLikeCreateURL} from "../constants";
 import { Menu, Icon, Tabs, List } from 'antd';
 import { connect } from 'react-redux';
 import { Link, withRouter } from "react-router-dom";
@@ -66,11 +67,11 @@ class ArticleDetailMenu extends React.Component {
     console.log("likedVal after clic: "+ likedVal)
     console.log("like_counter: "+ JSON.stringify(like_counter))
     if(likedVal !== null){
-      await axios.put(`http://127.0.0.1:8000/api/articles/${articleID}/likes/${userId}/`, { user_id: userId, user: username, article: articleID, liked: likedVal })
+      await axios.put(articleLikeUpdateURL, { user_id: userId, user: username, article: articleID, liked: likedVal })
       this.props.getLikeCounter(this.props.token, this.props.match.params.articleID)
       this.props.getLiked(this.props.token, this.props.match.params.articleID, this.props.userId)
     } else {
-      await axios.post(`http://127.0.0.1:8000/api/articles/${articleID}/likes/`, { user_id: userId, user: username, article: articleID, liked: true })
+      await axios.post(articleLikeCreateURL(articleID), { user_id: userId, user: username, article: articleID, liked: true })
       .then(res => {
         console.log(JSON.stringify(res));
         console.log("Receive data from res.data");
@@ -94,7 +95,7 @@ class ArticleDetailMenu extends React.Component {
         "Content-Type": "aplication/json",
         Authorization: `Token ${this.props.token}`
       }
-      axios.post(`http://127.0.0.1:8000/api/articles/${articleID}/update/`);
+      axios.post(articleUpdateURL(articleID));
       this.props.history.push('/');
       this.forceUpdate();
     } else {

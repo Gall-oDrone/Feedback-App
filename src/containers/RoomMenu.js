@@ -34,29 +34,41 @@ class App2 extends React.Component {
   handlerTimeCounter(RoomKeys) {
     const {date_to_appointment} = RoomKeys
           console.log("ZZ: "+date_to_appointment)
-          this.interval = setInterval(() => {
-            var timeTillDate = date_to_appointment
-            var timeFormat = 'YYYY-MM-DD HH:mm:ss'
-            // const { timeTillDate, timeFormat } = this.props;
-            const then = moment(timeTillDate, timeFormat);
-            const then2 = moment( "2020-03-06T00:30:00Z", timeFormat)
-            const now = moment();
-            // const now2 = moment("2020-01-25T14:30:00Z").format("mm:ss");
-            const countdown = moment(then2 - now);
-            console.log("then: "+then2)
-            console.log("now:"+ now)
-            console.log("countdown:"+countdown)
-    
-            const minutes = countdown.format('mm');
-            const seconds = countdown.format('ss');
-            if (countdown <= 0 ){
-              this.setState({ minutes:0, seconds:0, disabledB:true, disabledA:false, defaultKey: "2" });
-              clearInterval(this.interval);
-            } else {
-              this.setState({ minutes, seconds });
-            }
-            
-        }, 1000);
+          const dateTest = "2020-03-14T16:20:00-06:00"
+          if(moment().format()> moment((dateTest)).format()){
+            console.log("now > DTA")
+            console.log(moment(new Date(dateTest)).format())
+            console.log(moment().format())
+            console.log(moment().format() > moment(new Date(dateTest)).format())
+            this.setState({ minutes:0, seconds:0, disabledB:true, disabledA:false, defaultKey: "2" });
+          } else {
+            this.intervalZ = setInterval(() => {
+              console.log("now < DTA")
+              var timeTillDate = date_to_appointment
+              var timeFormat = 'YYYY-MM-DD HH:mm:ss'
+              // const { timeTillDate, timeFormat } = this.props;
+              const then = moment(timeTillDate, timeFormat).add('m', 30);
+              const then2 = moment( dateTest, timeFormat)
+              const now = moment();
+              const countdown = (then2 - now)
+              console.log("then: "+then2)
+              console.log("now:"+ now)
+              console.log("countdown:"+ countdown)
+              console.log("countdown:"+ (countdown <0))
+              const minutes = moment(countdown).format('mm');
+              const seconds = moment(countdown).format('ss');
+              console.log("minutes: "+minutes)
+              console.log("seconds:"+ seconds)
+              if (countdown < 0 ){
+                clearInterval(this.intervalZ);
+                this.setState({ minutes:0, seconds:0, disabledB:true, disabledA:false, defaultKey: "2" });
+              } else {
+                if (countdown < 0 ){clearInterval(this.intervalZ);}
+                this.setState({ minutes:minutes, seconds:seconds });
+              }
+              
+          }, 1000);
+          }
   }
 
   handlerCallerTimeCounter(maxTime) {
@@ -83,6 +95,7 @@ class App2 extends React.Component {
             console.log("HCTC duration: "+ JSON.stringify(duration))
             if (minuteReminder === 0 && secondReminder === 0 ){
               clearInterval(this.intervalH);
+              
               this.setState({ min:0, sec:0});
             } else {
               this.setState({ min:minuteReminder, sec:secondReminder });
@@ -104,24 +117,21 @@ class App2 extends React.Component {
         defaultKey: "2"
      });
   };
-  handleC(data, newData){
+  async handleC(data, newData){
+    return (
     new Promise((resolve, reject) => {
       resolve(this.props.updateDetailRoom(this.props.token, data.room_name, newData))
-      // Promise.resolve(this.props.getDetailRoom(this.props.token, data.room_name)
-      // .then(() => {
-      //   console.log("2.0)", data.called_time)
-      //   this.handlerCallerTimeCounter(data.called_time)
-      //     console.log("2)")
-      //     console.log("2.1)", data.called_time)
-      //     console.log("3)")
-      //     this.setState({
-      //       caller:true
-      //     })
-      //   })
-      //   ))
     })
+    )
   }
-
+  handleReview(timeNow, date_to_appointment){
+    if(timeNow > date_to_appointment){
+      this.setState({
+        disabledB:true,
+        disabledA:false,
+      })
+    }
+  }
   handleCaller = (data) => {
     const par = data.participants
     const data1 = data
@@ -134,22 +144,12 @@ class App2 extends React.Component {
         }
         const newData = Object.assign(adding, data1)
         console.log("newData at handleCaller: ", JSON.stringify(newData))
-        Promise.resolve(this.handleC(data1, newData)).then(() => {this.props.getDetailRoom(this.props.token, data.room_name).then(res =>{console.log(res)})})
-        // console.log("2)")
-        // console.log("2.1)", data1.called_time)
-        // this.handlerCallerTimeCounter(data1.called_time);
-       
-          
-        // let waiter = Promise.resolve(this.props.updateDetailRoom(this.props.token, data.room_name, newData))
-        // waiter.then(() => {
-        //   this.handlerCallerTimeCounter(data.called_time)
-        // })
-        // Promise.resolve(this.props.getDetailRoom(this.props.token, "wzzGwAyE9f7e4CawhzZm")).then(() => {
-        //   this.setState({
-        //     caller:true
-        //   })
-        // })
-        
+        const prom = this.handleC(data1, newData).then(() => {
+          this.handlerCallerTimeCounter(adding.called)
+              this.setState({
+              caller:true
+            })
+        })
       }
     })
   };
@@ -184,9 +184,9 @@ componentWillReceiveProps(newProps) {
         this.props.getDetailRoom(newProps.token, "wzzGwAyE9f7e4CawhzZm")
       }
   } else if (this.props.roomDetails.RoomDetail !== undefined){
-    // this.handlerTimeCounter(this.props.roomDetails.RoomDetail)
+    this.handlerTimeCounter(this.props.roomDetails.RoomDetail)
   } else if (newProps.roomDetails.RoomDetail !== undefined){
-    // this.handlerTimeCounter(newProps.roomDetails.RoomDetail)
+    this.handlerTimeCounter(newProps.roomDetails.RoomDetail)
   }
 }
 
@@ -198,11 +198,9 @@ componentWillUnmount() {
 
   render() {
       // console.log("this.props: "+ JSON.stringify(this.props))
+      const roomName = this.props.match.params.roomID;
       const { minutes, seconds, min, sec, timeNow, timeNow2, defaultKey, disabledA, disabledB } = this.state;
       const reviews = [];
-      if(this.props.roomDetails.RoomDetail !== undefined){
-        const {date_to_appointment, participants} = this.props.roomDetails.RoomDetail
-      }
       const start = moment();
       let minuteReminder = 5 - start.minute() % 5;
       const end = moment().add('m', 5); 
@@ -217,16 +215,9 @@ componentWillUnmount() {
       var totalSec = moment("30:00", 'mm:ss: A').diff(moment().startOf('day'), 'seconds');
       var totalSec2 = moment("05:00", 'mm:ss: A').diff(moment().startOf('day'), 'seconds');
       const dateTime = moment(start).add(minuteReminder, "minutes").format("DD.MM.YYYY, h:mm:ss a");
-      // console.log("this.state: "+ JSON.stringify(this.state))
-      // console.log("start: "+ JSON.stringify(start))
-      // console.log("end: "+ JSON.stringify(end))
-      // console.log("duration: "+ JSON.stringify(duration))
-      // console.log("start.minute(): "+ JSON.stringify(start.minute()))
-      // console.log("minuteReminder: "+ JSON.stringify(minuteReminder))
-      // console.log("ss3: "+ JSON.stringify(ss3))
-      // console.log("timeNow: "+ JSON.stringify(timeNow)); 
-      // console.log("timeNow2: "+ JSON.stringify(timeNow2)); 
-      // console.log("min, sec: "+ JSON.stringify(min,sec)); 
+      if(this.props.roomDetails.RoomDetail !== undefined){
+        const {date_to_appointment, participants} = this.props.roomDetails.RoomDetail
+      }
       return (
         <div>
           {this.props.roomDetails.RoomDetail !== undefined ? (
@@ -234,7 +225,7 @@ componentWillUnmount() {
                <Row type="flex" justify="center" align="top">
                 <Col span={3} pull={3}>
                     <div>
-                      { timeNow2 < "2020-03-06T00:30:00Z"//this.props.roomDetails.RoomDetail.date_to_appointment
+                      { timeNow2 > "2020-03-06T00:30:00Z"//this.props.roomDetails.RoomDetail.date_to_appointment
                           ? <Button disabled icon="user"> Call user</Button>
                           : 
                             this.state.caller === true ? (
@@ -246,7 +237,7 @@ componentWillUnmount() {
                   <Col span={12} style={{justifyContent: 'center'}}>
                     <div>
                       { timeNow2 > "2020-03-06T00:30:00Z"//this.props.roomDetails.RoomDetail.date_to_appointment
-                          ?<h1 align="center">Meeting finished please provide a review!</h1>
+                          ? <h1 align="center">Meeting finished please provide a review!</h1>
                           : <h1 align="center">Time Remaining: {`${duration2}`}</h1>
                           // : <h1 align="center">Time Remaining: {minutes}:{seconds < 10 ? `0${seconds}` : seconds}</h1>
                       }
@@ -314,8 +305,10 @@ componentWillUnmount() {
                               Learn React
                             </a>
         
-                            <VideoCallFrame url={`https://testwebapp.daily.co/wzzGwAyE9f7e4CawhzZm`}/>
-        
+                            {this.props.roomDetails.RoomDetail.room_name !== null ?
+                            <VideoCallFrame url={`https://testwebapp.daily.co/${this.props.roomDetails.RoomDetail.room_name}`}/>
+                            : <VideoCallFrame url={`https://testwebapp.daily.co/wzzGwAyE9f7e4CawhzZm`}/>
+                            }
                           </header>
                         </div>
                     </TabPane>

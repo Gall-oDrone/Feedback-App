@@ -4,7 +4,9 @@ import { Link, withRouter } from "react-router-dom";
 import { Button, Table, Divider, Tag, DatePicker, Tab, Icon, Popover, Card } from 'antd';
 import {getUserBookedMeeting, updateMeeting} from "../store/actions/meetings";
 import UProfInfo from "../components/UserProfileInfo";
+import MAN from "../components/MeetingAttendaceNTFN";
 import App2 from "../components/test"
+import RoomMenu from "./RoomMenu"
 const { Column, ColumnGroup } = Table;
 var moment = require('moment');
 
@@ -65,14 +67,6 @@ class BookedMeetingList extends React.Component {
       if(this.props.username !== null && this.props.getBM(this.props.username, this.props.token) != undefined){
         console.log("this.props.getMeetings: " + JSON.stringify(this.props.getBM(this.props.username, this.props.token)))
         this.props.getBM(this.props.username, this.props.token)
-        // .then(res => {
-        //   console.log("6) componentWillReceiveProps before assigning res to dataList: " + JSON.stringify(this.props))
-        //   console.log(JSON.stringify(res))
-        //   this.setState({
-        //     dataList: res.BookedMeetingList
-        //   });
-        //   console.log("componentWillReceiveProps after : " + JSON.stringify(this.props))
-        // });
       } else {
         console.log("this.props.getMeetings was undefined at CDM")
       }
@@ -162,6 +156,18 @@ class BookedMeetingList extends React.Component {
     // this.setState({ iconLoading: false });
   }
 
+  handleMettingNotification(meetingTime){
+    const start = moment().format();
+    let ef = new Date(meetingTime);
+    const date_to_moment = moment(ef).format()
+    //Change .add('m', 1) when making tests
+    const preview = moment(date_to_moment).subtract('m', 5).format(); 
+    const diff = moment(preview).diff(start);
+    if(preview != start){
+      return
+    }
+  }
+
 render(){
   console.log('this.PROPS: ' + JSON.stringify(this.props))
   console.log('this.state: ' + JSON.stringify(this.state))
@@ -179,8 +185,10 @@ render(){
       console.log("BookedMeetingList[k].: "+JSON.stringify(BookedMeetingList[k].recipient))
     })
   }
+
   return(
     <div>
+      {/* {this.handleMettingNotification ? <MAN message={"Your meeting is about to start"} description={"Meeting NTFN"}/>:null} */}
       {username !== null ? (
         <div>    
           {BookedMeetingList !== undefined && BookedMeetingList.length > 0 ? (  
@@ -278,33 +286,36 @@ render(){
                       render={(text, data, index) => (
                         <span>
                           {this.state.dateNow ===  moment.utc(data.date_to_appointment).format("DD-MM-YYYY HH:mm") ? (
-                            <Link to={`/frameTest`}>
-                            <Button type="primary" disabled size={"small"}>
+                            <Link to={`/frameTest/${BookedMeetingList[index].room_name}`}>
+                            <Button type="primary" size={"small"}>
                               Attend
                             </Button>
                             </Link>
                           ):(
 
                             <div>
-                            {this.state.dateNow >  moment.utc(data.date_to_appointment).format("DD-MM-YYYY HH:mm") ? (
+                            {this.state.dateNow > moment.utc(data.date_to_appointment).format("DD-MM-YYYY HH:mm") ? (
                               <Link to={`/frameTest`}>
                               <Button type="primary" disabled size={"small"}>
                                 Finished
                               </Button>
                               </Link>
                             ):(
+                              <div>
                               <Link to={`/frameTest/${BookedMeetingList[index].room_name}`}>
-                                <Button type="primary" onClick={() => this.handleAttend(BookedMeetingList[index].room_url)} size={"small"}>
+                                <Button type="primary" disable onClick={() => this.handleAttend(BookedMeetingList[index].room_url)} size={"small"}>
                                   Attend
                                 </Button>
                               </Link>
+                               <Divider type="vertical" />
+                               <Button type="danger" onClick={() => this.handleCancel()} size={"small"}>
+                                 Cancel
+                               </Button>
+                               </div>
                             )}
                             </div>
                           )}
-                          <Divider type="vertical" />
-                            <Button type="danger" onClick={() => this.handleCancel()} size={"small"}>
-                              Cancel
-                            </Button>
+                         
                         </span>
                       )}
                     />

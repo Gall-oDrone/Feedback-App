@@ -308,7 +308,7 @@ const updateRoomFail = error => {
 };
 
 export const updateRoom = (token, roomName, data) => {
-  console.log(JSON.stringify(data))
+  console.log("updateRoom data: ",JSON.stringify(data))
     return dispatch => {
         // dispatch(updateMeetingStart());
         axios.defaults.headers = {

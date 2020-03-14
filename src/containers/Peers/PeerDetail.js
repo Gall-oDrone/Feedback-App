@@ -131,45 +131,61 @@ class PeerDetail extends React.Component {
                                   </Col>
                                 </Row>
                                 <Row>
-                                  <Col>
-                                    <p>Target Universities</p>
+                                  <Col span={12}>
+                                    <p>Target Audience:
+                                      {Object.values(this.props.data[this.props.id].inquiry_audience).map(k => {
+                                        return <li>{k}</li>
+                                      })}
+                                    </p>
                                   </Col>
-                                  <Col>
-                                    <Tag>
-                                      MIT
-                                    </Tag>
-                                    <Tag>
-                                      Stanford
-                                    </Tag>
-                                  </Col>
+                                    <Col span={12}>
+                                      <p>Target Universities </p>
+                                        <Tag>
+                                          MIT
+                                        </Tag>
+                                        <Tag>
+                                          Stanford
+                                        </Tag>
+                                    </Col>
                                 </Row>
                                 <Row>
                                   <Col>
                                     <p>Experienced</p>
                                   </Col>
                                 </Row>
-                                <Row>
-                                  <Col>
-                                    <p>Spoken Language: {this.props.data[this.props.id].language}</p>
-                                  </Col>
-                                </Row>
-                                <Row>
-                                  <Col>
+                                {this.props.data[this.props.id].language !== (null || undefined) &&
+                                  this.props.data[this.props.id].language.length > 0 ? (
+                                  <Row>
+                                    <Col>
+                                      <p>Spoken Language: {this.props.data[this.props.id].language}</p>
+                                    </Col>
+                                  </Row>
+                                ):null}
+                                {this.props.data[this.props.id].contact_option[0] !== (null || undefined) &&
+                                this.props.data[this.props.id].contact_option.length > 0 ? (
+                                  <Row>
+                                    <Col>
                                     <p>Contact options: {this.props.data[this.props.id].contact_option[0]}</p>
-                                  </Col>
-                                </Row>
+                                    </Col>
+                                  </Row>
+                                ):null}
                                 <Row>
-                                  <Col>
-                                    <p>Rewards: {this.props.data[this.props.id].rewards === false ? "No":"Yes"}</p>
-                                  </Col>
-                                  <Col>
-                                  <p>Upload</p>
-                                    <Upload name="logo" customRequest={this.dummyRequest}//action="http://localhost:8001/media/images" //fileList={fileList} showUploadList={true}
-                                      // onPreview={this.handleFileList(this.props.data[this.props.id].ufile, fileList)} 
-                                      listType="picture"
-                                      defaultFileList= {fileList} //onChange={this.handleFileChange} >
-                                    />
-                                  </Col>
+                                  {this.props.data[this.props.id].rewards === true ? (
+                                    <Col>
+                                      <p>Rewards: {this.props.data[this.props.id].rewards === false ? "No":"Yes"}</p>
+                                    </Col>
+                                  ):(null)}
+                                  
+                                  {this.props.data[this.props.id].ufile !== null ? (
+                                    <Col>
+                                      <p>Upload</p>
+                                        <Upload name="logo" customRequest={this.dummyRequest}//action="http://localhost:8001/media/images" //fileList={fileList} showUploadList={true}
+                                          // onPreview={this.handleFileList(this.props.data[this.props.id].ufile, fileList)} 
+                                          listType="picture"
+                                          defaultFileList= {fileList} //onChange={this.handleFileChange} >
+                                        />
+                                    </Col>
+                                ):null}
                                 </Row>
                               </Card>
                             </div>

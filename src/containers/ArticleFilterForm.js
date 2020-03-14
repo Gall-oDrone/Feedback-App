@@ -17,6 +17,7 @@ import {
 } from "antd";
 import axios from "axios";
 import Results from './InquiryResults';
+import {filterURL} from "../constants";
 import countryList from 'react-select-country-list'
 const countries = countryList().getData()
 const Search = Input.Search;
@@ -75,7 +76,7 @@ class FilterForm extends React.Component {
 
     if (!err) {
       axios
-        .get("http://127.0.0.1:8000/api/", {
+        .get(filterURL, {
           params: {
             title_contains,
             id_exact,

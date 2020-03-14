@@ -6,6 +6,7 @@ import { withRouter } from "react-router-dom";
 import ChildrenComment from "./ChildrenComment";
 import { Comment, Avatar, Form, Button, List, Input, Tooltip, Icon } from 'antd';
 import { createComment, getComment, getCommentList } from '../store/actions/comments';
+import {inquiryUpdateCommentURL2} from "../constants";
 import moment from 'moment';
 
 const { TextArea } = Input;
@@ -144,7 +145,7 @@ class Comments extends React.Component {
         "Content-Type": "application/json",
         Authorization: `Token ${this.props.token}`
       }
-      await axios.put(`http://127.0.0.1:8000/inquiries/${inquiryID}/update-comment/${commentID}/`, data)
+      await axios.put(inquiryUpdateCommentURL2(inquiryID, commentID), data)
         .then((res) => {
           console.log("MR CROSO: " + JSON.stringify(res.data))
           // if (res.status === 200) {

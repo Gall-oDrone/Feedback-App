@@ -1,6 +1,7 @@
 import React from 'react';
 import Articles from '../components/Articles';
 import axios from 'axios';
+import {articleDetailURL} from "../constants";
 import { connect } from 'react-redux';
 import { Link, withRouter } from "react-router-dom";
 import { Menu, Card, Button, Skeleton, message, Result, List, Icon, Form } from "antd";
@@ -58,7 +59,7 @@ class ArticleFeedback extends React.Component {
                 //     console.log("Article Detail res data: " + JSON.stringify(res.data));
                 // });
         }
-        axios.get(`http://127.0.0.1:8000/api/articles/${articleID}`)
+        axios.get(articleDetailURL(articleID))
             .then(res => {
                 console.log("res: " + JSON.stringify(res.data))
                 this.setState({
@@ -86,7 +87,7 @@ class ArticleFeedback extends React.Component {
                 Authorization: newProps.token
             }
             const articleID = this.props.match.params.articleID;
-            axios.get(`http://127.0.0.1:8000/api/articles/${articleID}/`)
+            axios.get(articleDetailURL(articleID))
                 .then(res => {
                     this.setState({
                         article: res.data

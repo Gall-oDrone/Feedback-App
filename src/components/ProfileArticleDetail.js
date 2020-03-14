@@ -72,15 +72,7 @@ class ProfileArticleDetail extends React.Component {
     previewImage: '',
     imageThumbUrl: null,
     imageUrl: null,
-    fileList: [
-      {
-        uid: '-1',
-        name: 'xxx.png',
-        status: 'done',
-        url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
-        thumbUrl: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
-      },
-    ],
+    fileList: null,
     imagePath: '',
   };
 
@@ -122,7 +114,6 @@ class ProfileArticleDetail extends React.Component {
     fileList = fileList.slice(-1);
     console.log('Upload event:', e);
     console.log('Upload fileList:', JSON.stringify(fileList));
-    console.log('Upload file.name:', fileList[0].name);
     if (Array.isArray(e)) {
       return e;
     }
@@ -158,21 +149,25 @@ class ProfileArticleDetail extends React.Component {
   handleFileList = (thumbnail, fileList) => {
     console.log("IUOIU")
     console.log(JSON.stringify(thumbnail))
-    console.log(JSON.stringify(fileList[0].thumbUrl))
-    fileList[0].thumbUrl = thumbnail
-    console.log(JSON.stringify(fileList[0].thumbUrl))
-    return fileList
-    // this.setState({
-    //   fileList: [
-    //     {
-    //       uid: '-1',
-    //       name: 'xxx.png',
-    //       status: 'done',
-    //       url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
-    //       thumbUrl: thumbnail,
-    //     },
-    //   ]
-    // });
+    if (fileList !== null){
+      console.log(JSON.stringify(fileList[0].thumbUrl))
+      fileList[0].thumbUrl = thumbnail
+      console.log(JSON.stringify(fileList[0].thumbUrl))
+      return fileList
+    } else if (thumbnail !== null){
+      this.setState({
+        fileList: [
+        {
+          uid: '-1',
+          name: 'xxx.png',
+          status: 'done',
+          url: thumbnail,
+          thumbUrl: thumbnail,
+        },
+      ]})
+    } else {
+      return
+    }
   }
 
   handleFileChange = e => {
@@ -384,16 +379,16 @@ class ProfileArticleDetail extends React.Component {
             <Checkbox.Group style={{ width: '100%' }}>
               <Row>
                 <Col span={8}>
-                  <Checkbox disable value="3">Phone Call</Checkbox>
+                  <Checkbox disabled value="3">Phone Call</Checkbox>
                 </Col>
                 <Col span={8}>
-                  <Checkbox disable value="2">Chat session</Checkbox>
+                  <Checkbox disabled value="4">Chat session</Checkbox>
                 </Col>
                 <Col span={8}>
-                  <Checkbox value="1">Live chat sessions</Checkbox>
+                  <Checkbox value="2">Live chat sessions</Checkbox>
                 </Col>
                 <Col span={8}>
-                  <Checkbox value="5">Survey</Checkbox>
+                  <Checkbox value="1">Survey</Checkbox>
                 </Col>
               </Row>
             </Checkbox.Group>,
