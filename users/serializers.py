@@ -49,6 +49,7 @@ class CustomRegisterSerializer(RegisterSerializer):
 
         profile_info = ProfileInfo()
         profile_info.profile_username = User.objects.get(username=user.username)
+        # profile_info.name = self.cleaned_data.get('first_name')+" "+self.cleaned_data.get('last_name')
         print("self.cleaned_data.get('university')", self.cleaned_data.get('university'))
         self.add_fields(self.cleaned_data.get('university'),0, profile_info)
         # profile_info.university = Universities.objects.get(university=self.cleaned_data.get('university'))

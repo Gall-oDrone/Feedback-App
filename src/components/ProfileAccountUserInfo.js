@@ -161,8 +161,10 @@ class UserProfileInfo extends React.Component {
     var academic_s = null
     if(val === "True"){
       this.academic_s = "undergraduate"
-    } else {
+    } else if (val === "False"){
       this.academic_s = "graduate"
+    } else {
+      return this.academic_s
     }
     return this.academic_s
   }
@@ -171,8 +173,10 @@ class UserProfileInfo extends React.Component {
     var work_e = null
     if(val === "True"){
       this.work_e = "True"
-    } else {
+    } else if (val === "False"){
       this.work_e = "False"
+    } else {
+      return this.work_e
     }
     return this.work_e
   }
@@ -256,7 +260,7 @@ class UserProfileInfo extends React.Component {
           <p style={pStyle}>Personal</p>
           <FormItem label="First name">
             {getFieldDecorator("firstName", {
-              initialValue: [`${UserAccountInfo.name}`],
+              initialValue: (UserAccountInfo.name !== null?[`${UserAccountInfo.name}`]:null),
               rules: [{ required: true, message: "Please input your first name!" }]
             })(
               <Input
@@ -276,7 +280,7 @@ class UserProfileInfo extends React.Component {
 
           <Form.Item label="Greeting Message">
             {getFieldDecorator("message", {
-              initialValue: UserAccountInfo.message,
+              initialValue: (UserAccountInfo.message !== null?`${UserAccountInfo.message}`:null),
               rules: [
                 { type: 'string', required: true, message: 'Please type a welcome message' },
               ],
@@ -311,7 +315,7 @@ class UserProfileInfo extends React.Component {
 
           <Form.Item label="Website">
             {getFieldDecorator('website', {
-              initialValue: [`${UserAccountInfo.website}`],
+              initialValue: (UserAccountInfo.website !== null?[`${UserAccountInfo.website}`]:null),
               rules: [
                 {
                   required: false,
@@ -345,18 +349,18 @@ class UserProfileInfo extends React.Component {
 
           <Form.Item label="Github">
             {getFieldDecorator('github', {
-              initialValue: [`${UserAccountInfo.github}`],
+              initialValue: (UserAccountInfo.github !== null?[`${UserAccountInfo.github}`]:null),
               rules: [
                 {
                   required: false,
-                  message: 'Please input website!'
+                  message: 'Please input a repository!'
                 }
               ],
             })(
               <AutoComplete
                 dataSource={websiteOptions}
                 onChange={this.handleWebsiteChange}
-                placeholder="website"
+                placeholder="Git Repo"
               >
                 <Input />
               </AutoComplete>,
