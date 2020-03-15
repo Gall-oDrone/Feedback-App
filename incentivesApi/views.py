@@ -1,4 +1,5 @@
 # from rest_framework import viewsets
+import os
 from django.db.models import Count, Q, Sum
 from django.shortcuts import get_object_or_404, redirect, reverse
 from django.core import serializers
@@ -181,10 +182,13 @@ class IncentiveDeleteView(DestroyAPIView):
 #         return Response(status=HTTP_400_BAD_REQUEST)
 
 def post_incentive(self, data):
-    local_url = "http://127.0.0.1:7000/incentives/data/create/"
-    heroku_url = "https://py2-incentives.herokuapp.com/incentives/data/create/"
+    if 'DYNO' in os.environ:
+        c_url = "https://py2-incentives.herokuapp.com/incentives/data/create/"
+    else:
+        c_url = "http://127.0.0.1:7000/incentives/data/create/"
     headers = {'content-type': "application/json"}
-    url = local_url
+    url = c_url
+    print("URL: ", url)
     r = requests.post(url, data=json.dumps(data), headers=headers)
     print(r.status_code)
     if r.status_code == 200:

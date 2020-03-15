@@ -50,7 +50,7 @@ if in_heroku:
     H_DATABASES = {'default': dj_database_url.config()}
 else:
     print("POSTGRES DB")
-    DATABASES
+    H_DATABASES
 
 CORS_ORIGIN_WHITELIST = (
     'http://localhost:3000',
