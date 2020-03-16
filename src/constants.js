@@ -83,7 +83,7 @@ export const profileAccountUserSurveyUpdateURL = (username, surveyID) => `${endp
 export const articleRatingURL = data => `${endpoint}/articles/${data.articleID}/rating/`
 export const fetchRatingURL = articleID => `${endpoint}/articles/${articleID}`
 export const articleLikeUpdateURL = (articleID, userID) => `${endpoint}/articles/${articleID}/likes/${userID}/`
-export const articleLikeCreateURL = (articleID) => `${endpoint}/articles/${articleID}/likes/`
+export const articleLikeCreateURL = (articleID) => `${endpoint}/articles/${articleID}/create-likes/`
 export const fetchLikeCounterURL = (articleID) => `${endpoint}/articles/${articleID}`
 // export const articleListURL = articleID => `${endpoint}/articles/${articleID}`
 

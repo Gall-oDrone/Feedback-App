@@ -190,7 +190,7 @@ class ArticleFeedback extends React.Component {
                         >
                             {!this.state.schedule && this.state.noTitleKey == "live chat" ? (
                                 <div>
-                                 {this.props.meetingDetails.date_to_appointment != null ? (
+                                 {this.props.meetingDetails.date_to_appointment == null ? (
                                 <Button type="primary" onClick={() =>{this.handleClick()}}>
                                    Schedule a Meeting
                                 </Button>

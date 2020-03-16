@@ -55,30 +55,30 @@ class ArticleRating extends React.Component {
     }
   }
 
-  handleSubmit() {
-    message.success("Thanks for rating!");
-    const { usersAnswers } = this.state;
+  handleSubmit(val) {
     const articleID = this.props.match.params.articleID;
     const username = this.props.username
     const data = {
       username: username,
       articleID: articleID,
-      rate: this.state.value + 1,
+      rate: val,
     };
+    console.log("DATA BEFORE POSTING", JSON.stringify(data));
     this.props.createRating(
       this.props.token,
       data
     )
+    message.success("Thanks for rating!");
+    this.setState({ rated:true });
   }
 
-  handleChange = value => {
-    if (this.props.token !== undefined && this.props.token !== null) {
+  handleChange = val => {
+    if (this.props.token !== undefined || this.props.username !== null) {
       console.log(JSON.stringify(this.state.rated))
       if (this.state.rated === false) {
-        this.setState({ value });
-        this.handleSubmit();
+        this.setState({ value:val });
+        this.handleSubmit(val);
         console.log("Corso2")
-        this.state.rated = true;
       } else {
         message.warning("You already rated this article!");
       }
@@ -95,12 +95,12 @@ class ArticleRating extends React.Component {
   };
 
   render() {
-    console.log(this.props);
-    console.log(this.state);
+    console.log("this.PROPS", JSON.stringify(this.props));
+    console.log("this.STATE", JSON.stringify(this.state));
     // const { currentAssignment } = this.props;
     // console.log(currentAssignment);
     // const { title } = currentAssignment;
-    const { usersAnswers, value } = this.state;
+    const { value } = this.state;
     const ratingAvg = this.props.avgRating;
     const ratingCount = this.props.ratingCount;
     return (

@@ -48,7 +48,7 @@ export const fetchLikeCounter = (token, articleID) => {
       dispatch(likeStart());
       axios.defaults.headers = {
         "Content-Type": "application/json",
-        Authorization: `Token ${token}`
+        // Authorization: `Token ${token}`
       };
       axios
         .get(fetchLikeCounterURL(articleID))

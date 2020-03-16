@@ -259,7 +259,7 @@ class LikeSerializer(serializers.ModelSerializer):
         print("DATA LikeSerializer")
         print(data)
         like = Like()
-        like.user = User.objects.get(username=data["username"])
+        like.user = User.objects.get(username=data["user"])
         like.liked = data["liked"]
         like.article = Article.objects.get(id=data["article"])
         like.save()
@@ -318,10 +318,11 @@ class CommentSerializer(serializers.ModelSerializer):
         comment.content = data["content"]
         comment.liked = data["like"]
         comment.disliked = data["dislike"]
-        comment.reply_to = Comment.objects.get(id=data["reply_to"])
+        # if("reply_to" in data):
+        #     comment.reply_to = Comment.objects.get(id=data["reply_to"])
         comment.article = Article.objects.get(id=data["articleID"])
         comment.save()
-        if data["reply_to"] != None:
+        if("reply_to" in data):
             replyC = Comment(id=data["reply_to"])
             replyC.replies.add(comment.id)
         return comment

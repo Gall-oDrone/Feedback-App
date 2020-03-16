@@ -46,7 +46,10 @@ class ArticleDetailMenu extends React.Component {
     const articleID = this.props.match.params.articleID;
     const username = this.props.username
     const userId = this.props.userId
-    let likedVal = this.props.liked.liked
+    let likedVal = this.props.liked
+    if(likedVal !== null){
+      likedVal = likedVal.liked
+    }
     console.log("handleLike")
     console.log("userId: "+ JSON.stringify(userId))
     console.log("likedVal: "+ JSON.stringify(likedVal))
@@ -67,7 +70,7 @@ class ArticleDetailMenu extends React.Component {
     console.log("likedVal after clic: "+ likedVal)
     console.log("like_counter: "+ JSON.stringify(like_counter))
     if(likedVal !== null){
-      await axios.put(articleLikeUpdateURL, { user_id: userId, user: username, article: articleID, liked: likedVal })
+      await axios.put(articleLikeUpdateURL(articleID, userId), { user_id: userId, user: username, article: articleID, liked: likedVal })
       this.props.getLikeCounter(this.props.token, this.props.match.params.articleID)
       this.props.getLiked(this.props.token, this.props.match.params.articleID, this.props.userId)
     } else {
@@ -158,9 +161,6 @@ class ArticleDetailMenu extends React.Component {
       if (newProps.token !== undefined && newProps.token !== null) {
         console.log("componentWillReceiveProps 1): " + JSON.stringify(this.props))
         console.log("componentWillReceiveProps 2): " + JSON.stringify(newProps))
-        console.log("componentWillReceiveProps 3): " + JSON.stringify(newProps.token))
-        console.log("componentWillReceiveProps 4): " + JSON.stringify(newProps.match.params.articleID))
-        console.log("componentWillReceiveProps 5): " + JSON.stringify(this.props.getLikeCounter(newProps.token, newProps.match.params.articleID)))
         this.props.getLikeCounter(newProps.token, newProps.match.params.articleID)
         this.props.getRatingCounter(newProps.token, newProps.match.params.articleID)
         this.props.getLiked(newProps.token, newProps.match.params.articleID, newProps.userId)
@@ -184,9 +184,10 @@ class ArticleDetailMenu extends React.Component {
     let {like_counter} = this.props
     console.log("CORSO")
     console.log(JSON.stringify(articleID))
-    console.log(JSON.stringify(like_counter))
-    console.log("this.props: "+ JSON.stringify(this.props))
-    console.log("this.state: "+ JSON.stringify(this.state))
+    console.log("like_counter: ", JSON.stringify(like_counter))
+    console.log("liked: ", JSON.stringify(liked))
+    console.log("this.PROPS: "+ JSON.stringify(this.props))
+    console.log("this.STATE: "+ JSON.stringify(this.state))
     return (
       <div>
         <List >

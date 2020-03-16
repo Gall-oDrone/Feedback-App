@@ -4,7 +4,7 @@ import axios from 'axios';
 import { connect } from 'react-redux';
 import InquiryCustomForm from "../containers/InquiryCreate"
 import { Button } from 'antd';
-
+import { inquiryListURL } from "../constants";
 class InquiryList extends React.Component {
 
     state = {
@@ -14,7 +14,7 @@ class InquiryList extends React.Component {
 
 
     fetchInquirys = () => {
-        axios.get("http://127.0.0.1:8000/api/inquiries/list/")
+        axios.get(inquiryListURL)
         .then(res => {
             this.setState({
                 inquiries: res.data
