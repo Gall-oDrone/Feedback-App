@@ -28,8 +28,8 @@ class LCRequestSerializer(serializers.ModelSerializer):
         print("DATA")
         print(data)
         print(parse_datetime(data["date"]))
-        parsed_date = parse_datetime(data["date"])
-        print(datetime.strptime(data["date"], "%Y-%m-%dT%H:%M:%S.%fZ").date())
+        # parsed_date = parse_datetime(data["date"])
+        # print(datetime.strptime(data["date"], "%Y-%m-%dT%H:%M:%S.%fZ").date())
         request = Request()
         request.notified = True
         request.scheduled = False
