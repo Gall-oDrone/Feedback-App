@@ -5,9 +5,9 @@ import { withRouter } from "react-router-dom";
 import { Steps, Button, message, notification } from 'antd';
 import CalendarComponent from './Calendar';
 import CategoryComponent from './CategorySelector';
-import {createMeeting} from "../store/actions/meetings"
-import {getDetailMeetingList} from "../store/actions/meetings"
-
+import {createMeeting} from "../store/actions/meetings";
+import {getDetailMeetingList} from "../store/actions/meetings";
+import { articleDetailURL } from "../constants";
 const { Step } = Steps;
 
 const openNotificationWithIcon = type => {
@@ -44,11 +44,6 @@ class MeetingSteps extends React.Component {
         date:null,
         topic:null
       }
-      // order: [
-      //   order0: date: {},
-      //   order1: topic: {},
-      //   order2: confirm:{}
-      // ]
     };
   }
 
@@ -104,7 +99,7 @@ class MeetingSteps extends React.Component {
     // console.log("this.props.match.params.articleID: " + JSON.stringify(this.props.match.params.articleID))
     const articleID = this.props.match.params.articleID;
     //const articleID = 11
-    axios.get(`http://127.0.0.1:8000/articles/${articleID}`)
+    axios.get(articleDetailURL(articleID))
         .then(res => {
             console.log("res: " + JSON.stringify(res.data))
             this.setState({
