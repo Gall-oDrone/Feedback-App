@@ -91,88 +91,93 @@ class UserProfileInfo extends React.Component {
     const {ProfileMRI} = this.props.pInfo
     return (
         <div>
-        <Button onClick={() => this.showDrawer(this.props.username, this.props.token)} key={`a-${this.props.keys}`} block={true} >
-          Profile
-        </Button>
-        {ProfileMRI !== undefined ? (
-        <Drawer
-          width={640}
-          placement="right"
-          closable={false}
-          onClose={this.onClose}
-          visible={this.state.visible}
-        >
-          <p style={{ ...pStyle, marginBottom: 24 }}>User Profile</p>
-          <Row>
-            <Col span={12}>
-              <DescriptionItem title="Name" content={`${ProfileMRI.name}`} />
-            </Col>
-          </Row>
-          <Row>
-            <Col span={12}>
-              <DescriptionItem title="Country" content={`${ProfileMRI.country}`} />
-            </Col>
-          </Row>
-          <Row>
-            <Col span={12}>
-              <DescriptionItem title="Website" content="-" />
-            </Col>
-          </Row>
-          <Row>
-            <Col span={24}>
-              <DescriptionItem
-                title="Message"
-                content="Make things as simple as possible but no simpler."
-              />
-            </Col>
-          </Row>
-          <Divider />
-          <p style={pStyle}>Company</p>
-          <Row>
-            <Col span={12}>
-              <DescriptionItem title="Position" content="Programmer" />
-            </Col>
-            <Col span={12}>
-              <DescriptionItem title="Responsibilities" content="Coding" />
-            </Col>
-          </Row>
-          <Row>
-            <Col span={12}>
-              <DescriptionItem title="Department" content="XTech" />
-            </Col>
-            <Col span={12}>
-              <DescriptionItem title="Supervisor" content={<a>Lin</a>} />
-            </Col>
-          </Row>
-          <Row>
-            <Col span={24}>
-              <DescriptionItem
-                title="Skills"
-                content="C / C + +, data structures, software engineering, operating systems, computer networks, databases, compiler theory, computer architecture, Microcomputer Principle and Interface Technology, Computer English, Java, ASP, etc."
-              />
-            </Col>
-          </Row>
-          <Divider />
-          <p style={pStyle}>Academy</p>
-          <Row>
-            <Col span={12}>
-              <DescriptionItem title="University" content={`${ProfileMRI.university}`} />
-            </Col>
-          </Row>
-          <Row>
-            <Col span={24}>
-              <DescriptionItem
-                title="Github"
-                content={
-                  <a href="http://github.com/ant-design/ant-design/">
-                    github.com/ant-design/ant-design/
-                  </a>
-                }
-              />
-            </Col>
-          </Row>
-        </Drawer>
-      ):(null)}
+          {this.props.username !== null ? (
+            <div>
+                     <Button onClick={() => this.showDrawer(this.props.username, this.props.token)} key={`a-${this.props.keys}`} block={true} >
+                     {this.props.username}
+                   </Button>
+                   {ProfileMRI !== undefined ? (
+                   <Drawer
+                     width={640}
+                     placement="right"
+                     closable={false}
+                     onClose={this.onClose}
+                     visible={this.state.visible}
+                   >
+                     <p style={{ ...pStyle, marginBottom: 24 }}>User Profile</p>
+                     <Row>
+                       <Col span={12}>
+                         <DescriptionItem title="Name" content={`${ProfileMRI.name}`} />
+                       </Col>
+                     </Row>
+                     <Row>
+                       <Col span={12}>
+                         <DescriptionItem title="Country" content={`${ProfileMRI.country}`} />
+                       </Col>
+                     </Row>
+                     <Row>
+                       <Col span={12}>
+                         <DescriptionItem title="Website" content="-" />
+                       </Col>
+                     </Row>
+                     <Row>
+                       <Col span={24}>
+                         <DescriptionItem
+                           title="Message"
+                           content="Make things as simple as possible but no simpler."
+                         />
+                       </Col>
+                     </Row>
+                     <Divider />
+                     <p style={pStyle}>Company</p>
+                     <Row>
+                       <Col span={12}>
+                         <DescriptionItem title="Position" content="Programmer" />
+                       </Col>
+                       <Col span={12}>
+                         <DescriptionItem title="Responsibilities" content="Coding" />
+                       </Col>
+                     </Row>
+                     <Row>
+                       <Col span={12}>
+                         <DescriptionItem title="Department" content="XTech" />
+                       </Col>
+                       <Col span={12}>
+                         <DescriptionItem title="Supervisor" content={<a>Lin</a>} />
+                       </Col>
+                     </Row>
+                     <Row>
+                       <Col span={24}>
+                         <DescriptionItem
+                           title="Skills"
+                           content="C / C + +, data structures, software engineering, operating systems, computer networks, databases, compiler theory, computer architecture, Microcomputer Principle and Interface Technology, Computer English, Java, ASP, etc."
+                         />
+                       </Col>
+                     </Row>
+                     <Divider />
+                     <p style={pStyle}>Academy</p>
+                     <Row>
+                       <Col span={12}>
+                         <DescriptionItem title="University" content={`${ProfileMRI.university}`} />
+                       </Col>
+                     </Row>
+                     <Row>
+                       <Col span={24}>
+                         <DescriptionItem
+                           title="Github"
+                           content={
+                             <a href="http://github.com/ant-design/ant-design/">
+                               github.com/ant-design/ant-design/
+                             </a>
+                           }
+                         />
+                       </Col>
+                     </Row>
+                   </Drawer>
+                 ):(null)}
+                 </div>
+          ):(null)}
+       
       </div>
     );
   }

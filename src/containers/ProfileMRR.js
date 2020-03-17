@@ -8,6 +8,8 @@ import UProfInfo from "../components/UserProfileInfo";
 const { Column, ColumnGroup } = Table;
 var moment = require('moment');
 
+const buttonWidth = 70;
+
 const data = [
   {
     key: '1',
@@ -220,8 +222,19 @@ render(){
                     />
                     <Column
                       title="User"
-                      dataIndex="sender"
+                      dataIndex="notified"
                       key="userInfo"
+                      render={(record, date, index) => (
+                        <div style={{ width: buttonWidth}}>
+                          <UProfInfo {...this.props}
+                            token={this.props.token}
+                            username={this.props.username !== ReceivedMeetingList[index].sender ? 
+                              ReceivedMeetingList[index].sender:null}
+                            keys = {index}
+                          >
+                          </UProfInfo>
+                        </div>
+                      )}
                     />
                     <Column
                       title="Status"

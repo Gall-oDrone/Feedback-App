@@ -61,7 +61,7 @@ class App2 extends React.Component {
               console.log("seconds:"+ seconds)
               if (countdown < 0 ){
                 clearInterval(this.intervalZ);
-                this.setState({ minutes:0, seconds:0, disabledB:true, disabledA:false, defaultKey: "2" });
+                this.setState({ minutes:0, seconds:0, disabledB:false, disabledA:false, defaultKey: "2" });
               } else {
                 if (countdown < 0 ){clearInterval(this.intervalZ);}
                 this.setState({ minutes:minutes, seconds:seconds });

@@ -236,7 +236,8 @@ render(){
                         <div style={{ width: buttonWidth}}>
                           <UProfInfo {...this.props}
                             token={this.props.token}
-                            username={BookedMeetingList[index].sender}
+                            username={this.props.username !== BookedMeetingList[index].sender ? 
+                              BookedMeetingList[index].sender:null}
                             keys = {index}
                           >
                           </UProfInfo>
