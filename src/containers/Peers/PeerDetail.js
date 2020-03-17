@@ -191,7 +191,7 @@ class PeerDetail extends React.Component {
                             </div>
                             <Divider/>
                               <Card>
-                                <Comments/>
+                                <Comments inquiryID={this.props.data[this.props.id].id}/>
                               </Card>
                           </Content>
                           <Footer style={{ textAlign: 'center' }}>Ant Design ©2018 Created by Ant UED</Footer>

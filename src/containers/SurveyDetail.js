@@ -21,7 +21,6 @@ class AssignmentDetail extends React.Component {
     if (this.props.token !== undefined && this.props.token !== null) {
       const articleID = this.props.arId;
       this.props.getSurveySDetail1(this.props.token, articleID);
-      // this.props.getSurveySDetail1(this.props.token, this.props.match.params.id, this.props.match.params.userId);
     }
   }
 
@@ -30,7 +29,6 @@ class AssignmentDetail extends React.Component {
       if (newProps.token !== undefined && newProps.token !== null) {
         const articleID = this.props.arId;
         this.props.getSurveySDetail1(newProps.token, articleID);
-        // this.props.getSurveySDetail1(newProps.token, this.props.match.params.id, this.props.match.params.userId);
       }
     }
   }
@@ -104,7 +102,7 @@ const mapStateToProps = state => {
     token: state.auth.token,
     username: state.auth.username,
     currentSurvey: state.survey.currentSurvey,
-    loading: state.assignments.loading
+    loading: state.survey.loading
   };
 };
 

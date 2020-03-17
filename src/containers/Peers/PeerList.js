@@ -107,23 +107,26 @@ class ProductList extends React.Component {
                     <List.Item
                     >
                         <List.Item.Meta
-                        avatar={
-                          <Card size={"small"}> 
-                          <p>{item.author}</p>
-                           {
-                            // item.ufile !== null ? (
-                            //   <img
-                            //       width={100}
-                            //       alt={item.ufile}
-                            //       src="https://gw.alipayobjects.com/zos/rmsportal/mqaQswcyDLcXyDKnZfES.png"
-                            //   />
-                            // ):(null)
-                           }
-                          </Card>}
+                        // avatar={
+                        //   <Card size={"small"}> 
+                        //   <p>User:{item.author}</p>
+                        //    {
+                        //     // item.ufile !== null ? (
+                        //     //   <img
+                        //     //       width={100}
+                        //     //       alt={item.ufile}
+                        //     //       src="https://gw.alipayobjects.com/zos/rmsportal/mqaQswcyDLcXyDKnZfES.png"
+                        //     //   />
+                        //     // ):(null)
+                        //    }
+                        //   </Card>}
                         title={
                           <Row>
                             <Col span={8}>
-                              <a href="https://ant.design">{item.title}</a>
+                              <p>
+                                User: <a>{item.author}</a>
+                              </p>
+                              
                             </Col>
                             <Col span={8} offset={8}>
                               <Tag>
@@ -136,7 +139,7 @@ class ProductList extends React.Component {
                           <div className="Description" style={{display: 'block',  justifyContent:'center'}}>
                             <Row justify="start">
                               <Col span={24}>
-                                <h4>{item.content}</h4>
+                                <h4>{item.title}</h4>
                               </Col>
                             </Row>
                             <Row justify="center">

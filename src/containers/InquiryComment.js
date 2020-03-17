@@ -56,7 +56,7 @@ class CommentForm extends React.Component {
   componentDidMount() {
     console.log(JSON.stringify(this.props))
     if (this.props.token !== undefined && this.props.token !== null) {
-      this.props.getComment(this.props.token, this.props.match.params.inquiryID)
+      this.props.getComment(this.props.token, this.props.inquiryID)
       console.log("ComponentDidMount after: " + JSON.stringify(this.props))
     }
   }
@@ -66,7 +66,8 @@ class CommentForm extends React.Component {
       if (newProps.token !== undefined && newProps.token !== null) {
         // this.props.getASNTSDetail(newProps.token, this.props.match.params.id, this.props.match.params.userId);
         console.log("componentWillReceiveProps: " + JSON.stringify(this.props))
-        this.props.getComment(newProps.token, newProps.match.params.inquiryID).then(res => {
+        console.log("coalkdjfas89fas98fu: " + JSON.stringify(newProps.inquiryID))
+        this.props.getComment(newProps.token, newProps.inquiryID).then(res => {
           console.log("componentWillReceiveProps before assigning res to dataList: " + JSON.stringify(this.props))
           console.log(JSON.stringify(res))
           this.setState({
@@ -83,7 +84,7 @@ class CommentForm extends React.Component {
     if (!this.state.value) {
       return;
     } else {
-      const inquiryID = this.props.match.params.inquiryID;
+      const inquiryID = this.props.inquiryID;
       const username = this.props.username;
       const likes = this.props.likes;
       const dislikes = this.props.dislikes;
@@ -97,8 +98,10 @@ class CommentForm extends React.Component {
         like: liked,
         dislike: disliked,
       };
+      console.log("DATA: ", JSON.stringify(data))
        await this.props.createComment(
         this.props.token,
+        inquiryID,
         data
       )
       
@@ -106,7 +109,7 @@ class CommentForm extends React.Component {
     this.setState({
       submitting: true,
     });
-    await this.props.getComment(this.props.token, this.props.match.params.inquiryID)
+    await this.props.getComment(this.props.token, this.props.inquiryID)
     setTimeout(() => {
       this.setState({
         submitting: false,
@@ -174,7 +177,7 @@ class CommentForm extends React.Component {
 
     return (
       <div>
-        {data !== null && data.length > 0 && <Comments />}
+        {data !== null && data.length > 0 && <Comments inquiryID={this.props.inquiryID}/>}
           
           <Comment
           author={<a>{username}`</a>}
@@ -212,14 +215,14 @@ const mapStateToProps = state => {
     likes: state.like_counter,
     dislikes: state.dislike_counter,
     loading: state.loading,
-    data: state.comments.commentData
+    data: state.inquiry_comments.commentData
   };
 };
 
 const mapDispatchToProps = dispatch => {
   return {
     getComment: (token, inquiryID) => dispatch(getComment(token, inquiryID)),
-    createComment: (token, username, inquiryId, comments) => dispatch(createComment(token, username, inquiryId, comments)),
+    createComment: (token, inquiryId, comments) => dispatch(createComment(token, inquiryId, comments)),
   };
 };
 

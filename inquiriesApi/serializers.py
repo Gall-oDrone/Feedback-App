@@ -304,13 +304,13 @@ class CommentSerializer(serializers.ModelSerializer):
         comment.content = data["content"]
         comment.liked = data["like"]
         comment.disliked = data["dislike"]
-        comment.reply_to = Comment.objects.get(id=data["reply_to"])
         comment.inquiry = Inquiry.objects.get(id=data["inquiryID"])
         comment.save()
-        if data["reply_to"] != None:
+        if("reply_to" in data):
             replyC = Comment(id=data["reply_to"])
             replyC.replies.add(comment.id)
         return comment
+ 
     
     def upload_comment(self, request):
         data = request.data

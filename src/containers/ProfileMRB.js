@@ -53,7 +53,8 @@ class BookedMeetingList extends React.Component {
 
   state = {
     dataList: {},
-    dateNow: moment( new Date().toJSON().slice(0, 10) ).format("DD-MM-YYYY HH:mm"),
+    // dateNow: moment( new Date().toJSON().slice(0, 10) ).format("DD-MM-YYYY HH:mm"),
+    dateNow: moment().format("DD-MM-YYYY HH:mm"),
     iconLoading: false
   }
 
@@ -180,9 +181,18 @@ render(){
     console.log('BookedMeetingList.article: ' +BookedMeetingList.article)
     console.log('BookedMeetingList.scheduled: ' +BookedMeetingList[0].scheduled)
     console.log('this.state.DateNow: ' +JSON.stringify(this.state.dateNow))
+    console.log('this.state.DateNow: ' +JSON.stringify(this.state.dateNow))
     Object.keys(BookedMeetingList).map(k=>{
       console.log("k: "+JSON.stringify(BookedMeetingList[k]))
-      console.log("BookedMeetingList[k].: "+JSON.stringify(BookedMeetingList[k].recipient))
+      console.log("AHAHAHSH: "+ typeof(this.state.dateNow ))
+      console.log("AHAHAHSH: "+ typeof(moment(new Date(BookedMeetingList[4].date_to_appointment)).format("DD-MM-YYYY HH:mm")))
+      if(this.state.dateNow > moment(new Date(BookedMeetingList[4].date_to_appointment)).format("DD-MM-YYYY HH:mm")){
+        console.log("SKEJFKALFJALK")
+      } else {
+        console.log("1231039809")
+      }
+      console.log("AHAHAHSH: "+ this.state.dateNow > moment(new Date(BookedMeetingList[4].date_to_appointment)).format("DD-MM-YYYY HH:mm"))
+      console.log("AHAHAHSH.: "+JSON.stringify(moment(new Date(BookedMeetingList[4].date_to_appointment)).format("DD-MM-YYYY HH:mm")))
     })
   }
 
@@ -285,7 +295,7 @@ render(){
                       key="action"
                       render={(text, data, index) => (
                         <span>
-                          {this.state.dateNow ===  moment.utc(data.date_to_appointment).format("DD-MM-YYYY HH:mm") ? (
+                          {this.state.dateNow ===  moment(new Date(data.date_to_appointment)).format("DD-MM-YYYY HH:mm") ? (
                             <Link to={`/frameTest/${BookedMeetingList[index].room_name}`}>
                             <Button type="primary" size={"small"}>
                               Attend
@@ -294,7 +304,7 @@ render(){
                           ):(
 
                             <div>
-                            {this.state.dateNow > moment.utc(data.date_to_appointment).format("DD-MM-YYYY HH:mm") ? (
+                            {this.state.dateNow > moment(new Date(data.date_to_appointment)).format("DD-MM-YYYY HH:mm") ? (
                               <Link to={`/frameTest`}>
                               <Button type="primary" disabled size={"small"}>
                                 Finished
@@ -303,7 +313,7 @@ render(){
                             ):(
                               <div>
                               <Link to={`/frameTest/${BookedMeetingList[index].room_name}`}>
-                                <Button type="primary" disable onClick={() => this.handleAttend(BookedMeetingList[index].room_url)} size={"small"}>
+                                <Button type="primary" disabled onClick={() => this.handleAttend(BookedMeetingList[index].room_url)} size={"small"}>
                                   Attend
                                 </Button>
                               </Link>
@@ -330,9 +340,6 @@ render(){
 
 const mapStateToProps = state => {
   console.log("mapStateToProps: "+JSON.stringify(state))
-  /*console.log("1) ASNT List mapStateToProps containers state 1: "+ JSON.stringify(state.assignments.assignments))
-  console.log("2) ASNT List mapStateToProps containers state 2: "+ JSON.stringify(state.assignments))
-  console.log("2) ASNT List mapStateToProps containers state 3: "+ JSON.stringify(state))*/
   return {
     token: state.auth.token,
     username: state.auth.username,

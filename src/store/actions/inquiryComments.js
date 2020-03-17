@@ -30,6 +30,7 @@ const getCommentListStart = () => {
 
 const getCommentListSuccess = data => {
   console.log("2) Actions getCommentListSuccess")
+  console.log("2) Actions getCommentListSuccess data", JSON.stringify(data))
   return {
     type: GET_INQUIRY_COMMENTS_LIST_SUCCESS,
     data
@@ -120,14 +121,14 @@ const createCommentFail = error => {
   };
 };
 
-export const createComment = (token, data) => {
+export const createComment = (token, inquiryID, data) => {
     return dispatch => {
         dispatch(createCommentStart());
         axios.defaults.headers = {
             "Content-Type": "application/json",
             Authorization: `Token ${token}`
         }
-        axios.post(inquiryCreateCommentURL(data), data)
+        axios.post(inquiryCreateCommentURL(inquiryID), data)
         .then(res => {
             
             dispatch(createCommentSuccess());

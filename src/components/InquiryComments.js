@@ -5,7 +5,7 @@ import axios from 'axios';
 import { withRouter } from "react-router-dom";
 import ChildrenComment from "./ChildrenComment";
 import { Comment, Avatar, Form, Button, List, Input, Tooltip, Icon } from 'antd';
-import { createComment, getComment, getCommentList } from '../store/actions/comments';
+import { createComment, getComment, getCommentList } from '../store/actions/inquiryComments';
 import {inquiryUpdateCommentURL2} from "../constants";
 import moment from 'moment';
 
@@ -113,8 +113,8 @@ class Comments extends React.Component {
     console.log(JSON.stringify(this.props))
     if (this.props.token !== undefined && this.props.token !== null) {
       console.log("ComponentDidMount after 1: " + JSON.stringify(this.props.token))
-      console.log("ComponentDidMount after 2: " + JSON.stringify(this.props.match.params.inquiryID))
-      this.props.getComment(this.props.token, this.props.match.params.inquiryID)
+      console.log("ComponentDidMount after 2: " + JSON.stringify(this.props.inquiryID))
+      this.props.getComment(this.props.token, this.props.inquiryID)
       console.log("ComponentDidMount after 4: " + JSON.stringify(this.props))
     }
   }
@@ -140,7 +140,7 @@ class Comments extends React.Component {
       const commentID = data.id;
       console.log("commentID: " + JSON.stringify(commentID))
       console.log("data: " + JSON.stringify(data))
-      const inquiryID = this.props.match.params.inquiryID;
+      const inquiryID = this.props.inquiryID;
       axios.defaults.headers = {
         "Content-Type": "application/json",
         Authorization: `Token ${this.props.token}`
@@ -155,7 +155,7 @@ class Comments extends React.Component {
           console.log("error: ")
           console.log(error);
         })
-      await this.props.getComment(this.props.token, this.props.match.params.inquiryID)
+      await this.props.getComment(this.props.token, this.props.inquiryID)
     } else {
       // Could not update 
     }
@@ -179,7 +179,7 @@ class Comments extends React.Component {
     if (!this.state.value) {
       return;
     } else {
-      const inquiryID = this.props.match.params.inquiryID;
+      const inquiryID = this.props.inquiryID;
       const username = this.props.username;
       const likes = this.props.likes;
       const dislikes = this.props.dislikes;
@@ -242,6 +242,7 @@ class Comments extends React.Component {
     console.log("1) this.state: " + JSON.stringify(this.state))
     const { submitting, value, reply, replyId, action, nestComments, ncCount } = this.state;
     const { data } = this.props;
+    console.log("2) this.props.data QUE?: " + JSON.stringify(data))
     const parents = data.filter(el => el.reply_to == null)
     const children = data.filter(el => el.reply_to != null)
     const nc = [];
@@ -372,7 +373,7 @@ const mapStateToProps = state => {
     likes: state.like_counter,
     dislikes: state.dislike_counter,
     loading: state.loading,
-    data: state.comments.commentData
+    data: state.inquiry_comments.commentData
   };
 };
 

@@ -122,7 +122,7 @@ export const fetchInquiryLikeCounterURL = (inquiryID) => `${endpoint}/inquiries/
 
 export const inquiryCommentsURL = inquiryID => `${endpoint}/inquiries/${inquiryID}/comments/`
 export const inquiryCommentURL = (inquiryID, commentID) => `${endpoint}/inquiries/${inquiryID}/comment/${commentID}/`
-export const inquiryCreateCommentURL = data => `${endpoint}/inquiries/${data.inquiryID}/create-comment/`
+export const inquiryCreateCommentURL = inquiryID => `${endpoint}/inquiries/${inquiryID}/create-comment/`
 export const inquiryUpdateCommentURL = data => `${endpoint}/inquiries/${data.inquiryID}/update-comment/${data.id}/`
 export const inquiryUpdateCommentURL2 = (inquiryID, commentID) => `${endpoint}/inquiries/${inquiryID}/update-comment/${commentID}/`
 
