@@ -110,7 +110,7 @@ const mapStateToProps = state => {
   return {
     token: state.auth.token,
     username: state.auth.username,
-    loading: state.assignments.loading
+    loading: state.survey.loading
   };
 };
 

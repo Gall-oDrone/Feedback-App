@@ -184,15 +184,6 @@ render(){
     console.log('this.state.DateNow: ' +JSON.stringify(this.state.dateNow))
     Object.keys(BookedMeetingList).map(k=>{
       console.log("k: "+JSON.stringify(BookedMeetingList[k]))
-      console.log("AHAHAHSH: "+ typeof(this.state.dateNow ))
-      console.log("AHAHAHSH: "+ typeof(moment(new Date(BookedMeetingList[4].date_to_appointment)).format("DD-MM-YYYY HH:mm")))
-      if(this.state.dateNow > moment(new Date(BookedMeetingList[4].date_to_appointment)).format("DD-MM-YYYY HH:mm")){
-        console.log("SKEJFKALFJALK")
-      } else {
-        console.log("1231039809")
-      }
-      console.log("AHAHAHSH: "+ this.state.dateNow > moment(new Date(BookedMeetingList[4].date_to_appointment)).format("DD-MM-YYYY HH:mm"))
-      console.log("AHAHAHSH.: "+JSON.stringify(moment(new Date(BookedMeetingList[4].date_to_appointment)).format("DD-MM-YYYY HH:mm")))
     })
   }
 
