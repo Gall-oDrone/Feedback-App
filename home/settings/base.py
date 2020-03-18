@@ -40,7 +40,7 @@ INSTALLED_APPS = [
     "surveyApi",
     "notificationsApi",
     "inquiriesApi",
-    "storages",
+    # "storages",
 ]
 
 MIDDLEWARE = [
