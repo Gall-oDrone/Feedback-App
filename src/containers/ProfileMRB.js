@@ -130,7 +130,10 @@ class BookedMeetingList extends React.Component {
       }
     })
     console.log("data after: "+JSON.stringify(data))
-    this.props.putDetailMeeting(this.props.token, articleID, this.props.username, data)
+    Promise.resolve(this.props.putDetailMeeting(this.props.token, articleID, this.props.username, data)).then(() => {
+      console.log("props LOADING II: ", this.props.loading)
+      this.props.getBM(this.props.username, this.props.token)
+    })
     console.log("MR CORSO ")
     // {() => this.enterIconLoading()}
     // this.setState({ iconLoading: false });
@@ -151,7 +154,10 @@ class BookedMeetingList extends React.Component {
       }
     })
     console.log("data after: "+JSON.stringify(data))
-    this.props.putDetailMeeting(this.props.token, articleID, this.props.username, data)
+    Promise.resolve(this.props.putDetailMeeting(this.props.token, articleID, this.props.username, data)).then(() => {
+      console.log("props LOADING II: ", this.props.loading)
+      this.props.getBM(this.props.username, this.props.token)
+    })
     console.log("MR CORSO ")
     // {() => this.enterIconLoading()}
     // this.setState({ iconLoading: false });
@@ -237,7 +243,7 @@ render(){
                           <UProfInfo {...this.props}
                             token={this.props.token}
                             username={this.props.username !== BookedMeetingList[index].sender ? 
-                              BookedMeetingList[index].sender:null}
+                              BookedMeetingList[index].sender: BookedMeetingList[index].recipient}
                             keys = {index}
                           >
                           </UProfInfo>

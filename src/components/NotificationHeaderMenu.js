@@ -37,12 +37,13 @@ class ProfileHeaderMenu extends React.Component {
 
   handleViewNTFN = async (NTFN) => {
     console.log(JSON.stringify(NTFN))
-    await this.props.putProfileNTFNList(this.props.token, this.props.username, NTFN)
-    if(this.props.loadingPut == false){
-      console.log("MR CORSO")
-      console.log("MR CORSO")
-      this.props.getProfileNTFNList(this.props.token, this.props.username)
-    }
+    Promise.resolve(this.props.putProfileNTFNList(this.props.token, this.props.username, NTFN)).then(() => {
+      if(this.props.loadingPut == false){
+        console.log("MR CORSO")
+        console.log("MR CORSO")
+        this.props.getProfileNTFNList(this.props.token, this.props.username)
+      }
+    })
   }
 
   handleInfiniteOnLoad = (NTFN) => {
@@ -62,6 +63,11 @@ class ProfileHeaderMenu extends React.Component {
       return;
     }
   };
+
+  handleUnviewNTFN = async (unview, descrps, NTFNL) => {
+    NTFNL.forEach(el => {descrps.push(el.description)})
+      unview = NTFNL.filter(el => el.view == false)
+  }
   
 
   render() {
@@ -72,6 +78,7 @@ class ProfileHeaderMenu extends React.Component {
     let unview = [];
     const {logout, userId, notificationList} = this.props
     if ( this.props.profileNTFN.notificationList !== undefined){
+      // this.handleUnviewNTFN(unview, descrps, this.props.profileNTFN.notificationList);
       this.props.profileNTFN.notificationList.forEach(el => {descrps.push(el.description)})
       unview = this.props.profileNTFN.notificationList.filter(el => el.view == false)
       // data = data.concat(descrps.slice(0,3))

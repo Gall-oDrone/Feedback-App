@@ -42,7 +42,8 @@ class ReceivedMeetingListReceived extends React.Component {
   state = {
     dataList: {},
     dateNow: moment( new Date().toJSON().slice(0, 10) ).format("DD-MM-YYYY HH:mm"),
-    iconLoading: false
+    iconLoading: false,
+    meetingLoading: false
   }
 
   componentDidMount() {
@@ -99,7 +100,7 @@ class ReceivedMeetingListReceived extends React.Component {
   }
 
   enterIconLoading = () => {
-    this.setState({ iconLoading: true });
+    this.setState({ iconLoading: true, meetingLoading: true });
   };
 
   handleDelete() {
@@ -115,6 +116,7 @@ class ReceivedMeetingListReceived extends React.Component {
   }
   handleAcceptR(index, data, meetingData){
     // this.enterIconLoading()
+    this.setState({meetingLoading: true})
     const articleID = meetingData[index]["article"];
     console.log("EHRENO: "+JSON.stringify(index))
     console.log("EHRENO: "+JSON.stringify(meetingData[index]))
@@ -127,7 +129,10 @@ class ReceivedMeetingListReceived extends React.Component {
       }
     })
     console.log("data after: "+JSON.stringify(data))
-    this.props.putDetailMeeting(this.props.token, articleID, this.props.username, data)
+    Promise.resolve(this.props.putDetailMeeting(this.props.token, articleID, this.props.username, data)).then(() => {
+      console.log("props LOADING II: ", this.props.loading)
+      this.props.getRM(this.props.username, this.props.token)
+    })
     console.log("MR CORSO ")
     // {() => this.enterIconLoading()}
     // this.setState({ iconLoading: false });
@@ -135,7 +140,10 @@ class ReceivedMeetingListReceived extends React.Component {
   }
 
   handleRejectR(index, data, meetingData){
-    this.enterIconLoading()
+    // this.enterIconLoading()
+    this.setState({meetingLoading: true})
+    console.log("props LOADING I: ", this.props.loading)
+    console.log("state LOADING I: ", this.state.meetingLoading)
     const articleID = meetingData[index]["article"];
     console.log("EHRENO: "+JSON.stringify(index))
     console.log("EHRENO: "+JSON.stringify(meetingData[index]))
@@ -148,10 +156,23 @@ class ReceivedMeetingListReceived extends React.Component {
       }
     })
     console.log("data after: "+JSON.stringify(data))
-    this.props.putDetailMeeting(this.props.token, articleID, this.props.username, data)
+    Promise.resolve(this.props.putDetailMeeting(this.props.token, articleID, this.props.username, data)).then(() => {
+      console.log("props LOADING II: ", this.props.loading)
+      this.props.getRM(this.props.username, this.props.token)
+    })
+    
+    
+    console.log("state LOADING II: ", this.state.meetingLoading)
+    if(this.props.loading === true) {
+      
+      console.log("MR ELECTRIK GIRL  ")
+    }
     console.log("MR CORSO ")
+    console.log("props LOADING III: ", this.props.loading)
+    console.log("state LOADING III: ", this.state.meetingLoading)
     // {() => this.enterIconLoading()}
     // this.setState({ iconLoading: false });
+    this.setState({meetingLoading: false})
   }
 
 render(){
@@ -313,8 +334,8 @@ const mapStateToProps = state => {
     token: state.auth.token,
     username: state.auth.username,
     meeting: state.meetings,
-    pInfo: state.profileInfo
-    // loading: state.meetings.loading
+    pInfo: state.profileInfo,
+    loading: state.meetings.loading
   };
 };
 

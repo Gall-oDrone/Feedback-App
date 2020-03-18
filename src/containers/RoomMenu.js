@@ -40,7 +40,7 @@ class App2 extends React.Component {
             console.log(moment(new Date(dateTest)).format())
             console.log(moment().format())
             console.log(moment().format() > moment(new Date(dateTest)).format())
-            this.setState({ minutes:0, seconds:0, disabledB:true, disabledA:false, defaultKey: "2" });
+            this.setState({ minutes:0, seconds:0, disabledB:false, disabledA:false, defaultKey: "2" });
           } else {
             this.intervalZ = setInterval(() => {
               console.log("now < DTA")

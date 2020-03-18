@@ -191,6 +191,8 @@ class LCRequestListDetailView(RetrieveUpdateDestroyAPIView):
         elif (self.request.data.get("canceled") == True):
             Request.objects.filter(recipient=uId[0]).filter(
                 article=articleId).update(canceled=self.request.data.get("canceled"))
+            # delete_lc_room_view(self, request, self.request.data.get("room_name"))
+            print("NOCHE DE RUBÍ")
             
             #NOTIFICATION
             userId = User.objects.get(username=request.data["sender"]).id
