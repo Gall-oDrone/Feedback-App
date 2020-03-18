@@ -39,7 +39,8 @@ INSTALLED_APPS = [
     "django_countries",
     "surveyApi",
     "notificationsApi",
-    "inquiriesApi"
+    "inquiriesApi",
+    "storages",
 ]
 
 MIDDLEWARE = [

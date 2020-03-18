@@ -23,15 +23,15 @@ urlpatterns = [
     path('api/live-chat/', include('livechatApi.livechat.urls')),
     path('api/filter', ReactFilterView.as_view(), name='react'),
     path('api/users/', include('users.urls')),
-    re_path(r'^.*', TemplateView.as_view(template_name='index.html'))
+    # re_path(r'^.*', TemplateView.as_view(template_name='index.html'))
     
 ]
 
-# if settings.DEBUG:
-#     urlpatterns += static(settings.STATIC_URL,
-#                           document_root=settings.STATIC_ROOT)
-#     urlpatterns += static(settings.MEDIA_URL,
-#                           document_root=settings.MEDIA_ROOT)
+if settings.DEBUG:
+    urlpatterns += static(settings.STATIC_URL,
+                          document_root=settings.STATIC_ROOT)
+    urlpatterns += static(settings.MEDIA_URL,
+                          document_root=settings.MEDIA_ROOT)
         
 if not settings.DEBUG:
     urlpatterns += [re_path(r'^.*',
