@@ -1,10 +1,11 @@
 {
   "name": "django-react-boilerplate",
-  
   "version": "0.1.0",
   "private": true,
   "dependencies": {
     "@daily-co/daily-js": "^0.9.981",
+    "@stripe/react-stripe-js": "^1.1.0",
+    "@stripe/stripe-js": "^1.2.0",
     "antd": "^3.7.3",
     "axios": "^0.18.0",
     "babel-core": "^6.26.3",

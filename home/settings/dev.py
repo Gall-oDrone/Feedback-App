@@ -6,13 +6,22 @@ ALLOWED_HOSTS += ['py3-test-app.herokuapp.com', '127.0.0.1']
 DEBUG = True
 
 WSGI_APPLICATION = 'home.wsgi.dev.application'
-
+ASGI_APPLICATION = "home.asgi.routing.application"
 # DATABASES = {
 #         'default': {
 #             'ENGINE': 'django.db.backends.sqlite3',
 #             'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
 #         }
 #     }
+
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'CONFIG': {
+            "hosts": [('127.0.0.1', 6379)],
+        },
+    },
+}
 
 DATABASES = {
     'default': {
@@ -59,3 +68,8 @@ CORS_ORIGIN_WHITELIST = (
     "https://py3-test-app.herokuapp.com",
     'http://localhost:5432',
 )
+
+# Stripe
+
+STRIPE_PUBLIC_KEY = config('STRIPE_TEST_PUBLIC_KEY')
+STRIPE_SECRET_KEY = config('STRIPE_TEST_SECRET_KEY')

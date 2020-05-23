@@ -11,7 +11,7 @@ from rest_framework.status import(
     HTTP_201_CREATED,
     HTTP_400_BAD_REQUEST
 )
-from rest_framework import permissions
+from rest_framework import permissions, generics
 from articlesApi.models import Article, Tag, Tagging, Category, Like, Rating, Comment, Video, Image, FeedbackTypes
 from notificationsApi.models import Notification 
 from users.models import User
@@ -320,3 +320,40 @@ class ProfileNotificationDetailView(RetrieveUpdateDestroyAPIView):
                     else:
                         print("None")
                         return
+
+def infinite_filter(request, username):
+    print("infinite_filter method")
+    limit = request.GET.get('limit')
+    offset = request.GET.get('offset')
+    print("limit, offset: ", limit, ", ", offset)
+    # user = request.GET.get('username')
+    # userId = self.kwargs.get('username')
+    userId = User.objects.get(username=username).id
+    print("userID: ", userId)
+    print("END")
+    return Notification.objects.filter(user=userId)[int(offset): int(offset) + int(limit)]
+
+def is_there_more_data(request, username):
+    offset = request.GET.get("offset")
+    userId = User.objects.get(username=username).id
+    if int(offset) > Notification.objects.filter(user=userId).count():
+        return False
+    return True
+
+class ReactInfiniteView(generics.ListAPIView):
+    serializer_class = NotificationSerializer
+    # permission_classes = (permissions.AllowAny,)
+
+    def get_queryset(self, username):
+        qs = infinite_filter(self.request, username)
+        return qs
+
+    def list(self, request, username):
+        queryset = self.get_queryset(username)
+        print("queryset: ", queryset)
+        serializer = self.serializer_class(queryset, many=True)
+        print("sdfaf", serializer)
+        return Response({
+            "notification": serializer.data,
+            "has_more": is_there_more_data(request, username)
+        })

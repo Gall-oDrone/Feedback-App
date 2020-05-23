@@ -6,6 +6,7 @@ import ProfileInfo from "../components/ProfileAccountInfo"
 
 const { Header, Content, Footer, Sider } = Layout;
 const { TabPane } = Tabs;
+const { SubMenu } = Menu;
 
 class ProfileMMenu extends React.Component {
     render() {
@@ -125,6 +126,22 @@ class ProfileMMenu extends React.Component {
                             <Link to={`/profile/${this.props.userId}/account/articles/list/`}>
                                 <Icon type="book" />
                                 My articles
+                            </Link>
+                            </span>
+                        </Menu.Item>
+                        <Menu.Item key="sub8">
+                            <span>
+                            <Link to={"/address/"}>
+                                <Icon type="book" />
+                                My Address
+                            </Link>
+                            </span>
+                        </Menu.Item>
+                        <Menu.Item key="sub9">
+                            <span>
+                            <Link to={"/payments/"}>
+                                <Icon type="account-book" />
+                                My Payments
                             </Link>
                             </span>
                         </Menu.Item>

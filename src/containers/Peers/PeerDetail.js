@@ -24,21 +24,6 @@ function handleChange(value) {
   console.log(`selected ${value}`);
 }
 
-const data = [
-  {
-    title: 'Need help with Econometrics homework',
-  },
-  {
-    title: 'University admissions for foreigners',
-  },
-  {
-    title: 'Need tester for product Beta',
-  },
-  {
-    title: 'Respond this survey an get a $100 Amazon Gift Card',
-  },
-];
-
 function onChange(checkedValues) {
   console.log('checked = ', checkedValues);
 }
@@ -84,21 +69,21 @@ class PeerDetail extends React.Component {
       return fileList
     }
 
-    handleOk = e => {
-        console.log(e);
-        // this.props.visible = false
-        this.setState({
-          visible: false,
-        });
-      };
+    // handleOk = e => {
+    //     console.log(e);
+    //     // this.props.visible = false
+    //     this.setState({
+    //       visible: false,
+    //     });
+    //   };
     
-      handleCancel = e => {
-        console.log(e);
-        // this.props.visible = false
-        this.setState({
-          visible: false,
-        });
-      };
+    //   handleCancel = e => {
+    //     console.log(e);
+    //     // this.props.visible = false
+    //     this.setState({
+    //       visible: false,
+    //     });
+    //   };
 
     onChangeCountry = value => {
       console.log('Country changed', value);
@@ -114,13 +99,14 @@ class PeerDetail extends React.Component {
                      {/* <Button type="primary" onClick={this.showModal}>
           Open Modal
         </Button> */}
-                    <Modal  title="Basic Modal"
+                    {/* <Modal  title="Basic Modal"
                     width={820}
                     visible={this.state.visible}
                     onOk={this.handleOk}
                     onCancel={this.handleCancel}
-                    key={this.props.id}>
-                        <div>
+                    key={this.props.id}
+                    > */}
+                        <div  key={this.props.id}>
                         <Layout key={this.props.id}>
                           <Content style={{ padding: '0 50px' }} key={this.props.id}>
                             <div className="site-card-border-less-wrapper">
@@ -190,14 +176,14 @@ class PeerDetail extends React.Component {
                               </Card>
                             </div>
                             <Divider/>
-                              <Card>
+                              <Card key={this.props.id}>
                                 <Comments inquiryID={this.props.data[this.props.id].id}/>
                               </Card>
                           </Content>
                           <Footer style={{ textAlign: 'center' }}>Ant Design ©2018 Created by Ant UED</Footer>
                     </Layout>
                         </div>
-                    </Modal>
+                    {/* </Modal> */}
                 </div>
                 )
             }

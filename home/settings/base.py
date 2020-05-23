@@ -1,5 +1,6 @@
 import os
 import django_heroku
+from decouple import config
 
 BASE_DIR = os.path.dirname(os.path.dirname(
     os.path.dirname(os.path.abspath(__file__))))
@@ -32,6 +33,8 @@ INSTALLED_APPS = [
     'articlesApi',
     'assignmentApi',
     'analytics',
+    'channels',
+    'chatApi',
     'filterApi',
     'incentivesApi',
     'livechatApi',
@@ -40,6 +43,7 @@ INSTALLED_APPS = [
     "surveyApi",
     "notificationsApi",
     "inquiriesApi",
+    "paymentsApi",
     # "storages",
 ]
 
@@ -100,7 +104,7 @@ SITE_ID = 1
 
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': (
-        'rest_framework.permissions.IsAuthenticatedOrReadOnly',
+        # 'rest_framework.permissions.IsAuthenticatedOrReadOnly',
         'rest_framework.permissions.IsAuthenticated',
     ),
     'DEFAULT_AUTHENTICATION_CLASSES': (

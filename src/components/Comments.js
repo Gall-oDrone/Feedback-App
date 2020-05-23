@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { connect } from "react-redux";
 import Hoc from "../hoc/hoc";
 import axios from 'axios';
@@ -27,9 +27,6 @@ const Editor = ({ onChange, onSubmit, submitting, value }) => (
 const ReplyToComment = ({ submitting, handleChange,
   handleSubmit, value, id, actions, username, index }) => (
   <Comment
-    consoles = {console.log(JSON.stringify(id))}
-    consoles2 = {console.log(JSON.stringify(index))}
-    actions={actions}
     key={id}
     author={<a>{username}</a>}
     avatar={
@@ -37,11 +34,6 @@ const ReplyToComment = ({ submitting, handleChange,
         src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"
         alt="Han Solo Children Comment"
       />
-    }
-    datetime={
-      <Tooltip title={moment().format('YYYY-MM-DD HH:mm:ss')}>
-        <span>{moment().fromNow()}</span>
-      </Tooltip>
     }
     content={
       <Editor
@@ -55,6 +47,111 @@ const ReplyToComment = ({ submitting, handleChange,
   </Comment>
 )
 
+function ListComments(props, id){
+  const [commentId, setId] = useState(null);
+  const [replyId, setReplyId] = useState(null);
+  const [reply, setReplyStatus] = useState(false);
+  const data = props.props;
+  var chl_match = data.filter(function(el) {return el.reply_to === props.id})
+  if(chl_match.length = 0){
+    return
+  }
+  console.log("eh: ", JSON.stringify(chl_match))
+
+  const actions = (data, index) => {
+    return ([
+      <span key={`comment-basic-like ${index}`}>
+        <Tooltip title="Like">
+          <Icon
+            type="like"
+            theme={'outlined'}
+            onClick={() => { this.like(index, true, false) }}
+          />
+        </Tooltip>
+        <span style={{ paddingLeft: 8, cursor: 'auto' }}>{data.like_counter}</span>
+      </span>,
+      <span key={`comment-basic-dislike ${index}`}>
+        <Tooltip title="Dislike">
+          <Icon
+            type="dislike"
+            theme={'outlined'}
+            onClick={() => { this.like(index, false, true) }}
+          />
+        </Tooltip>
+        <span style={{ paddingLeft: 8, cursor: 'auto' }}>{data.dislike_counter}</span>
+      </span>,
+      <span key={`comment-basic-reply-to-${index}`} onClick={() => handleNestedReply(data.id)} >Reply to</span>,
+      <span key={`nest-comments-${index}`} onClick={() => CommentNC(data.replies, data.id)}>{`Replies ${data.replies.length}`}</span>
+    ]
+    )
+  }
+  const CommentNC =  (replies, commentID) => {
+      if(replies.length === 0){
+        return
+      }
+      setId(commentID)
+    }
+  
+  const handleNestedReply = (id) => {
+    if(reply == true){
+      setReplyStatus(!reply)
+      setReplyId(null)
+    } else {
+      setReplyStatus(!reply)
+      setReplyId(id)
+    }
+    return 
+  }
+
+  return (
+    <div>
+      {data !== null && data !== undefined ? (
+        <List
+          dataSource={data.filter(function(el) {return el.reply_to === props.id})}
+          header={`${data.filter(function(el) {return el.reply_to === props.id}).length} ${data.filter(function(el) {return el.reply_to === props.id}).length > 1 ? 'replies' : 'reply'}`}
+          itemLayout="horizontal"
+          renderItem={(props, index) =>
+              <Comment
+              actions={actions(props, index)}
+              author={props.user}
+              content={props.content}
+              avatar={
+                <Avatar
+                  src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"
+                  alt="Han Solo"
+                />
+              }
+              datetime={
+                <Tooltip title={moment(new Date(props.timestamp)).format('YYYY-MM-DD HH:mm')}>
+                  <span>{moment(new Date(props.timestamp)).fromNow()}</span>
+                </Tooltip>
+              }
+            >
+                  {reply === true && props.id === replyId ? (
+                    <ReplyToComment
+                      // handleChange={this.handleChange} 
+                      // handleSubmit={this.handleSubmit} 
+                      submitting={false} 
+                      index={index}
+                      value={''} 
+                      id={replyId} 
+                      key={replyId} 
+                    />
+                  ):null}
+
+                  {props.id === commentId ? (
+                    <ListComments props={data} id={props.id}/>
+                  ):null}
+                  
+            </Comment>
+          }
+        />
+      ) : (null)
+      }
+    </div>
+  );
+}
+
 class Comments extends React.Component {
   state = {
     comments: [],
@@ -63,6 +160,9 @@ class Comments extends React.Component {
     submitting: false,
     reply: false,
     replyId: null,
+    parentId: null,
+    corso: {reply: false,
+      replyId: null,},
     username: {},
     value: '',
     likes: 0,
@@ -174,8 +274,9 @@ class Comments extends React.Component {
         replyId: id
       });
     }
-    return ChildrenComment(id={id})
+    return 
   }
+
   handleSubmit = async () => {
     if (!this.state.value) {
       return;
@@ -218,16 +319,6 @@ class Comments extends React.Component {
         submitting: false,
         reply: false,
         value: ''
-        // value: '',
-        // comments: [
-        //   {
-        //     author: this.state.username,
-        //     avatar: 'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png',
-        //     content: <p>{this.state.value}</p>,
-        //     datetime: moment().fromNow(),
-        //   },
-        //   ...this.state.comments,
-        // ],
       });
     }, 1000);
   };
@@ -241,37 +332,10 @@ class Comments extends React.Component {
   render() {
     console.log('this.PROPS: ' + JSON.stringify(this.props))
     console.log("1) this.state: " + JSON.stringify(this.state))
-    const { submitting, value, reply, replyId, action, nestComments, ncCount } = this.state;
+    const { submitting, value, reply, replyId, action, nestComments, parentId } = this.state;
     const { data } = this.props;
     const parents = data.filter(el => el.reply_to == null)
-    const children = data.filter(el => el.reply_to != null)
-    const nc = [];
-
-   const nComm = (cId, index) => {
-      const chl_match = children.filter(el=> el.reply_to == cId)
-      for (let i=0; i < chl_match.length; i+= 1) {
-        nc.push(
-        <Comment
-              actions={actions(chl_match[i], index)}
-              author={chl_match[i].user}
-              content={chl_match[i].content}
-              avatar={
-                <Avatar
-                  src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"
-                  alt="Han Solo"
-                />
-              }
-              key={chl_match[i].id}
-              datetime={
-                <Tooltip title={moment(new Date(chl_match[i].timestamp)).format('YYYY-MM-DD HH:mm')}>
-                  <span>{moment(new Date(chl_match[i].timestamp)).fromNow()}</span>
-                </Tooltip>
-              }
-            />
-        )
-      }
-
-    }
+    const children = data.filter(el => el.reply_to !== null)
 
     const actions = (data, index) => {
       return ([
@@ -296,20 +360,32 @@ class Comments extends React.Component {
           <span style={{ paddingLeft: 8, cursor: 'auto' }}>{data.dislike_counter}</span>
         </span>,
         <span key={`comment-basic-reply-to-${index}`} onClick={() => this.handleReply(data.id, reply)} >Reply to</span>,
-        <span key={`nest-comment-${index}`} onClick={() => CommentNC(data.replies, reply)}>{`Replies ${data.replies.length}`}</span>
+        <span key={`nest-comments-${index}`} onClick={() => CommentNC(data.replies, data.id, data.reply_to)}>{`Replies ${data.replies.length}`}</span>
       ]
       )
     }
 
-    const CommentNC =  (replies, reply) => {
+    const CommentNC =  (replies, parentID, isNested) => {
+      console.log("POLLY; ", isNested, parentID)
+        if(replies.length === 0){
+          return
+        }
         if(replies !== null){
           if(this.state.nestComments == true){
-            this.setState({
-              nestComments: false,
-            });
+            if(isNested !== null){
+              this.setState({
+                corso: {reply:true,  parentId:parentID}
+              });
+            } else {
+              this.setState({
+                nestComments: false,
+                parentId: null
+              });
+            }
           } else {
             this.setState({
               nestComments: true,
+              parentId: parentID
             });
           }
         }
@@ -325,7 +401,7 @@ class Comments extends React.Component {
             renderItem={(props, index) =>
                 <Comment
                   actions={actions(props, index)}
-                  author={console.log((actions(props, index))), props.user}
+                  author={props.user}
                   content={props.content}
                   avatar={
                     <Avatar
@@ -350,10 +426,9 @@ class Comments extends React.Component {
                       key={replyId} 
                     />
                     ): (null) }
-                    {nestComments === true ? (
-                      nComm(props.id, index),
-                      nc
-                    ): (null) }
+                    {nestComments === true && props.id === parentId ? (
+                      <ListComments props={data} id={parentId}/>
+                    ): null }
                     
               </Comment>
             }

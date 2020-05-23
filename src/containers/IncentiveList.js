@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from "react-redux";
-import { withRouter } from "react-router-dom";
-import { Card, Layout, Icon, message, Avatar, Row, Col, Cascader, InputNumber, Divider, Button, Collapse, Popover } from 'antd';
+import { Link, withRouter } from "react-router-dom";
+import { Card, Layout, Icon, message, Modal, Row, Col, Cascader, InputNumber, Divider, Button, Collapse, Popover } from 'antd';
 import {createIncentive} from "../store/actions/incentives"
 import countryList from 'react-select-country-list'
 
@@ -145,24 +145,24 @@ class Incentives extends React.Component {
     this.toggle(true)
     console.log("this.props.error: " + JSON.stringify(this.props.err1))
     console.log("In handlerBuy")
-    const data = {
-      buyer: this.props.username,
-      amount: amountD,
-      country: countryD,
-      currency: currencyD,
-      incentive_brand: [brandD],
-      created: moment().format()
-    }
-    this.props.postIncentive(this.props.token, data)
-    console.log("POSTING")
-    this.postData2().then(() => {
-      if (this.props.err1 !== null) {
-        error()
-      } else {
-        success()
-      }
-      this.toggle(false)
-    });
+    // const data = {
+    //   buyer: this.props.username,
+    //   amount: amountD,
+    //   country: countryD,
+    //   currency: currencyD,
+    //   incentive_brand: [brandD],
+    //   created: moment().format()
+    // }
+    // this.props.postIncentive(this.props.token, data)
+    // console.log("POSTING")
+    // this.postData2().then(() => {
+    //   if (this.props.err1 !== null) {
+    //     error()
+    //   } else {
+    //     success()
+    //   }
+    //   this.toggle(false)
+    // });
   }
   
       render() {
@@ -223,9 +223,13 @@ class Incentives extends React.Component {
                         </Col>
                         <Col xs={{ span: 4, offset: 1 }} lg={{ span: 4, offset: 2 }}>
                         <div>
-                          <Button onClick={() => { this.handlerBuy(amount, country, currency, "Amazon.com Gift Card") }} style={{marginTop: "2rem", marginLeft: "-3rem"}}>
-                            Buy
-                          </Button>   
+                        <Link to={`/checkout/giftCard/${brand}/${amount}/${country}/${currency}/`}>
+                          <Button 
+                            onClick={() => { this.handlerBuy(amount, country, currency, "Amazon.com Gift Card")}} 
+                            style={{marginTop: "2rem", marginLeft: "-3rem"}}>
+                            Buy Now!
+                          </Button>
+                        </Link>
                         </div>
                       </Col>
                     </Row>

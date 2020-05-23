@@ -8,23 +8,28 @@ const Result = ({ journal }) => {
           <b>Title:</b> {journal.title}{" "}
         </span>
         <span>
-          <b>Author:</b> {journal.author.name}{" "}
+          <b>Author:</b> {journal.author}{" "}
         </span>
         <span>
-          <b>Categories:</b>
-          {journal.categories.map(c => {
+          <b>Topic:</b>
+          {journal.inquiry_topic.map(c => {
             return <span key={c}>{c} </span>;
           })}
         </span>
         <span>
-          <b>Publish date:</b> {journal.publish_date}{" "}
+          <b>Type:</b>
+          {journal.inquiry_type.map(c => {
+            return <span key={c}>{c} </span>;
+          })}
         </span>
         <span>
-          <b>View count:</b> {journal.views}{" "}
+          <b>University:</b> {journal.user_university}{" "}
         </span>
         <span>
-          <b>Reviewed: </b>
-          {`${journal.reviewed}`}{" "}
+          <b>Publish date:</b> {journal.start}{" "}
+        </span>
+        <span>
+          <b>View count:</b> {journal.view_count}{" "}
         </span>
       </li>
       <hr />

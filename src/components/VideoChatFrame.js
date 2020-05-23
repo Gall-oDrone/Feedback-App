@@ -1,151 +1,340 @@
-// import React from 'react';
-// import { List, Avatar, Button, Skeleton } from 'antd';
-// import axios from 'axios';
-// import { connect } from 'react-redux';
-// import DailyIframe from '@daily-co/daily-js';
-// import Iframe from "./iFrame";
-// const iframe = <Iframe src="https://www.example.com/show?data..." width="540" height="450"></Iframe>; 
+import React from 'react';
+import { connect } from "react-redux";
+import { withRouter } from "react-router-dom"
+import "../assets/main.css";
+import * as videoFns from "../chat_containers/VideoFns";
+import axios from 'axios';
+import { authAxios } from '../utils';
+import { vcroomGetDetailURL } from "../constants";
+// On this codelab, you will be streaming only video (video: true).
+const mediaStreamConstraints = {
+  video: true,
+};
 
-// function createFrameAndJoinRoom() {
-//   window.callFrame = window.DailyIframe.createFrame();
-//   callFrame.join({ url: A_DAILY_CO_ROOM_URL });
-// }
-// let MY_IFRAME = iframe 
+// Video element where stream will be placed.
+const localVideo = null
+var remoteVideo = null;
 
+// Local stream that will be reproduced on the video.
+let localStream;
+let remoteStream;
 
-// class ProductList2 extends React.Component {
+let localPeerConnection;
+let remotePeerConnection;
 
-//     state = {
-//         loading: false,
-//         error: null,
-//         data: []
-//     }
-//     componentDidMount() {
-//         this.setState({loading:true})
-//         axios.get("/some-url")
-//         .then(res => {
-//             this.setState.setState({
-//                 data: res.data,
-//                 loading: false
+const offerOptions = {
+  offerToReceiveVideo: 1,
+};
 
-//             });
-//         })
-//         .catch(err => {
-//             this.setState({error: err, loading: false})
-//         })
-//     }
+// Handles error by logging a message to the console with the error message.
+function handleLocalMediaStreamError(error) {
+  console.log('navigator.getUserMedia error: ', error);
+}
 
-//     async createFrameAndRoom() {
-//         document.getElementById('create-a-room').style.display = 'none';
-//         await this.createRoom();
-//         await this.createFrame();
-//         this.buttonEnable('join-meeting');
-//       }
+// Connects with new peer candidate.
+function handleConnection(event) {
+  const peerConnection = event.target;
+  const iceCandidate = event.candidate;
+  console.log("t:2", iceCandidate)
   
-//       // async createRoom() {
-//       //   //
-//       //   // create a short-lived demo room and a meeting token that gives
-//       //   // owner privileges and allows recording. if you just want to
-//       //   // hard-code a meeting link for testing you could do something like
-//       //   // this:
-//       //   //
-//       //   //   room = { url: 'https://your-domain.daily.co/hello' }
-//       //   //   ownerLink = room.url;
-//       //   //
-//       //   const room = await DailyIframe.createMtgRoom();
-//       //   const ownerLink = await DailyIframe.createMtgLinkWithToken(
-//       //     room, { 
-//       //       is_owner: true,
-//       //       enable_recording: 'local'
-//       //   });
-//       // }
+  if (iceCandidate) {
+    const newIceCandidate = new RTCIceCandidate(iceCandidate);
+    const otherPeer = getOtherPeer(peerConnection);
+
+    otherPeer.addIceCandidate(newIceCandidate)
+      .then(() => {
+        handleConnectionSuccess(peerConnection);
+      }).catch((error) => {
+        handleConnectionFailure(peerConnection, error);
+      });
+    console.log(`${getPeerName(peerConnection)} ICE candidate:\n` +
+          `${event.candidate.candidate}.`);
+  }
+}
+
+// Gets the "other" peer connection.
+function getOtherPeer(peerConnection) {
+  console.log("000: ", peerConnection === localPeerConnection)
+  return (peerConnection === localPeerConnection) ?
+      remotePeerConnection : localPeerConnection;
+}
+
+// Gets the name of a certain peer connection.
+function getPeerName(peerConnection) {
+  return (peerConnection === localPeerConnection) ?
+      'localPeerConnection' : 'remotePeerConnection';
+}
+
+// Logs that the connection succeeded.
+function handleConnectionSuccess(peerConnection) {
+  console.log(`${getPeerName(peerConnection)} addIceCandidate success.`);
+};
+
+// Logs that the connection failed.
+function handleConnectionFailure(peerConnection, error) {
+  console.log(`${getPeerName(peerConnection)} failed to add ICE Candidate:\n`+
+        `${error.toString()}.`);
+}
+
+// Logs changes to the connection state.
+function handleConnectionChange(event) {
+  const peerConnection = event.target;
+  console.log('ICE state change event: ', event);
+  console.log(`${getPeerName(peerConnection)} ICE state: ` +
+        `${peerConnection.iceConnectionState}.`);
+}
+
+// Logs error when setting session description fails.
+function setSessionDescriptionError(error) {
+  console.log(`Failed to create session description: ${error.toString()}.`);
+}
+
+// Logs success when setting session description.
+function setDescriptionSuccess(peerConnection, functionName) {
+  const peerName = getPeerName(peerConnection);
+  console.log(`${peerName} ${functionName} complete.`);
+}
+
+// Logs success when localDescription is set.
+function setLocalDescriptionSuccess(peerConnection) {
+  setDescriptionSuccess(peerConnection, 'setLocalDescription');
+}
+
+// Logs success when remoteDescription is set.
+function setRemoteDescriptionSuccess(peerConnection) {
+  setDescriptionSuccess(peerConnection, 'setRemoteDescription');
+}
+
+// Logs offer creation and sets peer connection session descriptions.
+function createdOffer(description, localPeerConnection) {
+  console.log(`Offer from localPeerConnection:\n${description.sdp}`);
+  console.log('localPeerConnection setLocalDescription start.');
+  console.log('t:4', localPeerConnection);
+  localPeerConnection.setLocalDescription(description)
+    .then(() => {
+      setLocalDescriptionSuccess(localPeerConnection);
+    })
+    .catch(setSessionDescriptionError);
+
+  console.log('remotePeerConnection setRemoteDescription start.');
+  remotePeerConnection.setRemoteDescription(description)
+    .then(() => {
+      setRemoteDescriptionSuccess(remotePeerConnection);
+    }).catch(setSessionDescriptionError);
+
+    console.log('remotePeerConnection createAnswer start.');
+  remotePeerConnection.createAnswer()
+    .then(createdAnswer)
+    .catch(setSessionDescriptionError);
+}
+
+// Logs answer to offer creation and sets peer connection session descriptions.
+function createdAnswer(description) {
+  console.log(`Answer from remotePeerConnection:\n${description.sdp}.`);
+
+  console.log('00: ', description);
+  console.log('remotePeerConnection setLocalDescription start.');
+  remotePeerConnection.setLocalDescription(description)
+    .then(() => {
+      setLocalDescriptionSuccess(remotePeerConnection);
+    }).catch(setSessionDescriptionError);
+
+  console.log('localPeerConnection setRemoteDescription start.');
+  localPeerConnection.setRemoteDescription(description)
+    .then(() => {
+      setRemoteDescriptionSuccess(localPeerConnection);
+    }).catch(setSessionDescriptionError);
+}
+
+class VideoCallFrame extends React.Component {
+
+  constructor(props) {
+    super(props);
+    this.videoRef = React.createRef();
+    this.remoteVideoRef = React.createRef();
+    // this.isInitiator = false;
+
+    this.state = {
+      otherUserId: null,
+      participants: null
+    };
+
+    // this.user = window.user;
+    // this.user.stream = null;
+    // this.peers = {};
+
+  }
+
+  componentDidMount() {
+    console.log("URL Daily.Co: " + JSON.stringify(this.props.url))
+    if(this.props.token !== undefined){
+      axios.defaults.headers = {
+        "Content-Type": "application/json",
+        Authorization: `Token ${this.props.token}`
+      };
+      axios.get(vcroomGetDetailURL(this.props.match.params.roomID))
+      .then(res => {
+        console.log("0O", res.data)
+        this.setState({
+          participants: res.data.participants
+        })
+      })
+      .catch(err => console.log(err))
+    }
+    // Initializes media stream.
+    // navigator.mediaDevices
+    //         .getUserMedia(mediaStreamConstraints)
+    //         .then(stream => this.gotLocalMediaStream(stream, this.videoRef))
+    //         .catch(handleLocalMediaStreamError);
+    //       if (!this.props.url) {
+    //         console.error('please set REACT_APP_DAILY_ROOM_URL env variable!');
+    //         return;
+    //       }
+  }
+
+  gotLocalMediaStream(mediaStream, ref) {
+    // const videoTracks = mediaStream.getVideoTracks()
+    // const track = videoTracks[0]
+    // alert(`Getting video from: ${track.label}`)
+    localStream = mediaStream;
+    ref.current.srcObject = mediaStream;
+    localStream.getTracks().forEach(track => localPeerConnection.addTrack(track, localStream));
+   
+  }
+
+  // Handles remote MediaStream success by adding it as the remoteVideo src.
+gotRemoteMediaStream(event) {
+  const mediaStream = event.stream;
+  remoteVideo.current.srcObject = mediaStream;
+  remoteStream = mediaStream;
+  console.log('Remote peer connection received remote stream.');
+}
+
+  startAction() {
+    // startButton.disabled = true;
+    navigator.mediaDevices.getUserMedia(mediaStreamConstraints)
+      .then(stream => this.gotLocalMediaStream(stream, this.videoRef))
+      .catch(handleLocalMediaStreamError);
+  }
+
+  // Handles call button action: creates peer connection.
+  callAction(initiator) {
+    // callButton.disabled = true;
+    // hangupButton.disabled = false;
+    this.isInitiator = initiator
+    console.log('Starting call.');
+    let startTime = window.performance.now();
+
+    // Get local media stream tracks.
+    const videoTracks = localStream.getVideoTracks();
+    const audioTracks = localStream.getAudioTracks();
+    if (videoTracks.length > 0) {
+      console.log(`Using video device: ${videoTracks[0].label}.`);
+    }
+    if (audioTracks.length > 0) {
+      console.log(`Using audio device: ${audioTracks[0].label}.`);
+    }
+
+    const servers = {
+      iceServers: [
+        {
+          urls: [
+            'stun:stun1.l.google.com:19302',
+            'stun:stun2.l.google.com:19302',
+          ],
+        },
+      ],
+      iceCandidatePoolSize: 10,
+    };
+
+    // Create peer connections and add behavior.
+    localPeerConnection = new RTCPeerConnection(servers);
+    console.log('Created local peer connection object localPeerConnection.');
+
+    console.log('t:1');
+    localPeerConnection.addEventListener('icecandidate', handleConnection);
+    localPeerConnection.addEventListener(
+      'iceconnectionstatechange', handleConnectionChange);
       
-//       // async createFrame() {
-//       //   //
-//       //   // ask the daily-js library to create an iframe inside the
-//       //   // 'call-frame-container' div
-//       //   //
-//       //   let customLayout = !!document
-//       //                          .querySelector('input[name="customLayout"]:checked')
-//       //                          .value,
-//       //       cssFile = customLayout ? 'basics.css' : null;
-//       //    const callFrame = window.DailyIframe.createFrame(
-//       //     document.getElementById('call-frame-container'),
-//       //     { customLayout, cssFile }
-//       //   );
-//       // }
+    remotePeerConnection = new RTCPeerConnection(servers);
+    console.log('Created remote peer connection object remotePeerConnection.');
 
-//   render() {
-//     let callFrame = DailyIframe.createFrame();
-//     return (
-//       <div id="page-blocks">
-//   <div id="create-a-room">
-//     <button onclick="createFrameAndRoom()">create a room</button>
-//     <div>
-//       <input type="radio" name="customLayout" value="" checked>
-//         standard Daily.co UI
-//       </input>
-//     </div>
-//     <div>
-//       <input type="radio" name="customLayout" value="true">
-//         demo custom UI
-//       </input>
-//     </div>
-//   </div>
-  
-//   <div id="meeting-info-row">
-//     <div id="meeting-room-info" class="info">
-//       room info
-//     </div>
-//     <div id="meeting-participants-info" class="info">
-//       meeting participants
-//     </div>
-//     <div id="network-info" class="info">
-//       network stats
-//     </div>  
-//   </div>
-  
-//   <div id="buttons-row">
-//     <div>
-//       <button id="join-meeting" onclick="callFrame.join({ url: ownerLink })">
-//         join meeting (as owner)
-//       </button>
-//       <button id="leave-meeting" onclick="callFrame.leave()">
-//         leave meeting
-//       </button>
-//     </div>
-//     <div>
-//       <button id="toggle-local-cam" onclick="toggleCam()">
-//         toggle local cam
-//       </button>
-//       <button id="toggle-local-mic" onclick="toggleMic()">
-//         toggle local mic
-//       </button>
-//     </div>
-//     <div>
-//       <button id="start-recording"
-//               onclick="buttonDisable('start-recording');
-//                        callFrame.startRecording()">
-//         start recording
-//       </button>
-//       <button id="stop-recording" onclick="callFrame.stopRecording()">
-//         stop recording
-//       </button>
-//     </div>
-//     <div>
-//       <button id="start-screenshare" onclick="callFrame.startScreenShare()">
-//         start screenshare
-//       </button>
-//       <button id="stop-screenshare" onclick="callFrame.stopScreenShare()">
-//         stop screenshare
-//       </button>
-//     </div>
-//   </div>
-//   {callFrame} 
-//   <div id="call-frame-container">
-//   </div>
-// </div>
-//     )
-//   }
-// }
-// export default ProductList2;
+    console.log('t:3');
+    remotePeerConnection.addEventListener('icecandidate', handleConnection);
+    remotePeerConnection.addEventListener(
+      'iceconnectionstatechange', handleConnectionChange);
+
+    remoteVideo = this.remoteVideoRef
+
+    remotePeerConnection.addEventListener('addstream', this.gotRemoteMediaStream);
+
+    // Add local stream to connection and create offer to connect.
+    localPeerConnection.addStream(localStream);
+    console.log('Added local stream to localPeerConnection.');
+
+    console.log('localPeerConnection createOffer start.');
+    localPeerConnection.createOffer(offerOptions)
+      .then(description => createdOffer(description, localPeerConnection))
+      .catch(setSessionDescriptionError);
+  }
+
+  // Handles hangup action: ends up call, closes connections and resets peers.
+  hangupAction() {
+    localPeerConnection.close();
+    remotePeerConnection.close();
+    localPeerConnection = null;
+    remotePeerConnection = null;
+    // hangupButton.disabled = true;
+    // callButton.disabled = false;
+    console.log('Ending call.');
+  }
+
+  render() {
+    return( 
+      <div>
+            <div id="video-container">
+                {/* <section className="col-md-8"> */}
+                    <h1>Realtime communication with WebRTC</h1>
+                    <video  
+                      className="my-video"
+                      ref={this.videoRef} 
+                      autoPlay 
+                      playsInline
+                      width={350}
+                      style={{backgroundColor:'#848484'}}
+                    >
+                    </video>
+                    <video  
+                      className="user-video"
+                      ref={this.remoteVideoRef} 
+                      autoPlay 
+                      playsInline
+                      // poster={'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png'}
+                      width={350}
+                      style={{backgroundColor:'#000000'}}
+                    >
+                    </video>
+                    </div>
+                    <div>
+                        <button className="button btn-primary btn-sm" onClick={() => {this.startAction()}} id="startButton">Start</button>
+                        <button className="button btn-success btn-sm" onClick={() => {this.callAction(true)}} id="callButton">Call</button>
+                        <button className="button btn-danger btn-sm" onClick={() => {this.hangupAction()}} id="hangupButton">Hang Up</button>
+                    </div>
+                {/* </section> */}
+            </div>
+    )
+  }
+}
+
+const mapStateToProps = state => {
+  return {
+    isAuthenticated: state.auth.token !== null,
+    loading: state.auth.loading,
+    token: state.auth.token,
+    username: state.auth.username,
+  };
+};
+
+export default withRouter(connect(
+  mapStateToProps
+)(VideoCallFrame));

@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
 import Comments from "../components/Comments"
 import { Comment, Avatar, Form, Button, List, Input, Tooltip, Icon} from 'antd';
-import { createComment, getComment, getCommentList } from '../store/actions/comments';
+import { createComment, getComment } from '../store/actions/comments';
 import moment from 'moment';
 
 
@@ -59,9 +59,7 @@ class CommentForm extends React.Component {
     this.props.getComment("this.props.token", this.props.match.params.articleID)
     if (this.props.token !== undefined && this.props.token !== null) {
       // this.props.getASNTSDetail(this.props.token, this.props.match.params.id, this.props.match.params.userId);
-      console.log("1) ComponentDidMount after: " + JSON.stringify(this.props.token))
-      console.log("2) ComponentDidMount after: " + JSON.stringify(this.props.match.params.articleID))
-      console.log("3) ComponentDidMount after: " + JSON.stringify(this.props.getComment(this.props.token, this.props.match.params.articleID)))
+      console.log("1) ComponentDidMount after: " + JSON.stringify(this.props.getComment(this.props.token, this.props.match.params.articleID)))
       this.props.getComment(this.props.token, this.props.match.params.articleID)
       
       console.log("ComponentDidMount after: " + JSON.stringify(this.props))
@@ -73,7 +71,6 @@ class CommentForm extends React.Component {
       if (newProps.token !== undefined && newProps.token !== null) {
         // this.props.getASNTSDetail(newProps.token, this.props.match.params.id, this.props.match.params.userId);
         console.log("componentWillReceiveProps: " + JSON.stringify(this.props))
-        console.log("componentWillReceiveProps this.props.getComment: " + JSON.stringify(this.props.getComment(newProps.token, newProps.match.params.articleID)))
         this.props.getComment(newProps.token, newProps.match.params.articleID).then(res => {
           console.log("componentWillReceiveProps before assigning res to dataList: " + JSON.stringify(this.props))
           console.log(JSON.stringify(res))
@@ -155,30 +152,6 @@ class CommentForm extends React.Component {
     console.log("2) this.props.data AFTER: " + JSON.stringify(data))
     console.log("2) this.props.data AFTER: " + JSON.stringify(this.props.data))
     console.log("2) this.state AFTER: " + JSON.stringify(this.state))
-
-    // const actions = [
-    //     <span key="comment-basic-like">
-    //       <Tooltip title="Like">
-    //         <Icon
-    //           type="like"
-    //           theme={action === 'liked' ? 'filled' : 'outlined'}
-    //           onClick={this.like}
-    //         />
-    //       </Tooltip>
-    //       <span style={{ paddingLeft: 8, cursor: 'auto' }}>{likes}</span>
-    //     </span>,
-    //     <span key=' key="comment-basic-dislike"'>
-    //       <Tooltip title="Dislike">
-    //         <Icon
-    //           type="dislike"
-    //           theme={action === 'disliked' ? 'filled' : 'outlined'}
-    //           onClick={this.dislike}
-    //         />
-    //       </Tooltip>
-    //       <span style={{ paddingLeft: 8, cursor: 'auto' }}>{dislikes}</span>
-    //     </span>,
-    //     <span key="comment-basic-reply-to" onClick={this.handleReply}>Reply to</span>,
-    //   ];
 
     return (
       <div>

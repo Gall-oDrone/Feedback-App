@@ -238,8 +238,8 @@ class Comments extends React.Component {
   };
 
   render() {
-    console.log('this.PROPS: ' + JSON.stringify(this.props))
-    console.log("1) this.state: " + JSON.stringify(this.state))
+    console.log('this.PROPS IC: ' + JSON.stringify(this.props))
+    console.log("1) this.state IC: " + JSON.stringify(this.state))
     const { submitting, value, reply, replyId, action, nestComments, ncCount } = this.state;
     const { data } = this.props;
     console.log("2) this.props.data QUE?: " + JSON.stringify(data))

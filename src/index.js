@@ -1,6 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import App from "./App";
+import ChatApp from "./chat_containers/chatApp";
 import registerServiceWorker from "./registerServiceWorker";
 import { createStore, compose, applyMiddleware, combineReducers } from "redux";
 import { Provider } from "react-redux";
@@ -30,6 +31,9 @@ import profileUserInfoReducer from "./store/reducers/profileAccountUserInfo"
 import profileAccountDetailReducer from "./store/reducers/profileAccountInfo"
 import profileNTFNListReducer from "./store/reducers/profileNTFN"
 
+import navReducer from "./store/reducers/nav";
+import messageReducer from "./store/reducers/message";
+import notifyReducer from "./store/reducers/notification";
 
 const composeEnhances = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
@@ -56,7 +60,11 @@ const rootReducer = combineReducers({
   // surveyChoices: surveyChoiceReduce,
   profileSurvey: profileSurveyReducer,
   profileNTFN: profileNTFNListReducer,
-  profileInquiry: profileInquiryReducer
+  profileInquiry: profileInquiryReducer,
+
+  nav: navReducer,
+  message: messageReducer,
+  notify: notifyReducer
 
 });
 
@@ -65,6 +73,7 @@ const store = createStore(rootReducer, composeEnhances(applyMiddleware(thunk)));
 const app = (
   <Provider store={store}>
     <App />
+    {/* <ChatApp /> */}
   </Provider>
 );
 

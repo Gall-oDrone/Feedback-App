@@ -47,8 +47,22 @@ import SurveyDetail from "./containers/SurveyDetail";
 import SurveyChoices from "./containers/SurveyChoices";
 import SurveyCreate from "./containers/SurveyCreate";
 import SurveyQuestions from "./containers/SurveyQuestions";
-import ProfileSurveyList from "./components/ProfileSurveyList"
-import ProfileSurveyDetail from "./components/ProfileSurveyDetail"
+import ProfileSurveyList from "./components/ProfileSurveyList";
+import ProfileSurveyDetail from "./components/ProfileSurveyDetail";
+
+import Checkout from "./containers/InjectedCheckoutForm";
+import OrderSummary from "./containers/OrderSummary";
+
+import ChatApp from "./chat_containers/chatApp";
+import Chat from "./chat_containers/Chat";
+import VideoChat from "./chat_containers/Video7"
+import Video from "./chat_containers/Video7"
+
+import Address from "./containers/ProfileAddress";
+import AddressForm from "./containers/AddressForm";
+
+import Payment from "./containers/ProfilePaymentHistory";
+import PaymentForm from "./containers/PaymentHistory";
 
 const BaseRouter = () => (
   <Hoc>
@@ -98,6 +112,22 @@ const BaseRouter = () => (
     <Route exact path="/profile-survey/" component={ProfileSurveyMenu} />
     <Route exact path="/profile/:id/account/survey/list/" component={ProfileSurveyList} />
     <Route exact path="/profile/:id/account/survey/detail/:articleID" component={ProfileSurveyDetail} />
+
+    <Route exact path="/order-summary/" component={OrderSummary} />
+    <Route exact path="/checkout/" component={Checkout} />
+    <Route exact path="/checkout/giftCard/:brand/:amount/:country/:currency/" component={Checkout} />
+
+    <Route exact path="/chat/" component={ChatApp} />
+    <Route exact path="/chat/:chatID/" component={ChatApp} />
+    <Route exact path="/video-chat/" component={VideoChat} />
+    <Route exact path="/video-chat-test/" component={Video} />
+    <Route exact path="/video-chat/:roomID" component={VideoChat} />
+
+    <Route exact path="/address/" component={Address} />
+    <Route exact path="/address-form/" component={AddressForm} />
+
+    <Route exact path="/payments/" component={Payment} />
+    <Route exact path="/payment-form/" component={PaymentForm} />
   </Hoc>
 );
 

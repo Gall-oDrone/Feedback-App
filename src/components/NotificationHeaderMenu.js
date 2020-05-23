@@ -1,3 +1,4 @@
+import axios from "axios";
 import React from 'react';
 import Hoc from "../hoc/hoc";
 import { connect } from 'react-redux';
@@ -6,19 +7,80 @@ import { withRouter } from "react-router-dom";
 import {getProfileNotificationList, putProfileNotificationList} from "../store/actions/profileNTFN"
 import { Spin, Popover, Icon, Menu, Badge, List, message, Button, Col, Row} from 'antd';
 import InfiniteScroll from 'react-infinite-scroll-component';
+import NTFNDDMenu from "./NTFNDDMenu";
+import { notificationListScrollerURL } from "../constants";
+import * as messageActions from "../store/actions/notification";
+import WebSocketInstance from "../NTFNwebsocket";
+
 class ProfileHeaderMenu extends React.Component {
+
+
+  initialiseChat() {
+    this.waitForSocketConnection(() => {
+      WebSocketInstance.fetchNTFNS(
+        this.props.username,
+      );
+    });
+    Promise.resolve(WebSocketInstance.notification_connect(this.props.username))
+    .then(() => this.setState((props) => ({
+      data: props.notification
+    })
+    ))
+    .catch(err => {
+      console.error("NOBETTER",err.message)
+    });
+  }
+
+
+  constructor(props) {
+    super(props);
+    WebSocketInstance.addCallbacks(
+      this.props.setMessages.bind(this),
+    );
+    if(this.props.username !== undefined){
+      this.initialiseChat();
+    }
+  }
+
   state = { 
-    visible: false,
-    usersInfo: [],
-    data: [],
+    data: null,
+    showContent: false,
+    notifications: [],
     loading: false,
     hasMore: true,
+    offset: 5,
+    limit: 5,
+  };
+
+  waitForSocketConnection(callback) {
+    const component = this;
+    setTimeout(function() {
+      if (WebSocketInstance.state() === 1) {
+        console.log("Connection is made");
+        callback();
+        return;
+      } else {
+        console.log("wait for connection...");
+        component.waitForSocketConnection(callback);
+      }
+    }, 10);
+  }
+
+  sendMessageHandler = e => {
+    e.preventDefault();
+    const messageObject = {
+      from: this.props.username,
+      content: this.state.message,
+      chatId: this.props.params
+      //chatId: this.props.match.params.chatID
+    };
+    WebSocketInstance.newChatMessage(messageObject);
+    this.setState({ message: "" });
   };
 
   componentDidMount() {
     if (this.props.token !== undefined && this.props.token !== null) {
-      if(this.props.username !== null){
-        this.props.getProfileNTFNList(this.props.token, this.props.username)
+      if(this.props.username !== null || undefined){
       } else {
         console.log("this.props.getMeetings was undefined at CDM")
       }
@@ -28,71 +90,67 @@ class ProfileHeaderMenu extends React.Component {
   componentWillReceiveProps(newProps) {
     if (newProps.token !== this.props.token) {
       console.log("newProps.token !== this.props.token")
-      this.props.getProfileNTFNList(newProps.token, newProps.username)
+      WebSocketInstance.disconnect();
+      if(newProps.username !== undefined){
+      this.waitForSocketConnection(() => {
+        WebSocketInstance.fetchNTFNS(
+          newProps.username,
+        );
+      });
+      WebSocketInstance.notification_connect(newProps.username);
+    } else {
+      WebSocketInstance.disconnect();
+    }
   } else {
       console.log("newProps.token !== this.props.token NOT")
-      // this.props.getProfilAccountInfo(this.props.token, this.props.username)
   }   
   }
 
-  handleViewNTFN = async (NTFN) => {
-    console.log(JSON.stringify(NTFN))
-    Promise.resolve(this.props.putProfileNTFNList(this.props.token, this.props.username, NTFN)).then(() => {
-      if(this.props.loadingPut == false){
-        console.log("MR CORSO")
-        console.log("MR CORSO")
-        this.props.getProfileNTFNList(this.props.token, this.props.username)
-      }
-    })
-  }
-
-  handleInfiniteOnLoad = (NTFN) => {
-    // let { data } = this.state;
-    // console.log("data at handleInfiniteOnLoad",JSON.stringify(data))
-    // this.setState({
-    //   loading: true,
-    // });
-    // console.log("WWWWW", data.length)
-    if (NTFN.length > 3) {
-      message.warning('Infinite List loaded all');
-      // this.setState({
-      //   hasMore: false,
-      //   loading: false,
-      // });
-      // data = data.concat(NTFN.slice(data.length,NTFN.length))
-      return;
+  handleViewNTFN = async () => {
+    if(this.props.unviews === "0"){
+      return
+    } else {
+      WebSocketInstance.fetchNTFNViews(
+        this.props.username,
+      );
     }
-  };
-
-  handleUnviewNTFN = async (unview, descrps, NTFNL) => {
-    NTFNL.forEach(el => {descrps.push(el.description)})
-      unview = NTFNL.filter(el => el.view == false)
+    this.setState((props) => ({
+        loading: false,
+        data: props.notification,
+        showContent:true
+      })
+    )
   }
-  
+
+  loadNotifications = () => {
+    console.log("KORN")
+    this.setState({ loading: true}, () => {
+        // const { offset, limit} = this.state;
+        // WebSocketInstance.fetchMoreNTFNS(this.props.username, limit, offset)
+        // WebSocketInstance.notification_connect(this.props.username)
+        // .then(
+        //   this.setState((state, props) => ({
+        //     loading: false,
+        //     offset: offset + limit
+        // })
+        // ))
+        // .catch(err => {
+        //   this.setState({
+        //     error: err.message,
+        //     loading: false
+        //   });
+        // });
+    })
+  };
 
   render() {
     console.log("PHDM this.props",JSON.stringify(this.props))
     console.log("PHDM this.state",JSON.stringify(this.state))
-    let { data } = this.state
-    const descrps = [];
-    let unview = [];
-    const {logout, userId, notificationList} = this.props
-    if ( this.props.profileNTFN.notificationList !== undefined){
-      // this.handleUnviewNTFN(unview, descrps, this.props.profileNTFN.notificationList);
-      this.props.profileNTFN.notificationList.forEach(el => {descrps.push(el.description)})
-      unview = this.props.profileNTFN.notificationList.filter(el => el.view == false)
-      // data = data.concat(descrps.slice(0,3))
-      console.log("data at Render",JSON.stringify(data))
-      
-    }
+    let { data, offset, limit } = this.state
 
-    const text = () => {return(
-      <div>
-        <li>
-        <span>Notifications</span>
-        </li>
-      </div>
-    )};
+    if(this.props.notification){
+      console.log("CORSO",JSON.stringify(this.props.notification))
+    }
 
       const content = (NTFN) => {
           return(
@@ -101,25 +159,28 @@ class ProfileHeaderMenu extends React.Component {
               <div className="list-container">
                 <InfiniteScroll
                   dataLength={NTFN.length}
-                  initialLoad={false}
-                  pageStart={0}
-                  loadMore={this.handleInfiniteOnLoad(NTFN)}
-                  hasMore={!this.state.loading && this.state.hasMore}
+                  initialLoad={true}
+                  // pageStart={0}
+                  // loadMore={this.loadNotifications()}
+                  hasMore={this.props.hasMore}
+                  loader={<Spin spinning={this.state.loading} delay={500} />}
                   useWindow={false}
-                  height={150}
+                  // height={150}
                 >
-                  <List
+                  <NTFNDDMenu ntfns={NTFN}/>
+
+                  {/* <List
                     size="small"
                     bordered
                     dataSource={NTFN}
-                    renderItem={(item, index) =><List.Item key={index}>{item}</List.Item>}
+                    renderItem={(item, index) =><List.Item key={index}>{item.content}</List.Item>}
                   >
                     {this.state.loading && this.state.hasMore && (
                       <div className="demo-loading-container">
-                        <Spin />
+                        <p>MR CORSO</p>
                       </div>
                     )}
-                  </List>
+                  </List> */}
                 </InfiniteScroll>
               </div>
             </Menu>
@@ -127,15 +188,25 @@ class ProfileHeaderMenu extends React.Component {
         )
       }
         return (
-          this.props.profileNTFN.notificationList !== undefined ?
+          this.props.notification ?
           <Hoc>
-            <div className="demo">
-                <Popover placement="bottomRight" trigger="click" onClick={()=>this.handleViewNTFN(this.props.profileNTFN.notificationList)} title={text()} content={content( descrps )}>
-                  <Badge count={1} count={unview.length} >
+            <NTFNDDMenu 
+              ntfns={this.props.notification}
+              username={this.props.username}
+              token={this.props.token}
+              hasMore={this.props.hasMore}/>
+
+            {/* <div className="demo">
+                <Popover placement="bottomRight" trigger="click" 
+                  onClick={()=>this.handleViewNTFN()} 
+                  content={content(this.props.notification)}
+                  // content={this.state.showContent === true ? content( this.props.notification ):<p>Not Yet</p>}
+                >
+                  <Badge count={1} count={(this.props.unviews)} >
                     <Icon type="notification" />
                   </Badge>
                 </Popover>
-            </div>
+            </div> */}
         </Hoc>
         : null
         )
@@ -146,17 +217,16 @@ class ProfileHeaderMenu extends React.Component {
       return {
         username: state.auth.username,
         token: state.auth.token,
-        profileNTFN: state.profileNTFN,
-        loadingGet: state.profileNTFN.loading,
-        loadingPut: state.profileNTFN.loading2
+        notification: state.notify.messages,
+        hasMore: state.notify.hasMore,
       };
     };
 
     const mapDispatchToProps = dispatch => {
       return {
         logout: () => dispatch(actions.logout()),
-        getProfileNTFNList: (token, username) => dispatch(getProfileNotificationList(token, username)),
-        putProfileNTFNList: (token, username, data) => dispatch(putProfileNotificationList(token, username, data)),
+        addMessage: message => dispatch(messageActions.addMessage(message)),
+        setMessages: messages => dispatch(messageActions.setMessages(messages)),
       };
     };
     

@@ -31,6 +31,15 @@ class ProfileHeaderMenu extends React.Component {
       // this.props.getProfilAccountInfo(this.props.token, this.props.username)
   }   
   }
+
+  handleLogOut = (e) => {
+    if(this.props.token !== null){
+      this.props.logout()
+      window.location.reload(false);
+    } else {
+      this.props.logout()
+    }
+  }
   
 
   render() {
@@ -61,7 +70,7 @@ class ProfileHeaderMenu extends React.Component {
           </Menu.Item>
           <Menu.Item>
           {this.props.auth ? (
-              <Menu.Item key="2" onClick={this.props.logout}>
+              <Menu.Item key="2" onClick={this.handleLogOut}>
                 Logout
               </Menu.Item>
             ) : (
@@ -78,6 +87,7 @@ class ProfileHeaderMenu extends React.Component {
     )}
 
         return (
+          this.props.username !== null &&
           this.props.profileAI.ProfileAccount !== undefined ?
           <Hoc>
             <div className="demo">

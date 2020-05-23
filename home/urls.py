@@ -13,6 +13,7 @@ urlpatterns = [
     path('accounts/', include("allauth.urls")),
     path('api/articles/', include('articlesApi.articles.urls')),
     path('assignments/', include('assignmentApi.assignments.urls')),
+    path('api/chat/', include('chatApi.chat.urls', namespace='chat')),
     path('api/survey/', include('surveyApi.survey.urls')),
     # path('assignmentsChoices/', include('assignmentApi.assignments.survey.urls')),
     path('api/graded-assignments/', include('assignmentApi.graded_assignments.urls')),
@@ -20,8 +21,9 @@ urlpatterns = [
     path('api/incentives/', include('incentivesApi.incentives.urls')),
     path('api/inquiries/', include('inquiriesApi.inquiries.urls')),
     path('api/notifications/', include('notificationsApi.notifications.urls')),
+    path('api/payments/', include('paymentsApi.payments.urls')),
     path('api/live-chat/', include('livechatApi.livechat.urls')),
-    path('api/filter', ReactFilterView.as_view(), name='react'),
+    path('api/filter/', include('filterApi.filter.urls')),
     path('api/users/', include('users.urls')),
     # re_path(r'^.*', TemplateView.as_view(template_name='index.html'))
     

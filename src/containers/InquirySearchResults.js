@@ -1,5 +1,5 @@
 import React from 'react'
-import Result from "../components/InquiryResult"
+import Result from "../components/InquirySearchResult"
 
 
 const Results = ({ journals}) => (

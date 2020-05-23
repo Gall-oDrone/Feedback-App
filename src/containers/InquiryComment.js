@@ -143,7 +143,7 @@ class CommentForm extends React.Component {
   };
 
   render() {
-    console.log('this.PROPS: ' + JSON.stringify(this.props))
+    console.log('this.PROPS Comments: ' + JSON.stringify(this.props))
     console.log("1) this.state: " + JSON.stringify(this.state))
     const { comments, submitting, value, likes, dislikes, action } = this.state;
     const {username, data} = this.props;

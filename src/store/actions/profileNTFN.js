@@ -20,7 +20,7 @@ import {
   notificationDetailURL,
   notificationUpdateURL,
   notificationUpdateListURL,
-  notificationCreateURL,
+  notificationListScrollerURL,
   notificationURL
 } from "../../constants"
 
@@ -46,7 +46,7 @@ const getProfileNotificationListFail = error => {
   };
 };
 
-export const getProfileNotificationList = (token, username) => {
+export const getProfileNotificationList = (token, username, limit, offset) => {
     return dispatch => {
       console.log(" getProfileNotificationList ")
         // dispatch(getMeetingDetailStart());
@@ -54,8 +54,8 @@ export const getProfileNotificationList = (token, username) => {
             "Content-Type": "application/json",
             Authorization: `Token ${token}`
         }
-        axios.get(notificationListURL(username))
-        // axios.get(`http://127.0.0.1:8000/notifications/list/${username}/`)
+        // axios.get(notificationListURL(username))
+        axios.get(notificationListScrollerURL(username, limit, offset))
         .then(res => {
             const data = res.data;
             console.log("data: "+ JSON.stringify(data))

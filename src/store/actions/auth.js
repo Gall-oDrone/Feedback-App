@@ -2,7 +2,8 @@ import axios from "axios";
 import * as actionTypes from "./actionTypes";
 import {
   authLogInURL,
-  authSignUpURL
+  authSignUpURL,
+  authLogOutURL
 } from "../../constants"
 
 export const authStart = () => {
@@ -27,6 +28,9 @@ export const authFail = error => {
 
 export const logout = () => {
   localStorage.removeItem("user");
+  // window.location.reload(false);
+  axios
+  .post(authLogOutURL)
   return {
     type: actionTypes.AUTH_LOGOUT
   };

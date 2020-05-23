@@ -3,9 +3,12 @@ import Articles from '../components/Articles';
 import axios from 'axios';
 import { connect } from 'react-redux';
 import ArticleCustomForm from "../containers/ArticleCreate"
-import { List, Button, Skeleton, message, Spin, Collapse, Alert, Switch, Row, Col, Divider, Cascader, InputNumber, Icon } from 'antd';
+import { List, Button, Skeleton, message, Spin, Collapse, Alert, Switch, Modal, Row, Col, Divider, Cascader, InputNumber, Icon } from 'antd';
 import { createIncentive, getDetailIncentiveList } from "../store/actions/incentives";
-import countryList from 'react-select-country-list'
+import Checkout from "./MeetingCheckout";
+import countryList from 'react-select-country-list';
+import { authAxios } from '../utils';
+import { directBuyURL } from "../constants";
 
 var moment = require('moment');
 const { Panel } = Collapse;
@@ -110,12 +113,14 @@ class MeetingListIncentives extends React.Component {
   state = {
     initLoading: false,
     loading: false,
+    visible: false,
     data: [],
     list: [],
     options: options2,
     participant: null,
     value: null,
     brand: null,
+    orderId: null,
     amount: 3,
     country: null,
     currency: null
@@ -133,6 +138,20 @@ class MeetingListIncentives extends React.Component {
         });
       });
   }
+
+  handleOk = e => {
+    console.log(e);
+    this.setState({
+      visible: false,
+    });
+  };
+
+  handleCancel = e => {
+    console.log(e);
+    this.setState({
+      visible: false,
+    });
+  };
 
   componentDidMount() {
     this.fetchArticles();
@@ -166,6 +185,29 @@ class MeetingListIncentives extends React.Component {
     });
   }
 
+  handlerModal = (participantD, amountD, countryD, currencyD, brand) => {
+    this.setState({ loading: true });
+    const data = {
+      buyer: this.props.username,
+      recipient: participantD,
+      amount: amountD,
+      country: countryD,
+      currency: currencyD,
+      brand: brand,
+      created: moment()
+    };
+    authAxios
+    .post(directBuyURL, data)
+    .then(res => {
+      if(res.status === 200){
+        this.setState({ orderId: res.data.order_id, loading: false, visible: true})
+      } else {
+        this.setState({ loading: false})
+      }
+    })
+    // .catch(err => { error:err})
+  }
+
   handlerBuy = async (participantD, amountD, countryD, currencyD, brand) => {
     this.toggle(true)
     console.log("this.props.error: " + JSON.stringify(this.props.err1))
@@ -176,7 +218,7 @@ class MeetingListIncentives extends React.Component {
       amount: amountD,
       country: countryD,
       currency: currencyD,
-      incentive_brand: [brand],
+      brand: brand,
       created: moment()
     }
     this.props.createIncentive(this.props.token, data)
@@ -190,6 +232,11 @@ class MeetingListIncentives extends React.Component {
       this.toggle(false)
     });
   }
+
+  onChangeBrand = (key, brand) => {
+    console.log("key, brand", key, brand);
+    this.setState({ brand: key });
+  };
 
   onChangeParticipant = value => {
     console.log('Participant changed', value);
@@ -236,9 +283,9 @@ class MeetingListIncentives extends React.Component {
 
   render() {
     console.log("this.props " + this.props)
-    console.log("this.state " + this.state)
+    console.log("this.state " + this.state.country)
 
-    const { initLoading, participant, loading, amount, country, currency } = this.state;
+    const { initLoading, participant, loading, amount, country, orderId, brand, currency, visible } = this.state;
     const loadMore =
       !initLoading && !loading ? (
         <div
@@ -254,10 +301,22 @@ class MeetingListIncentives extends React.Component {
       ) : null;
 
     return (
+      <div>
+      {visible === true ? (
+        <Modal  
+          visible={visible}
+          onOk={this.handleOk}
+          onCancel={this.handleCancel}
+        >
+          <Checkout orderID={orderId}/>
+        </Modal>
+      ):(null)}
+
       <Collapse
         bordered={false}
         defaultActiveKey={['1']}
         expandIcon={({ isActive }) => <Icon type="caret-right" rotate={isActive ? 90 : 0} />}
+        // onClick={this.onChangeBrand("Amazon.com Gift Card", brand)}
       >
         <Panel header={
           <List
@@ -272,7 +331,7 @@ class MeetingListIncentives extends React.Component {
                 <Skeleton title={false} loading={item.loading} active>
                   <List.Item.Meta
                     title={<a href="https://ant.design" style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>{item.title}</a>}
-                    description="Amount:$0.01 - $2000"
+                    description="Amount:$3 - $2000"
                     style={{ flex: 1, justifyContent: 'center', alignItems: 'flex-center', marginLeft: 30 }}
                   />
                 </Skeleton>
@@ -321,8 +380,20 @@ class MeetingListIncentives extends React.Component {
               <Row type="flex" justify="center">
                 <Col >
                   <div>
-                    <Button onClick={() => { this.handlerBuy(participant, amount, country, currency, "Amazon.com Gift Card") }} style={{ marginTop: "2rem" }}>
-                      Buy
+                    <Button 
+                      type="primary"
+                      onClick={() => {this.handlerModal(participant, amount, country, currency, "Amazon Gift Card")}}
+                      loading={loading} 
+                      disabled={
+                        visible || 
+                        (participant &&
+                        amount &&
+                        country &&
+                        currency) == null} 
+                      style={{ marginTop: "10px" }}
+                    > 
+                    {/* </div>this.handlerBuy(participant, amount, country, currency, "Amazon.com Gift Card") }} style={{ marginTop: "2rem" }}> */}
+                      Buy Now!
                     </Button>
                   </div>
                 </Col>
@@ -331,6 +402,7 @@ class MeetingListIncentives extends React.Component {
           </div>
         </Panel>
       </Collapse>
+      </div>
     )
   }
 }

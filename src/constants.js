@@ -22,22 +22,24 @@ export const endpoint = `${localhost}${apiURL}`
 const image_endpoint = `${localhost}${imageURL}`
 export const media_endpoint = `${localhost}${mediaURL}`
 
-export const productListURL = `${endpoint}/products/`;
-export const productDetailURL = id => `${endpoint}/products/${id}/`;
-export const addToCartURL = `${endpoint}/add-to-cart/`;
-export const orderSummaryURL = `${endpoint}/order-summary/`;
-export const checkoutURL = `${endpoint}/checkout/`;
-export const addCouponURL = `${endpoint}/add-coupon/`;
-export const countryListURL = `${endpoint}/countries/`;
+export const productListURL = `${endpoint}/paymentsApi/products/`;
+export const productDetailURL = id => `${endpoint}/payments/products/${id}/`;
+export const directBuyURL = `${endpoint}/payments/direct-buy/`;
+export const addToCartURL = `${endpoint}/payments/add-to-cart/`;
+export const orderSummaryURL = `${endpoint}/payments/order-summary/`;
+export const checkoutURL = `${endpoint}/payments/checkout/`;
+export const addCouponURL = `${endpoint}/payments/add-coupon/`;
+export const countryListURL = `${endpoint}/payments/countries/`;
 export const image_URL = `${image_endpoint}/`;
-export const userIDURL = `${endpoint}/user-id/`;
+export const userIDURL = `${endpoint}/payments/user-id/`;
 export const addressListURL = addressType =>
-  `${endpoint}/addresses/?address_type=${addressType}`;
-export const addressCreateURL = `${endpoint}/addresses/create/`;
-export const addressUpdateURL = id => `${endpoint}/addresses/${id}/update/`;
-export const addressDeleteURL = id => `${endpoint}/addresses/${id}/delete/`;
-export const orderItemDeleteURL = id => `${endpoint}/order-items/${id}/delete/`;
-export const orderItemUpdateQuantityURL = `${endpoint}/order-item/update-quantity/`;
+  `${endpoint}/payments/addresses/?address_type=${addressType}`;
+export const addressCreateURL = `${endpoint}/payments/addresses/create/`;
+export const addressUpdateURL = id => `${endpoint}/payments/addresses/${id}/update/`;
+export const addressDeleteURL = id => `${endpoint}/payments/addresses/${id}/delete/`;
+export const orderItemDeleteURL = id => `${endpoint}/payments/order-items/${id}/delete/`;
+export const orderItemUpdateQuantityURL = `${endpoint}/payments/order-item/update-quantity/`;
+export const paymentListURL = `${endpoint}/payments/payment-list/`;
 
 export const articleListURL = `${endpoint}/articles/`
 export const articleCreateURL = `${endpoint}/articles/create/`
@@ -46,6 +48,7 @@ export const articleUpdateURL = (articleID) => `${endpoint}/articles/${articleID
 
 export const authLogInURL = `${localhost}/rest-auth/login/`;
 export const authSignUpURL = `${localhost}/rest-auth/registration/`;
+export const authLogOutURL = `${localhost}/rest-auth/logout/`;
 
 export const articleCommentsURL = articleID => `${endpoint}/articles/${articleID}/comments/`
 export const articleCommentURL = (articleID, commentID) => `${endpoint}/articles/${articleID}/comment/${commentID}/`
@@ -102,6 +105,7 @@ export const gradedSurveyCreateURL = `${endpoint}/graded-survey/create/`
 export const gradedSurveyChociesURL = `${endpoint}/graded-survey/choices/`
 
 export const notificationListURL = (username) => `${endpoint}/notifications/list/${username}/`
+export const notificationListScrollerURL = (username, limit, offset) => `${endpoint}/notifications/list/scroller/${username}/?limit=${limit}&offset=${offset}`
 export const notificationUpdateListURL = username => `${endpoint}/notifications/list/update/${username}/`
 export const notificationDetailURL = (notificationID, username)=> `${endpoint}/notifications/${notificationID}/detail/${username}/`
 export const notificationUpdateURL = (notificationID, username)=> `${endpoint}/notifications/${notificationID}/detail/update/${username}/`
@@ -127,4 +131,9 @@ export const inquiryUpdateCommentURL = data => `${endpoint}/inquiries/${data.inq
 export const inquiryUpdateCommentURL2 = (inquiryID, commentID) => `${endpoint}/inquiries/${inquiryID}/update-comment/${commentID}/`
 
 export const filterURL = `${endpoint}/`
-export const filterGetURL = `${endpoint}/filter`
+export const filterGetURL = `${endpoint}/filter/inquiry/`
+
+export const vcroomGetDetailURL =  (chatID) => `${endpoint}/chat/video-chat/${chatID}`
+export const chatDetailURL = (chatID) => `${endpoint}/chat/detail/${chatID}`
+export const chatDetailParticipantsURL = (chatID) => `${endpoint}/chat/detail/participants/${chatID}`
+export const chatDetailRoomStatusURL = (chatID) => `${endpoint}/chat/detail/status/${chatID}`

@@ -3,6 +3,20 @@ export const AUTH_SUCCESS = "AUTH_SUCCESS";
 export const AUTH_FAIL = "AUTH_FAIL";
 export const AUTH_LOGOUT = "AUTH_LOGOUT";
 
+export const CART_START = "CART_START";
+export const CART_SUCCESS = "CART_SUCCESS";
+export const CART_FAIL = "CART_FAIL";
+
+export const OPEN_ADD_CHAT_POPUP = "OPEN_ADD_CHAT_POPUP";
+export const CLOSE_ADD_CHAT_POPUP = "CLOSE_ADD_CHAT_POPUP";
+export const ADD_MESSAGE = "ADD_MESSAGE";
+export const SET_MESSAGES = "SET_MESSAGES";
+export const SET_STATUS = "SET_STATUS";
+export const SET_UNVIEWS = "SET_UNVIEWS";
+export const GET_CHATS_SUCCESS = "GET_CHATS_SUCCESS";
+export const ADD_NOTIFICATION = "ADD_NOTIFICATION";
+export const SET_NOTIFICATIONS = "SET_NOTIFICATIONS";
+
 export const GET_USER_START = "GET_USER_START";
 export const GET_USER_FAIL = "GET_USER_FAIL";
 export const GET_USER_SUCCESS = "GET_USER_SUCCESS";

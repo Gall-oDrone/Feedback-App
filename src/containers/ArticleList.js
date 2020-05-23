@@ -8,7 +8,6 @@ class ArticleList extends React.Component {
 
     state = {
         articles: [],
-        // hasMore: true
     }
 
 

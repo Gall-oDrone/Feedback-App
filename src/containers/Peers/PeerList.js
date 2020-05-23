@@ -1,5 +1,5 @@
 import React from 'react';
-import { List, Avatar, Button, Select, Icon, Cascader, Collapse, Card, Input, Tag, Tabs, Skeleton, Checkbox, Row, Col } from 'antd';
+import { List, Avatar, Button, Select, Icon, Modal, Cascader, Collapse, Card, Input, Tag, Tabs, Skeleton, Checkbox, Row, Col } from 'antd';
 import axios from 'axios';
 import Hoc from "../../hoc/hoc";
 import { connect } from 'react-redux';
@@ -51,6 +51,7 @@ class ProductList extends React.Component {
         error: null,
         data: [],
         country: null,
+        inquiries: [],
         visible: false,
         index: null
     }
@@ -85,17 +86,34 @@ class ProductList extends React.Component {
       this.setState({ visible: true, index: i })
     }
 
+    handleOk = e => {
+      console.log(e);
+      // this.props.visible = false
+      this.setState({
+        visible: false,
+      });
+    };
+  
+    handleCancel = e => {
+      console.log(e);
+      // this.props.visible = false
+      this.setState({
+        visible: false,
+      });
+    };
+
         render () {
           console.log('this.props', JSON.stringify(this.props));
           console.log('this.state', JSON.stringify(this.state));
           const inquiries = [];
-          for (let i=0; i < data.length; i+= 1) {
+          for (let i=0; i < data.length; i++) {
             inquiries.push(
               <Hoc key= {i}>
                 <PeerDetail id={i} visible={this.state.visible} {...this.props} />
               </Hoc>
               );
           }
+          console.log('INQUIRIES', (inquiries));
                 return(
 
                   <div>
@@ -180,12 +198,32 @@ class ProductList extends React.Component {
                         inquiries[index]
                         :null
                         } */}
+                         {/* {this.state.visible === true ?
+                           <Modal  title="Basic Modal"
+                           width={820}
+                           visible={this.state.visible}
+                           onOk={this.handleOk}
+                           onCancel={this.handleCancel}
+                           key={this.props.id}
+                           >
+                          {inquiries["1"]}
+                          </Modal>
+                        :null
+                        } */}
                     </List.Item>
                     
                     )}
                     />
                     {this.state.visible === true ?
-                        inquiries[this.state.index]
+                           <Modal  title="Basic Modal"
+                           width={820}
+                           visible={this.state.visible}
+                           onOk={this.handleOk}
+                           onCancel={this.handleCancel}
+                           key={this.props.id}
+                           >
+                          {inquiries[this.state.index]}
+                          </Modal>
                         :null
                         }
                 </div>
