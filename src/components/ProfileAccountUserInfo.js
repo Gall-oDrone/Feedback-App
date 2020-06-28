@@ -1,9 +1,11 @@
+import axios from "axios";
 import React from "react";
 import { Form, Input, Icon, Button, Select, Radio, Upload, AutoComplete, Cascader, Divider } from "antd";
 import { connect } from "react-redux";
 import { NavLink } from "react-router-dom";
 import {getProfileAccountInfo, putProfileAccountInfo} from "../store/actions/profileUserInfo";
 import countryList from 'react-select-country-list'
+import { fetchDegreesAndCoursesURL } from "../constants"
 
 const pStyle = {
   fontSize: 16,
@@ -24,7 +26,7 @@ const universities = [
     label: 'Instituto Autónomo Tecnológico de México (ITAM)'
   },
   {
-    value: 'CIDE',
+    value: 'Center of Teaching and Research in Economics',
     label: 'Centro de Investigación y Docencias Económicas (CIDE)'
   },
   {
@@ -51,6 +53,12 @@ class UserProfileInfo extends React.Component {
     autoCompleteResult: [],
     university: null,
     country: options2,
+    academic_status: null,
+    academic_degree: null,
+    bachelors_degree: null,
+    masters_degree: null,
+    phD_degree: null,
+    course: null
   };
 
   normFile = e => {
@@ -157,16 +165,57 @@ class UserProfileInfo extends React.Component {
     return this.lab
   };
 
+  handleBachelorChange = val => {
+    var lab = null
+    this.lab = val
+    return this.lab
+  };
+
+  handleMasterChange = val => {
+    var lab = null
+    this.lab = val
+    return this.lab
+  };
+
+  handleDoctorateChange = val => {
+    var lab = null
+    this.lab = val
+    return this.lab
+  };
+
+  handleCourseChange = val => {
+    var lab = null
+    this.lab = val
+    return this.lab
+  };
+
   handleAcademicStatus = val => {
     var academic_s = null
-    if(val === "True"){
+    if(val.undergraduate === true){
       this.academic_s = "undergraduate"
-    } else if (val === "False"){
+    } else if (val.graduate === true){
       this.academic_s = "graduate"
-    } else {
-      return this.academic_s
+    } else if (val.postgraduate === true){
+      this.academic_s = "postgraduate"
     }
     return this.academic_s
+  }
+
+  handleDegree = val => {
+    var academic_d = null
+    if(val === "Bachelor's degree"){
+      academic_d = "bachelor"
+    } else if (val === "Master's degree"){
+      academic_d = "master"
+    } else if (val === "Doctorate"){
+      academic_d = "doctorate"
+    }
+    return academic_d
+  }
+
+  handleCourse = val => {
+    var academic_c = null
+    return this.academic_c
   }
 
   handleWorkExperience = val => {
@@ -181,18 +230,31 @@ class UserProfileInfo extends React.Component {
     return this.work_e
   }
 
+  fetchData = () => {
+    axios.defaults.headers = {
+      "Content-Type": "application/json"
+    }
+    axios.get(fetchDegreesAndCoursesURL)
+    .then(res => {
+      console.log("resData at UI: ", (res))
+      this.setState({
+        academic_degree:res.data[0].degree,
+        bachelors_degree:res.data[0].bachelor,
+        masters_degree:res.data[0].master,
+        phD_degree:res.data[0].pHD,
+        course:res.data[0].course
+      });
+      console.log("componentWillReceiveProps after : " + JSON.stringify(this.props))
+    })
+    .catch(err =>
+      console.error("ERROR 123: ", err.message));
+  }
+
   componentDidMount() {
     if (this.props.token !== undefined && this.props.token !== null) {
       if(this.props.username !== null){
         this.props.getProfileInfo(this.props.token, this.props.username)
-        // .then(res => {
-        //   console.log("6) componentWillReceiveProps before assigning res to dataList: " + JSON.stringify(this.props))
-        //   console.log(JSON.stringify(res))
-        //   this.setState({
-        //     dataList: res.BookedMeetingList
-        //   });
-        //   console.log("componentWillReceiveProps after : " + JSON.stringify(this.props))
-        // });
+        this.fetchData()
       } else {
         console.log("this.props.getMeetings was undefined at CDM")
       }
@@ -204,21 +266,23 @@ class UserProfileInfo extends React.Component {
       console.log("componentWillReceiveProps newProps: ")
       console.log(newProps)
       this.props.getProfileInfo(newProps.token, newProps.username)
+      this.fetchData()
   } else {
-    // this.props.getProfileInfo(newProps.token, newProps.username)
   }
       
   }
 
   render() {
       if (this.props.profileIA != undefined){
-      const { getFieldDecorator, getFieldValue } = this.props.form;
-      const { autoCompleteResult } = this.state;
+      const { getFieldDecorator, getFieldValue, getFieldsValue } = this.props.form;
+      const { autoCompleteResult, 
+              academic_status, 
+              university, 
+              academic_degree, 
+              bachelors_degree,
+              masters_degree,
+              phD_degree, course } = this.state;
       const { UserAccountInfo} = this.props.profileIA;
-      if(UserAccountInfo != undefined){
-        console.log("XXX: "+JSON.stringify(this.handleUniversityChange(UserAccountInfo.university)))
-      }
-      
       const websiteOptions = autoCompleteResult.map(website => (
         <AutoCompleteOption 
           key={website}>
@@ -234,46 +298,29 @@ class UserProfileInfo extends React.Component {
           <Option value="87">+87</Option>
         </Select>,
       );
-      
-      //team members
-      const formItemLayout = {
-        labelCol: {
-          xs: { span: 24 },
-          sm: { span: 4 },
-        },
-        wrapperCol: {
-          xs: { span: 24 },
-          sm: { span: 20 },
-        },
-      };
-      const formItemLayoutWithOutLabel = {
-        wrapperCol: {
-          xs: { span: 24, offset: 0 },
-          sm: { span: 20, offset: 4 },
-        },
-      };
+      console.log("123, ", UserAccountInfo)
 
       return (
         (UserAccountInfo !== undefined ? (
 
         <Form onSubmit={this.handleSubmit}>
-          <p style={pStyle}>Personal</p>
-          <FormItem label="First name">
+          <p style={pStyle}>Basic Information</p>
+          <FormItem label="Name">
             {getFieldDecorator("firstName", {
               initialValue: (UserAccountInfo.name !== null?[`${UserAccountInfo.name}`]:null),
-              rules: [{ required: true, message: "Please input your first name!" }]
+              rules: [{ required: true, message: "Please input your full name!" }]
             })(
               <Input
                 prefix={<Icon type="user" style={{ color: "rgba(0,0,0,.25)" }} />}
-                placeholder="First name"
+                placeholder="E.g. John Stone"
               />
             )}
           </FormItem>
           <Form.Item label="Country">
-            {getFieldDecorator("university", {
+            {getFieldDecorator("country", {
               initialValue: [this.handleCountryChange(UserAccountInfo.country)],
               rules: [
-                { type: 'array', required: true, message: 'Please select your University' },
+                { type: 'array', required: true, message: 'Please select your country' },
               ],
             })(<Cascader options={options2} />)}
           </Form.Item>
@@ -291,27 +338,101 @@ class UserProfileInfo extends React.Component {
           </Form.Item>
 
           <Divider />
-          <p style={pStyle}>Academy</p>
+          <p style={pStyle}>Academic Information</p>
 
           <Form.Item label="College Institution">
             {getFieldDecorator("university", {
               initialValue: [this.handleUniversityChange(UserAccountInfo.university)],
               rules: [
-                { type: 'array', required: true, message: 'Please select your University' },
+                { type: 'array', required: true, message: 'Please select your university' },
               ],
             })(<Cascader options={universities} />)}
           </Form.Item>
 
           <Form.Item label="Academic status">
           {getFieldDecorator('attendace', {
-            initialValue: this.handleAcademicStatus(UserAccountInfo.graduate)
+            initialValue: this.handleAcademicStatus(UserAccountInfo),
+            rules: [ { type: 'string' } ]
           })(
             <Radio.Group >
               <Radio.Button value="undergraduate">Undergraduate</Radio.Button>
               <Radio.Button value="graduate">Graduate</Radio.Button>
+              <Radio.Button value="postgraduate">Postgraduate</Radio.Button>
             </Radio.Group>,
           )}
         </Form.Item>
+
+        {getFieldValue("attendace") === "graduate" || 
+          getFieldValue("attendace") ==="postgraduate" ? (
+          // {academic_status === null ? (
+          <>
+            <Form.Item label="Degree">
+              {getFieldDecorator('degree', {
+                initialValue: this.handleDegree(UserAccountInfo.degree)
+              })(
+                <Radio.Group >
+                  <Radio.Button value="bachelor">Bachelor's</Radio.Button>
+                  <Radio.Button value="master">Master's</Radio.Button>
+                  <Radio.Button value="doctorate">pHD</Radio.Button>
+                </Radio.Group>,
+              )}
+            </Form.Item>
+          </>
+        ):null}
+
+        {getFieldValue("degree") === "bachelor" &&
+          getFieldValue("attendace") === "graduate" ? (
+          // {academic_degree === null ? (
+            <>
+              <Form.Item label="Bachelor Degree">
+                {getFieldDecorator("bachelor", {
+                  initialValue: [this.handleBachelorChange(UserAccountInfo.bachelor)],
+                  rules: [
+                    { type: 'array', required: true, message: 'Please select a Bachelors Degree' },
+                  ],
+                })(<Cascader options={bachelors_degree} />)}
+              </Form.Item> 
+            </>
+          ):null}
+
+        {getFieldValue("degree") === "master" &&
+          getFieldValue("attendace") === "postgraduate" ? (
+          // {academic_degree === null ? (
+            <>
+              <Form.Item label="Master Degree">
+                {getFieldDecorator("master", {
+                  initialValue: this.handleMasterChange(UserAccountInfo.master),
+                  rules: [
+                    { type: 'array', required: true, message: 'Please select a Masters Degree' },
+                  ],
+                })(<Cascader options={masters_degree} />)}
+              </Form.Item> 
+            </>
+          ):null}
+
+        {getFieldValue("degree") === "doctorate" &&
+          getFieldValue("attendace") === "postgraduate" ? (
+          // {academic_degree === null ? (
+            <>
+              <Form.Item label="pHD Degree">
+                {getFieldDecorator("doctorate", {
+                  initialValue: this.handleDoctorateChange(UserAccountInfo.doctorate),
+                  rules: [
+                    { type: 'array', required: true, message: 'Please select a pHD Degree' },
+                  ],
+                })(<Cascader options={phD_degree} />)}
+              </Form.Item>
+            </>
+        ):null}
+
+          <Form.Item label="Course">
+            {getFieldDecorator("course", {
+              initialValue: [this.handleCourseChange(UserAccountInfo.course)],
+              rules: [
+                { type: 'array', required: true, message: 'Please select a course' },
+              ],
+            })(<Cascader options={course} />)}
+          </Form.Item> 
 
           <Form.Item label="Website">
             {getFieldDecorator('website', {

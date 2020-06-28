@@ -1,7 +1,8 @@
 from django_countries.serializer_fields import CountryField
 from rest_framework import serializers
-from paymentsApi.models import (Address, Item, Order, OrderItem, Coupon, Payment)
+from paymentsApi.models import (Address, Item, Order, OrderItem, Coupon, Payment, SessionOrderItem, SessionOrder)
                         # Coupon, Variation, ItemVariation, Payment)
+from sessionsApi.serializers import SessionSerializer
 
 
 class StringSerializer(serializers.StringRelatedField):
@@ -99,6 +100,28 @@ class OrderItemSerializer(serializers.ModelSerializer):
     def get_final_price(self, obj):
         return obj.get_final_price()
 
+class SessionOrderItemSerializer(serializers.ModelSerializer):
+    # item_variations = serializers.SerializerMethodField()
+    session = serializers.SerializerMethodField()
+    total_session_price = serializers.SerializerMethodField()
+
+    class Meta:
+        model = SessionOrderItem
+        fields = (
+            'id',
+            'hrs',
+            'session',
+            'total_session_price',
+            'date',
+            'start_time',
+            'end_time'
+        )
+
+    def get_session(self, obj):
+        return SessionSerializer(obj.session).data
+    
+    def get_total_session_price(self, obj):
+        return obj.get_total_session_price()
 
 class OrderSerializer(serializers.ModelSerializer):
     order_items = serializers.SerializerMethodField()
@@ -125,6 +148,21 @@ class OrderSerializer(serializers.ModelSerializer):
             return CouponSerializer(obj.coupon).data
         return None
 
+class SessionOrderSerializer(serializers.ModelSerializer):
+    # order_items = serializers.SerializerMethodField()
+    session_order_items = serializers.SerializerMethodField()
+
+    class Meta:
+        model = SessionOrder
+        fields = (
+            'id',
+            # 'order_items',
+            'session_order_items',
+        )
+
+    def get_session_order_items(self, obj):
+        # print("CORSO", SessionOrderItemSerializer(obj.session, many=True).data)
+        return SessionOrderItemSerializer(obj.session, many=True).data
 
 # class ItemVariationSerializer(serializers.ModelSerializer):
 #     class Meta:

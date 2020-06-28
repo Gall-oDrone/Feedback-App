@@ -125,11 +125,27 @@ class ProfileMMenu extends React.Component {
                             <span>
                             <Link to={`/profile/${this.props.userId}/account/articles/list/`}>
                                 <Icon type="book" />
-                                My articles
+                                My Articles
                             </Link>
                             </span>
                         </Menu.Item>
                         <Menu.Item key="sub8">
+                            <span>
+                            <Link to={`/profile/${this.props.userId}/account/inquiries/list/`}>
+                                <Icon type="book" />
+                                My Inquiries
+                            </Link>
+                            </span>
+                        </Menu.Item>
+                        <Menu.Item key="sub9">
+                            <span>
+                            <Link to={`/profile/${this.props.userId}/account/sessions/list/`}>
+                                <Icon type="book" />
+                                My Sessions
+                            </Link>
+                            </span>
+                        </Menu.Item>
+                        <Menu.Item key="sub10">
                             <span>
                             <Link to={"/address/"}>
                                 <Icon type="book" />
@@ -137,7 +153,7 @@ class ProfileMMenu extends React.Component {
                             </Link>
                             </span>
                         </Menu.Item>
-                        <Menu.Item key="sub9">
+                        <Menu.Item key="sub11">
                             <span>
                             <Link to={"/payments/"}>
                                 <Icon type="account-book" />

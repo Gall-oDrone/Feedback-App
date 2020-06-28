@@ -4,13 +4,16 @@ import { Link, withRouter } from "react-router-dom";
 import { connect } from "react-redux";
 import { Button, Table, Radio, Spin, message, Divider, Tag, DatePicker, Tab, Icon, Popover, Card } from 'antd';
 import OrderPreview from "./OrderPreview";
+import SeassionOrderPreview from "./SessionOrderPreview";
 import CouponForm from "./CouponForm";
 import { authAxios } from "../utils";
 import {
   checkoutURL,
   orderSummaryURL,
+  sessionOrderSummaryURL,
   addCouponURL,
-  addressListURL
+  addressListURL,
+  paymentSURL
 } from "../constants";
 import "../assets/styleStripe.css";
 
@@ -46,15 +49,19 @@ class CheckoutForm extends React.Component {
     billingAddresses: [],
     selectedBillingAddress: "",
     selectedShippingAddress: "",
-    isDirectBuying: false
+    isDirectBuying: false,
+    order_type: null,
+    order_id: null,
+    order_key: null
   };
 
   componentDidMount() {
-    if(this.props.match !== undefined && Object.keys(this.props.match.params).length > 0){
-      this.handleFetchParams();
-    } else {
-      this.handleFetchOrder();
-    }
+    this.handleFetchOrder();
+    // if(this.props.match !== undefined && Object.keys(this.props.match.params).length > 0){
+    //   this.handleFetchParams();
+    // } else {
+    //   this.handleFetchOrder();
+    // }
     this.handleFetchBillingAddresses();
     this.handleFetchShippingAddresses();
     
@@ -125,15 +132,27 @@ class CheckoutForm extends React.Component {
 
   handleFetchOrder = () => {
     this.setState({ loading: true });
-    console.log("aw:", this.props.orderID.orderID)
+    var url = null
+    console.log("aw:", this.props.orderID, this.props.orderID.orderID)
+    if(this.props.orderID.orderID.order_type = "session"){
+      url = sessionOrderSummaryURL
+    } else {
+      url = orderSummaryURL
+    }
     let postParams = {params: {
-      orderID: this.props.orderID.orderID
+      orderID: this.props.orderID.orderID.order_id
     }}
     authAxios
-      .get(orderSummaryURL, postParams)
+      .get(url, postParams)
       .then(res => {
         console.log("NI: ", res.data)
-        this.setState({ data: res.data, loading: false });
+        this.setState({ 
+                data: res.data, 
+                order_type:this.props.orderID.orderID.order_type, 
+                order_id:this.props.orderID.orderID.order_id, 
+                order_key: this.props.orderID.orderID.order_key,
+                loading: false 
+              });
       })
       .catch(err => {
         if (err.response.status === 404) {
@@ -205,7 +224,7 @@ class CheckoutForm extends React.Component {
     event.preventDefault();
     console.log("TIRA PA DELANTE", this.state.stripe);
     const { stripe, elements } = this.props;
-    this.setState({ loading: true });
+    this.setState({ loading: true, error: null, success:null });
     if (stripe || elements) {
       const cardElement = elements.getElement(CardElement);
       const { error, paymentMethod } = await stripe.createPaymentMethod({
@@ -221,12 +240,15 @@ class CheckoutForm extends React.Component {
         this.setState({ error: error.message, loading: false });
       } else {
         console.log('[PaymentMethod]', paymentMethod);
-        this.setState({ error: null });
+        // this.setState({ error: null });
           const {
             selectedBillingAddress,
             selectedShippingAddress,
             isDirectBuying,
-            params
+            params,
+            order_type,
+            order_id,
+            order_key
           } = this.state;
 
           authAxios
@@ -235,7 +257,10 @@ class CheckoutForm extends React.Component {
               selectedBillingAddress,
               selectedShippingAddress,
               isDirectBuying,
-              params
+              params,
+              order_type,
+              order_id,
+              order_key
             })
             .then(res => {
               if(res.status == "200"){
@@ -257,17 +282,27 @@ class CheckoutForm extends React.Component {
                       // The payment has been processed!
                       if (result.paymentIntent.status === 'succeeded') {
                         this.setState({ loading: false, success: true });
-                        // Show a success message to your customer
-                        // There's a risk of the customer closing the window before callback
-                        // execution. Set up a webhook or plugin to listen for the
-                        // payment_intent.succeeded event that handles any business critical
-                        // post-payment actions.
+                        // authAxios
+                        // .post(paymentSURL, {
+                        //   order_type,
+                        //   order_id,
+                        // }).then(res => {
+                        //   if (res.status === "200") {
+                        //     this.setState({ loading: false, success: true });
+                        //     // Show a success message to your customer
+                        //     // There's a risk of the customer closing the window before callback
+                        //     // execution. Set up a webhook or plugin to listen for the
+                        //     // payment_intent.succeeded event that handles any business critical
+                        //     // post-payment actions.   
+                        //   }
+                        // })
                       }
                     }
                   });
               }
             })
             .catch(err => {
+              console.error("ERROR AT: ", err)
               this.setState({ loading: false, error: err });
             });
       }
@@ -282,18 +317,19 @@ class CheckoutForm extends React.Component {
       error,
       loading,
       success,
+      order_type,
       billingAddresses,
       shippingAddresses,
       selectedBillingAddress,
       selectedShippingAddress
     } = this.state;
     const { stripe } = this.props;
-    console.log("81: ", this.props)
+    console.log("81: ", this.props, this.state)
     return (
       <div>
 
         {error && (
-          message.error(error.response.data.message)
+          message.error(error)
         )}
         {loading && (
           <Spin spinning={loading} />
@@ -304,7 +340,10 @@ class CheckoutForm extends React.Component {
             Go to your <b>profile</b> to see the order delivery status.
           </p>
         )}
-        <OrderPreview data={data} />
+        {order_type !== "session" ? 
+          (<OrderPreview data={data} />
+          ):(<SeassionOrderPreview data={data}/>
+        )}
         <Divider />
         <CouponForm
           handleAddCoupon={(e, code) => this.handleAddCoupon(e, code)}
@@ -355,12 +394,12 @@ class CheckoutForm extends React.Component {
               <CardElement options={CARD_OPTIONS} />
             </div>
           </fieldset>
-            {success && (
+            {/* {success && (
                   message.success("Your payment was successful")
-                  // <p>
-                  //   Go to your <b>profile</b> to see the order delivery status.
-                  // </p>
-            )}
+                  <p>
+                    Go to your <b>profile</b> to see the order delivery status.
+                  </p>
+            )} */}
             <Button 
               type="primary"
               onClick={this.submit} 

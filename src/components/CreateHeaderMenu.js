@@ -14,17 +14,22 @@ class CreateHeaderMenu extends React.Component {
         <Menu>
           <Menu.Item key="CreateHeader 0">
             <a target="_blank" rel="noopener noreferrer" href={`/create-article/`}>
-              Create a project article
+              Post a project/article
             </a>
           </Menu.Item>
           <Menu.Item key="CreateHeader 1">
             <a target="_blank" rel="noopener noreferrer" href={`/create/survey/`}>
-              Create a Survey
+              Post a Survey
             </a>
           </Menu.Item>
           <Menu.Item key="CreateHeader 1">
             <a target="_blank" rel="noopener noreferrer" href={`/create-inquiry/`}>
               Post an inquiry
+            </a>
+          </Menu.Item>
+          <Menu.Item key="CreateHeader 1">
+            <a target="_blank" rel="noopener noreferrer" href={`/create-session/`}>
+              Post a session
             </a>
           </Menu.Item>
         </Menu>
@@ -34,7 +39,7 @@ class CreateHeaderMenu extends React.Component {
           <Hoc>
             <Popover placement="bottomRight" trigger="click" content={menu()}>
                 <a className="ant-dropdown-link" onClick={e => e.preventDefault()}>
-                  Create
+                  <Icon type="plus" />
                 </a>
             </Popover>
         </Hoc>

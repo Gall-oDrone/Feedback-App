@@ -8,8 +8,16 @@ from .views import (
     UserLCRequestsView,
     UserProfileView,
     UserProfileInfoView,
+    ProfilePageView,
     UserMeetingInfoView,
-    UserViewSet
+    UserViewSet,
+    Degrees_and_CoursesView,
+    UniView,
+    DegView
+    # BachelorView,
+    # MasterView,
+    # DoctorateView,
+    # CourseView
 	)
 
 router = DefaultRouter()
@@ -28,5 +36,13 @@ urlpatterns = [
     path('profile/account/user/info/<username>', UserProfileInfoView.as_view()),
     path('profile/account/info/<userid>', UserProfileView.as_view()),
     path('profile/info/<username>', UserMeetingInfoView.as_view()),
+    path('profile-page/<username>', ProfilePageView.as_view()),
     path('profile/account/user/info/update/<username>', UserProfileInfoView.as_view()),
+    path('courses-degrees/', Degrees_and_CoursesView.as_view()),
+    path('universities/', UniView.as_view()),
+    path('deg/', DegView.as_view()),
+    # path('bachelor-list/', BachelorView.as_view()),
+    # path('master-list/', MasterView.as_view()),
+    # path('doctorate-list/', DoctorateView.as_view()),
+    # path('course-list/', CourseView.as_view()),
 ]

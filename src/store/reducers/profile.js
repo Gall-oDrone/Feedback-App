@@ -18,7 +18,15 @@ import {
   PUT_PROFILE_ARTICLE_DETAIL_FAIL,
   PUT_PROFILE_ARTICLE_DETAIL_SUCCESS,
   DELETE_PROFILE_ARTICLE_DETAIL_SUCCESS,
-  DELETE_PROFILE_ARTICLE_DETAIL_FAIL
+  DELETE_PROFILE_ARTICLE_DETAIL_FAIL,
+  GET_PROFILE_INQUIRIES_LIST_FAIL,
+  GET_PROFILE_INQUIRIES_LIST_SUCCESS,
+  GET_PROFILE_INQUIRY_DETAIL_FAIL,
+  GET_PROFILE_INQUIRY_DETAIL_SUCCESS,
+  PUT_PROFILE_INQUIRY_DETAIL_FAIL,
+  PUT_PROFILE_INQUIRY_DETAIL_SUCCESS,
+  DELETE_PROFILE_INQUIRY_DETAIL_FAIL,
+  DELETE_PROFILE_INQUIRY_DETAIL_SUCCESS,
 } from "../actions/actionTypes";
 import { updateObject } from "../utility";
 
@@ -205,6 +213,55 @@ const deleteProfileArticleDetailFail = (state, action) => {
     loading: false
   });
 };
+
+const getProfileInquiryListSuccess = (state, action) => {
+  console.log("2) Reducers getProfileInquiryListSuccess")
+  return updateObject(state, {
+    articleList: action.data,
+    error: null,
+    loading: false
+  });
+};
+
+const getProfileInquiryListFail = (state, action) => {
+  return updateObject(state, {
+    error: action.error,
+    loading: false
+  });
+};
+
+const getProfileInquiryDetailSuccess = (state, action) => {
+  console.log("2) Reducers getProfileInquiryDetailSuccess")
+  return updateObject(state, {
+    articleDetail: action.data,
+    error: null,
+    loading: false
+  });
+};
+
+const getProfileInquiryDetailFail = (state, action) => {
+  return updateObject(state, {
+    error: action.error,
+    loading: false
+  });
+};
+
+const deleteProfileInquiryDetailSuccess = (state, action) => {
+  console.log("2) Reducers deleteProfileInquiryDetailSuccess")
+  return updateObject(state, {
+    error: null,
+    loading: false
+  });
+};
+
+const deleteProfileInquiryDetailFail = (state, action) => {
+  return updateObject(state, {
+    error: action.error,
+    loading: false
+  });
+};
+
+
 
 const reducer = (state = initialState, action) => {
   switch (action.type) {

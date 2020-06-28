@@ -15,7 +15,7 @@ import {
   Col,
   DatePicker
 } from 'antd';
-import {inquiryCreateURL} from "../constants";
+import {inquiryCreateURL, inquirySelectableListURL} from "../constants";
 import moment from "moment";
 import axios from 'axios';
 
@@ -151,6 +151,9 @@ class ArticleCustomForm extends React.Component {
     topic: null,
     inquirty_type: null,
     language: null,
+    inquiry_type: null,
+    inquiry_audience: null,
+    inquiry_topic: null,
     fileList: [
       {
         uid: '-1',
@@ -181,6 +184,7 @@ class ArticleCustomForm extends React.Component {
     console.log('handleLanguage', value);
     this.setState({ language: value[0] })
   }
+  
 
   normFile = e => {
     let fileList = [...e.fileList];
@@ -310,11 +314,47 @@ class ArticleCustomForm extends React.Component {
     });
   }
 
+  fetchData = () => {
+    axios.defaults.headers = {
+      "Content-Type": "application/json"
+    }
+    axios.get(inquirySelectableListURL)
+    .then(res => {
+      console.log("resData at UI: ", (res))
+      this.setState({
+        inquiry_type:res.data[0].Itype,
+        inquiry_audience:res.data[0].audience,
+        inquiry_topic:res.data[0].topic,
+      });
+      console.log("componentWillReceiveProps after : " + JSON.stringify(this.props))
+    })
+    .catch(err =>
+      console.error("ERROR 123: ", err.message));
+  }
+
+  componentDidMount() {
+    if (this.props.token !== undefined && this.props.token !== null) {
+      if(this.props.username !== null){
+        this.fetchData()
+      } else {
+        console.log("this.props.getMeetings was undefined at CDM")
+      }
+    }
+  }
+  
+  componentWillReceiveProps(newProps) {
+    if (newProps.token !== this.props.token) {
+      this.fetchData()
+  } else {
+  }
+      
+  }
+
   render() {
     console.log("this.props: "+ JSON.stringify(this.props))
     const { form } = this.props;
     const { getFieldDecorator, getFieldValue } = this.props.form;
-    const { fileList } = this.state;
+    const { fileList, inquiry_type, inquiry_audience, inquiry_topic } = this.state;
     const contact_option = form.getFieldValue(`contact_options`);
     console.log("contact_option  I: "+ JSON.stringify(contact_option))
     const fields = getFieldValue("upload")
@@ -347,12 +387,12 @@ class ArticleCustomForm extends React.Component {
 
         <Form.Item label="Inquiry Type">
           {getFieldDecorator('inquiry_type', {
-            initialValue: ["homework review"],
+            initialValue: ["Homework Review"],
             rules: [
               { type:"array", required: true, message: 'Please select a field for your project!', type: 'array' },
             ],
           })(
-            <Cascader options={i_type} />
+            <Cascader options={inquiry_type} />
           )}
         </Form.Item>
         <Form.Item label="Topic">
@@ -362,7 +402,7 @@ class ArticleCustomForm extends React.Component {
               { type: "array", required: true, message: 'Please select a field for your project!', type: 'array' },
             ],
           })(
-            <Cascader options={topic} />
+            <Cascader options={inquiry_topic} />
           )}
         </Form.Item>
         <Form.Item label="Select a target University">

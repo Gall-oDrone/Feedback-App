@@ -3,9 +3,9 @@ from rest_auth.registration.serializers import RegisterSerializer
 from rest_framework import serializers
 from rest_framework.authtoken.models import Token
 
-from .models import User, MeetingRequest, ProfileInfo, Profile, Universities
+from .models import User, MeetingRequest, Universities, ProfileInfo, Profile, Universities, Degree, Bachelor, Master, Doctorate, Course
 from django.core.files.storage import FileSystemStorage
-
+import json 
 class StringSerializer(serializers.StringRelatedField):
     def to_internal_value(self, value):
         return value
@@ -148,6 +148,7 @@ class TokenSerializer(serializers.ModelSerializer):
         return {
             'university': university
         }
+
 class ProfileSerializer(serializers.ModelSerializer):
     user = StringSerializer(many=False)
     # slug = serializers.SerializerMethodField(many=False)
@@ -194,17 +195,26 @@ class ProfileInfoSerializer(serializers.ModelSerializer):
     name = StringSerializer(many=False)
     country = StringSerializer(many=False)
     university = StringSerializer(many=False)
-    graduate = StringSerializer(many=False)
-    undergraduate = StringSerializer(many=False)
+    degree = StringSerializer(many=False)
+    bachelor = StringSerializer(many=False)
+    master = StringSerializer(many=False)
+    doctorate = StringSerializer(many=False)
+    course  = StringSerializer(many=False)
     work_experience = StringSerializer(many=False)
     website = StringSerializer(many=False)
     message = StringSerializer(many=False)
     github = StringSerializer(many=False)
+    profile_avatar = serializers.SerializerMethodField()
 
     class Meta:
         model = ProfileInfo
         fields = ("__all__")
     
+    def get_profile_avatar(self, obj):
+        print("CULO: ", ProfileSerializer(obj.profile, many=False).data["profile_avatar"])
+        profile = ProfileSerializer(obj.profile, many=False).data["profile_avatar"]
+        return profile
+
     def update_account_info(self, request):
         data = request.data
         print('update_account_info data: ')
@@ -222,8 +232,208 @@ class ProfileInfoSerializer(serializers.ModelSerializer):
         profile.save()
         return profile
 
+class ProfilePageSerializer(serializers.ListSerializer):
+    info = ProfileInfoSerializer
+
+
 class ProfileInfoListSerializer(serializers.ListSerializer):
     child = ProfileInfoSerializer()
     allow_null = True
     many = True
 
+class UniSerializer(serializers.ModelSerializer):
+    university = StringSerializer(many=False)
+    # UNIVERSITIES = serializers.MultipleChoiceField(choices = Universities.UNIVERSITIES) 
+    class Meta:
+        model = Universities
+        fields = ("university", )
+        # read_only_fields = ("bac",)
+
+class degreeSerializer(serializers.Serializer):
+    # degree = serializers.MultipleChoiceField(choices=Degree.DEGREES)
+    degree = serializers.SerializerMethodField()
+    bachelor = serializers.SerializerMethodField()
+    # degree = serializers.MultipleChoiceField(choices=Degree.DEGREES)
+    # print("123456, ", degree)
+    def get_degree(self, obj):
+        obj = Degree.DEGREES
+        return obj
+    
+    def get_bachelor(self, obj):
+        obj = Degree.DEGREES
+        return obj
+
+    class Meta:
+        model = Degree
+        fields = ("__all__")
+
+class bachelor_degreeSerializer(serializers.ModelSerializer):
+    type = serializers.ChoiceField(choices=Bachelor.BACHELOR_DEGREES)
+
+    class Meta:
+        model = Bachelor
+        fields = ("__all__")
+
+class master_degreeSerializer(serializers.ModelSerializer):
+    type = serializers.ChoiceField(choices= Master.MASTER_DEGREES)
+
+    class Meta:
+        model = Master
+        fields = ("__all__")
+
+class pHd_degreeSerializer(serializers.ModelSerializer):
+    type = serializers.ChoiceField(choices= Doctorate.PHD_DEGREES)
+
+    class Meta:
+        model = Doctorate
+        fields = ("__all__")
+
+class courseSerializer(serializers.ModelSerializer):
+    type = serializers.ChoiceField(choices= Course.COURSES)
+
+    class Meta:
+        model = Course
+        fields = ("__all__")
+
+class FetchDataSerializer(serializers.ListSerializer):
+    child = serializers.ListField(child=serializers.CharField())
+    allow_null = False
+    many = True
+    
+class testSerializer(serializers.Serializer):
+    # degree2 = serializers.MultipleChoiceField( 
+    #                     choices = Degree.DEGREES) 
+
+    degree = serializers.SerializerMethodField()
+    bachelor = serializers.SerializerMethodField()
+    master = serializers.SerializerMethodField()
+    pHD = serializers.SerializerMethodField()
+    course = serializers.SerializerMethodField()
+    def get_degree(self, obj):
+        ob = []
+        for d in Degree.DEGREES:
+            ob.append({"value": d[1], "label": d[0]})
+        obj = ob
+        return obj
+    def get_bachelor(self, obj):
+        ob = []
+        for d in Bachelor.BACHELOR_DEGREES:
+            ob.append({"value": d[0], "label": d[0]})
+        obj = ob
+        return obj
+    def get_master(self, obj):
+        ob = []
+        for d in Master.MASTER_DEGREES:
+            ob.append({"value": d[1], "label": d[0]})
+        obj = ob
+        return obj
+    def get_pHD(self, obj):
+        ob = []
+        for d in Doctorate.PHD_DEGREES:
+            ob.append({"value": d[1], "label": d[0]})
+        obj = ob
+        return obj
+    def get_course(self, obj):
+        ob = []
+        for d in Course.COURSES:
+            ob.append({"value": d[1], "label": d[0]})
+        obj = ob
+        return obj
+    # degree = StringSerializer(many=True)
+    # bachelor = StringSerializer(many=True)
+    # master = StringSerializer(many=True)
+    # pHD = StringSerializer(many=True)
+    # course  = StringSerializer(many=True)
+
+    # Degree.DEGREES = serializers.MultipleChoiceField( 
+    #                     choices = Degree.DEGREES) 
+
+    # degree = StringSerializer(many=False)
+    # bachelor = StringSerializer(many=False)
+    # master = StringSerializer(many=False)
+    # pHD = StringSerializer(many=False)
+    # course  = StringSerializer(many=False)
+    # class Geeks(object): 
+    # def __init__(self, multiplechoices): 
+    #     self.multiplechoices = multiplechoices 
+    
+    class Meta:
+        fields = (
+            "degree",
+            "bachelor",
+            "master",
+            "pHD",
+            "course",
+            "data"
+            # "Degree.DEGREES",
+            # "Bachelor.BACHELOR_DEGREES",
+            # "Master.MASTER_DEGREES",
+            # "Doctorate.PHD_DEGREES",
+            # "Course.COURSES",
+        )
+        # depth = 1
+    
+    # name = serializers.SerializerMethodField()
+    # def get_name(self, obj):
+    #     return obj.get_name_display()
+    # GEEKS_CHOICES = [{"degree": Degree.DEGREES, "bachelor": Bachelor.BACHELOR_DEGREES, "master": Master.MASTER_DEGREES,
+    #         "pHD": Doctorate.PHD_DEGREES, "course": Course.COURSES}]
+
+    # multiplechoices = serializers.MultipleChoiceField( 
+    #     choices = GEEKS_CHOICES) 
+
+class testSerializer2(serializers.Serializer):
+
+    degree = serializers.SerializerMethodField()
+    bachelor = serializers.SerializerMethodField()
+    def get_degree(self, obj):
+        # ob = {}
+        # for d in Degree.DEGREES:
+        #     for sd in d:
+        #         ob["value"] = 
+        obj = Degree.DEGREES
+        return obj
+    def get_bachelor(self, obj):
+        obj = Bachelor.BACHELOR_DEGREES
+        return obj
+    def get_master(self, obj):
+        obj = Master.MASTER_DEGREES
+        return obj
+    def get_pHD(self, obj):
+        obj = Doctorate.PHD_DEGREES
+        return obj
+    def get_course(self, obj):
+        obj = Course.COURSES
+        return obj
+    # degree = StringSerializer(many=True)
+    # bachelor = StringSerializer(many=True)
+    # master = StringSerializer(many=True)
+    # pHD = StringSerializer(many=True)
+    # course  = StringSerializer(many=True)
+
+    # Degree.DEGREES = serializers.MultipleChoiceField( 
+    #                     choices = Degree.DEGREES) 
+
+    # degree = StringSerializer(many=False)
+    # bachelor = StringSerializer(many=False)
+    # master = StringSerializer(many=False)
+    # pHD = StringSerializer(many=False)
+    # course  = StringSerializer(many=False)
+    # class Geeks(object): 
+    # def __init__(self, multiplechoices): 
+    #     self.multiplechoices = multiplechoices 
+    
+    class Meta:
+        fields = (
+            "degree",
+            "bachelor"
+        )
+    
+    # name = serializers.SerializerMethodField()
+    # def get_name(self, obj):
+    #     return obj.get_name_display()
+    # GEEKS_CHOICES = [{"degree": Degree.DEGREES, "bachelor": Bachelor.BACHELOR_DEGREES, "master": Master.MASTER_DEGREES,
+    #         "pHD": Doctorate.PHD_DEGREES, "course": Course.COURSES}]
+
+    # multiplechoices = serializers.MultipleChoiceField( 
+    #     choices = GEEKS_CHOICES) 

@@ -5,6 +5,16 @@ import dj_database_url
 DEBUG = False
 ALLOWED_HOSTS += ['py3-test-app.herokuapp.com', '*'] 
 WSGI_APPLICATION = 'home.wsgi.prod.application'
+ASGI_APPLICATION = "home.asgi.routing.application"
+
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'CONFIG': {
+            "hosts": [('127.0.0.1', 6379)],
+        },
+    },
+}
 
 DATABASES = {
     'default': {
@@ -27,4 +37,27 @@ AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator'},
 ]
 
-STATICFILES_STORAGE = 'whitenoise.django.GzipManifestStaticFilesStorage'
+# Stripe
+
+STRIPE_PUBLIC_KEY = config('STRIPE_TEST_PUBLIC_KEY')
+STRIPE_SECRET_KEY = config('STRIPE_TEST_SECRET_KEY')
+STRIPE_WEBHOOK_SIGNING_KEY = os.environ.get('STRIPE_WEBHOOK_SIGNING_KEY')
+
+#AWS
+AWS_ACCESS_KEY_ID = 'AKIAIRTLBPQ7C24IDY3A'
+AWS_SECRET_ACCESS_KEY ='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' 
+AWS_STORAGE_BUCKET_NAME ='py3-test-app-bucket'
+
+AWS_DEFAULT_ACL = None
+AWS_S3_CUSTOM_DOMAIN = f'{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com'
+AWS_S3_OBJECT_PARAMETERS = {'CacheControl': 'max-age=86400'}
+
+STATIC_LOCATION = 'static'
+STATIC_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/${STATIC_LOCATION}/'
+STATICFILES_STORAGE = 'home.storage_backends.StaticStorage'
+
+PUBLIC_MEDIA_LOCATION = 'media'
+MEDIA_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/${PUBLIC_MEDIA_LOCATION}/'
+DEFAULT_FILE_STORAGE = 'home.storage_backends.MediaStorage'
+
+STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]

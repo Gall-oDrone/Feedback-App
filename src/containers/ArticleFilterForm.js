@@ -16,7 +16,7 @@ import {
   Row
 } from "antd";
 import axios from "axios";
-import Results from './InquiryResults';
+import Results from './ArticleSearchResults';
 import {filterURL} from "../constants";
 import countryList from 'react-select-country-list'
 const countries = countryList().getData()

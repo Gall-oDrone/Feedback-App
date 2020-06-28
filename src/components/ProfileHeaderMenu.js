@@ -48,28 +48,35 @@ class ProfileHeaderMenu extends React.Component {
     const {logout, userId} = this.props
     const text = (username, avatar) => {return(
       <div>
-        <Row>
-        <Avatar src={avatar}>
-          <span>
-            {username[0].toUpperCase()}
-          </span>
-        </Avatar>
-        </Row>
-        <Row>
-        <span>Hi {username}</span>
+        <Row align="middle">
+          <Col span={12}>
+            <Avatar src={avatar} style={{display:"flex", float:"left"}}>
+              <span>
+                {username[0].toUpperCase()}
+              </span>
+            </Avatar>
+          </Col>
+          <Col span={12} style={{paddingTop:5}}>
+              <span>Hi {username}</span>
+          </Col>
         </Row>
       </div>
       )};
     const content = (logout, uId) => {return(
       <div>
-        <Menu style={{ width: 156 , height: 100}} >
+        <Menu>
           <Menu.Item>
             <a target="_blank" rel="noopener noreferrer" href={`/profile/${uId}/menu/`}>
-              Account
+              My Profile
             </a>
           </Menu.Item>
           <Menu.Item>
-          {this.props.auth ? (
+            <a target="_blank" rel="noopener noreferrer" href={`/profile/${uId}/menu/`}>
+              My Account
+            </a>
+          </Menu.Item>
+          <Menu.Item>
+          {this.props.auth === true ? (
               <Menu.Item key="2" onClick={this.handleLogOut}>
                 Logout
               </Menu.Item>

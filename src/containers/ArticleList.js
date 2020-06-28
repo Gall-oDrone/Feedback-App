@@ -1,6 +1,7 @@
 import React from 'react';
 import Articles from '../components/Articles';
 import axios from 'axios';
+import Filter from "./ArticleFilterForm";
 import {articleListURL} from "../constants";
 
 
@@ -38,6 +39,7 @@ class ArticleList extends React.Component {
         console.log(this.state)
         return (
             <div align="center">
+                <Filter />
                 <Articles data={this.state.articles} />      
             </div>
 

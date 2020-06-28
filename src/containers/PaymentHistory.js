@@ -77,7 +77,7 @@ class PaymentHistory extends React.Component {
           dataIndex="timestamp"
           key="p.timestamp"
           render={(timestamp) => (
-              <a>{new Date(timestamp).toUTCString()}</a>
+              <span>{new Date(timestamp).toUTCString()}</span>
           )}
         />
       </Table>

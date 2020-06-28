@@ -24,7 +24,7 @@ const addMessage = (state, action) => {
 
 const setMessages = (state, action) => {
   return updateObject(state, {
-    messages: action.messages.reverse(),
+    messages: action.messages,
     hasMore: action.hasMore 
   });
 };

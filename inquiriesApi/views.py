@@ -11,8 +11,23 @@ from rest_framework.status import(
     HTTP_201_CREATED,
     HTTP_400_BAD_REQUEST
 )
-from rest_framework import permissions
-from .models import Inquiry, Tag, Tagging, InquiryType, InquiryView, Like, Rating, Comment, File, ContactOption
+from rest_framework import permissions, generics
+from .models import (
+    Inquiry, 
+    Tag, 
+    Tagging, 
+    InquiryType, 
+    InquiryView, 
+    Like, 
+    Rating, 
+    Comment, 
+    File, 
+    ContactOption, 
+    InquiryStatus, 
+    InquiryType,
+    TargetAudience, 
+    Topic,  
+    PreferLanguage)
 from users.models import User
 from .serializers import (
     InquirySerializer, 
@@ -24,7 +39,8 @@ from .serializers import (
     RatingSerializer, 
     CommentListSerializer, 
     FileFormSerializer, 
-    ProfileInquiryListSerializer
+    ProfileInquiryListSerializer,
+    testSerializer
     )
 from analytics.models import View
 from django.http import Http404
@@ -163,10 +179,8 @@ class InquiryUpdateView(UpdateAPIView):
 class ProfileInquiryListView(RetrieveAPIView):
     queryset = Inquiry.objects.all()
     print("queryset from ProfileInquiryListView")
-    print(queryset)
     serializer_class = ProfileInquiryListSerializer
     permission_classes = (permissions.IsAuthenticated,)
-
     def get_object(self, *args, **kwargs):
         try:
             print("ProfileInquiryListView")
@@ -708,3 +722,23 @@ class UpdateComment(UpdateAPIView):
         if update_inquiry:
             return Response(status=HTTP_201_CREATED)
         return Response(status=HTTP_400_BAD_REQUEST)
+
+class SelectablesView(generics.ListAPIView):
+    # queryset = ProfileInfo.objects.all()
+    serializer_class = (testSerializer)
+    permission_classes = (permissions.AllowAny,)
+    if(len(InquiryStatus.objects.all()) == 0):
+        for i in InquiryStatus.CHOICES:
+            degree = InquiryStatus.objects.create(inquiry_status=i[0])
+    if(len(InquiryType.objects.all()) == 0):
+        for i in InquiryType.CHOICES:
+            degree = InquiryType.objects.create(inquiry_type=i[0])
+    if(len(TargetAudience.objects.all()) == 0):
+        for i in TargetAudience.CHOICES:
+            degree = TargetAudience.objects.create(target_audience=i[0])
+
+    def get_queryset(self):
+        print("Lacking")
+        qs = {"data"}
+        print(qs)
+        return qs

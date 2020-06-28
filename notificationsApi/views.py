@@ -74,7 +74,6 @@ class NotificationCreateView(CreateAPIView):
     parser_classes = (MultiPartParser, FormParser)
     queryset = Notification.objects.all()
     print("queryset Create view")
-    print(queryset)
     serializer_class = NotificationSerializer
     permission_classes = (permissions.IsAuthenticated,)
 
@@ -330,13 +329,13 @@ def infinite_filter(request, username):
     # userId = self.kwargs.get('username')
     userId = User.objects.get(username=username).id
     print("userID: ", userId)
-    print("END")
-    return Notification.objects.filter(user=userId)[int(offset): int(offset) + int(limit)]
+    print("END", Notification.objects.filter(user=userId).order_by('-timestamp').all()[int(offset): int(offset) + int(limit)])
+    return Notification.objects.filter(user=userId).order_by('-timestamp').all()[int(offset): int(offset) + int(limit)]
 
 def is_there_more_data(request, username):
     offset = request.GET.get("offset")
     userId = User.objects.get(username=username).id
-    if int(offset) > Notification.objects.filter(user=userId).count():
+    if(int(offset) > Notification.objects.filter(user=userId).count()):
         return False
     return True
 

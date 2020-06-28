@@ -13,12 +13,12 @@ import {
   PUT_PROFILE_ARTICLE_DETAIL_FAIL,
   PUT_PROFILE_ARTICLE_DETAIL_SUCCESS,
   DELETE_PROFILE_ARTICLE_DETAIL_FAIL,
-  DELETE_PROFILE_ARTICLE_DETAIL_SUCCESS
+  DELETE_PROFILE_ARTICLE_DETAIL_SUCCESS,
 } from "./actionTypes";
 import {
   profileMeetingRequestURL,
   profileArticleListURL,
-  profileArticleDetailURL
+  profileArticleDetailURL,
 } from "../../constants"
 
 const getProfileMeetingRequestsStart = () => {
@@ -53,9 +53,7 @@ export const getProfileMeetingRequests = (username, token) => {
     axios
       .get(profileMeetingRequestURL(username))
       .then(res => {
-        console.log("EHRENO")
         const meetingList = res.data;
-        console.log("EHRENO 2")
         dispatch(getProfileMeetingRequestsSuccess(meetingList));
       })
       .catch(err => {

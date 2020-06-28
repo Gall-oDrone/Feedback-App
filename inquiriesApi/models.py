@@ -3,32 +3,60 @@ from django.conf import settings
 from django.db import models
 from users.models import User, ProfileInfo, Universities
 
+class InquiryStatus(models.Model):
+    O = True
+    C = False
+    CHOICES = [
+        (O, ('open')),
+        (C, ('close'))
+    ]
+    inquiry_status=models.CharField(max_length=10, choices=CHOICES, blank=True)
+
+    def __str__(self):
+        return self.inquiry_status
+
 class InquiryType(models.Model):
-    HR = 'homework review'
-    A = 'admissions'
-    CI = 'college information'
-    S = 'scholarships'
-    CR = 'class review'
-    OTHER = 'other'
+    HR = 'Homework Review'
+    A = 'Admissions'
+    C = 'Courses'
+    CI = 'College Information'
+    S = 'Scholarships'
+    CR = 'Class Review'
+    GA = 'General Advice'
+    LO = "Loans"
+    FC = "Fees and Costs"
+    PS = "Problem Solving"
+    EP = "Exchange Programs"
+    LS = "Living style"
+    EA = "Extracurricular Activity"
+    OTHER = 'Other'
     CHOICES = [
         (HR, ('homework review')),
         (A, ('admissions')),
+        (C, ('courses')),
         (CI, ('college information')),
         (S, ('scholarships')),
         (CR, ('class review')),
+        (GA, ('general advice')),
+        (LO, ("loans")),
+        (FC, ("fees and costs")),
+        (PS, ("problem solving")),
+        (EP, ("exchange programs")),
+        (LS, ("living style")),
+        (EA, ("extracurricular activity")),
         (OTHER, ('other')),
     ]
-    inquiry_type=models.CharField(max_length=25, choices=CHOICES, blank=True)
+    inquiry_type=models.CharField(max_length=50, choices=CHOICES, blank=True)
 
     def __str__(self):
         return self.inquiry_type
 
 class TargetAudience(models.Model):
-    G = 'graduates'
-    U = 'undergraduates'
-    PHD = 'pHD'
-    MBA = 'MBA'
-    MS = 'MS'
+    G = 'Graduates'
+    U = 'Undergraduates'
+    PHD = 'pHD students'
+    MBA = 'MBA students'
+    MS = 'MS students'
     OTHER = 'other'
     CHOICES = [
         (G, ('graduates')),
@@ -38,7 +66,7 @@ class TargetAudience(models.Model):
         (MS, ('MS')),
         (OTHER, ('other')),
     ]
-    target_audience=models.CharField(max_length=25, choices=CHOICES, blank=True)
+    target_audience=models.CharField(max_length=50, choices=CHOICES, blank=True)
 
     def __str__(self):
         return self.target_audience
@@ -115,8 +143,8 @@ class ContactOption(models.Model):
         return self.contact_option
 
 class PreferLanguage(models.Model):
-    SPANISH = 'spanish'
-    ENGLISH = 'english'
+    SPANISH = 'Spanish'
+    ENGLISH = 'English'
     CHOICES = [
         (SPANISH, ('spanish')),
         (ENGLISH, ('english')),
@@ -142,8 +170,7 @@ class Inquiry(models.Model):
     timestamp = models.DateTimeField(auto_now_add=True, null=True)
     start = models.DateTimeField(auto_now_add=True, null=True)
     end = models.DateTimeField(auto_now_add=False, null=True)
-    opened = models.BooleanField(default=True)
-    closed = models.DateTimeField(auto_now_add=False, null=True)
+    status = models.OneToOneField(InquiryStatus, on_delete=models.CASCADE, null=True)
     ufile = models.ImageField(upload_to="files/", blank=True)
     rewards = models.BooleanField(default=False)
 

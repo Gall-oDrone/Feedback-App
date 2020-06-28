@@ -2,11 +2,15 @@ from django.db.models import Q, Count
 from django.shortcuts import render, get_object_or_404
 from .models import Journal, Category
 from articlesApi.models import Article, Category, Tag
-from users.models import User, ProfileInfo, Universities
+from users.models import User, ProfileInfo, Universities, Degree, Bachelor, Master, Doctorate, Course
+from surveyApi.models import Survey
 from inquiriesApi.models import Inquiry, InquiryType, TargetAudience, Topic, PreferLanguage
+from sessionsApi.models import Topic, Experience
 from .serializers import JournalSerializer
 from articlesApi.serializers import ArticleSerializer
 from inquiriesApi.serializers import InquirySerializer
+from sessionsApi.serializers import SessionSerializer
+from surveyApi.serializers import SurveySerializer
 from rest_framework import generics, permissions
 from rest_framework.response import Response
 

@@ -20,6 +20,8 @@ export const authSuccess = user => {
 };
 
 export const authFail = error => {
+  console.log("COÑO: ", error)
+  window.location.reload(false);
   return {
     type: actionTypes.AUTH_FAIL,
     error: error
@@ -29,8 +31,6 @@ export const authFail = error => {
 export const logout = () => {
   localStorage.removeItem("user");
   // window.location.reload(false);
-  axios
-  .post(authLogOutURL)
   return {
     type: actionTypes.AUTH_LOGOUT
   };

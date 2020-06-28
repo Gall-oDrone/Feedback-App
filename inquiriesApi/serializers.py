@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Inquiry, Comment, InquiryType, Like, Rating, File, CommentReply,InquiryType, TargetAudience, Topic, ContactOption, PreferLanguage
+from .models import Inquiry, Comment, InquiryType, Like, Rating, File, CommentReply, InquiryStatus, TargetAudience, Topic, ContactOption, PreferLanguage
 from users.models import User, ProfileInfo, Universities
 from django.core.files.storage import FileSystemStorage
 import json
@@ -22,7 +22,7 @@ class InquirySerializer(serializers.ModelSerializer):
     contact_option = StringSerializer(many=True)
     author = StringSerializer(many=False)
     user_university = StringSerializer(many=False)
-    opened = StringSerializer(many=False)
+    status = serializers.BooleanField()
     contact_option = StringSerializer(many=True)
     language = StringSerializer(many=True)
 
@@ -90,6 +90,8 @@ class InquirySerializer(serializers.ModelSerializer):
         if "contact" in data:
             self.add_fields(data["contact"],3,inquiry)
         self.add_fields(data["inquiry_type"],0,inquiry)
+        if "inquiry_status" in data:
+            self.add_fields(data["inquiry_status"],5,inquiry)
 
         inquiry.save()
         return inquiry
@@ -157,6 +159,7 @@ class InquirySerializer(serializers.ModelSerializer):
                 2:Topic.TOPICS,
                 3:ContactOption.CHOICES,
                 4:PreferLanguage.CHOICES,
+                5:InquiryStatus.CHOICES
             }
         return switcher.get(i,"Invalid day of week")
 
@@ -166,12 +169,14 @@ class InquirySerializer(serializers.ModelSerializer):
         t =Topic()
         co = ContactOption()
         pl =PreferLanguage()
+        ins = InquiryStatus()
         switcher={
                 0:it,
                 1:ta,
                 2:t ,
                 3:co,
                 4:pl,
+                5:ins
             }
         print("switcher: ", switcher.get(i))
         return switcher.get(i,"Invalid day of week")
@@ -192,6 +197,9 @@ class InquirySerializer(serializers.ModelSerializer):
         elif(i == 4):
             m.language = f
             return m
+        elif(i == 5):
+            m.inquiry_status = f
+            return m
         else:
             return "Invalid day of week"
 
@@ -202,6 +210,7 @@ class InquirySerializer(serializers.ModelSerializer):
                 2:Topic,
                 3:ContactOption,
                 4:PreferLanguage,
+                5:InquiryStatus
             }
         return switcher.get(i,"Invalid day of week")
     def scher5(self, i, m, inquiry):
@@ -225,6 +234,10 @@ class InquirySerializer(serializers.ModelSerializer):
         elif(i == 4):
             mt = sch.objects.get(language=m)
             inquiry.language.add(mt.id)
+            return 
+        elif(i == 5):
+            mt = sch.objects.get(inquiry_status=m)
+            inquiry.status.set(mt.id)
             return 
         else:
             return "Invalid day of week"
@@ -340,3 +353,36 @@ class FileFormSerializer(serializers.ModelSerializer):
     class Meta:
         model = File
         fields = ("__all__")
+
+class testSerializer(serializers.Serializer):
+    Itype = serializers.SerializerMethodField()
+    topic = serializers.SerializerMethodField()
+    audience = serializers.SerializerMethodField()
+
+    def get_Itype(self, obj):
+        ob = []
+        for d in InquiryType.CHOICES:
+            ob.append({"value": d[0], "label": d[0]})
+        obj = ob
+        return obj
+    
+    def get_topic(self, obj):
+        ob = []
+        for d in Topic.TOPICS:
+            ob.append({"value": d[0], "label": d[0]})
+        obj = ob
+        return obj
+
+    def get_audience(self, obj):
+        ob = []
+        for d in TargetAudience.CHOICES:
+            ob.append({"value": d[0], "label": d[0]})
+        obj = ob
+        return obj
+    
+    class Meta:
+        fields = (
+            "Itype",
+            "topic",
+            "audience"
+        )

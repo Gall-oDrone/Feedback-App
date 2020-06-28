@@ -13,7 +13,8 @@ import {
 import {
   profileUserInfoURL,
   profileAccountUserInfoURL,
-  profileAccountUserInfoUpdateURL
+  profileAccountUserInfoUpdateURL,
+  profilePageURL,
 } from "../../constants"
 
 const getProfileMeetingInfoStart = () => {
@@ -94,7 +95,7 @@ export const getProfileAccountInfo = (token, userID) => {
             "Content-Type": "application/json",
             Authorization: `Token ${token}`
         }
-        axios.get(profileAccountUserInfoURL(userID))
+        axios.get(profilePageURL(userID))
         .then(res => {
             const data = res.data;
             console.log("data: "+ JSON.stringify(data))

@@ -5,17 +5,23 @@ from django.http import HttpResponseRedirect, Http404, JsonResponse, HttpRespons
 from django.shortcuts import render, get_object_or_404
 from django.core.exceptions import ObjectDoesNotExist
 from rest_framework.response import Response
-from rest_framework import viewsets, permissions
+from rest_framework import viewsets, permissions, generics
 from rest_framework.status import HTTP_200_OK, HTTP_400_BAD_REQUEST, HTTP_201_CREATED, HTTP_400_BAD_REQUEST
 from rest_framework.parsers import MultiPartParser, FileUploadParser, FormParser, JSONParser
 import json
-from .models import User, Profile, FriendRequest, MeetingRequest, ProfileInfo
+from .models import User, Profile, Universities, FriendRequest, MeetingRequest, ProfileInfo, Degree, Bachelor, Master, Doctorate, Course
 from .serializers import (
     UserSerializer, 
     UserProfileLCRequestSerializer, 
     ProfileSerializer, 
     ProfileInfoSerializer, 
-    ProfileInfoListSerializer 
+    ProfilePageSerializer,
+    ProfileInfoListSerializer,
+    FetchDataSerializer,
+    testSerializer,
+    testSerializer2,
+    degreeSerializer,
+    UniSerializer
 )
 
 from rest_framework.generics import (
@@ -26,6 +32,7 @@ from rest_framework.generics import (
     RetrieveUpdateDestroyAPIView
 )
 import requests
+import json
 
 
 class UserViewSet(viewsets.ModelViewSet):
@@ -208,11 +215,31 @@ class UserMeetingInfoView(RetrieveAPIView):
         except ObjectDoesNotExist:
             raise Http404("You do not have an active order")
             return Response({"message": "You do not have an active order"}, status=HTTP_400_BAD_REQUEST)
+
+class ProfilePageView(RetrieveAPIView):
+    queryset = ProfileInfo.objects.all()
+    serializer_class = ProfileInfoSerializer
+    permission_classes = (permissions.AllowAny,)
+
+    def get_object(self, *args, **kwargs):
+        try:
+            print("UserProfileInfoView")
+            username = self.kwargs.get('username')
+            user = User.objects.get(username=username)
+            userInfo = ProfileInfo.objects.get(profile_username=user.id)
+            ProfileInfoSerializer(userInfo)
+            return userInfo
+        except ObjectDoesNotExist:
+            raise Http404("You do not have an active order")
+            return Response({"message": "You do not have an active order"}, status=HTTP_400_BAD_REQUEST)
                 
 class UserProfileInfoView(RetrieveUpdateDestroyAPIView):
     queryset = ProfileInfo.objects.all()
     serializer_class = ProfileInfoSerializer
     permission_classes = (permissions.IsAuthenticated,)
+    if(len(Degree.objects.all()) == 0):
+        for d in Degree.DEGREES:
+            degree = Degree.objects.create(degree=d[0])
 
     def get_object(self, *args, **kwargs):
         try:
@@ -237,6 +264,52 @@ class UserProfileInfoView(RetrieveUpdateDestroyAPIView):
             return Response(status=HTTP_201_CREATED)
         return Response(status=HTTP_400_BAD_REQUEST)
 
+class Degrees_and_CoursesView(generics.ListAPIView):
+    # queryset = ProfileInfo.objects.all()
+    serializer_class = (testSerializer)
+    permission_classes = (permissions.AllowAny,)
+    if(len(Bachelor.objects.all()) == 0):
+        for b in Bachelor.BACHELOR_DEGREES:
+            bachelor = Bachelor.objects.create(bachelor_degree=b[0])
+    if(len(Master.objects.all()) == 0):
+        for m in Master.MASTER_DEGREES:
+            master = Master.objects.create(master_degree=m[0])
+    if(len(Doctorate.objects.all()) == 0):
+        for p in Doctorate.PHD_DEGREES:
+            pHD = Doctorate.objects.create(pHd_degree=p[0])
+    if(len(Course.objects.all()) == 0):
+        for c in Course.COURSES:
+            course = Course.objects.create(course=c[0])
+
+    def get_queryset(self):
+        print("Lacking")
+        # qs1 = article_filter(self.request)
+        qs = {"data"}
+        # qs = {"degree": Degree.DEGREES}
+        # qs = {"degree": Degree.DEGREES, "bachelor": Bachelor.BACHELOR_DEGREES, "master": Master.MASTER_DEGREES,
+        #     "pHD": Doctorate.PHD_DEGREES, "course": Course.COURSES}
+        # qs = {{"degree": Degree.DEGREES}, {"bachelor": Bachelor.BACHELOR_DEGREES}, {"master": Master.MASTER_DEGREES},
+        #     {"pHD": Doctorate.PHD_DEGREES}, {"course": Course.COURSES}}
+        # qs = [Degree.DEGREES,  Bachelor.BACHELOR_DEGREES, Master.MASTER_DEGREES,
+        #      Doctorate.PHD_DEGREES, Course.COURSES]
+        print(qs)
+        return qs
+
+    # def get_object(self, *args, **kwargs):
+    #     try:
+    #         obj = {Degree.DEGREES}
+    #         return obj
+    #     except ObjectDoesNotExist:
+    #         raise Http404("You do not have an active order")
+    #         return Response({"message": "You do not have an active order"}, status=HTTP_400_BAD_REQUEST)
+
+# BachelorView,
+# MasterView,
+# DoctorateView,
+# CourseView
+
+
+
 # class UserProfileInfoHeaderView(RetrieveAPIView):
 #     queryset = ProfileInfo.objects.all()
 #     serializer_class = ProfileInfoSerializer
@@ -254,3 +327,23 @@ class UserProfileInfoView(RetrieveUpdateDestroyAPIView):
 #         except ObjectDoesNotExist:
 #             raise Http404("You do not have an active order")
 #             return Response({"message": "You do not have an active order"}, status=HTTP_400_BAD_REQUEST)
+
+class UniView(generics.ListAPIView):
+    serializer_class = UniSerializer
+    permission_classes = (permissions.AllowAny,)
+    queryset = Universities.objects.all()
+    print("Universities QS")
+    print(queryset)
+
+class DegView(generics.ListAPIView):
+    serializer_class = UniSerializer
+    permission_classes = (permissions.AllowAny,)
+    queryset = Universities.objects.all()
+    print("Universities QS")
+    print(queryset)
+
+    # def get(self, request, *args, **kwargs):
+    #     uni = Universities()
+    #     obj = Universities.objects.get(id= "1")
+    #     print("OBJ", obj)
+    #     return Response({"university": obj}, status=HTTP_200_OK)

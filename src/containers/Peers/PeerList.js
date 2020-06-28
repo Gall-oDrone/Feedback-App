@@ -186,8 +186,8 @@ class ProductList extends React.Component {
                               <Col span={4}>
                                   <span>Status: </span>
                                   <br/>
-                                  {item.opened === "True"? 
-                                    <Tag color="green">Opened</Tag>:<Tag color="red">Closed</Tag>}
+                                  {item.status === true ? 
+                                    <Tag color="green">Open</Tag>:<Tag color="red">Closed</Tag>}
                               </Col>
                             </Row>
                           </div>

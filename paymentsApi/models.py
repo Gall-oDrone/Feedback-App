@@ -5,12 +5,14 @@ from django.db.models import Sum
 from django.shortcuts import reverse
 from django_countries.fields import CountryField
 from users.models import User, Profile
+from sessionsApi.models import Session
 
 CATEGORY_CHOICES = (
     ('S', 'Shirt'),
     ('SW', 'Sport wear'),
     ('OW', 'Outwear'),
-    ('GC', 'Gift Card')
+    ('SE', 'Session'),
+    ('GC', 'Gift Card'),
 )
 
 LABEL_CHOICES = (
@@ -110,6 +112,27 @@ class OrderItem(models.Model):
             return self.get_total_discount_item_price()
         return self.get_total_item_price()
 
+class SessionOrderItem(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE )
+    ordered = models.BooleanField(default=False)
+    session = models.ForeignKey(Session, on_delete=models.CASCADE)
+    hrs = models.PositiveSmallIntegerField(default=1)
+    date = models.DateTimeField(auto_now_add=False, null=True)
+    start_time = models.DateTimeField(auto_now_add=False, null=True)
+    end_time = models.DateTimeField(auto_now_add=False, null=True)
+
+    def __str__(self):
+        return f"{self.user} ordered a session with {self.session.user} on {self.date}"
+
+    def get_total_session_price(self):
+        return self.hrs * self.session.price_per_hour
+    
+    def get_session_user(self):
+        return self.session.user
+    
+    def get_session(self):
+        return self.session
+
 class Order(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     ref_code = models.CharField(max_length=20, blank=True, null=True)
@@ -117,6 +140,7 @@ class Order(models.Model):
     start_date = models.DateTimeField(auto_now_add=True)
     ordered_date = models.DateTimeField()
     ordered = models.BooleanField(default=False)
+    payment_successful = models.BooleanField(default=False)
     shipping_address = models.ForeignKey(
         'Address', related_name='shipping_address', on_delete=models.SET_NULL, blank=True, null=True)
     billing_address = models.ForeignKey(
@@ -139,6 +163,48 @@ class Order(models.Model):
             total += order_item.get_final_price()
         if self.coupon:
             total -= self.coupon.amount
+        return total
+
+class SessionOrder(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    ref_code = models.CharField(max_length=20, blank=True, null=True)
+    session = models.ManyToManyField(SessionOrderItem)
+    ordered_date = models.DateTimeField()
+    ordered = models.BooleanField(default=False)
+    payment_successful = models.BooleanField(default=False)
+    billing_address = models.ForeignKey(
+        'Address', related_name='session_billing_address', on_delete=models.SET_NULL, blank=True, null=True)
+    payment = models.ForeignKey(
+        'Payment', on_delete=models.SET_NULL, blank=True, null=True)
+    # coupon = models.ForeignKey(
+    #     'Coupon', on_delete=models.SET_NULL, blank=True, null=True)
+    refund_requested = models.BooleanField(default=False)
+    refund_granted = models.BooleanField(default=False)
+
+    def __str__(self):
+        return self.user.username
+    
+    def get_session_user2(self, pk):
+        userId = str
+        for s in self.session.all():
+            if(s.pk == pk):
+                userId = s.get_session_user()
+        return userId
+
+    def get_session2(self, pk):
+        userId = str
+        for s in self.session.all():
+            if(s.pk == pk):
+                userId = s.get_session()
+        return userId
+
+    def get_total(self, pk):
+        total = 0
+        for s in self.session.all():
+            if(s.pk == pk):
+                total += s.get_total_session_price()
+        # if self.coupon:
+        #     total -= self.coupon.amount
         return total
 
 class Address(models.Model):

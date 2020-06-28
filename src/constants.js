@@ -1,12 +1,14 @@
 let localhost = null
+let files = null
 const publicUrl = new URL(process.env.PUBLIC_URL, window.location);
 if (process.env.NODE_ENV === "production"){
   localhost = 'https://py3-test-app.herokuapp.com'
+  files = 'https://py3-test-app-bucket.s3.amazonaws.com'
   console.log("process.env.PUBLIC_URL", JSON.stringify(process.env.PUBLIC_URL))
   console.log("window.location", JSON.stringify(window.location))
   console.log("publicUrl", JSON.stringify(publicUrl))
 } else {
-  localhost = 'http://127.0.0.1:8000'
+  localhost = files = 'http://127.0.0.1:8000'
   console.log("process.env.PUBLIC_URL", JSON.stringify(process.env.PUBLIC_URL))
   console.log("window.location", JSON.stringify(window.location))
   console.log("publicUrl", JSON.stringify(publicUrl))
@@ -19,18 +21,21 @@ const mediaURL = imageURL
 
 // export const endpoint = `${localhost}`
 export const endpoint = `${localhost}${apiURL}`
-const image_endpoint = `${localhost}${imageURL}`
-export const media_endpoint = `${localhost}${mediaURL}`
+const image_endpoint = `${files}${imageURL}`
+export const media_endpoint = `${files}${mediaURL}`
 
 export const productListURL = `${endpoint}/paymentsApi/products/`;
 export const productDetailURL = id => `${endpoint}/payments/products/${id}/`;
 export const directBuyURL = `${endpoint}/payments/direct-buy/`;
+export const sessionDirectBuyURL = `${endpoint}/payments/session-direct-buy/`;
 export const addToCartURL = `${endpoint}/payments/add-to-cart/`;
 export const orderSummaryURL = `${endpoint}/payments/order-summary/`;
+export const sessionOrderSummaryURL = `${endpoint}/payments/session-order-summary/`;
+export const paymentSURL = `${endpoint}/payments/payment-successful/`;
 export const checkoutURL = `${endpoint}/payments/checkout/`;
 export const addCouponURL = `${endpoint}/payments/add-coupon/`;
 export const countryListURL = `${endpoint}/payments/countries/`;
-export const image_URL = `${image_endpoint}/`;
+export const image_URL = `${files}/`;
 export const userIDURL = `${endpoint}/payments/user-id/`;
 export const addressListURL = addressType =>
   `${endpoint}/payments/addresses/?address_type=${addressType}`;
@@ -72,10 +77,16 @@ export const incentivesDetailURL = userID => `${endpoint}/incentives/listdetail/
 export const profileMeetingRequestURL = username => `${endpoint}/users/lcrequest/${username}`
 export const profileArticleListURL = username => `${endpoint}/articles/list/${username}/`
 export const profileArticleDetailURL = (articleID, username) => `${endpoint}/articles/${articleID}/detail/${username}/`
+export const profileSessionListURL = username => `${endpoint}/sessions/list/${username}/`
+export const profileSessionDetailURL = (articleID, username) => `${endpoint}/sessions/detail/${articleID}/${username}/`
+export const profileSessionRoomURL = (sessionID, username) => `${endpoint}/sessions/room/${sessionID}/${username}/`
+export const profileInquiryListURL = username => `${endpoint}/inquiries/list/${username}/`
+export const profileInquiryDetailURL = (articleID, username) => `${endpoint}/inquiries/${articleID}/detail/${username}/`
 export const profileAccountInfoURL = (userId) => `${endpoint}/users/profile/account/info/${userId}`
 export const profileURL = (articleID, username) => `${endpoint}/articles/${articleID}/detail/${username}/`
 export const profileUserInfoURL = username => `${endpoint}/users/profile/info/${username}`
-
+export const profilePageURL = username => `${endpoint}/users/profile-page/${username}`
+ 
 export const profileAccountUserInfoURL = userID => `${endpoint}/users/profile/account/user/info/${userID}`
 export const profileAccountUserUpdateInfoURL = userID => `${endpoint}/users/profile/account/info/${userID}`
 export const profileAccountUserInfoUpdateURL = username => `${endpoint}/users/profile/account/user/info/update/${username}`
@@ -116,6 +127,7 @@ export const inquiryDetailURL = (ID)=> `${endpoint}/inquiries/${ID}`
 export const inquiryUpdateURL = (inquiryID)=> `${endpoint}/inquiries/${inquiryID}`
 export const inquiryCreateURL = `${endpoint}/inquiries/create/`
 export const inquiryURL = (notificationID, username)=> `${endpoint}/notifications/${notificationID}/detail/delete/${username}/`
+export const inquirySelectableListURL = `${endpoint}/inquiries/types-and-others/`
 
 export const inquiryRatingURL = data => `${endpoint}/inquiries/${data.inquiryID}/rating/`
 export const fetchInquiryRatingURL = inquiryID => `${endpoint}/inquiries/${inquiryID}`
@@ -137,3 +149,16 @@ export const vcroomGetDetailURL =  (chatID) => `${endpoint}/chat/video-chat/${ch
 export const chatDetailURL = (chatID) => `${endpoint}/chat/detail/${chatID}`
 export const chatDetailParticipantsURL = (chatID) => `${endpoint}/chat/detail/participants/${chatID}`
 export const chatDetailRoomStatusURL = (chatID) => `${endpoint}/chat/detail/status/${chatID}`
+
+export const sessionListURL = `${endpoint}/sessions/list/`
+export const sessionCreateURL = `${endpoint}/sessions/session/create/`
+export const sessionDetailURL = (sessionID) => `${endpoint}/sessions/detail/${sessionID}`
+export const sessionProfileDetailURL = (sessionID, userID) => `${endpoint}/sessions/detail/${sessionID}/${userID}`
+export const sessionUpdateURL = (sessionID) => `${endpoint}/sessions/session/${sessionID}/update/`
+
+export const fetchDegreesAndCoursesURL = `${endpoint}/users/courses-degrees/`
+
+// export const walletURL = username => `${endpoint}/wallet/userlist/${username}`
+export const walletBalanceURL = username => `${endpoint}/wallet/balance/${username}`
+export const TransactionListURL = (walletID, username) => `${endpoint}/wallet/transactions/${walletID}/${username}`
+// export const walletTransactiontURL = username => `${endpoint}/wallet/transaction/${walletID}/${username`

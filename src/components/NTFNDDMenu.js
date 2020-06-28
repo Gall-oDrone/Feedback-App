@@ -12,6 +12,9 @@ function DropdownMenu(props) {
     const [loading, setLoading] = useState(false);
     const [ spinner, setSpinner ] = useState(true);
     const [ntfns, setNTFNS] = useState(props.NTFNS);
+    const [hasMore, setHasMore] = useState(props.hasMore);
+    const [offset, setOffset] = useState(5);
+    const [limit, setLimit] = useState(7);
     console.log("ntfns: "+ JSON.stringify(ntfns), props)
     useEffect(() => {
       setMenuHeight(dropdownRef.current?.firstChild.offsetHeight)
@@ -36,26 +39,33 @@ function DropdownMenu(props) {
       let element = e.target
       if (element.scrollHeight - element.scrollTop === element.clientHeight) {
        
-        
-          if(props.hasMore === true) {
+        console.log("CULO: "+ hasMore)
+          if(hasMore === true) {
             setLoading(true)
             setTimeout(() =>{
               axios.defaults.headers = {
                 "Content-Type": "application/json",
                 Authorization: `Token ${props.token}`
               }
-              axios.get(notificationListScrollerURL(props.username, 7, 5))
+              axios.get(notificationListScrollerURL(props.username, limit, offset))
               .then(res => {
                 console.log("data: "+ JSON.stringify(res.data))
                   const data = res.data.notification;
+                  const has_more = res.data.has_more;
                   Object.values(data).map((el, i) => {
                     const content =
                     {'id': el.id,
                     'author': el.user,
                     'content': el.description,
                     'timestamp': Date(el.timestamp)}
-                    setNTFNS(ntfns.concat(content))
+                    if(has_more === true){
+                      setNTFNS(ntfns.concat(content))
+                      setOffset(limit)
+                      setLimit(offset+limit)
+                    }
                   })
+                  setHasMore(has_more)
+                  console.log("ahah: "+ has_more, hasMore)
               })
               .catch(err => {
                   console.error("ERROR: ", err)
@@ -100,7 +110,7 @@ class NTFNDDMenu extends React.Component {
               hasMore={this.props.hasMore}>
 
             </DropdownMenu>
-          : null
+          : <p>Empty</p>
         )
     }
 

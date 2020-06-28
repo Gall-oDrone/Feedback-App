@@ -2,7 +2,7 @@ from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.contrib.auth.models import Group
 
-from .models import User, Student, Profile, FriendRequest, MeetingRequest, ProfileInfo, Universities
+from .models import User, Student, Profile, FriendRequest, MeetingRequest, ProfileInfo, Universities, Bachelor, Master, Doctorate, Course
 
 
 class UserAdmin(BaseUserAdmin):
@@ -35,3 +35,7 @@ admin.site.register(FriendRequest)
 admin.site.register(MeetingRequest)
 admin.site.register(ProfileInfo)
 admin.site.register(Universities)
+admin.site.register(Bachelor)
+admin.site.register(Master)
+admin.site.register(Doctorate)
+admin.site.register(Course)

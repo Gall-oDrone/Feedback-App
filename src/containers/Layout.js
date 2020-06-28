@@ -1,15 +1,17 @@
 import React from "react";
-import { Layout, Menu, Breadcrumb, Button, Icon, Avatar, Input, Dropdown } from "antd";
+import { Layout, Menu, Breadcrumb, Button, Icon, Avatar, Input, Dropdown, Row, Col, Tooltip } from "antd";
 import { Link, withRouter } from "react-router-dom";
 import { connect } from "react-redux";
 import * as actions from "../store/actions/auth";
 import ProfileHeaderMenu from "../components/ProfileHeaderMenu"
 import NotificationHeaderMenu from "../components/NotificationHeaderMenu"
 import NavMenu from "../components/navBar";
+import NavMenu2 from "../components/navBarWrapper";
 import { ReactComponent as BellIcon } from '../icons/bell.svg';
 import {getProfileAccountDetail} from "../store/actions/profileAccountInfo"
 import CreateHeaderMenu from "../components/CreateHeaderMenu";
 import "../assets/main.css";
+import "../assets/navBar.css";
 
 const { Search } = Input;
 const { Header, Content, Footer, Sider } = Layout;
@@ -75,39 +77,82 @@ class CustomLayout extends React.Component {
   render() {
     console.log(" Layour this.props: ")
     console.log(this.props)
+
+    let searchForm = this.state.showForm ? (
+      <form className="menu__search-form" method="POST">
+          <input className="menu__search-input" placeholder="Type and hit enter" />
+      </form>
+  ) : '';
+
     return (
       <Layout className="parent layout" >
                <Header style={{ height: "50px", padding: "0 15px"}}>
           <Menu
             theme="dark"
             mode="horizontal"
-            defaultSelectedKeys={["2"]}
             selectable={false}
             style={{ lineHeight: "50px" }}
           >
             
-            {this.props.isAuthenticated ? (
-              <Menu.Item key="2" onClick={this.handleLogOut}>
-                Logout
-              </Menu.Item>
-            ) : (
-                <Menu.Item key="2">
-                  <Link to="/login">Login</Link>
-                </Menu.Item>
-              )}
                 {/* <Menu.Item key="3" style= {{height: 40}}>
                 <Search placeholder="input search text" onSearch={value => console.log(value)} enterButton />
                 </Menu.Item> */}
-                <Menu.Item key="4" style= {{float: 'right'}}>
-                  {/* <NotificationHeaderMenu/> */}
+                
+                <Menu.Item key="1" style= {{float: 'left'}}>
+                  <div className="navbar-item-in">
+                    <Link to="/">
+                        <Icon type="home" />
+                        <span className="caption">HOME</span>
+                    </Link>
+                  </div>
+                  </Menu.Item>
+                <Menu.Item key="2" style= {{float: 'left'}}>
+                  <div className="navbar-item-in">
+                      <Link to="/articles/">
+                        <Icon type="project" />
+                        <span className="caption">PROJECTS</span>
+                      </Link> 
+                  </div>
                 </Menu.Item>
-                <Menu.Item key="6" style= {{float: 'right'}}>
-                    <ProfileHeaderMenu auth={this.props.isAuthenticated} logout={this.props.logout} userId={this.props.userId}/>
+                <Menu.Item key="3" style= {{float: 'left'}}>
+                  <div className="navbar-item-in">
+                      <Link to="/inquiries/">
+                          <Icon type="solution" />
+                          <span className="caption">INQUIRIES</span>
+                      </Link>
+                  </div>
+                  </Menu.Item>
+                <Menu.Item key="4" style= {{float: 'left'}}>
+                  <div className="navbar-item-in">
+                        <Link to="/incentives/">
+                          <Icon type="shop" />
+                          <span className="caption">SHOP</span>
+                        </Link>
+                  </div>
+                </Menu.Item>
+                <Menu.Item key="5" style= {{float: 'left'}}>
+                  <div className="navbar-item-in">
+                        <Link to="/sessions/">
+                          <Icon type="team" />
+                          <span className="caption">MEET AND TALK</span>
+                        </Link>
+                  </div>
+                </Menu.Item>
+                <Menu.Item key="6" style= {{float: 'left'}}>
+                  <div className="navbar-item-in">
+                      <Link to="/survey/">
+                        <Icon type="reconciliation" />
+                        <span className="caption">SURVEY</span>
+                      </Link>
+                  </div>
                 </Menu.Item>
                 <Menu.Item key="7" style= {{float: 'right'}}>
-                    <CreateHeaderMenu/>
+                    <ProfileHeaderMenu auth={this.props.isAuthenticated} logout={this.props.logout} userId={this.props.userId}/>
                 </Menu.Item>
                 <Menu.Item key="8" style= {{float: 'right'}}>
+                    <CreateHeaderMenu/>
+                </Menu.Item>
+                <Menu.Item key="" style= {{float: 'right'}}>
                   <NavMenu/>
                 </Menu.Item>
                 
@@ -159,6 +204,12 @@ class CustomLayout extends React.Component {
                     <span> Chat</span>
                   </Link>
                 </Menu.Item>
+                <Menu.Item key="8">
+                  <Link to={`/profile-page/${this.props.username}`}>
+                    <Icon type="user"/>
+                    <span> Profile Page</span>
+                  </Link>
+                </Menu.Item>
                 {/* <Menu.Item key="8">
                   <Link to={`/video-chat/`}>
                     <Icon type="video-camera"/>
@@ -171,19 +222,19 @@ class CustomLayout extends React.Component {
           )}
         <Content style={{ padding: "0 50px", display:"inline"}}>        
           <Breadcrumb style={{ margin: "16px 0" }}>
-            <Breadcrumb.Item>
+            {/* <Breadcrumb.Item>
               <Link to="/articles/">Home</Link>
-            </Breadcrumb.Item>
+            </Breadcrumb.Item> */}
             {/* <Breadcrumb.Item>
               <Link to="/peers/">Peers</Link>
             </Breadcrumb.Item> */}
-            <Breadcrumb.Item>
+            {/* <Breadcrumb.Item>
               <Link to="/inquiries/">Inquiries</Link>
-            </Breadcrumb.Item>
+            </Breadcrumb.Item> */}
             {/* <Breadcrumb.Item>
               <Link to="/peers3/">Peers3</Link>
             </Breadcrumb.Item> */}
-            <Breadcrumb.Item>
+            {/* <Breadcrumb.Item>
               <Link to="/articles/">Articles and Proyects</Link>
             </Breadcrumb.Item>
             <Breadcrumb.Item>
@@ -197,7 +248,13 @@ class CustomLayout extends React.Component {
             </Breadcrumb.Item>
             <Breadcrumb.Item>
                 <Link to={"/create-inquiry/"}>Post an Inquiry</Link>
+            </Breadcrumb.Item> */}
+            {/* <Breadcrumb.Item>
+                <Link to={"/sessions/"}>Meet and Talk</Link>
             </Breadcrumb.Item>
+            <Breadcrumb.Item>
+                <Link to={"/wallet/"}>User Wallet</Link>
+            </Breadcrumb.Item> */}
             {/* <Breadcrumb.Item>
                 <Link to={"/order-summary/"}>Order Summary</Link>
             </Breadcrumb.Item>

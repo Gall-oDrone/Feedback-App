@@ -303,8 +303,8 @@ render(){
 
                             <div>
                             {this.state.dateNow > moment(new Date(data.date_to_appointment)).format("DD-MM-YYYY HH:mm") ? (
-                              <Link to={`/frameTest`}>
-                              <Button type="primary" disabled size={"small"}>
+                              <Link to={`/frameTest/${BookedMeetingList[index].room_name}`}>
+                              <Button type="primary"  size={"small"}>
                                 Finished
                               </Button>
                               </Link>

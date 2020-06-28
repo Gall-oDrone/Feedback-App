@@ -18,7 +18,8 @@ from inquiriesApi.views import (
     UpdateComment,
     FileCreateView,
     FileDestroyView,
-    CommentListView
+    CommentListView,
+    SelectablesView
 )
 
 # from inquiriesApi.views import InquiryViewSet
@@ -48,6 +49,7 @@ urlpatterns = [
     #path('<pk>/video/', VideoViewSet.as_view()),
     path('create/images/', FileCreateView.as_view),
     path('destroy/images/', FileDestroyView.as_view),
+    path('types-and-others/', SelectablesView.as_view()),
     url(r'^video/', include(router.urls)),
     # url(r'^comment/', include(router.urls))
 

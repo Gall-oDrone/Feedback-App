@@ -13,6 +13,7 @@ import ArticleUpdate from "./containers/ArticleUpdate";
 import ArticleDetail from "./containers/ArticleDetail";
 import ArticleDetailMenu from "./containers/ArticleDetailMenu";
 
+import PeerSlide from "./containers/Peers/PeerSlideShow"
 import PeerList from "./containers/Peers/PeerList"
 import PeerList2 from "./containers/Peers/PeerList2"
 import PeerList3 from "./containers/Peers/PeerDetail"
@@ -34,12 +35,19 @@ import RoomMenu from "./containers/RoomMenu"
 import IncentiveList from "./containers/IncentiveList";
 import MeetingReview from "./components/MeetingReview"
 import MeetingReviewP from "./containers/MeetingParticipantSelector"
+
 import ProfileAccountInfo from "./components/ProfileAccountInfo"
 import ProfileAccountUserInfo from "./components/ProfileAccountUserInfo"
 import ProfileAccountArticleList from "./components/ProfileArticleList"
 import ProfileAccountArticleDetail from "./components/ProfileArticleDetail"
+import ProfileAccountInquiryList from "./components/ProfileInquiryList"
+import ProfileAccountInquiryDetail from "./components/ProfileInquiryDetail"
+import ProfileAccountSessionList from "./components/ProfileSessionList"
+import ProfileAccountSessionDetail from "./components/ProfileSessionDetail"
 import ProfileSurveyMenu from "./components/ProfileSurveyMenu"
 import ProfileAccountIncentiveList from "./containers/ProfileAccountIncentives"
+import ProfilePage from "./containers/ProfilePage"
+
 import Calendar from "./components/Calendar"
 
 import SurveyList from "./containers/SurveyList";
@@ -64,11 +72,20 @@ import AddressForm from "./containers/AddressForm";
 import Payment from "./containers/ProfilePaymentHistory";
 import PaymentForm from "./containers/PaymentHistory";
 
+import Wallet from "./containers/TransferMain";
+import PeerSlideShow from "./containers/Peers/PeerSlideShow";
+
+import SessionList from "./containers/SessionList";
+import SessionCreate from "./containers/SessionCreate";
+import SessionDetail from "./containers/SessionDetail";
+import SessionRoomMenu from "./containers/SessionRoomMenu2"
+
 const BaseRouter = () => (
   <Hoc>
     <Route exact path="/create/" component={AssignmentChoices} />
     <Route exact path="/articles/" component={ArticleList} />
 
+    <Route exact path="/peerSlide/" component={PeerSlideShow} />
     <Route exact path="/peers/" component={PeerList} />
     <Route exact path="/peers2/" component={PeerList2} />
     <Route exact path="/peers3/" component={PeerList3} />
@@ -94,11 +111,17 @@ const BaseRouter = () => (
     <Route exact path="/profile/:id" component={Profile} />
     <Route exact path="/profile/:id/menu/" component={ProfileMainMenu} />
     <Route exact path="/userProfile/" component={MeetingReview} />
+    <Route exact path="/profile-page/:user" component={ProfilePage} />
     <Route exact path="/profile/:id/meetings/" component={ProfileMeetings} />
+
     <Route exact path="/profile/:id/account/info/" component={ProfileAccountInfo} />
     <Route exact path="/profile/:id/account/user/info/" component={ProfileAccountUserInfo} />
     <Route exact path="/profile/:id/account/articles/list/" component={ProfileAccountArticleList} />
     <Route exact path="/profile/:id/account/articles/detail/:articleID" component={ProfileAccountArticleDetail} />
+    <Route exact path="/profile/:id/account/inquiries/list/" component={ProfileAccountInquiryList} />
+    <Route exact path="/profile/:id/account/inquiries/detail/:inquiryID" component={ProfileAccountInquiryDetail} />
+    <Route exact path="/profile/:id/account/sessions/list/" component={ProfileAccountSessionList} />
+    <Route exact path="/profile/:id/account/sessions/detail/:sessionID" component={ProfileAccountSessionDetail} />
     <Route exact path="/profile/:id/account/incentives/list/" component={ProfileAccountIncentiveList} />
     <Route exact path="/incentives/" component={IncentiveList} />
     <Route exact path="/rm/" component={RoomMenu} />
@@ -116,6 +139,7 @@ const BaseRouter = () => (
     <Route exact path="/order-summary/" component={OrderSummary} />
     <Route exact path="/checkout/" component={Checkout} />
     <Route exact path="/checkout/giftCard/:brand/:amount/:country/:currency/" component={Checkout} />
+    <Route exact path="/checkout/booking/:user/:amount/:country/:currency/" component={Checkout} />
 
     <Route exact path="/chat/" component={ChatApp} />
     <Route exact path="/chat/:chatID/" component={ChatApp} />
@@ -128,6 +152,13 @@ const BaseRouter = () => (
 
     <Route exact path="/payments/" component={Payment} />
     <Route exact path="/payment-form/" component={PaymentForm} />
+
+    <Route exact path="/wallet/" component={Wallet} />
+
+    <Route exact path="/create-session/" component={SessionCreate} />
+    <Route exact path="/sessions/:sessionID" component={SessionDetail} />
+    <Route exact path="/sessions/" component={SessionList} />
+    <Route exact path="/sessionFrameTest/:roomID" component={SessionRoomMenu} />
   </Hoc>
 );
 

@@ -45,6 +45,379 @@ class Universities(models.Model):
     def __str__(self):
         return self.university
 
+class Degree(models.Model):
+    BACHELOR = "Bachelor's degree"
+    MASTER = "Master's degree"
+    DOCTORATE = "Doctorate"
+    OTHER = "Other"
+    DEGREES = [
+        (BACHELOR, ('B')),
+        (MASTER, ('M')),
+        (DOCTORATE, ('pHd')),
+        (OTHER, ('Other')),
+    ]
+    degree=models.CharField(max_length=100, choices=DEGREES, blank=True)
+
+    def __str__(self):
+        return self.degree
+
+class Bachelor(models.Model):
+    Bachelor_of_Arts = "BA"
+    Bachelor_of_Science_And_Arts = "BSA"
+    Bachelor_of_Accountancy = "BAcy"
+    Bachelor_of_Accounting = "BAcc"
+    Bachelor_of_Animal_and_Veterinary_Bioscience = "B.An.Vet.Bio.Sc."
+    Bachelor_of_Applied_Science = "B.A.Sc."
+    Bachelor_of_Architecture = "BArch "
+    Bachelor_of_Business_Administration = "BBA"
+    Bachelor_of_Civil_Engineering = "BCE"
+    Bachelor_of_Commerce = "BCom"
+    Bachelor_of_Communications = "B.Comm."
+    Bachelor_of_Computer_Application = "BCA"
+    Bachelor_of_Dental_Hygiene = "BDH Or B.D.H"
+    Bachelor_of_Dental_Medicine = "BDM"
+    Bachelor_of_Dental_Science = "BDSc or B.D.Sc."
+    Bachelor_of_Dental_Surgery = "BDS or B.D.S."
+    Bachelor_of_Dentistry =	"BDent or B.Dent."
+    Bachelor_of_Design = "BDes or B.Des."
+    Bachelor_of_Design_Computing = "B.Des.Comp."
+    Bachelor_of_Design_in_Architecture = "B.Des.Arch."
+    Bachelor_of_Education =	"BEd or B.Ed."
+    Bachelor_of_Engineering = "BEng or B.Eng., or BE or B.E"
+    Bachelor_of_Electronic_Commerce = "BEC or B.E-COM."
+    Bachelor_of_Electrical_Engineering = "BEE or B.E.E."
+    Bachelor_of_Fine_Arts = "BFA or B.F.A."
+    Bachelor_of_Health_Sciences = "B.Hlth.Sci"
+    Bachelor_of_Information_Technology = "BIT or B.I.T."
+    Bachelor_of_International_and_Global_Studies = "BIGS or B.I.G.S."
+    Bachelor_of_Law = "LLB or LL.B."
+    Bachelor_of_Liberal_Arts_and_Sciences =	"BLAS or B.L.A.S."
+    Bachelor_of_Library_Science = "BLib or B.Lib., or BLS or B.L.S."
+    Bachelor_of_Literature = "BLit or B.Lit."
+    Bachelor_of_Mathematics = "BMath or B.Math"
+    Bachelor_of_Mechanical_Engineering = "BME or B.M.E."
+    Bachelor_of_Medical_Science = "B.Med.Sc."
+    Bachelor_of_Medicine = "MB or M.B."
+    Bachelor_of_Music = "B.M."
+    Bachelor_of_Music_Studies = "B.Mus.Studies"
+    Bachelor_of_Nursing = "BN or B.N."
+    Bachelor_of_Pharmacy = "B.Pharm."
+    Bachelor_of_Political_Economic_and_Social_Sciences = "B.P.E.S.S."
+    Bachelor_of_Resource_Economics = "B.Res.Ec."
+    Bachelor_of_Science = "BS"
+    Bachelor_of_Science_in_Dental_Hygiene = "BSDH or B.S.D.H"
+    Bachelor_of_Science_in_Environmental_and_Occupational_Health = "BS.EOH"
+    Bachelor_of_Science_in_Nursing = "BSN"
+    Bachelor_of_Socio_Legal_Studies = "BSLS or B.S.L.S."
+    Bachelor_of_Surgery = "BS or B.S."
+    Bachelor_of_Technology = "BTech or B.Tech."
+    Bachelor_of_Veterinary_Science = "B.V.Sc."
+    Bachelor_of_Visual_Arts = "BVA or B.V.A."
+    BACHELOR_DEGREES = [
+        ("Bachelor_of_Arts", ("BA")),
+        ("Bachelor_of_Science_And_Arts", ("BSA")),
+        ("Bachelor_of_Accountancy", ("BAcy")),
+        ("Bachelor_of_Accounting", ("BAcc")),
+        ("Bachelor_of_Animal_and_Veterinary_Bioscience", ("B.An.Vet.Bio.Sc.")),
+        ("Bachelor_of_Applied_Science", ("B.A.Sc.")),
+        ("Bachelor_of_Architecture", ("BArch ")),
+        ("Bachelor_of_Business_Administration", ("BBA")),
+        ("Bachelor_of_Civil_Engineering", ("BCE")),
+        ("Bachelor_of_Commerce", ("BCom")),
+        ("Bachelor_of_Communications", ("B.Comm.")),
+        ("Bachelor_of_Computer_Application", ("BCA")),
+        ("Bachelor_of_Dental_Hygiene", ("BDH Or B.D.H")),
+        ("Bachelor_of_Dental_Medicine", ("BDM")),
+        ("Bachelor_of_Dental_Science", ("BDSc or B.D.Sc.")),
+        ("Bachelor_of_Dental_Surgery", ("BDS or B.D.S.")),
+        ("Bachelor_of_Dentistry", ("BDent or B.Dent.")),
+        ("Bachelor_of_Design", ("BDes or B.Des.")),
+        ("Bachelor_of_Design_Computing", ("B.Des.Comp.")),
+        ("Bachelor_of_Design_in_Architecture", ("B.Des.Arch.")),
+        ("Bachelor_of_Education", ("BEd or B.Ed.")),
+        ("Bachelor_of_Engineering", ("BEng or B.Eng., or BE or B.E")),
+        ("Bachelor_of_Electronic_Commerce", ("BEC or B.E-COM.")),
+        ("Bachelor_of_Electrical_Engineering", ("BEE or B.E.E.")),
+        ("Bachelor_of_Fine_Arts", ("BFA or B.F.A.")),
+        ("Bachelor_of_Health_Sciences", ("B.Hlth.Sci")),
+        ("Bachelor_of_Information_Technology", ("BIT or B.I.T.")),
+        ("Bachelor_of_International_and_Global_Studies", ("BIGS or B.I.G.S.")),
+        ("Bachelor_of_Law", ("LLB or LL.B.")),
+        ("Bachelor_of_Liberal_Arts_and_Sciences", (	"BLAS or B.L.A.S.")),
+        ("Bachelor_of_Library_Science", ("BLib or B.Lib., or BLS or B.L.S.")),
+        ("Bachelor_of_Literature", ("BLit or B.Lit.")),
+        ("Bachelor_of_Mathematics", ("BMath or B.Math")),
+        ("Bachelor_of_Mechanical_Engineering", ("BME or B.M.E.")),
+        ("Bachelor_of_Medical_Science", ("B.Med.Sc.")),
+        ("Bachelor_of_Medicine", ("MB or M.B.")),
+        ("Bachelor_of_Music", ("B.M.")),
+        ("Bachelor_of_Music_Studies", ("B.Mus.Studies")),
+        ("Bachelor_of_Nursing", ("BN or B.N.")),
+        ("Bachelor_of_Pharmacy", ("B.Pharm.")),
+        ("Bachelor_of_Political_Economic_and_Social_Sciences", ("B.P.E.S.S.")),
+        ("Bachelor_of_Resource_Economics", ("B.Res.Ec.")),
+        ("Bachelor_of_Science", ("BS")),
+        ("Bachelor_of_Science_in_Dental_Hygiene", ("BSDH or B.S.D.H")),
+        ("Bachelor_of_Science_in_Environmental_and_Occupational_Health", ("BS.EOH")),
+        ("Bachelor_of_Science_in_Nursing", ("BSN")),
+        ("Bachelor_of_Socio_Legal_Studies", ("BSLS or B.S.L.S.")),
+        ("Bachelor_of_Surgery", ("BS or B.S.")),
+        ("Bachelor_of_Technology", ("BTech or B.Tech.")),
+        ("Bachelor_of_Veterinary_Science", ("B.V.Sc.")),
+        ("Bachelor_of_Visual_Arts", ("BVA or B.V.A."))
+    ]
+    bachelor_degree=models.CharField(max_length=100, choices=BACHELOR_DEGREES, blank=True)
+
+    def __str__(self):
+        return self.bachelor_degree
+
+class Master(models.Model):
+    Master_of_Architecture = "M.Arch., M.S."
+    Master_of_Arts =" MA, M.A. or A.M."
+    Master_of_Business_Administration =	"MBA or M.B.A."
+    Master_of_Commerce = "MCom or M.Com"
+    Master_of_Computer_Application = "MCA"
+    Master_of_Divinity = "MDiv or M.Div."
+    Master_of_Education = "M.Ed., M.S.Ed., or MSEd."
+    Master_of_Emergency_Management = "MEM or M.E.M."
+    Master_of_Emergency_and_Disaster_Management = "MEDM or M.E.D.M."
+    Master_of_Engineering =	"M.E., MEng or M.Eng."
+    Master_of_Fine_Arts = "MFA or M.F.A."
+    Master_of_Health_or_Healthcare_Management =	"MSc.HM or MHM"
+    Master_of_International_Affairs = "MIA or M.I.A."
+    Master_of_International_Studies = "MIS or M.I.S."
+    Master_of_Laws = "LLM or LL.M."
+    Master_of_Library_Science =	"MLS"
+    Master_of_Liberal_Arts = "MLA"
+    Master_of_Library_and_Information_Science = "MLIS"
+    Master_of_Music = " M.M."
+    Master_of_Professional_Studies = "MPS"
+    Master_of_Public_Administration = "MPA or M.P.A."
+    Master_of_Public_Health = "MPH or M.P.H."
+    Master_of_Science = "MS or M.S."
+    Master_of_Science_in_Information = "MSI or M.S.I."
+    Master_of_Social_Work =	"MSW or M.S.W."
+    Master_of_Strategic_Foresight = "MSF or M.S.F."
+    Master_of_Sustainable_Energy_and_Environmental_Management = "MSEEM"
+    Master_of_Technology = "MTech or M.Tech."
+    Master_of_Theology = "ThM or Th.M."
+    OTHER = "other"
+    MASTER_DEGREES = [
+        ("Master_of_Architecture", ("M.Arch., M.S.")),
+        ("Master_of_Arts", (" MA, M.A. or A.M.")),
+        ("Master_of_Business_Administration", ("MBA or M.B.A.")),
+        ("Master_of_Commerce", ("MCom or M.Com")),
+        ("Master_of_Computer_Application", ("MCA")),
+        ("Master_of_Divinity", ("MDiv or M.Div.")),
+        ("Master_of_Education", ("M.Ed., M.S.Ed., or MSEd.")),
+        ("Master_of_Emergency_Management", ("MEM or M.E.M.")),
+        ("Master_of_Emergency_and_Disaster_Management", ("MEDM or M.E.D.M.")),
+        ("Master_of_Engineering", ("M.E., MEng or M.Eng.")),
+        ("Master_of_Fine_Arts", ("MFA or M.F.A.")),
+        ("Master_of_Health_or_Healthcare_Management", ("MSc.HM or MHM")),
+        ("Master_of_International_Affairs", ("MIA or M.I.A.")),
+        ("Master_of_International_Studies", ("MIS or M.I.S.")),
+        ("Master_of_Laws", ("LLM or LL.M.")),
+        ("Master_of_Library_Science", ("MLS")),
+        ("Master_of_Liberal_Arts", ("MLA")),
+        ("Master_of_Library_and_Information_Science", ("MLIS")),
+        ("Master_of_Music", (" M.M.")),
+        ("Master_of_Professional_Studies", ("MPS")),
+        ("Master_of_Public_Administration", ("MPA or M.P.A.")),
+        ("Master_of_Public_Health", ("MPH or M.P.H.")),
+        ("Master_of_Science", ("MS or M.S.")),
+        ("Master_of_Science_in_Information", ("MSI or M.S.I.")),
+        ("Master_of_Social_Work", ("MSW or M.S.W.")),
+        ("Master_of_Strategic_Foresight", ("MSF or M.S.F.")),
+        ("Master_of_Sustainable_Energy_and_Environmental_Management", ("MSEEM")),
+        ("Master_of_Technology", ("MTech or M.Tech.")),
+        ("Master_of_Theology", ("ThM or Th.M."))
+    ]
+    master_degree=models.CharField(max_length=100, choices=MASTER_DEGREES, blank=True)
+
+    def __str__(self):
+        return self.master_degree
+
+class Doctorate(models.Model):
+    Doctor_of_Acupuncture =	"DAc or D.Ac. or DAc."
+    Doctor_of_Audiology = "AuD or Au.D."
+    Doctor_of_Biblical_Studies = "DBS, D.B.S. or DB"
+    Doctor_of_Chiropractic = "DC or D.C."
+    Doctor_of_Dental_Surgery = "DDS or D.D.S."
+    Doctor_of_Divinity = "DD or D.D."
+    Doctor_of_Education = "EdD or Ed.D."
+    Doctor_of_Jurisprudence = "JD or J.D."
+    Doctor_of_Immortality = "ImD or Im.D."
+    Doctor_of_Law_and_Policy = "LP.D. or DLP"
+    Doctor_of_Medical_Dentistry = "DMD or D.M.D."
+    Doctor_of_Medicine = "MD or M.D."
+    Doctor_of_Ministry = "DMin"
+    Doctor_of_Metaphysics = "Dr. mph."
+    Doctor_of_Musical_Arts = "D.M.A."
+    Doctor_of_Naturopathy = "ND or N.D."
+    Doctor_of_Nursing_Practice = "DNP or D.N.P."
+    Doctor_of_Optometry = "OD or O.D."
+    Doctor_of_Osteopathy = "DO or D.O."
+    Doctor_of_Pharmacy = "PharmD or Pharm.D."
+    Doctor_of_Philosophy = "PhD, Ph.D., DPhil, D.Phil., DPh or D.Ph."
+    Doctor_of_Physical_Therapy = "DPT or D.P.T."
+    Doctor_of_Practical_Theology = "DPT or D.P.T."
+    Doctor_of_Psychology = "PsyD or Psy.D."
+    Doctor_of_Public_Health = "DrPH"
+    Doctor_of_Religious_Sciences = "Dr. sc. rel. or D.R.S."
+    Doctor_of_Science = "DSc, D.Sc. or ScD"
+    Doctor_of_Theology = "D.Th., Th.D. or ThD"
+    Doctor_of_Veterinary_Medicine = "DVM or D.V.M."
+
+    PHD_DEGREES = [
+        ("Doctor_of_Acupuncture", ("DAc or D.Ac. or DAc.")),
+        ("Doctor_of_Audiology", ("AuD or Au.D.")),
+        ("Doctor_of_Biblical_Studies", ("DBS, D.B.S. or DB")),
+        ("Doctor_of_Chiropractic", ("DC or D.C.")),
+        ("Doctor_of_Dental_Surgery", ("DDS or D.D.S.")),
+        ("Doctor_of_Divinity", ("DD or D.D.")),
+        ("Doctor_of_Education", ("EdD or Ed.D.")),
+        ("Doctor_of_Jurisprudence", ("JD or J.D.")),
+        ("Doctor_of_Immortality", ("ImD or Im.D.")),
+        ("Doctor_of_Law_and_Policy", ("LP.D. or DLP")),
+        ("Doctor_of_Medical_Dentistry", ("DMD or D.M.D.")),
+        ("Doctor_of_Medicine", ("MD or M.D.")),
+        ("Doctor_of_Ministry", ("DMin")),
+        ("Doctor_of_Metaphysics", ("Dr. mph.")),
+        ("Doctor_of_Musical_Arts", ("D.M.A.")),
+        ("Doctor_of_Naturopathy", ("ND or N.D.")),
+        ("Doctor_of_Nursing_Practice", ("DNP or D.N.P.")),
+        ("Doctor_of_Optometry", ("OD or O.D.")),
+        ("Doctor_of_Osteopathy", ("DO or D.O.")),
+        ("Doctor_of_Pharmacy", ("PharmD or Pharm.D.")),
+        ("Doctor_of_Philosophy", ("PhD, Ph.D., DPhil, D.Phil., DPh or D.Ph.")),
+        ("Doctor_of_Physical_Therapy", ("DPT or D.P.T.")),
+        ("Doctor_of_Practical_Theology", ("DPT or D.P.T.")),
+        ("Doctor_of_Psychology", ("PsyD or Psy.D.")),
+        ("Doctor_of_Public_Health", ("DrPH")),
+        ("Doctor_of_Religious_Sciences", ("Dr. sc. rel. or D.R.S.")),
+        ("Doctor_of_Science", ("DSc, D.Sc. or ScD")),
+        ("Doctor_of_Theology", ("D.Th., Th.D. or ThD")),
+        ("Doctor_of_Veterinary_Medicine", ("DVM or D.V.M."))
+    ]
+    pHd_degree=models.CharField(max_length=100, choices=PHD_DEGREES, blank=True)
+
+    def __str__(self):
+        return self.pHd_degree
+
+class Course(models.Model):
+    Architecture = "Architecture"
+    Art_History = "Art_History"
+    Design = "Design"
+    Film_Studies = "Film_Studies"
+    Fine_Arts = "Fine_Arts"
+    Graphic_Design = "Graphic_Design"
+    Music = "Music"
+    Video_Game_Design = "Video_Game_Design"
+    Accounting = "Accounting"
+    Entrepreneurship = "Entrepreneurship"
+    Finance = "Finance"
+    Management = "Management"
+    Marketing = "Marketing"
+    Negotiations = "Negotiations"
+    Biomedical_Engineering = "Biomedical_Engineering"
+    Chemical_Engineering = "Chemical_Engineering"
+    Electrical_Engineering = "Electrical_Engineering"
+    Mechanical_Engineering = "Mechanical_Engineering"
+    Systems_Engineering = "Systems_Engineering"
+    Communications = "Communications"
+    History = "History"
+    Languages = "Languages"
+    Literature = "Literature"
+    Philosophy = "Philosophy"
+    Religious_Studies = "Religious_Studies"
+    Writing = "Writing"
+    Dentistry = "Dentistry"
+    Disease_and_Epidemiology = "Disease_and_Epidemiology"
+    Healthcare_Administration = "Healthcare_Administration"
+    Nursing = "Nursing"
+    Nutrition = "Nutrition"
+    Astronomy = "Astronomy"
+    Biology = "Biology"
+    Chemistry = "Chemistry"
+    Computer_Science = "Computer_Science"
+    Earth_Sciences = "Earth_Sciences"
+    Environmental_Studies = "Environmental_Studies"
+    Mathematics = "Mathematics"
+    Physics = "Physics"
+    Anthropology = "Anthropology"
+    Criminal_Justice = "Criminal_Justice"
+    Early_Childhood_Education = "Early_Childhood_Education"
+    Economics = "Economics"
+    Education = "Education"
+    Elementary_Education = "Elementary_Education"
+    International_Relations = "International_Relations"
+    Law = "Law"
+    Liberal_Studies = "Liberal_Studies"
+    Political_Science = "Political_Science"
+    Psychology = "Psychology"
+    Social_Work = "Social_Work"
+    Sociology = "Sociology"
+
+    COURSES = [
+        ("Architecture", ("Architecture")),
+        ("Art_History", ("Art_History")),
+        ("Design", ("Design")),
+        ("Film_Studies", ("Film_Studies")),
+        ("Fine_Arts", ("Fine_Arts")),
+        ("Graphic_Design", ("Graphic_Design")),
+        ("Music", ("Music")),
+        ("Video_Game_Design", ("Video_Game_Design")),
+        ("Accounting", ("Accounting")),
+        ("Entrepreneurship", ("Entrepreneurship")),
+        ("Finance", ("Finance")),
+        ("Management", ("Management")),
+        ("Marketing", ("Marketing")),
+        ("Negotiations", ("Negotiations")),
+        ("Biomedical_Engineering", ("Biomedical_Engineering")),
+        ("Chemical_Engineering", ("Chemical_Engineering")),
+        ("Electrical_Engineering", ("Electrical_Engineering")),
+        ("Mechanical_Engineering", ("Mechanical_Engineering")),
+        ("Systems_Engineering", ("Systems_Engineering")),
+        ("Communications", ("Communications")),
+        ("History", ("History")),
+        ("Languages", ("Languages")),
+        ("Literature", ("Literature")),
+        ("Philosophy", ("Philosophy")),
+        ("Religious_Studies", ("Religious_Studies")),
+        ("Writing", ("Writing")),
+        ("Dentistry", ("Dentistry")),
+        ("Disease_and_Epidemiology", ("Disease_and_Epidemiology")),
+        ("Healthcare_Administration", ("Healthcare_Administration")),
+        ("Nursing", ("Nursing")),
+        ("Nutrition", ("Nutrition")),
+        ("Astronomy", ("Astronomy")),
+        ("Biology", ("Biology")),
+        ("Chemistry", ("Chemistry")),
+        ("Computer_Science", ("Computer_Science")),
+        ("Earth_Sciences", ("Earth_Sciences")),
+        ("Environmental_Studies", ("Environmental_Studies")),
+        ("Mathematics", ("Mathematics")),
+        ("Physics", ("Physics")),
+        ("Anthropology", ("Anthropology")),
+        ("Criminal_Justice", ("Criminal_Justice")),
+        ("Early_Childhood_Education", ("Early_Childhood_Education")),
+        ("Economics", ("Economics")),
+        ("Education", ("Education")),
+        ("Elementary_Education", ("Elementary_Education")),
+        ("International_Relations", ("International_Relations")),
+        ("Law", ("Law")),
+        ("Liberal_Studies", ("Liberal_Studies")),
+        ("Political_Science", ("Political_Science")),
+        ("Psychology", ("Psychology")),
+        ("Social_Work", ("Social_Work")),
+        ("Sociology", ("Sociology"))
+    ]
+    course=models.CharField(max_length=100, choices=COURSES, blank=True)
+
+    def __str__(self):
+        return self.course
+
 
 class Student(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
@@ -98,7 +471,6 @@ class Profile(models.Model):
     def get_absolute_url(self):
     	return "/users/{}".format(self.slug)
 
-
     def post_save_user_model_receiver(sender, instance, created, *args, **kwargs):
         if created:
             try:
@@ -108,12 +480,22 @@ class Profile(models.Model):
     post_save.connect(post_save_user_model_receiver, sender=settings.AUTH_USER_MODEL)
 
 class ProfileInfo(models.Model):
+    profile = models.ForeignKey(Profile, related_name="user_profile", on_delete=models.CASCADE)
     profile_username = models.ForeignKey(User, on_delete=models.CASCADE)
     name = models.CharField(max_length=100, blank=True, null=True)
     country = CountryField(blank_label='(select country)')
     university = models.ForeignKey(Universities, on_delete=models.CASCADE, related_name="profile_university")
-    graduate = models.BooleanField(default=False)
+
+    degree = models.ForeignKey(Degree, on_delete=models.CASCADE, related_name="user_degree", blank=True, null=True)
+    bachelor = models.ForeignKey(Bachelor, on_delete=models.CASCADE, related_name="user_bachelor", blank=True, null=True)
+    master = models.ForeignKey(Master, on_delete=models.CASCADE, related_name="user_master", blank=True, null=True)
+    doctorate = models.ForeignKey(Doctorate, on_delete=models.CASCADE, related_name="user_pHD", blank=True, null=True)
+    course = models.ForeignKey(Course, on_delete=models.CASCADE, related_name="user_course", blank=True, null=True)
+
     undergraduate = models.BooleanField(default=False)
+    graduate = models.BooleanField(default=False)
+    postgraduate = models.BooleanField(default=False)
+
     work_experience = models.BooleanField(default=False)
     website = models.CharField(max_length=50, blank=True, null=True)
     message = models.CharField(max_length=150, blank=True, null=True)
@@ -128,6 +510,14 @@ class ProfileInfo(models.Model):
     # projects = models.ManyToManyField("Article")
     def __str__(self):
         return "{} profile info".format(self.profile_username.username)
+    
+    def avatar(self):
+        print("OD: ", str(self.profile.profile_avatar))
+        return self.profile.pk
+        for p in self.profile.avatar:
+            if(p.user == self.user):
+                return p.profile_avatar
+
 
 class FriendRequest(models.Model):
     to_user = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='to_user', on_delete=models.CASCADE)

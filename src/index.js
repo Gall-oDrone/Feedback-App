@@ -22,6 +22,7 @@ import inquiryCommentReducer from "./store/reducers/inquiryComments"
 import meetingsReducer from "./store/reducers/meetings"
 import incetivesReducer from "./store/reducers/incentives"
 import reviewMeetingReducer from "./store/reducers/reviewMeetings"
+import sessionsReducer from "./store/reducers/sessions"
 import profileReducer from "./store/reducers/profile"
 import profileInfoReducer from "./store/reducers/profileUserInfo"
 import profileInquiryReducer from "./store/reducers/profileInquiry"
@@ -52,6 +53,7 @@ const rootReducer = combineReducers({
   incentives: incetivesReducer,
   inquiry : inquiryReducer,
   roomDetail: dailyRoomReducer,
+  session: sessionsReducer,
   profileUserInfo: profileUserInfoReducer,
   profileAccountInfo: profileAccountDetailReducer,
   reviewMeeting: reviewMeetingReducer,

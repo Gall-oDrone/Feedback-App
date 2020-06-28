@@ -1,5 +1,6 @@
 import os
 import django_heroku
+from django.conf import settings
 from decouple import config
 
 BASE_DIR = os.path.dirname(os.path.dirname(
@@ -44,7 +45,9 @@ INSTALLED_APPS = [
     "notificationsApi",
     "inquiriesApi",
     "paymentsApi",
-    # "storages",
+    "sessionsApi",
+    # "walletApi",
+    "storages",
 ]
 
 MIDDLEWARE = [
@@ -79,10 +82,10 @@ TEMPLATES = [
 ]
 
 LANGUAGE_CODE = 'en-us'
-TIME_ZONE = 'America/Mexico_City'
+# TIME_ZONE = 'America/Mexico_City'
 USE_I18N = True
 USE_L10N = True
-USE_TZ = True
+USE_TZ = False
 
 # Configure app for Heroku deployment
 # django_heroku.settings(locals())
@@ -91,11 +94,7 @@ STATIC_URL = '/static/'
 MEDIA_URL = '/media/'
 
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'build/static')]
-print("STATICFILES_DIRS XXX")
-print(STATICFILES_DIRS)
-# STATICFILES_STORAGE = 'whitenoise.django.GzipManifestStaticFilesStorage'
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
-# STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.ManifestStaticFilesStorage'
 
 WHITENOISE_USE_FINDERS = True
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
@@ -104,8 +103,9 @@ SITE_ID = 1
 
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': (
-        # 'rest_framework.permissions.IsAuthenticatedOrReadOnly',
-        'rest_framework.permissions.IsAuthenticated',
+        'rest_framework.permissions.IsAuthenticatedOrReadOnly',
+        # 'rest_framework.permissions.IsAuthenticated',
+        # 'rest_framework.permissions.AllowAny',
     ),
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework.authentication.TokenAuthentication',
