@@ -167,8 +167,8 @@ class UserProfileView(RetrieveUpdateDestroyAPIView):
     def update(self, request, *args, **kwargs):
         request_data = json.loads((self.request.data["data"]))
         request_files = (self.request.FILES)
-        print(request_data)
-        print(request_files)
+        print("request_data ", request_data)
+        print("request_files ", request_files)
         serializer = ProfileSerializer(data=request_data)
         serializer.is_valid()
         print("On update method UserProfileView")

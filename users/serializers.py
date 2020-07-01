@@ -2,10 +2,11 @@ from allauth.account.adapter import get_adapter
 from rest_auth.registration.serializers import RegisterSerializer
 from rest_framework import serializers
 from rest_framework.authtoken.models import Token
-
 from .models import User, MeetingRequest, Universities, ProfileInfo, Profile, Universities, Degree, Bachelor, Master, Doctorate, Course
+from django.conf import settings
 from django.core.files.storage import FileSystemStorage
 import json 
+
 class StringSerializer(serializers.StringRelatedField):
     def to_internal_value(self, value):
         return value
@@ -167,17 +168,19 @@ class ProfileSerializer(serializers.ModelSerializer):
             print("FILES I: ", files['file'])
             for f in files:
                 myfile = files[f]
-                print("file type: ", myfile.content_type.split('/')[0])
-                file_type = myfile.content_type.split('/')[0]
-                fs = FileSystemStorage()
-                valid_extensions = ['.pdf', '.doc', '.docx', '.jpg', '.png', '.xlsx', '.xls']
-                print("myfile.name is doc")
-                filename = fs.save("files/"+myfile.name, myfile)
-                uploaded_file_url = fs.url(filename)
-                print("uploaded_file_url")
-                print(uploaded_file_url)
-                print(myfile.name)
-                profile.profile_avatar = "files/"+myfile.name
+                # print("file type: ", myfile.content_type.split('/')[0])
+                if settings.USE_S3:
+                    profile.profile_avatar = myfile
+                else:
+                    file_type = myfile.content_type.split('/')[0]
+                    fs = FileSystemStorage()
+                    valid_extensions = ['.pdf', '.doc', '.docx', '.jpg', '.png', '.xlsx', '.xls']
+                    filename = fs.save("profileAvatar/"+myfile.name, myfile)
+                    uploaded_file_url = fs.url(filename)
+                    # print("uploaded_file_url", uploaded_file_url)
+                    # print("myfile.name", myfile.name)
+                    # profile.profile_avatar = myfile
+                    profile.profile_avatar = "profileAvatar/"+myfile.name
         profile.save()
         return profile
 
@@ -211,7 +214,7 @@ class ProfileInfoSerializer(serializers.ModelSerializer):
         fields = ("__all__")
     
     def get_profile_avatar(self, obj):
-        print("CULO: ", ProfileSerializer(obj.profile, many=False).data["profile_avatar"])
+        request = self.context.get('request')
         profile = ProfileSerializer(obj.profile, many=False).data["profile_avatar"]
         return profile
 

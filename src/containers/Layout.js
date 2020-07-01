@@ -146,10 +146,18 @@ class CustomLayout extends React.Component {
                       </Link>
                   </div>
                 </Menu.Item>
-                <Menu.Item key="7" style= {{float: 'right'}}>
-                    <ProfileHeaderMenu auth={this.props.isAuthenticated} logout={this.props.logout} userId={this.props.userId}/>
+                <Menu.Item key="7" style= {{float: 'left'}}>
+                  <div className="navbar-item-in">
+                      <Link to="/group-sessions/">
+                        <Icon type="team" />
+                        <span className="caption">GROUPS</span>
+                      </Link>
+                  </div>
                 </Menu.Item>
                 <Menu.Item key="8" style= {{float: 'right'}}>
+                    <ProfileHeaderMenu auth={this.props.isAuthenticated} logout={this.props.logout} userId={this.props.userId}/>
+                </Menu.Item>
+                <Menu.Item key="9" style= {{float: 'right'}}>
                     <CreateHeaderMenu/>
                 </Menu.Item>
                 <Menu.Item key="" style= {{float: 'right'}}>

@@ -11,7 +11,7 @@ class CreateHeaderMenu extends React.Component {
   render() {
     const menu = () => {return(
       <div>
-        <Menu>
+        <Menu >
           <Menu.Item key="CreateHeader 0">
             <a target="_blank" rel="noopener noreferrer" href={`/create-article/`}>
               Post a project/article
@@ -37,11 +37,13 @@ class CreateHeaderMenu extends React.Component {
     )}
         return (
           <Hoc>
-            <Popover placement="bottomRight" trigger="click" content={menu()}>
-                <a className="ant-dropdown-link" onClick={e => e.preventDefault()}>
-                  <Icon type="plus" />
-                </a>
-            </Popover>
+            <div className="demo">
+              <Popover placement="bottomRight" trigger="click" content={menu()}>
+                  <a className="ant-dropdown-link" onClick={e => e.preventDefault()}>
+                    <Icon type="plus" />
+                  </a>
+              </Popover>
+            </div>
         </Hoc>
         )
     }

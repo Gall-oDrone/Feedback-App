@@ -62,3 +62,11 @@ img {
   .cover {
     object-fit: cover;
   }
+
+  .td{
+    color:black;
+  }
+
+  .td:hover{ 
+    color:rgb(0, 132, 255);
+    }

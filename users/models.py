@@ -4,6 +4,7 @@ from django.conf import settings
 from django.contrib.auth.models import AbstractUser
 from django.db.models.signals import post_save
 from django_countries.fields import CountryField
+from home.settings.storage_backends import MediaStorage
 
 class User(AbstractUser):
     is_student = models.BooleanField()
@@ -479,6 +480,11 @@ class Profile(models.Model):
                 pass
     post_save.connect(post_save_user_model_receiver, sender=settings.AUTH_USER_MODEL)
 
+    def get_profile_avatar(self, pk):
+        if self.pk == pk:
+            return self.profile_avatar
+
+
 class ProfileInfo(models.Model):
     profile = models.ForeignKey(Profile, related_name="user_profile", on_delete=models.CASCADE)
     profile_username = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -511,12 +517,9 @@ class ProfileInfo(models.Model):
     def __str__(self):
         return "{} profile info".format(self.profile_username.username)
     
-    def avatar(self):
-        print("OD: ", str(self.profile.profile_avatar))
-        return self.profile.pk
-        for p in self.profile.avatar:
-            if(p.user == self.user):
-                return p.profile_avatar
+    def avatar(self, pk):
+        return  self.profile.profile_avatar
+        
 
 
 class FriendRequest(models.Model):

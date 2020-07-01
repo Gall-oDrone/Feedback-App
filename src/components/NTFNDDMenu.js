@@ -110,7 +110,7 @@ class NTFNDDMenu extends React.Component {
               hasMore={this.props.hasMore}>
 
             </DropdownMenu>
-          : <p>Empty</p>
+          : null
         )
     }
 

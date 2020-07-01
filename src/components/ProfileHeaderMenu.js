@@ -35,7 +35,7 @@ class ProfileHeaderMenu extends React.Component {
   handleLogOut = (e) => {
     if(this.props.token !== null){
       this.props.logout()
-      window.location.reload(false);
+      // window.location.reload(false);
     } else {
       this.props.logout()
     }

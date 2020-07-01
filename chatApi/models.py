@@ -5,15 +5,16 @@ import datetime
 User = get_user_model()
 status = (("Active","Active"),("Inactive","Inactive"),("Delete","Delete"))
 source = (('Website', 'Website'),('Android', 'Android'),('iOS', 'iOS'),('AMP', 'AMP'),('PWA', 'PWA'),('Desktop', 'Desktop'),)
+# video_room_status = (("Open", "Open"), ("Close", "Close"), ("Started", "Started"), ("Waiting", "Waiting"))
 
 class Candidates(models.Model):
     candiadtes = models.CharField(max_length=150, blank=True)
 
 class Callers(models.Model):
-    caller = models.CharField(max_length=2550, blank=True)
+    caller = models.CharField(max_length=2550, blank=True, null=True)
 
 class Callees(models.Model):
-    callee = models.CharField(max_length=2550, blank=True)
+    callee = models.CharField(max_length=2550, blank=True, null=True)
 # class Room(models.Model):
 #     name = CharField(max_length=16, null=True, blank=True)
 #     users = models.ManyToManyField(User, related_name='rooms', through='RoomUsers')
@@ -58,7 +59,8 @@ class Message(models.Model):
     status = models.CharField(max_length=10, choices=status, default='Active')
 
     def __str__(self):
-        return self.contact.user.username
+        print()
+        return "On {} .{}: {}".format(self.timestamp.strftime("%Y/%m/%d, %H:%M"), self.contact.user.username, self.content)
 
 class Chat(models.Model):
     participants = models.ManyToManyField(
@@ -77,7 +79,7 @@ class Chat(models.Model):
     #     return str(users)
     
     def __str__(self):
-        return "{}".format(self.pk)
+        return "Room: {}".format(self.pk)
 
 # class RoomUsers(models.Model):
 # 	room = models.ForeignKey(Room, models.CASCADE, null=False)

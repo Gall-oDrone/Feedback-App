@@ -1,5 +1,10 @@
 import axios from "axios";
-import * as actionTypes from "./actionTypes";
+import {
+  AUTH_START,
+  AUTH_SUCCESS,
+  AUTH_FAIL,
+  AUTH_LOGOUT,
+} from '../actions/actionTypes';
 import {
   authLogInURL,
   authSignUpURL,
@@ -8,13 +13,13 @@ import {
 
 export const authStart = () => {
   return {
-    type: actionTypes.AUTH_START
+    type: AUTH_START
   };
 };
 
 export const authSuccess = user => {
   return {
-    type: actionTypes.AUTH_SUCCESS,
+    type: AUTH_SUCCESS,
     user
   };
 };
@@ -23,18 +28,24 @@ export const authFail = error => {
   console.log("COÑO: ", error)
   window.location.reload(false);
   return {
-    type: actionTypes.AUTH_FAIL,
+    type: AUTH_FAIL,
     error: error
   };
 };
 
-export const logout = () => {
+export const logout = () => dispatch => {
   localStorage.removeItem("user");
-  // window.location.reload(false);
-  return {
-    type: actionTypes.AUTH_LOGOUT
-  };
+  localStorage.removeItem('token');
+  localStorage.removeItem('expirationDate');
+  dispatch({ type: AUTH_LOGOUT});
 };
+  
+
+  // localStorage.removeItem("user");
+  // // window.location.reload(false);
+  // return {
+  //   type: AUTH_LOGOUT
+  // };
 
 export const checkAuthTimeout = expirationTime => {
   return dispatch => {

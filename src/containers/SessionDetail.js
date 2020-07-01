@@ -271,7 +271,7 @@ class ArticleDetail extends React.Component {
         const {user_name} = this.state.article
         return (
             <div>
-                <Card title={user_name !== undefined ? <a href={`/profile-page/${user_name.profile_username}`}>{user_name.name}</a>:null}>
+                <Card title={user_name !== undefined ? <a className="td" href={`/profile-page/${user_name.profile_username}`}>{user_name.name}</a>:null}>
                     <Form onSubmit={this.handleSubmit}>
                     <Row gutter={[16, 40]}>
                     

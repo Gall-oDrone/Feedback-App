@@ -287,8 +287,9 @@ class ArticleDetail extends React.Component {
         return (
             <div>
                 <Card title={username}>
-                    <Row>
+                    <Row type="flex" style={{ alignItems: 'center' }} justify="center">
                         <Col span={12}>
+                          <Row type="flex" style={{ alignItems: 'center' }} justify="center">
                             <div id="session-div-2">
                             <img
                                 className="contain"
@@ -296,11 +297,7 @@ class ArticleDetail extends React.Component {
                                 src={`http://127.0.0.1:8000${profile_avatar}`}
                             />
                             </div>
-                            <div style={{paddingTop: "5%"}}>
-                              <Button>
-                                Send Message
-                              </Button>
-                            </div>
+                            </Row>
                         </Col>
                         <Col span={12}>
                           <div>
@@ -311,18 +308,18 @@ class ArticleDetail extends React.Component {
 
                               <Divider />
                               <p style={pStyle}>Academic Information</p>
-                              <p>{university}</p>
+                              <p>University: {university}</p>
                               <p>{academic_status}</p>
-                              <p>{academic_degree}</p>
+                              <p>Degree: {academic_degree}</p>
                               <p>{bachelors_degree}</p>
                               <p>{masters_degree}</p>
                               <p>{phD_degree}</p>
-                              <p>{course}</p>
+                              <p>Course: {course}</p>
 
                               <Divider />
                               <p style={pStyle}>Working experience</p>
-                              <p>{website}</p>
-                              <p>{work_experience}</p>
+                              <p>Website: {website}</p>
+                              <p>Experience: {work_experience}</p>
                               </div>
                         </Col>
                     </Row>

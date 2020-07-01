@@ -4,8 +4,8 @@ class StaticStorage(S3Boto3Storage):
     location = 'static'
     default_acl = 'private'
 
-
 class MediaStorage(S3Boto3Storage):
     location = 'media'
-    default_acl = 'private'
+    default_acl = 'public-read'
     file_overwrite = False
+    

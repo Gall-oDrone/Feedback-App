@@ -3,6 +3,11 @@ import django_heroku
 from django.conf import settings
 from decouple import config
 
+USE_S3 == 'FALSE'
+if 'DYNO' in os.environ:
+    USE_S3 == "TRUE"
+# USE_S3 = os.environ.get('S3_BUCKET')
+
 BASE_DIR = os.path.dirname(os.path.dirname(
     os.path.dirname(os.path.abspath(__file__))))
 
@@ -46,7 +51,7 @@ INSTALLED_APPS = [
     "inquiriesApi",
     "paymentsApi",
     "sessionsApi",
-    # "walletApi",
+    "walletApi",
     "storages",
 ]
 
@@ -90,9 +95,29 @@ USE_TZ = False
 # Configure app for Heroku deployment
 # django_heroku.settings(locals())
 
-STATIC_URL = '/static/'
-MEDIA_URL = '/media/'
+if USE_S3:
+    # #AWS
+    AWS_ACCESS_KEY_ID = 'AKIAJE7FLPGNFBSDTZXQ'
+    AWS_SECRET_ACCESS_KEY ='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' 
+    AWS_STORAGE_BUCKET_NAME ='py3-test-app-bucket'
 
+    AWS_DEFAULT_ACL = None
+    AWS_S3_CUSTOM_DOMAIN = f'{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com'
+    AWS_S3_OBJECT_PARAMETERS = {'CacheControl': 'max-age=86400'}
+
+    # STATIC_LOCATION = 'static'
+    # STATIC_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/${STATIC_LOCATION}/'
+    # STATICFILES_STORAGE = 'home.settings.storage_backends.StaticStorage'
+    # STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
+
+    PUBLIC_MEDIA_LOCATION = 'media'
+    MEDIA_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/{PUBLIC_MEDIA_LOCATION}/'
+    DEFAULT_FILE_STORAGE = 'home.settings.storage_backends.MediaStorage'
+
+else:
+    MEDIA_URL = '/media/'
+
+STATIC_URL = '/static/'
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'build/static')]
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
@@ -113,6 +138,15 @@ REST_FRAMEWORK = {
         # 'rest_framework.authentication.BasicAuthentication',
     ),
 }
+
+# CHANNEL_LAYERS = {
+#     'default': {
+#         'BACKEND': 'channels_redis.core.RedisChannelLayer',
+#         'CONFIG': {
+#             "hosts": [('127.0.0.1', 6379)],
+#         },
+#     },
+# }
 
 CSRF_COOKIE_NAME = "csrftoken"
 
