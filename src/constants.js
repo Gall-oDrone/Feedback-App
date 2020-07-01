@@ -21,8 +21,8 @@ const mediaURL = imageURL
 
 // export const endpoint = `${localhost}`
 export const endpoint = `${localhost}${apiURL}`
-const image_endpoint =        `https://py3-test-app-bucket.s3.amazonaws.com${imageURL}`
-export const media_endpoint = `https://py3-test-app-bucket.s3.amazonaws.com${mediaURL}`
+const image_endpoint = `${files}${imageURL}`
+export const media_endpoint = `${files}${mediaURL}`
 
 export const productListURL = `${endpoint}/paymentsApi/products/`;
 export const productDetailURL = id => `${endpoint}/payments/products/${id}/`;
