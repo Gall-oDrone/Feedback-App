@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import (Item, OrderItem, Order, Payment, Coupon, Refund, Address, SessionOrderItem, SessionOrder)
+from .models import (Item, OrderItem, Order, Payment, DonationOrder, Coupon, Refund, Address, SessionOrderItem, SessionOrder)
     # Variation, ItemVariation)
 
 
@@ -80,3 +80,4 @@ admin.site.register(Coupon)
 admin.site.register(Address)
 admin.site.register(SessionOrderItem)
 admin.site.register(SessionOrder)
+admin.site.register(DonationOrder)

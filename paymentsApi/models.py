@@ -6,6 +6,7 @@ from django.shortcuts import reverse
 from django_countries.fields import CountryField
 from users.models import User, Profile
 from sessionsApi.models import Session
+from projectsApi.models import Project
 
 CATEGORY_CHOICES = (
     ('S', 'Shirt'),
@@ -13,6 +14,7 @@ CATEGORY_CHOICES = (
     ('OW', 'Outwear'),
     ('SE', 'Session'),
     ('GC', 'Gift Card'),
+    ('DO', 'Donation'),
 )
 
 LABEL_CHOICES = (
@@ -133,6 +135,19 @@ class SessionOrderItem(models.Model):
     def get_session(self):
         return self.session
 
+class DonationOrderItem(models.Model):
+    user = models.ForeignKey(User, null=True, blank=True, on_delete=models.CASCADE )
+    donated = models.BooleanField(default=False)
+    project = models.ForeignKey(Project, on_delete=models.CASCADE)
+    amount = models.FloatField(default=0)
+    date = models.DateTimeField(auto_now_add=False, null=True)
+
+    def __str__(self):
+        return f"{self.user} donated ${self.amount} to {self.project.title} project on {self.date}"
+    
+    def get_project(self):
+        return self.project
+
 class Order(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     ref_code = models.CharField(max_length=20, blank=True, null=True)
@@ -206,6 +221,24 @@ class SessionOrder(models.Model):
         # if self.coupon:
         #     total -= self.coupon.amount
         return total
+
+class DonationOrder(models.Model):
+    user = models.ForeignKey(User, blank=True, null=True, on_delete=models.CASCADE)
+    amount = models.FloatField(default=0)
+    ref_code = models.CharField(max_length=20, blank=True, null=True)
+    project = models.ForeignKey(Project, on_delete=models.CASCADE)
+    donated_date = models.DateTimeField()
+    payment_successful = models.BooleanField(default=False)
+    billing_address = models.ForeignKey(
+        'Address', related_name='donation_billing_address', on_delete=models.SET_NULL, blank=True, null=True)
+    payment = models.ForeignKey(
+        'Payment', on_delete=models.SET_NULL, blank=True, null=True)
+
+    def __str__(self):
+        return self.user.username
+
+    def get_donation_user(self):
+        return self.project.author
 
 class Address(models.Model):
     user = models.ForeignKey(User,

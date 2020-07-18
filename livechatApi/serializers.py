@@ -14,6 +14,7 @@ class LCRequestSerializer(serializers.ModelSerializer):
     sender = StringSerializer(many=False)
     recipient = StringSerializer(many=True)
     article = StringSerializer(many=False)
+    project = StringSerializer(many=False)
     room_name = StringSerializer(many=False)
     room_url = StringSerializer(many=False)
 
@@ -21,7 +22,7 @@ class LCRequestSerializer(serializers.ModelSerializer):
         model = Request
         fields = ("date_to_appointment", "created", "notified", 
                 "scheduled", "canceled", "discussion_topic", "sender", 
-                "recipient", "article", "room_name", "room_url")
+                "recipient", "article", "project", "room_name", "room_url")
 
     def create(self, request):
         data = request.data
@@ -89,13 +90,14 @@ class LCRequestListDetailSerializer(serializers.ModelSerializer):
     sender = StringSerializer(many=False)
     recipient = StringSerializer(many=True)
     article = StringSerializer(many=False)
+    project = StringSerializer(many=False)
     room_name = StringSerializer(many=False)
     room_url = StringSerializer(many=False)
     class Meta:
         model = Request
         fields = ("date_to_appointment", "created", "notified", 
                 "scheduled", "canceled", "discussion_topic", "sender", 
-                "recipient", "article", "room_name", "room_url")
+                "recipient", "article", "project", "room_name", "room_url")
 
 
 class LCRoomSerializer(serializers.ModelSerializer):

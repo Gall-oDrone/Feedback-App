@@ -23,6 +23,7 @@ urlpatterns = [
     path('api/inquiries/', include('inquiriesApi.inquiries.urls')),
     path('api/notifications/', include('notificationsApi.notifications.urls')),
     path('api/payments/', include('paymentsApi.payments.urls')),
+    # path('api/projects/', include('projectsApi.projects.urls')),
     path('api/live-chat/', include('livechatApi.livechat.urls')),
     path('api/filter/', include('filterApi.filter.urls')),
     path('api/sessions/', include('sessionsApi.sessions.urls')),

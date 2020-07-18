@@ -7,20 +7,12 @@ import CalendarComponent from './Calendar';
 import CategoryComponent from './CategorySelector';
 import {createMeeting} from "../store/actions/meetings";
 import {getDetailMeetingList} from "../store/actions/meetings";
-import { articleDetailURL } from "../constants";
+import { lcroomCreateMeetingURL } from "../constants";
 const { Step } = Steps;
-
-const openNotificationWithIcon = type => {
-  notification[type]({
-    message: 'Notification Title',
-    description:
-      'This is the content of the notification. This is the content of the notification. This is the content of the notification.',
-  });
-};
 
 const steps  = [
   {
-    title: 'Schedule a meeting',
+    title: 'Select a date',
     content: <CalendarComponent date_to_appointment/>,
   },
   {
@@ -28,7 +20,7 @@ const steps  = [
     content: <CategoryComponent category={"topic"}/>,
   },
   {
-    title: 'Book',
+    title: 'Confirmation',
     content: 'Last-content',
   },
 ];
@@ -40,6 +32,7 @@ class MeetingSteps extends React.Component {
       article: null,
       current: 0,
       schedule: false,
+      confirmation: false,
       userAnswer: {
         date:null,
         topic:null
@@ -67,24 +60,32 @@ class MeetingSteps extends React.Component {
   };
 
   onSubmit = (userAnswer) => {
-    return message.success('Processing complete!')
+    return message.success('Meeting Request Sent!')
   }
 
   handleSubmit = (userAnswer) => {
-    console.log("this.state.article: "+JSON.stringify(this.state.article))
-    const meeting = {
-      user: this.props.username,
+    const { username, token, match: {parans: {projectID}} } = this.props
+    const meeting_details = {
+      user: username,
       topic: userAnswer.topic,
       date: userAnswer.date,
-      article: this.state.article.title,
-      articleId: this.state.article.id,
-      recipient: this.state.article.author
+      projectId: projectID
     };
-    this.props.createMeeting(this.props.token, meeting)
-    // if(res.status == 201){
-    //   return message.success('Processing complete!')
-    // }
-};
+    axios.defaults.headers = {
+      "Content-Type": "application/json",
+      Authorization: `Token ${this.props.token}`
+    };
+    axios
+      .post(lcroomCreateMeetingURL, meeting_details)
+        .then(res => {
+          if(res.status == 201){
+            this.setState({confirmation:true})
+          }
+        })
+        .catch(err => {
+            console.error(err);
+        })
+  };
 
   onStatus = (userAnswer) => {
     if(Object.values(userAnswer)[this.state.current] === null) {
@@ -94,53 +95,45 @@ class MeetingSteps extends React.Component {
     }
   }
 
-  componentDidMount() {
-    // console.log("this.props.match.params: " + JSON.stringify(this.props.match.params))
-    // console.log("this.props.match.params.articleID: " + JSON.stringify(this.props.match.params.articleID))
-    const articleID = this.props.match.params.articleID;
-    //const articleID = 11
-    axios.get(articleDetailURL(articleID))
-        .then(res => {
-            console.log("res: " + JSON.stringify(res.data))
-            this.setState({
-                article: res.data
-            });
-            console.log("Article Detail res data: " + res.data);
-        });
-}
+//   componentDidMount() {
+//     // console.log("this.props.match.params: " + JSON.stringify(this.props.match.params))
+//     const projectID = this.props.match.params.projectID;
+//     axios.get(articleDetailURL(projectID))
+//         .then(res => {
+//             console.log("res: " + JSON.stringify(res.data))
+//             this.setState({
+//                 article: res.data
+//             });
+//             console.log("Article Detail res data: " + res.data);
+//         });
+// }
 
-  componentWillReceiveProps(newProps) {
-    if (newProps.token !== this.props.token) {
-      if (newProps.token !== undefined && newProps.token !== null) {
-        // this.props.getASNTSDetail(newProps.token, this.props.match.params.id, this.props.match.params.userId);
-        console.log("componentWillReceiveProps: " + JSON.stringify(this.props))
-        this.props.getComment(newProps.token, newProps.match.params.articleID).then(res => {
-          console.log("componentWillReceiveProps before assigning res to dataList: " + JSON.stringify(this.props))
-          console.log(JSON.stringify(res))
-          this.setState({
-            comments: res.commentData,
-            dataList: res.commentData
-          });
-          console.log("componentWillReceiveProps after : " + JSON.stringify(this.props))
-        });
-      }
-    }
-  }
+// componentDidUpdate(prevProps, prevState) {
+//       if (this.props.token !== undefined && this.props.token !== null) {
+//         console.log("componentWillReceiveProps: " + JSON.stringify(this.props))
+//         this.props.getComment(this.props.token, this.props.match.params.projectID).then(res => {
+//           console.log(JSON.stringify(res))
+//           this.setState({
+//             comments: res.commentData,
+//             dataList: res.commentData
+//           });
+//         });
+//       }
+//   }
 
   render() {
-    const { current, userAnswer, steps2} = this.state;
+    const { current, userAnswer, confirmation} = this.state;
     console.log("steps: "+JSON.stringify(steps))
-    const { date } = this.props;
     
     const meetingPhases2 =(data, title) =>{
-      if(title === "Schedule a meeting"){
+      if(title === "Select a date"){
         return <CalendarComponent date_to_appointment={data} />
       } else if (title === "Choose a discussion topic"){
         console.log(JSON.stringify(data))
         return <CategoryComponent category={data} />
       } else {
         console.log(JSON.stringify(data))
-        return 'Last-content'
+        return 'Confirmation'
       }
     }
     return (
@@ -159,8 +152,8 @@ class MeetingSteps extends React.Component {
               Next
             </Button>
           )}
-          {current === steps.length - 1 && (
-            <Button type="primary" onClick={() => this.handleSubmit(this.state.userAnswer)}>
+          {current && (
+            <Button type="primary" onClick={this.handleSubmit(this.state.userAnswer)}>
               Submit
             </Button>
           )}
@@ -168,6 +161,9 @@ class MeetingSteps extends React.Component {
             <Button style={{ marginLeft: 8 }} onClick={() => this.prev()}>
               Previous
             </Button>
+          )}
+          {confirmation && (
+            message.success('Meeting Request Sent!')
           )}
         </div>
       </div>
@@ -188,7 +184,7 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
   return {
     createMeeting: (token, meeting) => dispatch(createMeeting(token, meeting)),
-    getMeeting: (token, articleID, userID) => dispatch(getDetailMeetingList(token, articleID, userID))
+    getMeeting: (token, projectID, userID) => dispatch(getDetailMeetingList(token, projectID, userID))
   };
 };
 

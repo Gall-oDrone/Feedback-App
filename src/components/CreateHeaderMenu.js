@@ -14,20 +14,25 @@ class CreateHeaderMenu extends React.Component {
         <Menu >
           <Menu.Item key="CreateHeader 0">
             <a target="_blank" rel="noopener noreferrer" href={`/create-article/`}>
-              Post a project/article
+              Post an Article
             </a>
           </Menu.Item>
           <Menu.Item key="CreateHeader 1">
+            <a target="_blank" rel="noopener noreferrer" href={`/create-project/`}>
+              Post a Project
+            </a>
+          </Menu.Item>
+          <Menu.Item key="CreateHeader 2">
             <a target="_blank" rel="noopener noreferrer" href={`/create/survey/`}>
               Post a Survey
             </a>
           </Menu.Item>
-          <Menu.Item key="CreateHeader 1">
+          <Menu.Item key="CreateHeader 2">
             <a target="_blank" rel="noopener noreferrer" href={`/create-inquiry/`}>
               Post an inquiry
             </a>
           </Menu.Item>
-          <Menu.Item key="CreateHeader 1">
+          <Menu.Item key="CreateHeader 3">
             <a target="_blank" rel="noopener noreferrer" href={`/create-session/`}>
               Post a session
             </a>

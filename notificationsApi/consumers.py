@@ -43,7 +43,8 @@ class NotificationConsumer(WebsocketConsumer):
     def messages_to_json(self, messages):
         result = []
         for message in messages:
-            result.append(self.message_to_json(message))
+            if(message is not None):
+                result.append(self.message_to_json(message))
         return result
 
     def message_to_json(self, message):

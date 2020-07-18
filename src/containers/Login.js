@@ -13,7 +13,12 @@ class NormalLoginForm extends React.Component {
     this.props.form.validateFields((err, values) => {
       if (!err) {
         this.props.onAuth(values.userName, values.password);
-        this.props.history.push("/");
+        const {location} = this.props;
+        if(location.state && location.state.from) {
+           this.props.history.push(location.state.from);
+        } else {
+           this.props.history.push('/');
+        }
       }
     });
   };

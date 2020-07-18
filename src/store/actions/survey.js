@@ -38,13 +38,13 @@ const getSurveyListFail = error => {
   };
 };
 
-export const getSurvey = token => {
+export const getSurvey = () => {
     return dispatch => {
       console.log(" getSurveyS: ")
         dispatch(getSurveyListStart());
         axios.defaults.headers = {
             "Content-Type": "application/json",
-            Authorization: `Token ${token}`
+            // Authorization: `Token ${token}`
         }
         axios.get(surveyListURL)
         .then(res => {

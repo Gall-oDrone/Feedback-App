@@ -2,28 +2,27 @@ import React from "react";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
 import { List, Skeleton } from "antd";
-import * as actions from "../store/actions/survey";
+import { getSurvey } from "../store/actions/survey";
 import Hoc from "../hoc/hoc";
 
 class SurveyList extends React.PureComponent {
   componentDidMount() {
     console.log("1) componentDidMount: ")
     console.log("this.props: " + JSON.stringify(this.props))
-    if (this.props.token !== undefined && this.props.token !== null) {
-      console.log("2) this.props.token: " + this.props.token)
-      console.log("this.props: " + JSON.stringify(this.props))
-      console.log("this.props: " + JSON.stringify(this.props.getSurveys(this.props.token)))
-      this.props.getSurveys(this.props.token);
-
-    }
+    // if(this.props.surveys.length === 0){
+      this.props.getSurveys();
+    // }
   }
 
-  componentWillReceiveProps(newProps) {
-    console.log("3) componentWillReceiveProps: ")
-    if (newProps.token !== this.props.token) {
-      if (newProps.token !== undefined && newProps.token !== null) {
-        this.props.getSurveys(newProps.token);
-      }
+  // componentDidUpdate(prevProps, prevState){
+  //   console.log("CACA: ", prevProps, this.props)
+
+  // }
+
+  static getDerivedStateFromProps(props, state){
+    console.log("CACA: ", props)
+    if(props.surveys.length === 0){
+      props.getSurveys();
     }
   }
 
@@ -59,9 +58,9 @@ class SurveyList extends React.PureComponent {
 }
 
 const mapStateToProps = state => {
-  /*console.log("1) ASNT List mapStateToProps containers state 1: "+ JSON.stringify(state.surveys.surveys))
-  console.log("2) ASNT List mapStateToProps containers state 2: "+ JSON.stringify(state.surveys))
-  console.log("2) ASNT List mapStateToProps containers state 3: "+ JSON.stringify(state))*/
+  // console.log("1) ASNT List mapStateToProps containers state 1: "+ JSON.stringify(state.surveys.surveys))
+  // console.log("2) ASNT List mapStateToProps containers state 2: "+ JSON.stringify(state.surveys))
+  console.log("2) ASNT List mapStateToProps containers state 3: "+ JSON.stringify(state))
   return {
     token: state.auth.token,
     surveys: state.survey.surveys,
@@ -71,7 +70,7 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    getSurveys: token => dispatch(actions.getSurvey(token))
+    getSurveys: () => dispatch(getSurvey())
   };
 };
 

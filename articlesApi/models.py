@@ -34,7 +34,7 @@ class Image(models.Model):
         return str(self.image)
 
 class Comment(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="article_comment_user")
     reply_to = models.ForeignKey("self", null=True, blank=True, on_delete=models.CASCADE)
     # reply_to_counter = models.IntegerField(default=0)
     replies = models.ManyToManyField("self", blank=True)
@@ -50,7 +50,7 @@ class Comment(models.Model):
         return self.user.username
 
 class CommentReply(models.Model):
-    comment = models.ForeignKey(Comment, on_delete=models.CASCADE, related_name='comment_reply_id')
+    comment = models.ForeignKey(Comment, on_delete=models.CASCADE, related_name='article_comment_reply_id')
     reply = models.ManyToManyField(Comment, related_name="comment_reply")
     
 
@@ -113,7 +113,7 @@ class Like(models.Model):
     created = models.DateTimeField(auto_now_add=True)
 
 class Rating(models.Model):
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, null=True, on_delete=models.CASCADE)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, related_name="article_rating_user", null=True, on_delete=models.CASCADE)
     article = models.ForeignKey(Article, on_delete=models.CASCADE)
     rate = models.IntegerField(default=0)
     created = models.DateTimeField(auto_now_add=True)

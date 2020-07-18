@@ -13,6 +13,15 @@ import ArticleUpdate from "./containers/ArticleUpdate";
 import ArticleDetail from "./containers/ArticleDetail";
 import ArticleDetailMenu from "./containers/ArticleDetailMenu";
 
+import ProjectList from "./containers/ProjectList";
+import ProjectCreate from "./containers/ProjectCreate";
+import ProjectFeedback from "./containers/ProjectFeedback";
+import ProjectRating from "./containers/ProjectRating";
+import ProjectUpdate from "./containers/ProjectUpdate";
+import ProjectDetail from "./containers/ProjectDetail";
+import ProjectDetailMenu from "./containers/ProjectDetailMenu";
+import ProjectDetailMenu2 from "./containers/ProjectDetailMenu2";
+
 import PeerSlide from "./containers/Peers/PeerSlideShow"
 import PeerList from "./containers/Peers/PeerList"
 import PeerList2 from "./containers/Peers/PeerList2"
@@ -40,6 +49,8 @@ import ProfileAccountInfo from "./components/ProfileAccountInfo"
 import ProfileAccountUserInfo from "./components/ProfileAccountUserInfo"
 import ProfileAccountArticleList from "./components/ProfileArticleList"
 import ProfileAccountArticleDetail from "./components/ProfileArticleDetail"
+import ProfileAccountProjectList from "./components/ProfileProjectList"
+import ProfileAccountProjectDetail from "./components/ProfileProjectDetail"
 import ProfileAccountInquiryList from "./components/ProfileInquiryList"
 import ProfileAccountInquiryDetail from "./components/ProfileInquiryDetail"
 import ProfileAccountSessionList from "./components/ProfileSessionList"
@@ -59,6 +70,7 @@ import ProfileSurveyList from "./components/ProfileSurveyList";
 import ProfileSurveyDetail from "./components/ProfileSurveyDetail";
 
 import Checkout from "./containers/InjectedCheckoutForm";
+import DonationCheckout from "./containers/InjectedDonationCheckoutForm";
 import OrderSummary from "./containers/OrderSummary";
 
 import ChatApp from "./chat_containers/chatApp";
@@ -99,6 +111,16 @@ const BaseRouter = () => (
     <Route exact path="/articles/:articleID/rating/" component={ArticleRating} />
     <Route exact path="/articles/:articleID" component={ArticleDetail} />
     <Route exact path="/articles/detailmenu/:articleID" component={ArticleDetailMenu} />
+
+    <Route exact path="/projects/" component={ProjectList} />
+    <Route exact path="/create-project/" component={ProjectCreate} />
+    <Route exact path="/projects/update/" component={ProjectUpdate} />
+    <Route exact path="/projects/:projectID/feedback/" component={ProjectFeedback} />
+    <Route exact path="/projects/:projectID/rating/" component={ProjectRating} />
+    <Route exact path="/projects/:projectID" component={ProjectDetail} />
+    <Route exact path="/projects/detailmenu/:projectID" component={ProjectDetailMenu} />
+    <Route exact path="/projects/detailmenu2/:projectID" component={ProjectDetailMenu2} />
+
     <Route exact path="/assignments/" component={AssignmentList} />
     <Route exact path="/assignments/:id" component={AssignmentDetail} />
     <Route exact path="/create/assignment/" component={AssignmentCreate} />
@@ -118,6 +140,10 @@ const BaseRouter = () => (
     <Route exact path="/profile/:id/account/user/info/" component={ProfileAccountUserInfo} />
     <Route exact path="/profile/:id/account/articles/list/" component={ProfileAccountArticleList} />
     <Route exact path="/profile/:id/account/articles/detail/:articleID" component={ProfileAccountArticleDetail} />
+
+    <Route exact path="/profile/:id/account/projects/list/" component={ProfileAccountProjectList} />
+    <Route exact path="/profile/:id/account/projects/detail/:projectID" component={ProfileAccountProjectDetail} />
+
     <Route exact path="/profile/:id/account/inquiries/list/" component={ProfileAccountInquiryList} />
     <Route exact path="/profile/:id/account/inquiries/detail/:inquiryID" component={ProfileAccountInquiryDetail} />
     <Route exact path="/profile/:id/account/sessions/list/" component={ProfileAccountSessionList} />
@@ -138,6 +164,7 @@ const BaseRouter = () => (
 
     <Route exact path="/order-summary/" component={OrderSummary} />
     <Route exact path="/checkout/" component={Checkout} />
+    <Route exact path="/donation-checkout/" component={DonationCheckout} />
     <Route exact path="/checkout/giftCard/:brand/:amount/:country/:currency/" component={Checkout} />
     <Route exact path="/checkout/booking/:user/:amount/:country/:currency/" component={Checkout} />
 

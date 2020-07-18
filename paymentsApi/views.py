@@ -13,8 +13,9 @@ from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.status import HTTP_200_OK, HTTP_400_BAD_REQUEST
-from paymentsApi.models import Item, OrderItem, Order
+from .models import Item, OrderItem, Order, DonationOrder
 from notificationsApi.models import Notification
+from projectsApi.models import Project
 from users.models import User, Profile
 from .serializers import (ItemSerializer, 
                             OrderSerializer, 
@@ -134,6 +135,143 @@ class SessionBuyView(APIView):
         order.session.add(order_session)
         print("WUE 2: ", order.id, order.session)
         return Response({"order_id": order.id, "order_key":order_session.pk, "order_type": "session"}, status=HTTP_200_OK)
+
+class DonateView(APIView):
+
+    def post(self, request, *args, **kwargs):
+        print("SOLO", self.request.data)
+        if(self.request.user != None):
+            user = User.objects.get(username=self.request.user)
+        else:
+            user=None
+            
+        userprofile= Profile(user=user)
+        project=Project.objects.get(pk=request.data.get("project_id"))
+        amount = request.data.get("input_number")
+        donation_order = DonationOrder.objects.create(
+            user=user, 
+            project = project,
+            amount = amount,
+            donated_date = timezone.now())
+            
+        donation_order.save()
+        token = request.data.get('stripeToken')
+
+        if(userprofile != None):
+            billing_address_id = request.data.get('selectedBillingAddress')
+            billing_address = Address.objects.get(id=billing_address_id)
+
+            if userprofile.stripe_customer_id != '' and userprofile.stripe_customer_id is not None:
+                print("13")
+                customer = stripe.Customer.retrieve(
+                    userprofile.stripe_customer_id)
+            else:
+                print("14")
+                customer = stripe.Customer.create(
+                    email=self.request.user.email,
+                )
+                userprofile.stripe_customer_id = customer['id']
+                # userprofile.save()
+            s_cutomer = userprofile.stripe_customer_id
+
+        else:
+            customer = stripe.Customer.create(
+                description="Anonymous Donor",
+                )
+            print(customer)
+            s_cutomer = customer['id']
+        
+        amount = int(request.data.get("input_number") * 100)
+        create_payment = stripe.PaymentIntent.create(
+            amount=amount,
+            currency='usd',
+            customer=s_cutomer,
+            payment_method_types=['card'],
+            statement_descriptor='Donation',
+            metadata={'integration_check': 'accept_a_payment'},
+          )
+
+        try:
+
+            # create the payment
+            payment = Payment()
+            payment.stripe_charge_id = create_payment.client_secret
+            payment.user = user
+            payment.amount = amount
+            payment.save()
+
+            #On Webhook Callback
+            if(True):
+                d_order_item = DonationOrder.objects.get(pk=donation_order.pk)
+
+                if(user != None):
+                    buyerID = user
+                    user = d_order_item.get_donation_user()
+                    print("COÑO 2: ", user)
+                    notify = Notification()
+                    notify.user = user
+                    notify.actor = buyerID
+                    notify.verb = "Sent"
+                    notify.action = "Donation Received"
+                    notify.target = "1"
+                    print("WHERE")
+                    notify.description = f"{buyerID} donated to your project"
+                    notify.save()
+                    print("WHERE II")
+                else:
+                    buyerID = "Anonymous"
+                    user = d_order_item.get_donation_user()
+                    print("COÑO 2: ", user)
+                    notify = Notification()
+                    notify.user = user
+                    notify.actor = buyerID
+                    notify.verb = "Sent"
+                    notify.action = "Donation Received"
+                    notify.target = "1"
+                    print("WHERE")
+                    notify.description = f"{buyerID} donated to your project"
+                    notify.save()
+                    print("WHERE II")
+
+            print("duo 2:")
+            donation_order.save()
+            return Response({"client_secret": payment.stripe_charge_id}, status=HTTP_200_OK)
+
+        except stripe.error.CardError as e:
+            body = e.json_body
+            err = body.get('error', {})
+            return Response({"message": f"{err.get('message')}"}, status=HTTP_400_BAD_REQUEST)
+
+        except stripe.error.RateLimitError as e:
+            # Too many requests made to the API too quickly
+            messages.warning(self.request, "Rate limit error")
+            return Response({"message": "Rate limit error"}, status=HTTP_400_BAD_REQUEST)
+
+        except stripe.error.InvalidRequestError as e:
+            print(e)
+            # Invalid parameters were supplied to Stripe's API
+            return Response({"message": "Invalid parameters"}, status=HTTP_400_BAD_REQUEST)
+
+        except stripe.error.AuthenticationError as e:
+            # Authentication with Stripe's API failed
+            # (maybe you changed API keys recently)
+            return Response({"message": "Not authenticated"}, status=HTTP_400_BAD_REQUEST)
+
+        except stripe.error.APIConnectionError as e:
+            # Network communication with Stripe failed
+            return Response({"message": "Network error"}, status=HTTP_400_BAD_REQUEST)
+
+        except stripe.error.StripeError as e:
+            # Display a very generic error to the user, and maybe send
+            # yourself an email
+            return Response({"message": "Something went wrong. You were not charged. Please try again."}, status=HTTP_400_BAD_REQUEST)
+
+        except Exception as e:
+            # send an email to ourselves
+            print(e)
+            return Response({"message": "A serious error occurred. We have been notifed."}, status=HTTP_400_BAD_REQUEST)
+
+        return Response({"message": "Invalid data received"}, status=HTTP_400_BAD_REQUEST)
 
 class AddToCartView(APIView):
     def post(self, request, *args, **kwargs):

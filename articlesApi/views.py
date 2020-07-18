@@ -53,7 +53,7 @@ class ArticleListView(ListAPIView):
     # model = Article
     queryset = Article.objects.all()
     print("queryset List view")
-    print(queryset)
+    # ##print(queryset)
     serializer_class = ArticleSerializer
     permission_classes = (permissions.AllowAny,)
 
@@ -113,7 +113,7 @@ class ArticleCreateView(CreateAPIView):
     parser_classes = (MultiPartParser, FormParser)
     queryset = Article.objects.all()
     print("queryset Create view")
-    print(queryset)
+    ##print(queryset)
     serializer_class = ArticleSerializer
     permission_classes = (permissions.IsAuthenticated,)
 
@@ -151,7 +151,7 @@ class ArticleDeleteView(DestroyAPIView):
 class ArticleUpdateView(UpdateAPIView):
     queryset = Article.objects.all()
     print("queryset from ArticleUpdateView")
-    print(queryset)
+    ##print(queryset)
     serializer_class = ArticleSerializer
     permission_classes = (permissions.IsAuthenticated,)
 
@@ -173,7 +173,7 @@ class ArticleUpdateView(UpdateAPIView):
 class ProfileArticleListView(RetrieveAPIView):
     queryset = Article.objects.all()
     print("queryset from ProfileArticleListView")
-    print(queryset)
+    ##print(queryset)
     serializer_class = ProfileArticleListSerializer
     permission_classes = (permissions.IsAuthenticated,)
 
@@ -211,7 +211,7 @@ class ProfileArticleDetailView(RetrieveUpdateDestroyAPIView):
     parser_classes = (MultiPartParser, FormParser)
     queryset = Article.objects.all()
     print("queryset from ProfileArticleDetailView")
-    print(queryset)
+    ##print(queryset)
     serializer_class = ArticleSerializer
     permission_classes = (permissions.IsAuthenticated,)
 
@@ -413,9 +413,9 @@ class LikeDetailView(RetrieveUpdateDestroyAPIView):
         articleId = self.kwargs.get("pk")
         # userId = User.objects.get(username=username).id
         userId = User.objects.get(id=userId)
-        print("user EHRENO")
-        print(self.lookup_url_kwarg)
-        print(userId)
+        # print("user EHRENO")
+        # print(self.lookup_url_kwarg)
+        # print(userId)
         queryset = Like.objects.filter(user_id=userId).filter(article_id=articleId)
         print(queryset.values())
         return queryset
@@ -424,8 +424,8 @@ class LikeDetailView(RetrieveUpdateDestroyAPIView):
         serializer = LikeSerializer(data=request.data)
         serializer.is_valid()
         print("On update method")
-        print(self.request.data)
-        print(self.request.data.get("article"))
+        # print(self.request.data)
+        # print(self.request.data.get("article"))
         Like.objects.filter(user_id=self.request.data.get("user_id")).filter(article_id=self.request.data.get("article")).update(liked=self.request.data.get("liked"))
         Article.objects.update_or_create(
             id=self.request.data.get("article"),
@@ -439,9 +439,9 @@ class CreateLike(CreateAPIView):
     queryset = Like.objects.all()
     queryset2 = Article.objects.all().values()
     print("UpdateLike queryset")
-    print(queryset)
-    print(queryset2)
-    print(Like.objects.values())
+    ##print(queryset)
+    # print(queryset2)
+    # print(Like.objects.values())
     serializer_class = LikeSerializer
     permission_classes = (permissions.IsAuthenticated,)
 
@@ -530,7 +530,7 @@ class CommentListView(RetrieveAPIView):
     serializer_class = CommentListSerializer
     permission_classes = (permissions.AllowAny,)
     print("Comment Detial queryset")
-    print(queryset.values())
+    # print(queryset.values())
     def get_object(self):
         try:
             print("Comment filter")
@@ -544,7 +544,7 @@ class CommentListView(RetrieveAPIView):
 class CommentDetailView(RetrieveUpdateDestroyAPIView):
     queryset = Comment.objects.all()
     print("queryset from CoomentDetail View")
-    print(queryset)
+    ##print(queryset)
     serializer_class = CommentSerializer
     permission_classes = (permissions.IsAuthenticated,)
 

@@ -152,62 +152,11 @@ class ArticleCustomForm extends React.Component {
           // this.props.history.push('/');
           success();
         }
-            // .then(res => {
-            //   if (res.status === 201) {
-            //     this.props.history.push('/');
-            //   }
-            // })
-            // .catch(error => console.err(error))
-            // console.log('Error');
         }
 
         console.log('Received values of form: ', values);
     });
   }
-
-  // add = (ID) => {
-  //   const { form } = this.props;
-  //   const user = form.getFieldValue(`user`);
-  //   const found = this.props.s.some(el => el[ID] === this.props.pa[ID]);
-  //   if (!found) {this.props.s[ID].push( this.props.pa[ID] );}
-  //   console.log("user at add() I: ", JSON.stringify(user))
-  //    let r = {
-  //       "user": this.props.pa[ID],
-  //     }
-  //   // console.log("qs at add(): ", JSON.stringify(question_chs_id))
-  //   console.log("r at add(): ", JSON.stringify(r))
-  //   const nextKeys = question_chs_id[ID].choices;
-  //   if(ID !== 0){
-  //     let rr = null
-  //     if(nextKeys.length>1){
-  //       rr = globChois
-  //       console.log("rr at add() I: ",  JSON.stringify(rr))
-  //       console.log("rr at add() II: ",  JSON.stringify(rr.splice(ID, 1, nextKeys)))
-  //       rr.splice(ID, 1, nextKeys) 
-  //       console.log("rr at add() III: ",  JSON.stringify(rr))
-  //     } 
-  //     else{
-  //       rr = [globChois]
-  //       rr[ID]=(nextKeys)
-  //     }
-  //     console.log("rr at add() IV: ",  JSON.stringify(rr))
-  //     globChois = rr
-  //     console.log("globChois at add() III: ",  JSON.stringify(globChois))
-  //     globChois = globChois.slice(globChois.length - (ID+1)) 
-  //     // console.log("globChois splitted at add(): ", (globChois[globChois.length - (ID+1)]))
-  //     form.setFieldsValue({
-  //       keys: globChois
-  //     });
-  //   } else {
-  //   globChois.push(nextKeys)
-  //   console.log("globChois at add() II: ", JSON.stringify(globChois))
-  //   globChois = globChois[globChois.length - (ID+1)] 
-  //   console.log("globChois at add() III: ", (globChois))
-  //   form.setFieldsValue({
-  //     keys: [globChois]
-  //   });
-  //   }
-  // };
 
   render() {
     const { comments, submitting, value } = this.state;
@@ -300,12 +249,6 @@ class ArticleCustomForm extends React.Component {
             />)}
           </Form.Item>
           </div>
-        
-            {/* <Form.Item style={{display: 'flex', justifyContent: 'center'}} wrapperCol={{ justifyContent: 'center' }}>
-              <Button type="primary" htmlType="submit">
-                Done
-              </Button>
-            </Form.Item> */}
         </Hoc>
     );
   }
@@ -315,9 +258,6 @@ const WrappedArticleCreate = Form.create()(ArticleCustomForm);
 
 const mapStateToProps = state => {
   console.log("mapStateToProps: "+JSON.stringify(state))
-  /*console.log("1) ASNT List mapStateToProps containers state 1: "+ JSON.stringify(state.assignments.assignments))
-  console.log("2) ASNT List mapStateToProps containers state 2: "+ JSON.stringify(state.assignments))
-  console.log("2) ASNT List mapStateToProps containers state 3: "+ JSON.stringify(state))*/
   return {
     token: state.auth.token,
     username: state.auth.username,

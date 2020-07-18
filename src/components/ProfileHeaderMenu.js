@@ -23,9 +23,11 @@ class ProfileHeaderMenu extends React.Component {
   }
   
   componentWillReceiveProps(newProps) {
-    if (newProps.token !== this.props.token) {
-      console.log("newProps.token !== this.props.token")
-      this.props.getProfilAccountInfo(newProps.token, newProps.userId)
+    if (newProps.token !== undefined && newProps.token !== null) {
+      if(newProps.token !== this.props.token){
+        this.props.getProfilAccountInfo(newProps.token, newProps.userId)
+        console.log("newProps.token !== this.props.token")
+      }
   } else {
       console.log("newProps.token !== this.props.token NOT")
       // this.props.getProfilAccountInfo(this.props.token, this.props.username)
@@ -39,6 +41,7 @@ class ProfileHeaderMenu extends React.Component {
     } else {
       this.props.logout()
     }
+    this.props.history.push("/login");
   }
   
 

@@ -15,6 +15,7 @@ from paymentsApi.views import (
     OrderItemDeleteView,
     OrderQuantityUpdateView,
     PaymentListView,
+    DonateView,
     DirectBuyView,
     SessionBuyView,
     SessionOrderDetailView,
@@ -34,6 +35,7 @@ urlpatterns = [
     path('products/<pk>/', ItemListView.as_view(), name='product-detail'),
     path('direct-buy/', DirectBuyView.as_view(), name='direct-view'),
     path('session-direct-buy/', SessionBuyView.as_view(), name='session-direct-view'),
+    path('donation/', DonateView.as_view(), name='donation'),
 
     path('payment-successful/', csrf_exempt(PaymentSView.as_view()), name='spayment-successful'),
     

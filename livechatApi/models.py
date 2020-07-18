@@ -3,6 +3,8 @@ from django.conf import settings
 from django.db import models
 from users.models import User, ProfileInfo
 from articlesApi.models import Article
+from projectsApi.models import Project
+from sessionsApi.models import Session
 
 class Sender(models.Model):
     sender = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
@@ -43,7 +45,8 @@ class Request(models.Model):
     discussion_topic = models.ManyToManyField(Category)
     sender = models.ForeignKey(User, related_name='is_sender', on_delete=models.CASCADE)
     recipient = models.ManyToManyField(User, related_name='is_recipient')
-    article = models.ForeignKey(Article, on_delete=models.CASCADE)
+    article = models.ForeignKey(Article, on_delete=models.CASCADE, null=True, blank=True)
+    project = models.ForeignKey(Project, on_delete=models.CASCADE, null=True, blank=True)
     room_name = models.CharField(max_length=60, null=True, blank=True)
     #recipient's university
     #sender's university
@@ -57,14 +60,15 @@ class LCRoom(models.Model):
     api_created = models.BooleanField(default=False)
     privacy = models.CharField(max_length=60, null=True)
 
-    user_called = models.ManyToManyField(User, related_name="user_called")
-    called_time = models.DateTimeField(auto_now_add=False, null=True)
+    user_called_om = models.ManyToManyField(User, related_name="user_called_on_meeting")
+    meeting_called_time = models.DateTimeField(auto_now_add=False, null=True)
 
     url = models.CharField(max_length=60, null=True)
     created_at = models.DateTimeField(auto_now_add=False, null=True)
     date_to_appointment = models.DateTimeField(auto_now_add=False, null=True)
     participants = models.ManyToManyField(User, related_name='room_participants')
-    article = models.ForeignKey(Article, on_delete=models.CASCADE)
+    article = models.ForeignKey(Article, on_delete=models.CASCADE, null=True, blank=True)
+    project = models.ForeignKey(Project, on_delete=models.CASCADE, null=True, blank=True)
 
     def __str__(self):
         return self.room_name

@@ -170,16 +170,17 @@ class ArticleFeedback extends React.Component {
         console.log("4) this.state.schedule: " + this.state.schedule)
         console.log("5) this.state.noTitleKey: " + this.state.noTitleKey.replace(/ +/g, ""))
         console.log("6) this.props: " + JSON.stringify(this.props))
+        const dta = null;
         if(this.props.meetingDetails !== undefined) {
             console.log("7) this.props.meetings.meetingList: " + JSON.stringify(this.props.meetingDetails))
             console.log("8) this.props.meetings.meetingList: " + JSON.stringify(this.props.meetingDetails.scheduled))
+            dta = this.props.meetingDetails.date_to_appointment
         }
         // const {scheduled} = this.props.meetings.meetingList
         return (
             <div>
                 {this.state.article.engagement !== undefined && 
-                 this.props.username !== (undefined || null) && 
-                 this.props.meetingDetails !== undefined ? (
+                 this.props.username !== (undefined || null) ? (
                     <Card
                         style={{ width: '100%' }}
                         tabList={this.handleTabList(this.state.article.engagement)}
@@ -190,7 +191,7 @@ class ArticleFeedback extends React.Component {
                         >
                             {!this.state.schedule && this.state.noTitleKey == "live chat" ? (
                                 <div>
-                                 {this.props.meetingDetails.date_to_appointment !== null ? (
+                                 {dta !== null ? (
                                 <Button type="primary" onClick={() =>{this.handleClick()}}>
                                    Schedule a Meeting
                                 </Button>
@@ -204,7 +205,9 @@ class ArticleFeedback extends React.Component {
                         title="You need to be Logged In to leave a feedback"
                         extra={
                           <Button type="primary" key="console">
-                            Go Console
+                              <Link to="/login">
+                                Log In
+                              </Link>
                           </Button>
                         }
                       />)

@@ -16,7 +16,9 @@ import gradedSurveyReducer from "./store/reducers/gradedSurvey";
 import assignmentChoiceReduce from "./store/reducers/assignmentsChoices";
 import gradedAssignmentReducer from "./store/reducers/gradedAssignments";
 import likeReducer from "./store/reducers/likes"
+import projectLikeReducer from "./store/reducers/projectLikes"
 import ratingReducer from "./store/reducers/rating"
+import projectCommentReducer from "./store/reducers/projectComments"
 import commentReducer from "./store/reducers/comments"
 import inquiryCommentReducer from "./store/reducers/inquiryComments"
 import meetingsReducer from "./store/reducers/meetings"
@@ -44,8 +46,10 @@ const rootReducer = combineReducers({
   // gradedAssignments: gradedAssignmentReducer,
   // assignmentsChoices: assignmentChoiceReduce,
   like: likeReducer,
+  project_like: projectLikeReducer,
   rating: ratingReducer,
   comments: commentReducer,
+  project_comments: projectCommentReducer,
   inquiry_comments: inquiryCommentReducer,
   meetings: meetingsReducer,
   profile: profileReducer,

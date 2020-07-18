@@ -232,7 +232,7 @@ const getMeetingDetailFail = error => {
   };
 };
 
-export const getDetailMeetingList = (token, articleID, userID) => {
+export const getDetailMeetingList = (token, articleID, userID, postParams) => {
     return dispatch => {
       console.log(" getDetailMeetingList ")
       console.log(" token, articleID, userID: "+ token, articleID, userID)
@@ -241,7 +241,7 @@ export const getDetailMeetingList = (token, articleID, userID) => {
             "Content-Type": "application/json",
             Authorization: `Token ${token}`
         }
-        axios.get(lcroomListDetailURL(articleID, userID))
+        axios.get(lcroomListDetailURL(articleID, userID), postParams)
         .then(res => {
             const data = res.data;
             console.log("data: "+ JSON.stringify(data))

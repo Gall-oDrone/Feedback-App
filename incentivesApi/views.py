@@ -33,7 +33,7 @@ class IncentiveCreateView(CreateAPIView):
     # model = Incentive
     queryset = Incentive.objects.all().order_by('-created')
     print("queryset IncentiveCreateView")
-    print(queryset)
+    #print(queryset)
     serializer_class = IncentiveListSerializer
     permission_classes = (permissions.IsAuthenticated,)
 
@@ -83,7 +83,7 @@ class IncentiveListView(ListAPIView):
     # model = Incentive
     queryset = Incentive.objects.all()
     print("queryset List view")
-    print(queryset)
+    #print(queryset)
     serializer_class = IncentiveListSerializer
     permission_classes = (permissions.AllowAny,)
 
@@ -92,7 +92,7 @@ class IncentiveUserListView(RetrieveAPIView):
     queryset = Incentive.objects.all()
     serializer_class = IncentiveUserListSerializer
     permission_classes = (permissions.AllowAny,)
-    print(queryset.values())
+    #print(queryset.values())
 
     def get_object(self):
         try:
@@ -165,7 +165,7 @@ class IncentiveDeleteView(DestroyAPIView):
 #     # model = Incentive
 #     queryset = CreateAWGiftCard.objects.all().order_by('-created')
 #     print("queryset IncentiveCreateView")
-#     print(queryset)
+#     #print(queryset)
 #     serializer_class = AMIncentiveCreateView
 #     permission_classes = (permissions.AllowAny,)
 

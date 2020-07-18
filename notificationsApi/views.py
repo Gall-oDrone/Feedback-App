@@ -53,7 +53,7 @@ class NotificationListView(ListAPIView):
     # model = Notification
     queryset = Notification.objects.all()
     print("queryset List view")
-    print(queryset)
+    #print(queryset)
     serializer_class = NotificationSerializer
     permission_classes = (permissions.AllowAny,)
 
@@ -98,7 +98,7 @@ class NotificationDeleteView(DestroyAPIView):
 class NotificationUpdateView(UpdateAPIView):
     queryset = Notification.objects.all()
     print("queryset from NotificationUpdateView")
-    print(queryset)
+    #print(queryset)
     serializer_class = NotificationSerializer
     permission_classes = (permissions.IsAuthenticated,)
 
@@ -120,7 +120,7 @@ class NotificationUpdateView(UpdateAPIView):
 class ProfileNotificationListView(RetrieveAPIView):
     queryset = Notification.objects.all()
     print("queryset from ProfileNotificationListView")
-    print(queryset)
+    #print(queryset)
     serializer_class = ProfileNotificationListSerializer
     permission_classes = (permissions.IsAuthenticated,)
 
@@ -147,7 +147,7 @@ class ProfileNotificationListView(RetrieveAPIView):
 class ProfileNotificationListUpdateView(UpdateAPIView):
     queryset = Notification.objects.all()
     print("queryset from ProfileNotificationListView")
-    print(queryset)
+    #print(queryset)
     serializer_class = NotificationSerializer
     permission_classes = (permissions.IsAuthenticated,)
 
@@ -174,7 +174,7 @@ class ProfileNotificationDetailView(RetrieveUpdateDestroyAPIView):
     parser_classes = (MultiPartParser, FormParser)
     queryset = Notification.objects.all()
     print("queryset from ProfileNotificationDetailView")
-    print(queryset)
+    #print(queryset)
     serializer_class = NotificationSerializer
     permission_classes = (permissions.IsAuthenticated,)
 

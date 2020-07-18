@@ -13,12 +13,12 @@ import {
   DELETE_PROFILE_INQUIRY_DETAIL_SUCCESS
 } from "./actionTypes";
 import {
-  inquiryListURL,
-  inquiryDetailURL,
-  inquiryCreateURL,
+  projectListURL,
+  projectDetailURL,
+  projectCreateURL,
   profileInquiryListURL,
   profileInquiryDetailURL,
-  inquiryURL
+  projectURL
 } from "../../constants"
 
 const getProfileInquiryListStart = () => {
@@ -85,7 +85,7 @@ const getProfileInquiryDetailFail = error => {
   };
 };
 
-export const getProfileInquiryDetail = (token, inquiryID, username) => {
+export const getProfileInquiryDetail = (token, projectID, username) => {
     return dispatch => {
       console.log(" getDetailMeetingList ")
         // dispatch(getMeetingDetailStart());
@@ -93,7 +93,7 @@ export const getProfileInquiryDetail = (token, inquiryID, username) => {
             "Content-Type": "application/json",
             Authorization: `Token ${token}`
         }
-        axios.get(profileInquiryDetailURL(inquiryID, username))
+        axios.get(profileInquiryDetailURL(projectID, username))
         .then(res => {
             const data = res.data;
             console.log("data: "+ JSON.stringify(data))
@@ -127,7 +127,7 @@ const putProfileInquiryDetailFail = error => {
   };
 };
 
-export const putProfileInquiryDetail = (token, inquiryID, username, data) => {
+export const putProfileInquiryDetail = (token, projectID, username, data) => {
     return dispatch => {
       console.log(" putProfileInquiryDetail ")
       console.log(" putProfileInquiryDetail data: "+JSON.stringify(data))
@@ -138,7 +138,7 @@ export const putProfileInquiryDetail = (token, inquiryID, username, data) => {
             // "Content-Type": "application/json",
             Authorization: `Token ${token}`
         }
-        axios.put(profileInquiryDetailURL(inquiryID, username), data)
+        axios.put(profileInquiryDetailURL(projectID, username), data)
         .then(res => {
             const data = res.data;
             console.log("data: "+ JSON.stringify(data))
@@ -164,7 +164,7 @@ const deleteProfileInquiryDetailFail = error => {
   };
 };
 
-export const deleteProfileInquiryDetail = (token, inquiryID, username) => {
+export const deleteProfileInquiryDetail = (token, projectID, username) => {
     return dispatch => {
       console.log(" putProfileInquiryDetail ")
         // dispatch(getMeetingDetailStart());
@@ -174,7 +174,7 @@ export const deleteProfileInquiryDetail = (token, inquiryID, username) => {
             // "Content-Type": "application/json",
             Authorization: `Token ${token}`
         }
-        axios.delete(profileInquiryDetailURL(inquiryID, username))
+        axios.delete(profileInquiryDetailURL(projectID, username))
         .then(res => {
             dispatch(deleteProfileInquiryDetailSuccess());
         })

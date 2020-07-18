@@ -50,6 +50,7 @@ INSTALLED_APPS = [
     "notificationsApi",
     "inquiriesApi",
     "paymentsApi",
+    "projectsApi",
     "sessionsApi",
     "walletApi",
     "storages",

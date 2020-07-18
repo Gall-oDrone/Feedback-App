@@ -44,36 +44,6 @@ class CustomLayout extends React.Component {
     }
   };
 
-  handleLogOut = (e) => {
-    if(this.props.token !== null){
-      this.props.logout()
-      window.location.reload(false);
-    } else {
-      this.props.logout()
-    }
-  }
-  //
-  componentDidMount() {
-    if (this.props.token !== undefined && this.props.token !== null) {
-      if(this.props.userId !== null){
-        this.props.getProfilAccountInfo(this.props.token, this.props.userId)
-      } else {
-        console.log("this.props.getMeetings was undefined at CDM")
-      }
-    }
-  }
-  
-  componentWillReceiveProps(newProps) {
-    if (newProps.token !== this.props.token) {
-      console.log("newProps.token !== this.props.token")
-      this.props.getProfilAccountInfo(newProps.token, newProps.userId)
-  } else {
-      console.log("newProps.token !== this.props.token NOT")
-      // this.props.getProfilAccountInfo(this.props.token, this.props.userId)
-  }
-      
-  }
-
   render() {
     console.log(" Layour this.props: ")
     console.log(this.props)
@@ -101,47 +71,55 @@ class CustomLayout extends React.Component {
                 <Menu.Item key="1" style= {{float: 'left'}}>
                   <div className="navbar-item-in">
                     <Link to="/">
-                        <Icon type="home" />
+                        <Icon style={{margin:0}} type="home" />
                         <span className="caption">HOME</span>
                     </Link>
                   </div>
                   </Menu.Item>
-                <Menu.Item key="2" style= {{float: 'left'}}>
+                  <Menu.Item key="2" style= {{float: 'left'}}>
                   <div className="navbar-item-in">
                       <Link to="/articles/">
-                        <Icon type="project" />
-                        <span className="caption">PROJECTS</span>
+                        <Icon style={{margin:0}} type="project" />
+                        <span className="caption">ARTICLES</span>
                       </Link> 
                   </div>
                 </Menu.Item>
                 <Menu.Item key="3" style= {{float: 'left'}}>
                   <div className="navbar-item-in">
+                      <Link to="/projects/">
+                        <Icon style={{margin:0}} type="project" />
+                        <span className="caption">PROJECTS</span>
+                      </Link> 
+                  </div>
+                </Menu.Item>
+                <Menu.Item key="4" style= {{float: 'left'}}>
+                  <div className="navbar-item-in">
                       <Link to="/inquiries/">
-                          <Icon type="solution" />
+                          <Icon style={{margin:0}} type="solution" />
                           <span className="caption">INQUIRIES</span>
                       </Link>
                   </div>
                   </Menu.Item>
-                <Menu.Item key="4" style= {{float: 'left'}}>
-                  <div className="navbar-item-in">
-                        <Link to="/incentives/">
-                          <Icon type="shop" />
-                          <span className="caption">SHOP</span>
-                        </Link>
-                  </div>
-                </Menu.Item>
                 <Menu.Item key="5" style= {{float: 'left'}}>
                   <div className="navbar-item-in">
-                        <Link to="/sessions/">
-                          <Icon type="team" />
-                          <span className="caption">MEET AND TALK</span>
+                        <Link to="/incentives/">
+                          <Icon style={{margin:0}} type="shop" />
+                          <span className="caption">SHOP</span>
                         </Link>
                   </div>
                 </Menu.Item>
                 <Menu.Item key="6" style= {{float: 'left'}}>
                   <div className="navbar-item-in">
+                        <Link to="/sessions/">
+                          <Icon style={{margin:0}} type="team" />
+                          <span className="caption">MEET AND TALK</span>
+                        </Link>
+                  </div>
+                </Menu.Item>
+                <Menu.Item key="7" style= {{float: 'left'}}>
+                  <div className="navbar-item-in">
                       <Link to="/survey/">
-                        <Icon type="reconciliation" />
+                        <Icon style={{margin:0}} type="reconciliation" />
                         <span className="caption">SURVEY</span>
                       </Link>
                   </div>
@@ -170,8 +148,8 @@ class CustomLayout extends React.Component {
           <Layout className="children layout">
           {this.props.isAuthenticated ? (
             <Sider style={{paddingTop: "50.1px"}}trigger={null} collapsible collapsed={true} >
-              <div className="logo" />
-              <Menu theme="dark" mode="inline" defaultSelectedKeys={['1']}>
+              
+              <Menu theme="dark" mode="inline">
               <Menu.Item key="1">
                   <Link to={`/profile/${this.props.userId}/account/user/info/`}>
                     <Icon type="user"/>
@@ -297,14 +275,12 @@ const mapStateToProps = state => {
     token: state.auth.token,
     is_student: state.auth.is_student,
     is_teacher: state.auth.is_teacher,
-    profileAI: state.profileAccountInfo
   };
 };
 
 const mapDispatchToProps = dispatch => {
   return {
     logout: () => dispatch(actions.logout()),
-    getProfilAccountInfo: (token, userID) => dispatch(getProfileAccountDetail(token, userID)),
   };
 };
 

@@ -103,9 +103,9 @@ class Session(models.Model):
 
     start_time = models.DateTimeField(auto_now_add=False, null=True)
     end_time = models.DateTimeField(auto_now_add=False, null=True)
-    weekdays = models.ManyToManyField(Weekdays, null=True, blank=True)
-    months = models.ManyToManyField(Months, null=True, blank=True)
-    dates = models.ManyToManyField(Dates, null=True, blank=True)
+    weekdays = models.ManyToManyField(Weekdays, blank=True)
+    months = models.ManyToManyField(Months, blank=True)
+    dates = models.ManyToManyField(Dates, blank=True)
 
     topic = models.ManyToManyField(Topic)
     experience = models.ManyToManyField(Experience)

@@ -24,7 +24,7 @@ class AssignmentDetail extends React.Component {
     }
   }
 
-  componentWillReceiveProps(newProps) {
+  componentDidUpdate(newProps) {
     if (newProps.token !== this.props.token) {
       if (newProps.token !== undefined && newProps.token !== null) {
         const articleID = this.props.arId;

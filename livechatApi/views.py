@@ -37,7 +37,7 @@ class LCRequestListView(ListAPIView):
     # model = Request
     queryset = Request.objects.all()
     print("queryset List view")
-    print(queryset)
+    #print(queryset)
     serializer_class = LCRequestSerializer
     permission_classes = (permissions.AllowAny,)
 
@@ -59,7 +59,7 @@ class LCRequestUserListView(RetrieveAPIView):
     queryset = Request.objects.all()
     serializer_class = LCRequestUserListSerializer
     permission_classes = (permissions.AllowAny,)
-    print(queryset.values())
+    # #print(queryset.values())
 
     def get_object(self):
         try:
@@ -79,7 +79,7 @@ class LCRequestReceivedUserListView(RetrieveAPIView):
     queryset = Request.objects.all()
     serializer_class = LCRequestUserListSerializer
     permission_classes = (permissions.AllowAny,)
-    print(queryset.values())
+    #print(queryset.values())
 
     def get_object(self):
         try:
@@ -99,7 +99,7 @@ class LCRequestBookedUserListView(RetrieveAPIView):
     queryset = Request.objects.all()
     serializer_class = LCRequestUserListSerializer
     permission_classes = (permissions.AllowAny,)
-    print(queryset.values())
+    #print(queryset.values())
 
     def get_object(self):
         try:
@@ -122,7 +122,7 @@ class LCRequestListDetailView(RetrieveUpdateDestroyAPIView):
     # lookup_url_kwarg = "article_id"
     # lookup_url_kwarg = "user_id"
     permission_classes = (permissions.IsAuthenticated,)
-    print(queryset.values())
+    #print(queryset.values())
 
     def get_object(self, *args, **kwargs):
         try:
@@ -131,15 +131,18 @@ class LCRequestListDetailView(RetrieveUpdateDestroyAPIView):
             userId = self.kwargs.get('user_id')
             user = User.objects.get(username=userId)
             # articleId = Article.objects.get(title=article).id
-            print(articleId, userId, user, user.id)
-            meetingList = Request.objects.filter(sender=user.id, article=articleId)
-            LCRequestListDetailSerializer(meetingList)
+            print(articleId, userId, user, user.id, str(self.request.GET.get("model")))
+            if(self.request.GET.get("model") == "project"):
+                meetingList = Request.objects.filter(sender=user.id, project=articleId)
+            else:
+                meetingList = Request.objects.filter(sender=user.id, article=articleId)
+            # LCRequestListDetailSerializer(meetingList)
             print(meetingList)
             print(len(meetingList))
-            if len(meetingList) == 0:
-                return None
+            if len(meetingList)>0:
+                return meetingList
             else:
-                return meetingList[0]
+                return None
         except ObjectDoesNotExist:
             raise Http404("You do not have an active order")
             return Response({"message": "You do not have an active order"}, status=HTTP_400_BAD_REQUEST)
@@ -232,7 +235,7 @@ lcRequest_post_signal = Signal(providing_args=["context"])
 class LCRequestCreateView(CreateAPIView):
     queryset = Request.objects.all()
     print("queryset Create view at LCRequest")
-    print(queryset.values())
+    #print(queryset.values())
     serializer_class = LCRequestSerializer
     permission_classes = (permissions.IsAuthenticated,)
 
@@ -391,14 +394,14 @@ class LCRoomDetailView(RetrieveUpdateDestroyAPIView):
 class LCMeetingReviewlistView(ListAPIView):
     queryset = MeetingReview.objects.all()
     print("queryset LCMeetingReviewlistView")
-    # print(queryset.values())
+    # #print(queryset.values())
     serializer_class = LCMeetingReviewSerializer
     permission_classes = (permissions.IsAuthenticated,)
 
 class LCMeetingReviewCreateView(CreateAPIView):
     queryset = MeetingReview.objects.all()
     print("queryset Create view at LCRequest")
-    # print(queryset.values())
+    # #print(queryset.values())
     serializer_class = LCMeetingReviewSerializer
     permission_classes = (permissions.IsAuthenticated,)
 

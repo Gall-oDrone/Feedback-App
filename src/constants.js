@@ -33,6 +33,7 @@ export const orderSummaryURL = `${endpoint}/payments/order-summary/`;
 export const sessionOrderSummaryURL = `${endpoint}/payments/session-order-summary/`;
 export const paymentSURL = `${endpoint}/payments/payment-successful/`;
 export const checkoutURL = `${endpoint}/payments/checkout/`;
+export const donationURL = `${endpoint}/payments/donation/`;
 export const addCouponURL = `${endpoint}/payments/add-coupon/`;
 export const countryListURL = `${endpoint}/payments/countries/`;
 export const image_URL = `${files}/`;
@@ -51,6 +52,11 @@ export const articleCreateURL = `${endpoint}/articles/create/`
 export const articleDetailURL = (articleID) => `${endpoint}/articles/${articleID}`
 export const articleUpdateURL = (articleID) => `${endpoint}/articles/${articleID}/update/`
 
+export const projectListURL = `${endpoint}/projects/`
+export const projectCreateURL = `${endpoint}/projects/create/`
+export const projectDetailURL = (projectID) => `${endpoint}/projects/${projectID}`
+export const projectUpdateURL = (projectID) => `${endpoint}/projects/${projectID}/update/`
+
 export const authLogInURL = `${localhost}/rest-auth/login/`;
 export const authSignUpURL = `${localhost}/rest-auth/registration/`;
 export const authLogOutURL = `${localhost}/rest-auth/logout/`;
@@ -60,6 +66,12 @@ export const articleCommentURL = (articleID, commentID) => `${endpoint}/articles
 export const articleCreateCommentURL = data => `${endpoint}/articles/${data.articleID}/create-comment/`
 export const articleUpdateCommentURL = data => `${endpoint}/articles/${data.articleID}/update-comment/${data.id}/`
 export const articleUpdateCommentURL3 = (articleID, commentID) => `${endpoint}/articles/${articleID}/update-comment/${commentID}/`
+
+export const projectCommentsURL = projectID => `${endpoint}/projects/${projectID}/comments/`
+export const projectCommentURL = (projectID, commentID) => `${endpoint}/projects/${projectID}/comment/${commentID}/`
+export const projectCreateCommentURL = data => `${endpoint}/projects/${data.projectID}/create-comment/`
+export const projectUpdateCommentURL = data => `${endpoint}/projects/${data.projectID}/update-comment/${data.id}/`
+export const projectUpdateCommentURL3 = (projectID, commentID) => `${endpoint}/projects/${projectID}/update-comment/${commentID}/`
 
 export const lcroomCreateMeetingURL = `${endpoint}/live-chat/lcrequest/create/`
 export const lcroomListURL = username => `${endpoint}/live-chat/lcrequest/lcroom/list/${username}`
@@ -77,6 +89,8 @@ export const incentivesDetailURL = userID => `${endpoint}/incentives/listdetail/
 export const profileMeetingRequestURL = username => `${endpoint}/users/lcrequest/${username}`
 export const profileArticleListURL = username => `${endpoint}/articles/list/${username}/`
 export const profileArticleDetailURL = (articleID, username) => `${endpoint}/articles/${articleID}/detail/${username}/`
+export const profileProjectListURL = username => `${endpoint}/projects/list/${username}/`
+export const profileProjectDetailURL = (projectID, username) => `${endpoint}/projects/${projectID}/detail/${username}/`
 export const profileSessionListURL = username => `${endpoint}/sessions/list/${username}/`
 export const profileSessionDetailURL = (articleID, username) => `${endpoint}/sessions/detail/${articleID}/${username}/`
 export const profileSessionRoomURL = (sessionID, username) => `${endpoint}/sessions/room/${sessionID}/${username}/`
@@ -99,7 +113,15 @@ export const fetchRatingURL = articleID => `${endpoint}/articles/${articleID}`
 export const articleLikeUpdateURL = (articleID, userID) => `${endpoint}/articles/${articleID}/likes/${userID}/`
 export const articleLikeCreateURL = (articleID) => `${endpoint}/articles/${articleID}/create-likes/`
 export const fetchLikeCounterURL = (articleID) => `${endpoint}/articles/${articleID}`
-// export const articleListURL = articleID => `${endpoint}/articles/${articleID}`
+
+export const projectRatingURL = data => `${endpoint}/projects/${data.projectID}/rating/`
+export const fetchProjectRatingURL = projectID => `${endpoint}/projects/${projectID}`
+export const projectLikeUpdateURL = (projectID, userID) => `${endpoint}/projects/${projectID}/likes/${userID}/`
+export const projectLikeCreateURL = (projectID) => `${endpoint}/projects/${projectID}/create-likes/`
+export const fetchProjectLikeCounterURL = (projectID) => `${endpoint}/projects/${projectID}`
+export const projectUpvoteUpdateURL = (projectID, userID) => `${endpoint}/projects/${projectID}/upvotes/${userID}/`
+export const projectUpvoteCreateURL = (projectID) => `${endpoint}/projects/${projectID}/create-upvotes/`
+export const fetchUpvoteCounterURL = (projectID) => `${endpoint}/projects/${projectID}`
 
 export const lcroomReviewURL = `${endpoint}/live-chat/lcrequest/lcroom/review/create/`
 

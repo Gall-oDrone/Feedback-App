@@ -41,25 +41,25 @@ class NavMenu extends React.Component {
 
   waitForSocketConnection(callback) {
     const component = this;
-    // if (WebSocketInstance.state() === 1) {
-    //   console.log("Connection is made");
-    //   callback();
-    //   return;
-    // } 
-    const timer = setTimeout(function() {
-      if (WebSocketInstance.state() === 1) {
-        console.log("Connection is made");
-        callback();
-        return;
-      } else {
-        console.log("wait for connection...");
-        component.waitForSocketConnection(callback);
-      }
-    }, 10);
-    if(timer > 10){
-      console.log("timer is greater than 10 milisecs, it's: ", timer);
-      this.componentWillUnmount(timer)
-    }
+    if (WebSocketInstance.state() === 1) {
+      console.log("Connection is made");
+      callback();
+      return;
+    } 
+    // const timer = setTimeout(function() {
+    //   if (WebSocketInstance.state() === 1) {
+    //     console.log("Connection is made");
+    //     callback();
+    //     return;
+    //   } else {
+    //     console.log("wait for connection...");
+    //     component.waitForSocketConnection(callback);
+    //   }
+    // }, 10);
+    // if(timer > 10){
+    //   console.log("timer is greater than 10 milisecs, it's: ", timer);
+    //   this.componentWillUnmount(timer)
+    // }
   }
 
   componentWillUnmount(timer){
@@ -68,26 +68,19 @@ class NavMenu extends React.Component {
   }
 
   componentWillReceiveProps(newProps) {
-    if (newProps.token != this.props.token) {
+    if (newProps.token != null) {
         if(newProps.username != undefined){
-          WebSocketInstance.disconnect();
+          // WebSocketInstance.disconnect();
           this.waitForSocketConnection(() => {
             WebSocketInstance.fetchNTFNViews(
               newProps.username,
             );
           });
       WebSocketInstance.notification_connect(newProps.username);
-    } else {
-      WebSocketInstance.disconnect();
+      } else {
+        WebSocketInstance.disconnect();
+      }
     }
-  } else {
-      console.log("newProps.token !== this.props.token NOT")
-      this.waitForSocketConnection(() => {
-        WebSocketInstance.fetchNTFNViews(
-          this.props.username,
-        );
-      });
-  }   
   }
 
   render() {

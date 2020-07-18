@@ -80,7 +80,7 @@ class InquiryListView(ListAPIView):
     # model = Inquiry
     queryset = Inquiry.objects.all()
     print("queryset List view")
-    print(queryset)
+    #print(queryset)
     serializer_class = InquirySerializer
     permission_classes = (permissions.AllowAny,)
 
@@ -129,7 +129,7 @@ class InquiryCreateView(CreateAPIView):
     parser_classes = (MultiPartParser, FormParser)
     queryset = Inquiry.objects.all()
     print("queryset Create view")
-    print(queryset)
+    #print(queryset)
     serializer_class = InquirySerializer
     permission_classes = (permissions.IsAuthenticated,)
 
@@ -157,7 +157,7 @@ class InquiryDeleteView(DestroyAPIView):
 class InquiryUpdateView(UpdateAPIView):
     queryset = Inquiry.objects.all()
     print("queryset from InquiryUpdateView")
-    print(queryset)
+    #print(queryset)
     serializer_class = InquirySerializer
     permission_classes = (permissions.IsAuthenticated,)
 
@@ -215,7 +215,7 @@ class ProfileInquiryDetailView(RetrieveUpdateDestroyAPIView):
     parser_classes = (MultiPartParser, FormParser)
     queryset = Inquiry.objects.all()
     print("queryset from ProfileInquiryDetailView")
-    print(queryset)
+    #print(queryset)
     serializer_class = InquirySerializer
     permission_classes = (permissions.IsAuthenticated,)
 
@@ -410,7 +410,7 @@ class LikeDetailView(RetrieveUpdateDestroyAPIView):
         print(self.lookup_url_kwarg)
         print(userId)
         queryset = Like.objects.filter(user_id=userId).filter(inquiry_id=inquiryId)
-        print(queryset.values())
+        #print(queryset.values())
         return queryset
     
     def update(self, request, *args, **kwargs):
@@ -432,9 +432,9 @@ class CreateLike(CreateAPIView):
     queryset = Like.objects.all()
     queryset2 = Inquiry.objects.all().values()
     print("UpdateLike queryset")
-    print(queryset)
-    print(queryset2)
-    print(Like.objects.values())
+    #print(queryset)
+    # print(queryset2)
+    # print(Like.objects.values())
     serializer_class = LikeSerializer
     permission_classes = (permissions.IsAuthenticated,)
 
@@ -523,7 +523,7 @@ class CommentListView(RetrieveAPIView):
     serializer_class = CommentListSerializer
     permission_classes = (permissions.AllowAny,)
     print("Comment Detial queryset")
-    print(queryset.values())
+    #print(queryset.values())
     def get_object(self):
         try:
             print("Comment filter")
@@ -537,7 +537,7 @@ class CommentListView(RetrieveAPIView):
 class CommentDetailView(RetrieveUpdateDestroyAPIView):
     queryset = Comment.objects.all()
     print("queryset from CoomentDetail View")
-    print(queryset)
+    #print(queryset)
     serializer_class = CommentSerializer
     permission_classes = (permissions.IsAuthenticated,)
 
@@ -646,7 +646,7 @@ class CommentListView(RetrieveAPIView):
     serializer_class = CommentListSerializer
     permission_classes = (permissions.AllowAny,)
     print("Comment Detial queryset")
-    print(queryset.values())
+    #print(queryset.values())
     def get_object(self):
         try:
             print("Comment filter")
@@ -660,7 +660,7 @@ class CommentListView(RetrieveAPIView):
 class CommentDetailView(RetrieveUpdateDestroyAPIView):
     queryset = Comment.objects.all()
     print("queryset from CoomentDetail View")
-    print(queryset)
+    #print(queryset)
     serializer_class = CommentSerializer
     permission_classes = (permissions.IsAuthenticated,)
 

@@ -39,7 +39,7 @@ class UserViewSet(viewsets.ModelViewSet):
     serializer_class = UserSerializer
     queryset = User.objects.all()
     print("USER QS")
-    print(queryset)
+    #print(queryset)
 
     def get(self, request, *args, **kwargs):
         print("current_user QS")
@@ -333,14 +333,14 @@ class UniView(generics.ListAPIView):
     permission_classes = (permissions.AllowAny,)
     queryset = Universities.objects.all()
     print("Universities QS")
-    print(queryset)
+    #print(queryset)
 
 class DegView(generics.ListAPIView):
     serializer_class = UniSerializer
     permission_classes = (permissions.AllowAny,)
     queryset = Universities.objects.all()
     print("Universities QS")
-    print(queryset)
+    #print(queryset)
 
     # def get(self, request, *args, **kwargs):
     #     uni = Universities()

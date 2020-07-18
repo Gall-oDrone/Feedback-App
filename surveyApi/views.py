@@ -48,6 +48,7 @@ class SurveyCreateView(CreateAPIView):
 class SurveyListView(ListAPIView):
     serializer_class = SurveyListSerializer
     queryset = Survey.objects.all()
+    permission_classes = (permissions.AllowAny,)
 
     # def get_queryset(self):
     #     queryset = Survey.objects.all()

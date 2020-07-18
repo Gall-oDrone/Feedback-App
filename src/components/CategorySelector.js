@@ -46,6 +46,7 @@ function displayRender(label) {
 }
 
 const CategorySelectorComponent = ({category}) => {
+  const selected = category.topic
   console.log("0) category: "+JSON.stringify(category))
     return(
         <div style={{ width: 350, height:300, border: '1px solid #d9d9d9', borderRadius: 4 }}>
@@ -55,15 +56,17 @@ const CategorySelectorComponent = ({category}) => {
               <Col>
                 <Cascader
                     options={options}
+                    defaultValue={selected !== null ? selected : null}
                     expandTrigger="hover"
                     displayRender={displayRender}
                     onChange={(value) => {
+                      if(value.length === 0){
+                        category.topic = null
+                      } else{
+                        category.topic = value;
+                      }
                       console.log("1) value: "+JSON.stringify(value))
-                      console.log("3) category: "+JSON.stringify(category))
-                      console.log("4) category: "+JSON.stringify(typeof(category)))
-                      category.topic = value;
-                      console.log("5) category: "+JSON.stringify(category))
-                      // console.log("6) displayRender: "+JSON.stringify(displayRender))
+                      console.log("2) category: "+JSON.stringify(category))
                   }}
                 />
               </Col>
