@@ -23,10 +23,10 @@ class Universities(models.Model):
     STANDFORD = 'Stanford University'
     DUKE = "Duke University"
     CIDE = "Center of Teaching and Research in Economics"
-    ITAM = "Instituto Tecnológico Autónomo de México"
+    ITAM = "Autonomous Technological Institute of Mexico "
     COLMEX = "El Colegio de México"
-    TEC = "Instituto Tecnológico y de Estudios Superiores de Monterrey"
-    IBERO = "Universidad Iberoamericana"
+    ITESM = "Monterrey Institute of Technology and Higher Education"
+    UIA = " Ibero-American University"
     OTHER = 'other'
     UNIVERSITIES = [
         (MIT, ('Massachusetts Institute of Technology')),
@@ -37,8 +37,8 @@ class Universities(models.Model):
         (CIDE, ("Center of Teaching and Research in Economics")),
         (ITAM, ("Instituto Tecnológico Autónomo de México")),
         (COLMEX, ("El Colegio de México")),
-        (TEC, ("Instituto Tecnológico y de Estudios Superiores de Monterrey")),
-        (IBERO, ("Universidad Iberoamericana")),
+        (ITESM, ("Instituto Tecnológico y de Estudios Superiores de Monterrey")),
+        (UIA, ("Universidad Iberoamericana")),
         (OTHER, ('other'))
     ]
     university=models.CharField(max_length=100, choices=UNIVERSITIES, blank=True)

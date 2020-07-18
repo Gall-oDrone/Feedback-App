@@ -107,10 +107,17 @@ class Chat extends React.Component {
   };
 
   scrollToBottom = () => {
-    this.messagesEnd.scrollIntoView({ block: "start", behavior: "smooth" });
+    this.messagesEnd.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'start' });
+    // this.messagesEnd.scrollIntoView({ block: "start", behavior: "smooth" });
   };
 
+  handleScroll = (event) => {
+    return window.scrollY === 0
+        // itemTranslate = Math.min(0, scrollTop/3 - 60);
+}
+
   componentDidMount() {
+    window.addEventListener('scroll', this.handleScroll);
     this.scrollToBottom();
   }
 
@@ -155,6 +162,7 @@ class Chat extends React.Component {
           <ul id="chat-log" key={this.props.username}>
             {this.props.messages && this.renderMessages(this.props.messages)}
             <div
+              className="messageDisplay"
               style={{ float: "left", clear: "both" }}
               ref={el => {
                 this.messagesEnd = el;

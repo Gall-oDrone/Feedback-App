@@ -146,14 +146,14 @@ class CustomLayout extends React.Component {
                       </Link>
                   </div>
                 </Menu.Item>
-                <Menu.Item key="7" style= {{float: 'left'}}>
+                {/* <Menu.Item key="7" style= {{float: 'left'}}>
                   <div className="navbar-item-in">
                       <Link to="/group-sessions/">
                         <Icon type="team" />
                         <span className="caption">GROUPS</span>
                       </Link>
                   </div>
-                </Menu.Item>
+                </Menu.Item> */}
                 <Menu.Item key="8" style= {{float: 'right'}}>
                     <ProfileHeaderMenu auth={this.props.isAuthenticated} logout={this.props.logout} userId={this.props.userId}/>
                 </Menu.Item>
@@ -169,18 +169,16 @@ class CustomLayout extends React.Component {
 
           <Layout className="children layout">
           {this.props.isAuthenticated ? (
-            <Sider style={{paddingTop: "50.1px"}}trigger={null} collapsible collapsed={this.state.collapsed} >
-              <div className="sH" align= "center">
-                <Button type="primary" onMouseEnter={this.toggle} style={{ marginBottom: 16 }}>
-                    <Icon
-                      className="trigger"
-                      type={this.state.collapsed ? 'menu-unfold' : 'menu-fold'}
-                    />
-                </Button>
-              </div>
+            <Sider style={{paddingTop: "50.1px"}}trigger={null} collapsible collapsed={true} >
               <div className="logo" />
               <Menu theme="dark" mode="inline" defaultSelectedKeys={['1']}>
-                <Menu.Item key="1">
+              <Menu.Item key="1">
+                  <Link to={`/profile/${this.props.userId}/account/user/info/`}>
+                    <Icon type="user"/>
+                    <span> My Profile Page</span>
+                  </Link>
+                </Menu.Item>
+                <Menu.Item key="2">
                   <Link to={`profile/${this.props.userId}/account/articles/list/`}>
                     <Icon type="project" />
                     <span>My articles</span>
@@ -196,7 +194,7 @@ class CustomLayout extends React.Component {
               
                 <Menu.Item key="5">
                   <Link to={`/profile/${this.props.userId}/menu`}>
-                    <Icon type="user"/>
+                    <Icon type="setting"/>
                     <span> userAccount </span>
                   </Link>
                 </Menu.Item>
@@ -210,12 +208,6 @@ class CustomLayout extends React.Component {
                   <Link to={`/chat/`}>
                     <Icon type="message"/>
                     <span> Chat</span>
-                  </Link>
-                </Menu.Item>
-                <Menu.Item key="8">
-                  <Link to={`/profile-page/${this.props.username}`}>
-                    <Icon type="user"/>
-                    <span> Profile Page</span>
                   </Link>
                 </Menu.Item>
                 {/* <Menu.Item key="8">

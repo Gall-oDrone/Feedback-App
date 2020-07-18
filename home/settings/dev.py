@@ -14,15 +14,6 @@ ASGI_APPLICATION = "home.asgi.routing.application"
 #         }
 #     }
 
-CHANNEL_LAYERS = {
-    'default': {
-        'BACKEND': 'channels_redis.core.RedisChannelLayer',
-        'CONFIG': {
-            "hosts": [('127.0.0.1', 6379), os.environ.get('REDIS_URL', 'redis://localhost:6379')],
-        },
-    },
-}
-
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
@@ -49,6 +40,7 @@ db_from_env = dj_database_url.config(conn_max_age=500, ssl_require=True)
 DATABASES['default'].update(db_from_env)
 
 in_heroku = False
+redis_host = ('127.0.0.1', 6379)
 if 'DATABASE_URL' in os.environ:
     in_heroku = True
 
@@ -57,9 +49,19 @@ if in_heroku:
     db_from_env = dj_database_url.config(conn_max_age=500, ssl_require=True)
     H_DATABASES['default'].update(db_from_env)
     H_DATABASES = {'default': dj_database_url.config()}
+    redis_host = os.environ.get('REDIS_URL', 'redis://localhost:6379')
 else:
     print("POSTGRES DB")
     DATABASES
+
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'CONFIG': {
+            "hosts": [redis_host],
+        },
+    },
+}
 
 CORS_ORIGIN_WHITELIST = (
     'http://localhost:3000',

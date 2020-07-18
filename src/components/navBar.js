@@ -20,7 +20,7 @@ import WebSocketInstance from "../NTFNwebsocket";
 
 class NavMenu extends React.Component {
 
-  initialiseChat() {
+  initialiseNTFNS() {
     this.waitForSocketConnection(() => {
       WebSocketInstance.fetchNTFNViews(
         this.props.username,
@@ -35,12 +35,17 @@ class NavMenu extends React.Component {
       this.props.setUnviews.bind(this),
     );
     if(this.props.username !== undefined){
-      this.initialiseChat();
+      this.initialiseNTFNS();
     }
   }
 
   waitForSocketConnection(callback) {
     const component = this;
+    // if (WebSocketInstance.state() === 1) {
+    //   console.log("Connection is made");
+    //   callback();
+    //   return;
+    // } 
     const timer = setTimeout(function() {
       if (WebSocketInstance.state() === 1) {
         console.log("Connection is made");
@@ -52,7 +57,7 @@ class NavMenu extends React.Component {
       }
     }, 10);
     if(timer > 10){
-      console.log("timer is greater than 60 secs, it's: ", timer);
+      console.log("timer is greater than 10 milisecs, it's: ", timer);
       this.componentWillUnmount(timer)
     }
   }
@@ -77,6 +82,11 @@ class NavMenu extends React.Component {
     }
   } else {
       console.log("newProps.token !== this.props.token NOT")
+      this.waitForSocketConnection(() => {
+        WebSocketInstance.fetchNTFNViews(
+          this.props.username,
+        );
+      });
   }   
   }
 
@@ -107,10 +117,9 @@ function NavItem(props) {
       WebSocketInstance.updateNTFNS(
         props.username,
       );
-      WebSocketInstance.fetchNTFNViews(
+      return( WebSocketInstance.fetchNTFNViews(
         props.username,
-      );
-      return
+      ))      
     } else {
       return
     }

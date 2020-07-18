@@ -20,6 +20,7 @@ class WebSocketService {
       console.log("chatUrl is: ", chatUrl, chatUrl === null, chatUrl === undefined)
       const path = `${SOCKET_URL}/ws/notification/${chatUrl}/`;
       this.socketRef2 = new WebSocket(path);
+      console.log("CULOWS: ", this.socketRef2)
       this.socketRef2.onopen = () => {
         console.log("WebSocket open");
       };
@@ -27,7 +28,7 @@ class WebSocketService {
         this.socketNewMessage(e.data);
       };
       this.socketRef2.onerror = e => {
-        console.log(e.message);
+        console.log("NWS Error", e.message);
       };
       this.socketRef2.onclose = () => {
         console.log("WebSocket closed let's reopen");

@@ -1,3 +1,4 @@
+import os
 from django.contrib import admin
 from django.urls import path, include, re_path
 from filterApi.views import ReactFilterView
@@ -27,9 +28,13 @@ urlpatterns = [
     path('api/sessions/', include('sessionsApi.sessions.urls')),
     # path('api/wallet/', include('walletApi.wallet.urls')),
     path('api/users/', include('users.urls')),
-    re_path(r'^.*', TemplateView.as_view(template_name='index.html'))
+    # re_path(r'^.*', TemplateView.as_view(template_name='index.html'))
     
 ]
+
+if 'DYNO' in os.environ:
+    urlpatterns += [re_path(r'^.*',
+                            TemplateView.as_view(template_name='index.html'))]
 
 if settings.DEBUG:
     urlpatterns += static(settings.STATIC_URL,

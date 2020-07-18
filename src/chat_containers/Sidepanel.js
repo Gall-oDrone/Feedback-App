@@ -26,27 +26,36 @@ class Sidepanel extends React.Component {
   waitForAuthDetails() {
     const component = this;
     let { timer } = this.state
-    timer = setTimeout(function() {
-      if (
-        component.props.token !== null &&
-        component.props.token !== undefined
-      ) {
-        component.props.getUserChats(
-          component.props.username,
-          component.props.token
-        );
-        return;
-      } else {
-        console.log("waiting for authentication details...");
-        component.waitForAuthDetails();
-        console.log("NIP TUCK", component.props.token);
-        console.log("timer", timer.timeout, timer, this.timer);
-        console.log("timer > 60 sec? ", this.timer>60);
-      }
-    }, 5000);
-    if(timer > 60){
-      console.log("timer is greater than 60 secs, it's: ", timer);
-      this.componentWillUnmount(timer)
+    if (
+      component.props.token !== null &&
+      component.props.token !== undefined
+    ) {
+      component.props.getUserChats(
+        component.props.username,
+        component.props.token
+      );
+      return;
+    // timer = setTimeout(function() {
+    //   if (
+    //     component.props.token !== null &&
+    //     component.props.token !== undefined
+    //   ) {
+    //     component.props.getUserChats(
+    //       component.props.username,
+    //       component.props.token
+    //     );
+    //     return;
+    //   } else {
+    //     console.log("waiting for authentication details...");
+    //     component.waitForAuthDetails();
+    //     console.log("NIP TUCK", component.props.token);
+    //     console.log("timer", timer.timeout, timer, this.timer);
+    //     console.log("timer > 60 sec? ", this.timer>60);
+    //   }
+    // }, 5000);
+    // if(timer > 60){
+    //   console.log("timer is greater than 60 secs, it's: ", timer);
+    //   this.componentWillUnmount(timer)
     }
   }
 
@@ -54,9 +63,40 @@ class Sidepanel extends React.Component {
     this.waitForAuthDetails();
   }
 
-  componentWillMount(){
-    // this.waitForAuthDetails();
+//   static getDerivedStateFromProps(nextProps, prevState){
+//     console.log("Static X", nextProps.token, prevState.token)
+//     if(nextProps.token!==prevState.token){
+//       if(nextProps.getUserChats !==undefined ){
+//         return nextProps.getUserChats(
+//           nextProps.username,
+//           nextProps.token
+//         )
+//       }
+//    }
+//    else return null;
+//  }
+
+ componentDidUpdate(prevProps, prevState) {
+  console.log("Static X CDU", prevProps.token, this.props.token)
+  if(prevProps.token!==this.props.token){
+    this.props.getUserChats(
+      this.props.username,
+      this.props.token
+    )
   }
+}
+
+  // componentWillReceiveProps(newProps){
+  //   if (
+  //     newProps.token !== null &&
+  //     newProps.token !== undefined
+  //     ) {
+  //       newProps.getUserChats(
+  //         newProps.username,
+  //         newProps.token
+  //       );
+  //   }
+  // }
 
   componentWillUnmount(timer){
     clearTimeout(timer);
@@ -87,7 +127,7 @@ class Sidepanel extends React.Component {
 
   render() {
     console.log("taki, ", this.props.chats)
-    let activeChats = this.props.chats.map(c => {
+    const activeChats = this.props.chats.map(c => {
       return (
         <Contact
           key={c.id}

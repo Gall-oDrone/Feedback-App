@@ -63,7 +63,7 @@ class ProfileHeaderMenu extends React.Component {
         console.log("wait for connection...");
         component.waitForSocketConnection(callback);
       }
-    }, 10);
+    }, 5000);
   }
 
   sendMessageHandler = e => {

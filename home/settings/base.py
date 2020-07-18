@@ -3,9 +3,9 @@ import django_heroku
 from django.conf import settings
 from decouple import config
 
-USE_S3 == 'FALSE'
+USE_S3= 'FALSE'
 if 'DYNO' in os.environ:
-    USE_S3 == "TRUE"
+    USE_S3= "TRUE"
 # USE_S3 = os.environ.get('S3_BUCKET')
 
 BASE_DIR = os.path.dirname(os.path.dirname(
@@ -95,7 +95,7 @@ USE_TZ = False
 # Configure app for Heroku deployment
 # django_heroku.settings(locals())
 
-if USE_S3:
+if USE_S3 == "TRUE":
     # #AWS
     AWS_ACCESS_KEY_ID = 'AKIAJE7FLPGNFBSDTZXQ'
     AWS_SECRET_ACCESS_KEY ='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' 
@@ -169,3 +169,10 @@ SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 # CORS_ORIGIN_ALLOW_ALL = True
 # Activate Django-Heroku
 # django_heroku.settings(locals())
+
+CACHES = {
+    "default": {
+         "BACKEND": "redis_cache.RedisCache",
+         "LOCATION": os.environ.get('REDIS_URL'),
+    }
+}
