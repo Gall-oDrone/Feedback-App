@@ -123,7 +123,7 @@ class FilterForm extends React.Component {
             enterButton
           />
         </Form.Item>
-        <Collapse defaultActiveKey={['1']} onChange={callback}>
+        <Collapse defaultActiveKey={['0']} onChange={callback}>
           <Panel header="Filter by" key="1">
             <Tabs type="card">
               <TabPane tab="University" key="1">

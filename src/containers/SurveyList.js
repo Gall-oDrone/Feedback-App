@@ -2,6 +2,7 @@ import React from "react";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
 import { List, Skeleton } from "antd";
+import Filter from "./SurveyFilterForm";
 import { getSurvey } from "../store/actions/survey";
 import Hoc from "../hoc/hoc";
 
@@ -16,15 +17,12 @@ class SurveyList extends React.PureComponent {
 
   // componentDidUpdate(prevProps, prevState){
   //   console.log("CACA: ", prevProps, this.props)
-
+  //   if(prevProps.prevProps !== this.props){
+  //     if(this.props.surveys !== null && this.props.surveys.length === 0){
+  //       this.props.getSurveys();
+  //     } 
+  //   }
   // }
-
-  static getDerivedStateFromProps(props, state){
-    console.log("CACA: ", props)
-    if(props.surveys.length === 0){
-      props.getSurveys();
-    }
-  }
 
   renderItem(item) {
     console.log("5) renderItem(item): " + JSON.stringify(item))
@@ -42,8 +40,9 @@ class SurveyList extends React.PureComponent {
         {this.props.loading ? (
           <Skeleton active />
         ) : (
-          <div>
-            <h3 style={{ margin: "16px 0" }}>Survey List</h3>
+          <div align="center">
+            <Filter />
+              <div style={{paddingTop: "10px", paddingBottom: "10px"}} />
             <List
               size="large"
               bordered

@@ -133,6 +133,7 @@ class Project(models.Model):
     # previous_project = models.ForeignKey("self", related_name='previous',on_delete=models.SET_NULL,blank=True, null=True)
     # next_project = models.ForeignKey("self", related_name='next', on_delete=models.SET_NULL,blank=True, null=True)
     def get_author_details(self):
+        print("DOC: ", ProfileInfo.objects.get(profile_username=self.author).profile)
         return ProfileInfo.objects.get(profile_username=self.author)
 
     def __str__(self):

@@ -40,7 +40,7 @@ class ArticleList extends React.Component {
         return (
             <div align="center">
                 <Filter />
-                <div style={{paddingTop: "20px", paddingBottom: "20px"}} />
+                    <div style={{paddingTop: "20px", paddingBottom: "20px"}} />
                 <Articles data={this.state.articles} />      
             </div>
 

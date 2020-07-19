@@ -33,7 +33,7 @@ class ProjectAuthorInfoSerializer(serializers.ModelSerializer):
     
     def get_profile_avatar(self, obj):
         request = self.context.get('request')
-        profile = ProfileSerializer(obj.profile, many=False).data["profile_avatar"]
+        profile = ProfileSerializer(obj.profile, many=False, context={'request': request}).data["profile_avatar"]
         return profile
 
 class ProjectDetailSerializer(serializers.ModelSerializer):
@@ -49,8 +49,9 @@ class ProjectDetailSerializer(serializers.ModelSerializer):
         
     def get_author_info(self, obj):
         p_u = obj.get_author_details()
+        request = self.context.get('request')
         print("CORSO: ", p_u)
-        return ProjectAuthorInfoSerializer(p_u, many=False).data
+        return ProjectAuthorInfoSerializer(p_u, many=False, context={'request': request}).data
 
 class ProjectSerializer(serializers.ModelSerializer):
     project_feedback = StringSerializer(many=True)

@@ -242,7 +242,7 @@ class ProfileProjectDetailView(RetrieveUpdateDestroyAPIView):
             projectId = self.kwargs.get('pk')
             user = User.objects.get(username=userId)
             profile_project_detail = Project.objects.get(author=user.id, id=projectId)
-            ProjectSerializer(profile_project_detail)
+            ProjectSerializer(profile_project_detail, context={'request': self.request})
             return profile_project_detail
         except ObjectDoesNotExist:
             raise Http404("You do not have an active order")

@@ -314,7 +314,7 @@ class ArticleDetailMenu extends React.Component {
             <div className="middle-column" ref={node => (this.parentRef = node)}>
                 <section id="authors" style={{display:"flex", flexDirection: "row"}}>
                   <div id="image" style={{display: "flex", alignItems: "center", paddingRight:"10px"}}>
-                  <Avatar icon={<Icon type="user"/>} src={`http://127.0.0.1:8000${author_info.profile_avatar}`}/>
+                  <Avatar icon={<Icon type="user"/>} src={author_info.profile_avatar}/>
                   </div>
                   <div id="author">
                   <a style={{color:"black"}} href={`/profile-page/${project.author}`}>{project.author}</a>
@@ -351,7 +351,7 @@ class ArticleDetailMenu extends React.Component {
                 <section id="credits">
                   <h2>Credits</h2>
                     <div id="image" style={{display: "flex", alignItems: "center", paddingRight:"10px"}}>
-                      <Avatar size={64} icon={<Icon type="user"/>} src={`http://127.0.0.1:8000${author_info.profile_avatar}`}/>
+                      <Avatar size={64} icon={<Icon type="user"/>} src={author_info.profile_avatar}/>
                       <div id="author-name">
                         <a style={{color:"black"}} href={`/profile-page/${project.author}`}>{author_info.name}</a>
                         <br/>
