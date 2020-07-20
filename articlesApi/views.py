@@ -266,6 +266,9 @@ class ProfileArticleDetailView(RetrieveUpdateDestroyAPIView):
             print("myFile: ")
             print(myfile)
             print(type(myfile))
+            print(myfile.content_type)
+            print(myfile.content_type.split('/')[0])
+            file_type = myfile.content_type.split('/')[0]
             if settings.USE_S3:
                 if file_type == "video":
                     videoD = Video()
@@ -276,9 +279,6 @@ class ProfileArticleDetailView(RetrieveUpdateDestroyAPIView):
                 else: 
                     article.thumbnail = myfile
             else:
-                print(myfile.content_type)
-                print(myfile.content_type.split('/')[0])
-                file_type = myfile.content_type.split('/')[0]
                 fs = FileSystemStorage()
                 valid_extensions = ['.pdf', '.doc', '.docx', '.jpg', '.png', '.xlsx', '.xls']
                 if file_type == "video":
