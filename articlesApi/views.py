@@ -265,6 +265,16 @@ class ProfileArticleDetailView(RetrieveUpdateDestroyAPIView):
             print("myFile: ")
             print(myfile)
             print(type(myfile))
+            if settings.USE_S3:
+                    if file_type == "video":
+                        videoD = Video()
+                        videoD.videofile = myfile
+                        videoD.save()
+                        article.video= Video(id=videoD.id)
+                        # raise ValidationError('Unsupported file extension.')
+                    else: 
+                        article.thumbnail = myfile
+            else:
             print(myfile.content_type)
             print(myfile.content_type.split('/')[0])
             file_type = myfile.content_type.split('/')[0]
