@@ -266,47 +266,47 @@ class ProfileArticleDetailView(RetrieveUpdateDestroyAPIView):
             print(myfile)
             print(type(myfile))
             if settings.USE_S3:
-                    if file_type == "video":
-                        videoD = Video()
-                        videoD.videofile = myfile
-                        videoD.save()
-                        article.video= Video(id=videoD.id)
-                        # raise ValidationError('Unsupported file extension.')
-                    else: 
-                        article.thumbnail = myfile
+                if file_type == "video":
+                    videoD = Video()
+                    videoD.videofile = myfile
+                    videoD.save()
+                    article.video= Video(id=videoD.id)
+                    # raise ValidationError('Unsupported file extension.')
+                else: 
+                    article.thumbnail = myfile
             else:
-            print(myfile.content_type)
-            print(myfile.content_type.split('/')[0])
-            file_type = myfile.content_type.split('/')[0]
-            fs = FileSystemStorage()
-            valid_extensions = ['.pdf', '.doc', '.docx', '.jpg', '.png', '.xlsx', '.xls']
-            if file_type == "video":
-                print("myfile.name is video")
-                videoD = Video()
-                filename = fs.save("videos/"+myfile.name, myfile)
-                uploaded_file_url = fs.url(filename)
-                videoD.videofile = "videos/"+myfile.name
-                videoD.save()
-                print("videoD, ", videoD)
-                print("videoD.id, ", videoD.id)
-                article.video= Video(id=videoD.id)
-                # raise ValidationError('Unsupported file extension.')
-            else: 
-                print("myfile.name is image")
-                filename = fs.save("images/"+myfile.name, myfile)
-                uploaded_file_url = fs.url(filename)
-                print("uploaded_file_url")
-                print(uploaded_file_url)
-                # with open(uploaded_file_url) as f:
-                #     data = f.read()
-                #     article.thumbnail.save("images/"+myfile.name, ContentFile(data))
-                print(myfile.name)
-                print(myfile.name)
-                # print(os.path.basename(uploaded_file_url))
-                print(article.thumbnail)
-                article.thumbnail = "images/"+myfile.name
-                print("article.thumbnail")
-                print(article.thumbnail)
+                print(myfile.content_type)
+                print(myfile.content_type.split('/')[0])
+                file_type = myfile.content_type.split('/')[0]
+                fs = FileSystemStorage()
+                valid_extensions = ['.pdf', '.doc', '.docx', '.jpg', '.png', '.xlsx', '.xls']
+                if file_type == "video":
+                    print("myfile.name is video")
+                    videoD = Video()
+                    filename = fs.save("videos/"+myfile.name, myfile)
+                    uploaded_file_url = fs.url(filename)
+                    videoD.videofile = "videos/"+myfile.name
+                    videoD.save()
+                    print("videoD, ", videoD)
+                    print("videoD.id, ", videoD.id)
+                    article.video= Video(id=videoD.id)
+                    # raise ValidationError('Unsupported file extension.')
+                else: 
+                    print("myfile.name is image")
+                    filename = fs.save("images/"+myfile.name, myfile)
+                    uploaded_file_url = fs.url(filename)
+                    print("uploaded_file_url")
+                    print(uploaded_file_url)
+                    # with open(uploaded_file_url) as f:
+                    #     data = f.read()
+                    #     article.thumbnail.save("images/"+myfile.name, ContentFile(data))
+                    print(myfile.name)
+                    print(myfile.name)
+                    # print(os.path.basename(uploaded_file_url))
+                    print(article.thumbnail)
+                    article.thumbnail = "images/"+myfile.name
+                    print("article.thumbnail")
+                    print(article.thumbnail)
         article.save()
         # article.thumbnail = self.request.data["file"]get("thumbnail")
         # article.update(
