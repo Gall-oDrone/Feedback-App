@@ -11,10 +11,10 @@ from rest_framework.status import(
     HTTP_201_CREATED,
     HTTP_400_BAD_REQUEST
 )
-from rest_framework import permissions
+from rest_framework import permissions, generics
 from articlesApi.models import Article, Tag, Tagging, Category, ArticleView, Like, Rating, Comment, Video, Image, FeedbackTypes
 from users.models import User
-from .serializers import ArticleSerializer, ArticleFeatureSerializer, VideoFormSerializer, CommentSerializer, LikeSerializer, LikeListSerializer, RatingSerializer, CommentListSerializer, ImageFormSerializer, ProfileArticleListSerializer
+from .serializers import ArticleSerializer, ArticleFeatureSerializer, VideoFormSerializer, CommentSerializer, LikeSerializer, LikeListSerializer, RatingSerializer, CommentListSerializer, ImageFormSerializer, ProfileArticleListSerializer, Cat_FT_Serializer
 from analytics.models import View
 from django.http import Http404
 from rest_framework import viewsets
@@ -56,6 +56,9 @@ class ArticleListView(ListAPIView):
     # ##print(queryset)
     serializer_class = ArticleSerializer
     permission_classes = (permissions.AllowAny,)
+    if(len(FeedbackTypes.objects.all()) == 0):
+        for ft in FeedbackTypes.CHOICES:
+            f_t = FeedbackTypes.objects.create(bachelor_degree=ft[0])
 
     def category_count():
         queryset = Article \
@@ -257,42 +260,43 @@ class ProfileArticleDetailView(RetrieveUpdateDestroyAPIView):
         article_engagement = self.add_engagement(request_data.get("feedback_type"), article)
         article_categories = self.add_categories(request_data.get("categories"), article)
         print("before myfile")
-        myfile = request.FILES['file']
-        print("myFile: ")
-        print(myfile)
-        print(type(myfile))
-        print(myfile.content_type)
-        print(myfile.content_type.split('/')[0])
-        file_type = myfile.content_type.split('/')[0]
-        fs = FileSystemStorage()
-        valid_extensions = ['.pdf', '.doc', '.docx', '.jpg', '.png', '.xlsx', '.xls']
-        if file_type == "video":
-            print("myfile.name is video")
-            videoD = Video()
-            filename = fs.save("videos/"+myfile.name, myfile)
-            uploaded_file_url = fs.url(filename)
-            videoD.videofile = "videos/"+myfile.name
-            videoD.save()
-            print("videoD, ", videoD)
-            print("videoD.id, ", videoD.id)
-            article.video= Video(id=videoD.id)
-            # raise ValidationError('Unsupported file extension.')
-        else: 
-            print("myfile.name is image")
-            filename = fs.save("images/"+myfile.name, myfile)
-            uploaded_file_url = fs.url(filename)
-            print("uploaded_file_url")
-            print(uploaded_file_url)
-            # with open(uploaded_file_url) as f:
-            #     data = f.read()
-            #     article.thumbnail.save("images/"+myfile.name, ContentFile(data))
-            print(myfile.name)
-            print(myfile.name)
-            # print(os.path.basename(uploaded_file_url))
-            print(article.thumbnail)
-            article.thumbnail = "images/"+myfile.name
-            print("article.thumbnail")
-            print(article.thumbnail)
+        if (self.request.FILES):
+            myfile = request.FILES['file']
+            print("myFile: ")
+            print(myfile)
+            print(type(myfile))
+            print(myfile.content_type)
+            print(myfile.content_type.split('/')[0])
+            file_type = myfile.content_type.split('/')[0]
+            fs = FileSystemStorage()
+            valid_extensions = ['.pdf', '.doc', '.docx', '.jpg', '.png', '.xlsx', '.xls']
+            if file_type == "video":
+                print("myfile.name is video")
+                videoD = Video()
+                filename = fs.save("videos/"+myfile.name, myfile)
+                uploaded_file_url = fs.url(filename)
+                videoD.videofile = "videos/"+myfile.name
+                videoD.save()
+                print("videoD, ", videoD)
+                print("videoD.id, ", videoD.id)
+                article.video= Video(id=videoD.id)
+                # raise ValidationError('Unsupported file extension.')
+            else: 
+                print("myfile.name is image")
+                filename = fs.save("images/"+myfile.name, myfile)
+                uploaded_file_url = fs.url(filename)
+                print("uploaded_file_url")
+                print(uploaded_file_url)
+                # with open(uploaded_file_url) as f:
+                #     data = f.read()
+                #     article.thumbnail.save("images/"+myfile.name, ContentFile(data))
+                print(myfile.name)
+                print(myfile.name)
+                # print(os.path.basename(uploaded_file_url))
+                print(article.thumbnail)
+                article.thumbnail = "images/"+myfile.name
+                print("article.thumbnail")
+                print(article.thumbnail)
         article.save()
         # article.thumbnail = self.request.data["file"]get("thumbnail")
         # article.update(
@@ -311,68 +315,101 @@ class ProfileArticleDetailView(RetrieveUpdateDestroyAPIView):
         print(article.engagement.values())
         engagement_id_list = [x["id"] for x in (article.engagement.values())]
         print(engagement_id_list)
-        for i in article.engagement.values():
-            print(i)
-            print(i["id"])
-            print(type(i["id"]))
-            if str(i["id"]) not in engagement:
-                print("removing")
-                oldE = FeedbackTypes.objects.get(id=i["id"])
-                article.engagement.remove(oldE.id)
-            else:
-                for e in engagement:
-                    print("e:", e)
-                    if int(e) not in engagement_id_list:        
-                        print("adding")
-                        print(e)
+        if(len(engagement_id_list) == 0):
+            for e in engagement:
+                        print("adding e: ", e)
                         newE = FeedbackTypes.objects.get(id=e)
                         # newC = Category()
                         print(newE)
                         print(newE.id)
-                        # newC.id = c
-                        print("WHAT ?")
-                        # print(article.categories.category_id)
                         article.engagement.add(newE.id)
-                        print("WHAT 2?")
-                    else:
-                        None
+        else: 
+            for i in article.engagement.values():
+                print(i)
+                print(i["id"])
+                print(type(i["id"]))
+                if str(i["id"]) not in engagement:
+                    print("removing")
+                    oldE = FeedbackTypes.objects.get(id=i["id"])
+                    article.engagement.remove(oldE.id)
+                else:
+                    for e in engagement:
+                        print("e:", e)
+                        if int(e) not in engagement_id_list:        
+                            print("adding")
+                            print(e)
+                            newE = FeedbackTypes.objects.get(id=e)
+                            # newC = Category()
+                            print(newE)
+                            print(newE.id)
+                            # newC.id = c
+                            print("WHAT ?")
+                            # print(article.categories.category_id)
+                            article.engagement.add(newE.id)
+                            print("WHAT 2?")
+                        else:
+                            pass
 
-    def add_categories(self, categoriesD, article):
+    def add_categories(self, selectedCategories, article):
         print("CATEGORIES")
-        print(categoriesD)
+        print(selectedCategories)
         print("article_categories")
         print(article.categories.values())
         category_id_list = [x["id"] for x in (article.categories.values())]
-        for i in article.categories.values():
-            print(i)
-            print(i["id"])
-            print(type(i["id"]))
-            if str(i["id"]) not in categoriesD:
-                print("removing")
-                oldC = Category.objects.get(id=i["id"])
-                article.categories.remove(oldC.id)
-            else:
-                for c in categoriesD:
-                    print("c:")
-                    print(c)
-                    print(type(c))
-                    if int(c) not in category_id_list:        
-                        print("adding")
+        article_category_title_list = [x["title"] for x in (article.categories.values())]
+        category_title_list = [x["title"] for x in (Category.objects.values())]
+        self.checkCategory(selectedCategories, category_title_list)
+        if(len(category_id_list) == 0):
+            for c in selectedCategories:
+                print("adding c: ", c)
+                newC = Category.objects.get(title=c)
+                print(newC)
+                print(newC.id)
+                print(newC.title)
+                article.categories.add(newC.id)
+        else:
+            for i in article.categories.values():
+                print(i)
+                print(i["id"])
+                print(type(i["id"]))
+                if str(i["title"]) not in selectedCategories:
+                    print("removing")
+                    oldC = Category.objects.get(id=i["id"])
+                    article.categories.remove(oldC.id)
+                else:
+                    for c in selectedCategories:
+                        print("c:", c, article_category_title_list)
                         print(c)
                         print(type(c))
-                        newC = Category.objects.get(id=c)
-                        # newC = Category()
-                        print(newC)
-                        print(newC.id)
-                        print(newC.title)
-                        # newC.id = c
-                        print("WHAT ?")
-                        # print(article.categories.category_id)
-                        article.categories.add(newC.id)
-                        print("WHAT 2?")
-                    else:
-                        print("None")
-                        return
+                        if c not in article_category_title_list:        
+                            print("adding")
+                            print(c)
+                            print(type(c))
+                            newC = Category.objects.get(title=c)
+                            # newC = Category()
+                            print(newC)
+                            print(newC.id)
+                            print(newC.title)
+                            # newC.id = c
+                            print("WHAT ?")
+                            # print(article.categories.category_id)
+                            article.categories.add(newC.id)
+                            print("WHAT 2?")
+                        else:
+                            print("None")
+                            pass
+    
+    def checkCategory(self, category, categories):
+        # print("CACAS: ", category, Category.objects.all(), categories)
+        cgrs = [x.replace(" ", "").upper() for x in (categories)]
+        for c in category:
+            if len(cgrs) == 0:
+                Category.objects.create(title=c)
+            else:
+                # print("CACAS 2: ", cgrs)
+                if(c.replace(" ", "").upper() not in cgrs):
+                    Category.objects.create(title=c)
+
     def delete(self, *args, **kwargs):
         try:
             print("ProfileArticleDetailView")
@@ -660,3 +697,21 @@ class ImageDestroyView(DestroyAPIView):
           return Response(imageSerializer.data, status=status.HTTP_201_CREATED)
         else:
           return Response(imageSerializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class Categories_and_F_TView(generics.ListAPIView):
+    serializer_class = (Cat_FT_Serializer)
+    permission_classes = (permissions.AllowAny,)
+
+    def get_queryset(self):
+        print("Lacking")
+        # qs1 = article_filter(self.request)
+        qs = {"data"}
+        # qs = {"degree": Degree.DEGREES}
+        # qs = {"degree": Degree.DEGREES, "bachelor": Bachelor.BACHELOR_DEGREES, "master": Master.MASTER_DEGREES,
+        #     "pHD": Doctorate.PHD_DEGREES, "course": Course.COURSES}
+        # qs = {{"degree": Degree.DEGREES}, {"bachelor": Bachelor.BACHELOR_DEGREES}, {"master": Master.MASTER_DEGREES},
+        #     {"pHD": Doctorate.PHD_DEGREES}, {"course": Course.COURSES}}
+        # qs = [Degree.DEGREES,  Bachelor.BACHELOR_DEGREES, Master.MASTER_DEGREES,
+        #      Doctorate.PHD_DEGREES, Course.COURSES]
+        print(qs)
+        return qs

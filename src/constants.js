@@ -179,6 +179,7 @@ export const sessionProfileDetailURL = (sessionID, userID) => `${endpoint}/sessi
 export const sessionUpdateURL = (sessionID) => `${endpoint}/sessions/session/${sessionID}/update/`
 
 export const fetchDegreesAndCoursesURL = `${endpoint}/users/courses-degrees/`
+export const fetchCategoriesAndFeedbacksURL = `${endpoint}/articles/categories-f_t/`
 
 // export const walletURL = username => `${endpoint}/wallet/userlist/${username}`
 export const walletBalanceURL = username => `${endpoint}/wallet/balance/${username}`

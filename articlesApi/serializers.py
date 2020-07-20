@@ -355,3 +355,28 @@ class ImageFormSerializer(serializers.ModelSerializer):
     class Meta:
         model = Image
         fields = ("__all__")
+
+class CategorySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Category
+        fields = ("__all__")
+
+class Cat_FT_Serializer(serializers.Serializer):
+    category = serializers.SerializerMethodField()
+    feedback_type = serializers.SerializerMethodField()
+    def get_feedback_type(self, obj):
+        ob = []
+        for ft in FeedbackTypes.CHOICES:
+            ob.append({"value": ft[0], "label": ft[1]})
+        obj = ob
+        return obj
+    def get_category(self, obj):
+        cats = CategorySerializer(Category.objects.all(), many=True).data
+        return cats
+    
+    class Meta:
+        fields = (
+            "category",
+            "feedback_type",
+            "data"
+        )

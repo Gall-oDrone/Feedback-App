@@ -19,7 +19,8 @@ from articlesApi.views import (
     VideoViewSet,
     ImageCreateView,
     ImageDestroyView,
-    CommentListView
+    CommentListView,
+    Categories_and_F_TView
 )
 
 # from articlesApi.views import ArticleViewSet
@@ -49,6 +50,7 @@ urlpatterns = [
     #path('<pk>/video/', VideoViewSet.as_view()),
     path('create/images/', ImageCreateView.as_view),
     path('destroy/images/', ImageDestroyView.as_view),
+    path('categories-f_t/', Categories_and_F_TView.as_view()),
     url(r'^video/', include(router.urls)),
     # url(r'^comment/', include(router.urls))
 

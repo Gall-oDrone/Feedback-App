@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import { withRouter } from "react-router-dom";
 import { Form, Input, Select, Checkbox, Upload, message, Icon, Button, Col, Row} from 'antd';
 import {getProfileArticleDetail, putProfileArticleDetail} from "../store/actions/profile";
+import { fetchCategoriesAndFeedbacksURL } from "../constants"
 
 const { Option } = Select;
 
@@ -30,12 +31,12 @@ const categories = [
     label: 'Data Science'
   },
   {
-    value: '2',
+    value: '3',
     label: 'AI'
   },
   {
-    value: '3',
-    label: 'B2B'
+    id: '2',
+    title: '2'
   },
   {
     value: '4',
@@ -62,6 +63,33 @@ const engagements = [
   }
 ]
 
+const CategorySelector = ({categories_array}) => {
+  return(
+    <Select name="categories" mode="multiple" placeholder="Please select a field">
+      {categories_array.map(function (el){
+        return (<Option key={el.id} value={el.id}>{el.title}</Option>)
+      })}
+    </Select>
+  )
+}
+
+const FeedbackCheckbox = ({fb_array}) => {
+  return (
+    <Checkbox.Group style={{ width: '100%' }}>
+      <Row>
+        {fb_array.map(el => {
+            return (
+            <Col span={8}>
+              <Option value={el.value}>{el.label}</Option>
+            </Col>
+            )
+          })
+        }
+      </Row>
+    </Checkbox.Group>
+  )
+}
+
 class ProfileArticleDetail extends React.Component {
   
   state = { 
@@ -74,6 +102,8 @@ class ProfileArticleDetail extends React.Component {
     imageUrl: null,
     fileList: null,
     imagePath: '',
+    categories: null,
+    feedback_types: null
   };
 
   dummyRequest = ({ file, onSuccess }) => {
@@ -233,10 +263,11 @@ class ProfileArticleDetail extends React.Component {
 
   handleCategory = category => {
     const categoryArray = []
+    // const { categories } = this.state
     for (var i in category){
       for (var j in categories){
-        if( category[i] === categories[j].label){
-          categoryArray.push(categories[j].value)
+        if( category[i] === categories[j].title){
+          categoryArray.push(categories[j].title)
         }
       }
     }
@@ -308,8 +339,14 @@ class ProfileArticleDetail extends React.Component {
     console.log("this.props: " + JSON.stringify(this.props))
     console.log("this.state: " + JSON.stringify(this.state))
     if (this.props.token !== undefined && this.props.token !== null) {
-      if(this.props.username !== null != undefined){
-        this.props.getPAD(this.props.token, this.props.match.params.articleID, this.props.username)
+      if(this.props.username !== null){
+        axios.get(fetchCategoriesAndFeedbacksURL).then(res => {
+          console.log("res data: ", res.data)
+          this.setState({
+            categories: res.data[0].category,
+            feedback_types: res.data[0].feedback_type
+          })
+        }).then(() => {this.props.getPAD(this.props.token, this.props.match.params.articleID, this.props.username)})
       } else {
         console.log("this.props.getMeetings was undefined at CDM")
       }
@@ -319,7 +356,13 @@ class ProfileArticleDetail extends React.Component {
   componentWillReceiveProps(newProps) {
     if (newProps.token !== this.props.token) {
       if (newProps.token !== undefined && newProps.token !== null !== undefined) {
-        this.props.getPAD(newProps.token, newProps.match.params.articleID, newProps.username)
+        axios.get(fetchCategoriesAndFeedbacksURL).then(res => {
+          console.log("res data: ", res.data)
+          this.setState({
+            categories: res.data[0].category,
+            feedback_types: res.data[0].feedback_type
+          })
+        }).then(() => {this.props.getPAD(newProps.token, newProps.match.params.articleID, newProps.username)})
       } else {
         console.log("this.props.getMeetings was undefined")
       }
@@ -327,14 +370,16 @@ class ProfileArticleDetail extends React.Component {
   }
 
   render() {
-    console.log("this.props: "+ JSON.stringify(this.props))
+    // console.log("this.props: "+ JSON.stringify(this.props))
+    // console.log("this.state: "+ JSON.stringify(this.state))
     const { getFieldDecorator } = this.props.form;
-    const { previewVisible, previewImage, fileList, imageThumbUrl, imageUrl } = this.state;
+    const { previewVisible, previewImage, fileList, categories, feedback_types, imageThumbUrl, imageUrl } = this.state;
     const { articleDetail } = this.props.userPAD
     const formItemLayout = {
       labelCol: { span: 6 },
       wrapperCol: { span: 14 },
     };
+
     return (
       (articleDetail !== undefined ? (
       <Form {...formItemLayout} onSubmit={event => this.handleFormSubmit(
@@ -363,12 +408,19 @@ class ProfileArticleDetail extends React.Component {
               { required: true, message: 'Please select a field for your project!', type: 'array' },
             ],
           })(
-            <Select name="categories" mode="multiple" placeholder="Please select a field">
-              <Option value="1">Data Science</Option>
-              <Option value="2">AI</Option>
-              <Option value="3">Business to Business (B2B)</Option>
-              <Option value="4">C1</Option>
-            </Select>,
+            // <Select name="categories" mode="multiple" placeholder="Please select a field">
+            //   <Option value="1">Data Science</Option>
+            //   <Option value="2">AI</Option>
+            //   <Option value="3">Business to Business (B2B)</Option>
+            //   <Option value="4">C1</Option>
+            // </Select>,
+              // <CategorySelector categories_array={categories}/>
+              <Select name="categories" mode="multiple" placeholder="Please select a field">
+                {categories.map(function (el){
+                  return (<Option key={el.id} value={el.title}>{el.title}</Option>)
+                })}
+              </Select>
+            
           )}
         </Form.Item>
 
@@ -376,6 +428,7 @@ class ProfileArticleDetail extends React.Component {
           {getFieldDecorator('feedback_type', {
             initialValue: this.handleEngagement(articleDetail.engagement),
           })(
+
             <Checkbox.Group style={{ width: '100%' }}>
               <Row>
                 <Col span={8}>
@@ -390,6 +443,7 @@ class ProfileArticleDetail extends React.Component {
                 <Col span={8}>
                   <Checkbox value="1">Survey</Checkbox>
                 </Col>
+                {/* <FeedbackCheckbox fb_array={feedback_types} /> */}
               </Row>
             </Checkbox.Group>,
           )}
