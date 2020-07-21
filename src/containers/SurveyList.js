@@ -1,10 +1,11 @@
 import React from "react";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
-import { List, Skeleton } from "antd";
+import { Icon, Tag, Tooltip, List, Skeleton } from "antd";
 import Filter from "./SurveyFilterForm";
 import { getSurvey } from "../store/actions/survey";
 import Hoc from "../hoc/hoc";
+import moment from "moment";
 
 class SurveyList extends React.PureComponent {
   componentDidMount() {
@@ -29,7 +30,25 @@ class SurveyList extends React.PureComponent {
     console.log("6) renderItem(item.title): " + item.title)
     return (
       <Link to={`/survey/detail/${item.id}`}>
-        <List.Item>{item.title}</List.Item>
+        <List.Item>
+          <List.Item.Meta
+          title={item.title}
+          description={item.overview}
+          />
+          <div style={{display:"block", flexDirection:"column"}}>
+            <span>
+              <span>
+                {moment(item.timestamp).format("MMMM Do YYYY")}
+              </span>
+              <span>
+                {item.reward === true ? <Icon type={"trophy"}/>:null}
+              </span>
+              <span>
+                {<Tag>{item.survey_use_case}</Tag>}
+              </span>
+            </span>
+          </div>
+        </List.Item>
       </Link>
     );
   }
@@ -59,7 +78,7 @@ class SurveyList extends React.PureComponent {
 const mapStateToProps = state => {
   // console.log("1) ASNT List mapStateToProps containers state 1: "+ JSON.stringify(state.surveys.surveys))
   // console.log("2) ASNT List mapStateToProps containers state 2: "+ JSON.stringify(state.surveys))
-  console.log("2) ASNT List mapStateToProps containers state 3: "+ JSON.stringify(state))
+  console.log("2) Survey List mapStateToProps containers state 3: "+ JSON.stringify(state))
   return {
     token: state.auth.token,
     surveys: state.survey.surveys,

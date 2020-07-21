@@ -3,8 +3,36 @@ from users.models import User
 from articlesApi.models import Article
 from projectsApi.models import Project
 
+class SurveyUseCase(models.Model):
+    CUSTOMERS = 'customers'
+    EDUCATION = 'education'
+    EMPLOYEES = 'employees'
+    EVENTS = 'events'
+    HEALTHCARE = 'healthcare'
+    MARKET_RESEARCH = 'market research'
+    NONPROFIT = 'nonprofit'
+    OTHER = 'other'
+    CHOICES = [
+        (CUSTOMERS, ('Customers')),
+        (EDUCATION, ('Education')),
+        (EMPLOYEES, ('Employees')),
+        (EVENTS, ('Events')),
+        (HEALTHCARE, ('Healthcare')),
+        (MARKET_RESEARCH, ('Market Research')),
+        (NONPROFIT, ('Nonprofit')),
+        (OTHER, ('Other')),
+    ]
+    survey_use_case=models.CharField(max_length=15, choices=CHOICES, blank=True)
+
+    def __str__(self):
+        return self.survey_use_case
+
 class Survey(models.Model):
-    title = models.CharField(max_length=50)
+    title = models.CharField(max_length=100)
+    overview = models.TextField()
+    reward = models.BooleanField(default=False)
+
+    survey_use_case = models.ForeignKey(SurveyUseCase, null=True, blank=True, on_delete=models.CASCADE)
     teacher = models.ForeignKey(User, on_delete=models.CASCADE)
     article = models.ForeignKey(Article, on_delete=models.CASCADE, null=True, blank=True)
     project = models.ForeignKey(Project, on_delete=models.CASCADE, null=True, blank=True)

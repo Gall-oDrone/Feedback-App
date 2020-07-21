@@ -6,7 +6,7 @@ from rest_framework.status import(
     HTTP_201_CREATED,
     HTTP_400_BAD_REQUEST
 )
-from .models import Survey, Choice, GradedSurvey, SurveyData, SurveyCounter, Question
+from .models import Survey, SurveyUseCase, Choice, GradedSurvey, SurveyData, SurveyCounter, Question
 from users.models import User
 from articlesApi.models import Article
 from .serializers import (SurveySerializer, 
@@ -49,6 +49,9 @@ class SurveyListView(ListAPIView):
     serializer_class = SurveyListSerializer
     queryset = Survey.objects.all()
     permission_classes = (permissions.AllowAny,)
+    if(len(SurveyUseCase.objects.all()) == 0):
+        for b in SurveyUseCase.CHOICES:
+            bachelor = SurveyUseCase.objects.create(survey_use_case=b[0])
 
     # def get_queryset(self):
     #     queryset = Survey.objects.all()

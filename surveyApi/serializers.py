@@ -29,6 +29,7 @@ class SurveyListSerializer(serializers.ModelSerializer):
     title = StringSerializer(many=False)
     teacher = StringSerializer(many=False)
     article = StringSerializer(many=False)
+    survey_use_case = StringSerializer(many=False)
     class Meta:
         model = Survey
         fields = ('__all__')
