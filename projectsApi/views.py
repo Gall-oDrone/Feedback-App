@@ -1,4 +1,5 @@
 # from rest_framework import viewsets
+from django.conf import settings
 from django.db.models import Count, Q, Sum
 from django.shortcuts import get_object_or_404, redirect, reverse
 from django.core.exceptions import ObjectDoesNotExist
@@ -144,9 +145,9 @@ class ProjectCreateView(CreateAPIView):
         print("req.Files",request.FILES)
         request_data = json.loads((self.request.data["data"]))
         request_files = (self.request.FILES)
-        serializer = ProjectSerializer(data=request_data)
+        serializer = ProjectSerializer(data=request.data)
         serializer.is_valid()
-        print(serializer.is_valid())
+        print(serializer.is_valid(), request_files is dict, request.FILES is dict)
         create_project = serializer.create(request_data, request_files)
         if create_project:
             return Response(status=HTTP_201_CREATED)
@@ -277,43 +278,54 @@ class ProfileProjectDetailView(RetrieveUpdateDestroyAPIView):
         project_project_feedback = self.add_project_feedback(request_data.get("feedback_type"), project)
         project_categories = self.add_categories(request_data.get("categories"), project)
         print("before myfile")
-        myfile = request.FILES['file']
-        print("myFile: ")
-        print(myfile)
-        print(type(myfile))
-        print(myfile.content_type)
-        print(myfile.content_type.split('/')[0])
-        file_type = myfile.content_type.split('/')[0]
-        fs = FileSystemStorage()
-        valid_extensions = ['.pdf', '.doc', '.docx', '.jpg', '.png', '.xlsx', '.xls']
-        if file_type == "project_video":
-            print("myfile.name is project_video")
-            project_videoD = Video()
-            filename = fs.save("project_videos/"+myfile.name, myfile)
-            uploaded_file_url = fs.url(filename)
-            project_videoD.project_videofile = "project_videos/"+myfile.name
-            project_videoD.save()
-            print("project_videoD, ", project_videoD)
-            print("project_videoD.id, ", project_videoD.id)
-            project.project_video= Video(id=project_videoD.id)
-            # raise ValidationError('Unsupported file extension.')
-        else: 
-            print("myfile.name is image")
-            filename = fs.save("images/"+myfile.name, myfile)
-            uploaded_file_url = fs.url(filename)
-            print("uploaded_file_url")
-            print(uploaded_file_url)
-            # with open(uploaded_file_url) as f:
-            #     data = f.read()
-            #     project.project_image.save("images/"+myfile.name, ContentFile(data))
-            print(myfile.name)
-            print(myfile.name)
-            # print(os.path.basename(uploaded_file_url))
-            print(project.project_image)
-            project.project_image = "images/"+myfile.name
-            print("project.project_image")
-            print(project.project_image)
-        project.save()
+        if (self.request.FILES):
+            myfile = request.FILES['file']
+            print("myFile: ")
+            print(myfile)
+            print(type(myfile))
+            print(myfile.content_type)
+            print(myfile.content_type.split('/')[0])
+            file_type = myfile.content_type.split('/')[0]
+            if settings.USE_S3:
+                if file_type == "video":
+                    videoD = Video()
+                    videoD.videofile = myfile
+                    videoD.save()
+                    project.project_video= Video(id=videoD.id)
+                    # raise ValidationError('Unsupported file extension.')
+                else: 
+                    project.project_image = myfile
+            else:
+                fs = FileSystemStorage()
+                valid_extensions = ['.pdf', '.doc', '.docx', '.jpg', '.png', '.xlsx', '.xls']
+                if file_type == "project_video":
+                    print("myfile.name is project_video")
+                    project_videoD = Video()
+                    filename = fs.save("project_videos/"+myfile.name, myfile)
+                    uploaded_file_url = fs.url(filename)
+                    project_videoD.videofile = "project_videos/"+myfile.name
+                    project_videoD.save()
+                    print("project_videoD, ", project_videoD)
+                    print("project_videoD.id, ", project_videoD.id)
+                    project.project_video= Video(id=project_videoD.id)
+                    # raise ValidationError('Unsupported file extension.')
+                else: 
+                    print("myfile.name is image")
+                    filename = fs.save("images/"+myfile.name, myfile)
+                    uploaded_file_url = fs.url(filename)
+                    print("uploaded_file_url")
+                    print(uploaded_file_url)
+                    # with open(uploaded_file_url) as f:
+                    #     data = f.read()
+                    #     project.project_image.save("images/"+myfile.name, ContentFile(data))
+                    print(myfile.name)
+                    print(myfile.name)
+                    # print(os.path.basename(uploaded_file_url))
+                    print(project.project_image)
+                    project.project_image = "images/"+myfile.name
+                    print("project.project_image")
+                    print(project.project_image)
+            project.save()
         # project.project_image = self.request.data["file"]get("project_image")
         # project.update(
         #         title=self.request.data.get("title"),
@@ -357,22 +369,25 @@ class ProfileProjectDetailView(RetrieveUpdateDestroyAPIView):
                     else:
                         None
 
-    def add_categories(self, categoriesD, project):
+    def add_categories(self, selectedCategories, project):
         print("CATEGORIES")
-        print(categoriesD)
+        print(selectedCategories)
         print("project_categories")
         print(project.categories.values())
         category_id_list = [x["id"] for x in (project.categories.values())]
+        project_category_title_list = [x["title"] for x in (project.categories.values())]
+        category_title_list = [x["title"] for x in (Category.objects.values())]
+        self.checkCategory(selectedCategories, category_title_list)
         for i in project.categories.values():
             print(i)
             print(i["id"])
             print(type(i["id"]))
-            if str(i["id"]) not in categoriesD:
+            if str(i["id"]) not in selectedCategories:
                 print("removing")
                 oldC = Category.objects.get(id=i["id"])
                 project.categories.remove(oldC.id)
             else:
-                for c in categoriesD:
+                for c in selectedCategories:
                     print("c:")
                     print(c)
                     print(type(c))
@@ -393,6 +408,18 @@ class ProfileProjectDetailView(RetrieveUpdateDestroyAPIView):
                     else:
                         print("None")
                         return
+    
+    def checkCategory(self, category, categories):
+        # print("CACAS: ", category, Category.objects.all(), categories)
+        cgrs = [x.replace(" ", "").upper() for x in (categories)]
+        for c in category:
+            if len(cgrs) == 0:
+                Category.objects.create(title=c)
+            else:
+                # print("CACAS 2: ", cgrs)
+                if(c.replace(" ", "").upper() not in cgrs):
+                    Category.objects.create(title=c)
+
     def delete(self, *args, **kwargs):
         try:
             print("ProfileProjectDetailView")

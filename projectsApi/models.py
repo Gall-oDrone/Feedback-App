@@ -106,8 +106,8 @@ class CrowdfundingTypes(models.Model):
 
 class Project(models.Model):
     title = models.CharField(max_length=60)
-    content = models.TextField()
     overview = models.TextField()
+    content = models.TextField()
     website = models.TextField(max_length=30, blank=True)
 
     comment_count = models.IntegerField(default=0)
@@ -119,8 +119,8 @@ class Project(models.Model):
 
     tag = models.ManyToManyField(Tag, related_name="project_tags")
     project_feedback = models.ManyToManyField(FeedbackTypes)
-    project_phase = models.OneToOneField(DevPhases, null=True, blank=True, on_delete=models.CASCADE)
-    project_crowdfunding_type = models.OneToOneField(CrowdfundingTypes, null=True, blank=True, on_delete=models.CASCADE)
+    project_phase = models.ForeignKey(DevPhases, null=True, blank=True, on_delete=models.CASCADE)
+    project_crowdfunding_type = models.ForeignKey(CrowdfundingTypes, null=True, blank=True, on_delete=models.CASCADE)
 
     author = models.ForeignKey(User, on_delete=models.CASCADE, related_name="project_author", null=True)
     members = models.ManyToManyField(User, default=author)

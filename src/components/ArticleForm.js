@@ -128,9 +128,9 @@ class ArticleCustomForm extends React.Component {
         engagement: values.feedback_type,
         categories: values.categories,
       }
-      if(file !== null){
+      if(file !== null && file.length > 0){
         formData.append("file", file[0].originFileObj)
-      } else if (file2 !== null){
+      } else if (file2 !== null && file2.length > 0){
         formData.append("media", file2[0].originFileObj)
       }
       formData.append("data", JSON.stringify(postObj))

@@ -18,11 +18,11 @@ function getBase64(file) {
 }
 
 const success = () => {
-  message.success('Thanks for your review');
+  message.success('Changes saved');
 };
 
 const error = () => {
-  message.error('Error while submitting review');
+  message.error('Error while submitting changes');
 };
 
 const categories = [
@@ -314,7 +314,8 @@ class ProfileArticleDetail extends React.Component {
       formData.append("data", JSON.stringify(postObj))
       if (!err) {
         this.props.putPAD(this.props.token, this.props.match.params.articleID, this.props.username, formData)
-        if(this.props.err1 !== null){
+        if(this.props.userPAD_error !== null){
+          console.error("KONGOS", this.props.userPAD_error)
           error()
 
         } else {
@@ -492,7 +493,8 @@ const mapStateToProps = state => {
   return {
     token: state.auth.token,
     username: state.auth.username,
-    userPAD: state.profile
+    userPAD: state.profile,
+    userPAD_error: state.profile.error
   };
 };
 

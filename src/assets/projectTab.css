@@ -158,16 +158,41 @@ body {
 }
 
 .project-columns .middle-column #project-details {
-  display:flex;
+  /* display:flex;
   flex-direction: row;
   align-items: center;
-  justify-content: center;
+  justify-content: center; */
+  display: grid;
+  justify-items: center;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-rows: 1fr;
+  margin: 5px 0px;
 }
 
 .project-columns .middle-column #project-details span{
   display:flex;
   align-items: center;
   padding: 5px 60px;
+}
+
+.project-columns .middle-column #project-details #university{
+  display:flex;
+  align-items: left;
+  padding: 5px 0px;
+  font-size: 0.9em;
+}
+
+.project-columns .middle-column #project-details #category{
+  display:flex;
+  align-items: center;
+  padding: 5px 30px;
+  font-size: 0.9em;
+}
+
+.project-columns .middle-column #project-details #views{
+  display:flex;
+  align-items: center;
+  padding: 5px 30px;
 }
 
 .project-columns .middle-column .project-image-container {

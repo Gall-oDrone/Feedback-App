@@ -1,3 +1,4 @@
+from django.conf import settings
 from rest_framework import serializers
 from projectsApi.models import Project, Video, Comment, Category, Like, Upvote, Rating, Image, CommentReply, FeedbackTypes, DevPhases, CrowdfundingTypes
 from users.models import User, ProfileInfo
@@ -89,15 +90,26 @@ class ProjectSerializer(serializers.ModelSerializer):
         project = Project()
         project.save()
         project.title = data["title"]
+        project.content = data["overview"]
         project.content = data["content"]
         project.author = User.objects.get(username=data["user"])
-        if files is dict:
-            print("FILES I: ", files['file'])
-            print("FILES II: ", files['media'])
-            for f in files:
-                myfile = files[f]
-                print("file type: ", myfile.content_type.split('/')[0])
-                file_type = myfile.content_type.split('/')[0]
+        print("FILES: ", files)
+        # print("FILES I: ", files['file'])
+        # print("FILES II: ", files['media'])
+        for f in files:
+            myfile = files[f]
+            print("file type: ", myfile.content_type.split('/')[0])
+            file_type = myfile.content_type.split('/')[0]
+            if settings.USE_S3:
+                if file_type == "video":
+                    videoD = Video()
+                    videoD.videofile = myfile
+                    videoD.save()
+                    project.project_video= Video(id=videoD.id)
+                    # raise ValidationError('Unsupported file extension.')
+                else: 
+                    project.project_image = myfile
+            else:
                 fs = FileSystemStorage()
                 valid_extensions = ['.pdf', '.doc', '.docx', '.jpg', '.png', '.xlsx', '.xls']
                 if file_type == "video":
@@ -111,19 +123,19 @@ class ProjectSerializer(serializers.ModelSerializer):
                     print("project_videoD.id, ", project_videoD.id)
                     project.project_video= Video(id=project_videoD.id)
                     # raise ValidationError('Unsupported file extension.')
-            else: 
-                print("myfile.name is image")
-                filename = fs.save("project_images/"+myfile.name, myfile)
-                uploaded_file_url = fs.url(filename)
-                print("uploaded_file_url")
-                print(uploaded_file_url)
-                print(myfile.name)
-                print(project.project_image)
-                project.project_image = "project_images/"+myfile.name
-                print("project.project_image")
-                print(project.project_image)
+                else: 
+                    print("myfile.name is image")
+                    filename = fs.save("project_images/"+myfile.name, myfile)
+                    uploaded_file_url = fs.url(filename)
+                    print("uploaded_file_url")
+                    print(uploaded_file_url)
+                    print(myfile.name)
+                    print(project.project_image)
+                    project.project_image = "project_images/"+myfile.name
+                    print("project.project_image")
+                    print(project.project_image)
 
-        # self.add_fields(data['project_feedback'], 0, project)
+        self.add_fields(data['project_feedback'], 0, project)
         print("HASATTRB: ", hasattr(data, "project_crowdfunding_type"))
         self.add_fields(data['project_phase'], 1, project)
         if("project_crowdfunding_type" in data):
@@ -142,14 +154,15 @@ class ProjectSerializer(serializers.ModelSerializer):
                 for cs in Category.objects.all():
                     titles.append(cs.title)
                     if cs.title == c:
-                        project.categories.add(cs.id)
+                        print("CACAS 2 True")
+                        project.category.add(cs.id)
                 if c not in titles:
                     newC = Category()
                     newC.title = c
                     newC.save()
-                    project.categories.add(newC.id)
-            except:
-                print("except")
+                    project.category.add(newC.id)
+            except Exception as e:
+                print("except: ", e)
                 newC = Category()
                 newC.title = c
                 newC.save()
@@ -159,29 +172,55 @@ class ProjectSerializer(serializers.ModelSerializer):
         return project
     def add_fields(self, field, i, university):
         f = field
-        try:
-            print("try")
-            print(f)
-            print(i)
-            newM = self.scher1(i)
-            print("newM I: ", newM)
-            ms = self.scher2(i)
-            shh = self.scher3(newM, i, f)
-            for m in ms:
-                if(f == m[0]):
-                    self.scher3(newM, i, f)
-            print("newM II: ", newM)
-            mtype = self.scher5(i, newM, university)
-        except:
-            print("except")
-            print(f)
-            newM = self.scher1(i)
-            ms = self.scher2(i)
-            shh = self.scher3(newM, i, f)
-            newM.save()
-            print("End except")
-            print("newM: ", newM)
-            mtype = self.scher5(i, newM, university)
+        if(type(f) == list):
+            for f in field:
+                try:
+                    print("try")
+                    print(f)
+                    print(i)
+                    newM = self.scher1(i)
+                    print("newM I: ", newM, type(newM))
+                    ms = self.scher2(i)
+                    shh = self.scher3(newM, i, f)
+                    for m in ms:
+                        if(f == m[0]):
+                            self.scher3(newM, i, f)
+                    print("newM II: ", newM)
+                    mtype = self.scher5(i, newM, university)
+                except Exception as e:
+                    print("except: ", e)
+                    print(f)
+                    newM = self.scher1(i)
+                    ms = self.scher2(i)
+                    shh = self.scher3(newM, i, f)
+                    newM.save()
+                    print("End except")
+                    print("newM: ", newM)
+                    mtype = self.scher5(i, newM, university)
+        else:
+            try:
+                print("try")
+                print(f)
+                print(i)
+                newM = self.scher1(i)
+                print("newM I: ", newM, type(newM))
+                ms = self.scher2(i)
+                shh = self.scher3(newM, i, f)
+                for m in ms:
+                    if(f == m[0]):
+                        self.scher3(newM, i, f)
+                print("newM II: ", newM)
+                mtype = self.scher5(i, newM, university)
+            except Exception as e:
+                print("except: ", e)
+                print(f)
+                newM = self.scher1(i)
+                ms = self.scher2(i)
+                shh = self.scher3(newM, i, f)
+                newM.save()
+                print("End except")
+                print("newM: ", newM)
+                mtype = self.scher5(i, newM, university)
         print("live her alo")
 
     def scher1(self, i):
@@ -228,8 +267,9 @@ class ProjectSerializer(serializers.ModelSerializer):
     def scher5(self, i, m, university):
         sch = self.scher4(i)
         if(i == 0):
-            mt = sch.objects.get(feedback_type=m)    
-            university.project_feedback = mt
+            mt = sch.objects.get(feedback_type="survey")
+            print("KONGOS: ", mt)
+            university.project_feedback.add(mt)
             return 
         elif(i == 1):
             mt = sch.objects.get(dev_phase=m)    
@@ -237,6 +277,7 @@ class ProjectSerializer(serializers.ModelSerializer):
             return 
         elif(i == 2):
             mt = sch.objects.get(crowdfunding_type=m)    
+            print("CACAS: ", mt)
             university.project_crowdfunding_type = mt
             return 
         else:

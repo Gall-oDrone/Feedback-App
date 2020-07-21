@@ -135,6 +135,8 @@ class ArticleCustomForm extends React.Component {
     await this.props.form.validateFields((err, values) => {
       const title =
         values["title"] === undefined ? null : values["title"];
+        const overview =
+        values["overview"] === undefined ? null : values["overview"];
       const content =
         values["content"] === undefined ? null : values["content"];
       const categories =
@@ -156,6 +158,7 @@ class ArticleCustomForm extends React.Component {
       const postObj = {
         user: this.props.username,
         title: title,
+        overview: overview,
         content: content,
         categories: categories,
         member_emails: member_emails,
@@ -164,9 +167,12 @@ class ArticleCustomForm extends React.Component {
         project_phase: phase,
         project_crowdfunding_type: crowdfunding_type,
       }
-      if(file !== null){
+      console.log("formData file: ", JSON.stringify(file), JSON.stringify(file2))
+      if(file !== null && file.length > 0){
+        console.log("formData file: ", JSON.stringify(file))
         formData.append("file", file[0].originFileObj)
-      } else if (file2 !== null){
+      }
+      if (file2 !== null && file2.length > 0){
         formData.append("media", file2[0].originFileObj)
       }
       formData.append("data", JSON.stringify(postObj))
@@ -279,6 +285,14 @@ class ArticleCustomForm extends React.Component {
               })(<Input name="title" />
               )}
             </Form.Item>
+
+            <Form.Item label="Project Overview" hasFeedback>
+              {getFieldDecorator('overview', {
+                rules: [{ required: true, message: 'File required' }],
+              })(<TextArea rows={2} />
+              )}
+            </Form.Item>
+
             <Form.Item label="Project Description" hasFeedback>
               {getFieldDecorator('content', {
                 rules: [{ required: true, message: 'File required' }],
@@ -407,7 +421,7 @@ class ArticleCustomForm extends React.Component {
                       {getFieldDecorator('uploadV', {
                         initialValue: this.handleFileList(null, null),
                         valuePropName: 'fileList',
-                        getValueFromEvent: this.normFile,
+                        getValueFromEvent: this.normFile2,
                         setFieldsValue: "fileList"
                       })(
                         <Upload name="logo" key="Video" onPreview={this.handlePreview} listType="picture" customRequest={this.dummyRequest}>
