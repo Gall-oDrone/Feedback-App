@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from .models import Survey, Question, Choice, Choice, GradedSurvey, SurveyCounter
+from .models import Survey, SurveyUseCase, Question, Choice, Choice, GradedSurvey, SurveyCounter
 from articlesApi.models import Article
 from users.models import User
 
@@ -58,8 +58,8 @@ class SurveySerializer(serializers.ModelSerializer):
         teacher = User.objects.get(username=data["teacher"])
         survey.teacher = teacher
         survey.title = data["title"]
-        # survey.article = data["article"]
-        survey.article = Article.objects.get(id="1")
+        survey.overview = data["overview"]
+        survey.reward = data["reward"]
         survey.save()
 
         order = 1
@@ -81,7 +81,72 @@ class SurveySerializer(serializers.ModelSerializer):
             newQ.survey = Survey.objects.get(id=survey.id)
             newQ.save()
             order += 1
+        
+        self.add_fields(data('user_case'),0, survey)
         return survey
+
+    def add_fields(self, field, i, model):
+        f = field
+        try:
+            print("try")
+            print(f)
+            print(i)
+            newM = self.scher3(i)
+            print("newM I: ", newM)
+            ms = self.scher2(i)
+            shh = self.scher6(newM, i, f)
+            for m in ms:
+                if(f == m[0]):
+                    self.scher6(newM, i, f)
+            print("newM II: ", newM)
+            mtype = self.scher5(i, newM, model)
+        except:
+            print("except")
+            print(f)
+            newM = self.scher3(i)
+            ms = self.scher2(i)
+            shh = self.scher6(newM, i, f)
+            newM.save()
+            print("End except")
+            print("newM: ", newM)
+            mtype = self.scher5(i, newM, model)
+        print("live her alo")
+
+    def scher2(self, i):
+        switcher={
+                0:SurveyUseCase.CHOCIES,
+            }
+        return switcher.get(i,"Invalid day of week")
+
+    def scher3(self, i):
+        u = SurveyUseCase()
+        switcher={
+                0:u,
+            }
+        print("switcher: ", switcher.get(i))
+        return switcher.get(i,"Invalid day of week")
+ 
+    def scher6(self, m, i, f):
+        if(i == 0):
+            m.survey_use_case = f            
+            return m
+        else:
+            return "Invalid day of week"
+    
+    def scher4(self, i):
+        switcher={
+                0:SurveyUseCase,
+            }
+        return switcher.get(i,"Invalid day of week")
+
+    def scher5(self, i, m, university):
+        sch = self.scher4(i)
+        if(i == 0):
+            mt = sch.objects.get(survey_use_case=m)    
+            university.survey_use_case = mt
+            return 
+        else:
+            return "Invalid day of week"
 
 class GradedSurveySerializer(serializers.ModelSerializer):
     student = StringSerializer(many=False)

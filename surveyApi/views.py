@@ -34,7 +34,7 @@ class SurveyCreateView(CreateAPIView):
         # s_counter = self.kwargs.get('number')
         print("request from SurveyCreateView")
         if(SurveyCounter.objects.values() == 5):
-            return Response("You reached the limit number of surveis!!")
+            return Response("You reached the limit number of surveys!!")
         else: 
             print("survey counter < 5")
             serializer = SurveySerializer(data=request.data)

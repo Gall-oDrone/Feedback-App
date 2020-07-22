@@ -73,18 +73,12 @@ class Dates(models.Model):
         return str(self.date)
 
 class Topic(models.Model):
-    TOPICS = [
-        ("OTHER", ('other'))
-    ]
-    topic=models.CharField(max_length=50, choices=TOPICS, blank=True, null=True)
+    topic=models.CharField(max_length=50, blank=True, null=True)
     def __str__(self):
         return self.topic
 
 class Experience(models.Model):
-    EXPERIENCES = [
-        ("OTHER", ('other'))
-    ]
-    experience=models.CharField(max_length=50, choices=EXPERIENCES, blank=True, null=True)
+    experience=models.CharField(max_length=50, blank=True, null=True)
     def __str__(self):
         return self.experience
 

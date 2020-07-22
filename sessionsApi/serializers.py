@@ -106,10 +106,16 @@ class SessionSerializer(serializers.ModelSerializer):
                 print(session.session_photo)
         session.save()
      
-        self.add_fields(data["topics"], 0, session)
-        self.add_fields(data["areas_experience"], 1, session)
+        experience_list = [x["experience"] for x in (Experience.objects.values())]
+        topic_list = [x["topic"] for x in (Topic.objects.values())]
+        self.checkEntries(data["topics"], topic_list, 0, session)
+        self.checkEntries(data["areas_experience"], experience_list, 1, session)
+
+        # self.add_fields(data["topics"], 0, session)
+        # self.add_fields(data["areas_experience"], 1, session)
         self.add_fields(self.selectMonth(data["months"]), 2, session)
         self.add_fields(self.selectWeekday(data["weekdays"]), 3, session)
+
         for d in data["dates"]:
             Dates.objects.create(date=d)
             try:
@@ -117,14 +123,14 @@ class SessionSerializer(serializers.ModelSerializer):
                 session.dates.add(date_obj.id)
             except:
                 date_obj = Dates.objects.filter(date=d)
-                session.dates.add(date_obj[-1].id)
+                session.dates.add(date_obj.reverse()[0].id)
         return session
 
     def add_fields(self, field, i, inquiry):
         for f in field:
-            if(i == 0 or i == 1):
-                model = self.scher3(i)
-                self.check_existence(f, model, i)
+            # if(i == 0 or i == 1):
+            #     model = self.scher3(i)
+            #     self.check_existence(f, model, i)
             try:
                 print("try")
                 print(f)
@@ -264,7 +270,40 @@ class SessionSerializer(serializers.ModelSerializer):
             return
         else:
             return "Invalid day of week"
-
+    
+    def scher7(self, i, c, session):
+        sch = self.scher4(i)
+        if(i == 0):
+            mt = sch.objects.create(topic=c)
+            session.topic.add(mt.id)
+            return 
+        elif(i == 1):
+            mt = sch.objects.create(experience=c)
+            session.experience.add(mt.id)
+            return
+    
+    def scher8(self, i, c, session):
+        sch = self.scher4(i)
+        if(i == 0):
+            mt = sch.objects.get(topic=c)
+            session.topic.add(mt.id)
+            return 
+        elif(i == 1):
+            mt = sch.objects.get(experience=c)
+            session.experience.add(mt.id)
+            return
+    
+    def checkEntries(self, category, categories, i, session):
+        cgrs = [x.replace(" ", "").upper() for x in (categories)]
+        for c in category:
+            if len(cgrs) == 0:
+                self.scher7(i, c, session)
+            else:
+                print("CACAS 2: ", cgrs, c.replace(" ", "").upper())
+                if(c.replace(" ", "").upper() not in cgrs):
+                    self.scher7(i, c, session)
+                else:
+                    self.scher8(i, c, session)
         return session
 
 class SessionUserListSerializer(serializers.ModelSerializer):

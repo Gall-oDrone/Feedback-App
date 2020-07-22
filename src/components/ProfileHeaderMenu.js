@@ -49,18 +49,11 @@ class ProfileHeaderMenu extends React.Component {
     console.log("PHDM this.props",JSON.stringify(this.props))
     console.log("PHDM this.state",JSON.stringify(this.state))
     const {logout, userId} = this.props
-    const text = (username, avatar) => {return(
+    const text = (username) => {return(
       <div>
         <Row align="middle">
-          <Col span={12}>
-            <Avatar src={avatar} style={{display:"flex", float:"left"}}>
-              <span>
-                {username[0].toUpperCase()}
-              </span>
-            </Avatar>
-          </Col>
           <Col span={12} style={{paddingTop:5}}>
-              <span>Hi {username}</span>
+              <span>Hi {username}!</span>
           </Col>
         </Row>
       </div>
@@ -100,9 +93,13 @@ class ProfileHeaderMenu extends React.Component {
           this.props.username !== null &&
           this.props.profileAI.ProfileAccount !== undefined ?
           <Hoc>
-            <div className="demo">
-                <Popover placement="bottomRight" title={text(this.props.username, this.props.profileAI.ProfileAccount.profile_avatar)} content={content(logout, userId)}>
-                  <Icon type="user"/>
+            <div className="demo" style={{justifyContent:"center"}}>
+                <Popover placement="bottomRight" title={text(this.props.username)} content={content(logout, userId)}>
+                <Avatar src={this.props.profileAI.ProfileAccount.profile_avatar}>
+                  <span>
+                    {this.props.username[0].toUpperCase()}
+                  </span>
+                </Avatar>
                 </Popover>
             </div>
         </Hoc>

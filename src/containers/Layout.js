@@ -132,10 +132,10 @@ class CustomLayout extends React.Component {
                       </Link>
                   </div>
                 </Menu.Item> */}
-                <Menu.Item key="8" style= {{float: 'right'}}>
+                <Menu.Item key="8" style= {{float: 'right', paddingLeft: "15px", paddingRight: "15px"}}>
                     <ProfileHeaderMenu auth={this.props.isAuthenticated} logout={this.props.logout} userId={this.props.userId}/>
                 </Menu.Item>
-                <Menu.Item key="9" style= {{float: 'right'}}>
+                <Menu.Item key="9" style= {{float: 'right', paddingLeft: "15px", paddingRight: "15px"}}>
                     <CreateHeaderMenu/>
                 </Menu.Item>
                 <Menu.Item key="" style= {{float: 'right'}}>
