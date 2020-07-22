@@ -1,3 +1,4 @@
+from django.conf import settings
 from rest_framework import serializers
 from django.utils.dateparse import parse_datetime
 from datetime import datetime, date
@@ -86,24 +87,35 @@ class SessionSerializer(serializers.ModelSerializer):
         session.save()
         if files:
             print("FILES -I: ", files)
-            print("FILES -II: ", files is dict)
-            print("FILES I: ", files['file'])
+            # print("FILES -II: ", files is dict)
+            # print("FILES I: ", files['file'])
             for f in files:
                 myfile = files[f]
                 print("file type: ", myfile.content_type.split('/')[0])
                 file_type = myfile.content_type.split('/')[0]
-                fs = FileSystemStorage()
-                valid_extensions = ['.pdf', '.doc', '.docx', '.jpg', '.png', '.xlsx', '.xls']
-                print("myfile.name is doc")
-                filename = fs.save("sessionPhotos/"+myfile.name, myfile)
-                uploaded_file_url = fs.url(filename)
-                print("uploaded_file_url")
-                print(uploaded_file_url)
-                print(myfile.name)
-                print(session.session_photo)
-                session.session_photo = "sessionPhotos/"+myfile.name
-                print("inquiry.ufile")
-                print(session.session_photo)
+                if settings.USE_S3:
+                    if file_type == "video":
+                        # videoD = Video()
+                        # videoD.videofile = myfile
+                        # videoD.save()
+                        # session.session_photo= Video(id=videoD.id)
+                        # raise ValidationError('Unsupported file extension.')
+                        pass
+                    else: 
+                        session.session_photo = myfile
+                else:
+                    fs = FileSystemStorage()
+                    valid_extensions = ['.pdf', '.doc', '.docx', '.jpg', '.png', '.xlsx', '.xls']
+                    print("myfile.name is doc")
+                    filename = fs.save("sessionPhotos/"+myfile.name, myfile)
+                    uploaded_file_url = fs.url(filename)
+                    print("uploaded_file_url")
+                    print(uploaded_file_url)
+                    print(myfile.name)
+                    print(session.session_photo)
+                    session.session_photo = "sessionPhotos/"+myfile.name
+                    print("inquiry.ufile")
+                    print(session.session_photo)
         session.save()
      
         experience_list = [x["experience"] for x in (Experience.objects.values())]
