@@ -111,6 +111,7 @@ class SessionSerializer(serializers.ModelSerializer):
         self.checkEntries(data["topics"], topic_list, 0, session)
         self.checkEntries(data["areas_experience"], experience_list, 1, session)
 
+#
         # self.add_fields(data["topics"], 0, session)
         # self.add_fields(data["areas_experience"], 1, session)
         self.add_fields(self.selectMonth(data["months"]), 2, session)
