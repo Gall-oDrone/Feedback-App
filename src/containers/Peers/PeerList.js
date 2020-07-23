@@ -6,6 +6,7 @@ import { connect } from 'react-redux';
 import countryList from 'react-select-country-list'
 import Filter from "../FilterForm";
 import PeerDetail from './PeerDetail';
+import "../../assets/inquiries.css"
 var moment = require('moment');
 const { Search } = Input;
 const { Panel } = Collapse;
@@ -115,7 +116,6 @@ class ProductList extends React.Component {
           }
           console.log('INQUIRIES', (inquiries));
                 return(
-
                   <div>
                     <Filter/>
                     <List
@@ -124,20 +124,7 @@ class ProductList extends React.Component {
                     renderItem={(item, index) => (
                     <List.Item
                     >
-                        <List.Item.Meta
-                        // avatar={
-                        //   <Card size={"small"}> 
-                        //   <p>User:{item.author}</p>
-                        //    {
-                        //     // item.ufile !== null ? (
-                        //     //   <img
-                        //     //       width={100}
-                        //     //       alt={item.ufile}
-                        //     //       src="https://gw.alipayobjects.com/zos/rmsportal/mqaQswcyDLcXyDKnZfES.png"
-                        //     //   />
-                        //     // ):(null)
-                        //    }
-                        //   </Card>}
+                        {/* <List.Item.Meta
                         title={
                           <Row>
                             <Col span={8}>
@@ -192,7 +179,68 @@ class ProductList extends React.Component {
                             </Row>
                           </div>
                         }
-                        />
+                        /> */}
+                        <div className="inquiry-summary-search-result">
+                          <div className="statscontainer">
+                            <div className="stats">
+                                <div className="category">
+                                  <span>
+                                    {"Category:"}
+                                  </span>
+                                  <div className="status">
+                                    <Tag>
+                                      {item.inquiry_type}
+                                    </Tag>
+                                  </div>
+                                </div>
+                                <div className="topic">
+                                  <span>
+                                    {"Topic:"}
+                                  </span>
+                                  <div>
+                                    <Tag>
+                                      {item.inquiry_topic}
+                                    </Tag>
+                                  </div>
+                                </div>
+                                <div className="status">
+                                  <span>
+                                    {"Status:"}
+                                  </span>
+                                  <div>
+                                      {item.status === true ? 
+                                        <Tag color="green">Open</Tag>:<Tag color="red">Closed</Tag>
+                                      }
+                                      </div> 
+                                </div>
+                            </div>
+
+                          </div>
+                          <div className="summary">
+                            <div className="author">
+                              <a className="post-tag" style={{color:"black"}} href={`/profile-page/${item.author}`}><span>{item.author}</span></a>
+                            </div>
+                            <div className="time">
+                              <span>{moment(item.timestamp).format("MMMM Do YYYY")}</span>
+                            </div>
+                            <div className="title">
+                              <h3>
+                                <a>
+                                  {item.title}
+                                </a>
+                              </h3>
+                            </div>
+                            <div className="excerpt">
+                              {item.content}
+                            </div>
+                            <div className="views">
+                              <Icon type={"eye"}/> <span>{item.view_count}</span>
+                            </div>
+                            <div className="college">
+                              <Tag color="blue">{item.user_university}</Tag>
+                            </div>
+                          </div>
+                        </div>
                         <Button onClick={()=> this.handleOpenModal(index)}type="primary">Reach out</Button>
                         {/* {this.state.visible === true ?
                         inquiries[index]
