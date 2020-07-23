@@ -68,7 +68,7 @@
     flex-direction: column;
     background-color: #ffffff;
     border: 1px solid #e0e0e0;
-    cursor: pointer;
+    /* cursor: pointer; */
   }
 
   .card__image-container2 {

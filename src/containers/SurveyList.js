@@ -35,18 +35,24 @@ class SurveyList extends React.PureComponent {
           title={item.title}
           description={item.overview}
           />
-          <div style={{display:"block", flexDirection:"column"}}>
-            <span>
-              <span>
-                {moment(item.timestamp).format("MMMM Do YYYY")}
-              </span>
-              <span>
-                {item.reward === true ? <Icon type={"trophy"}/>:null}
-              </span>
-              <span>
-                {<Tag>{item.survey_use_case}</Tag>}
-              </span>
-            </span>
+          <div style={{display:"flex", flexDirection:"column"}}>
+            <ul>
+              <li>
+                <span style={{color:"black"}}>
+                  {moment(item.timestamp).format("MMMM Do YYYY")}
+                </span>
+              </li>
+              <li>
+                <span style={{color:"black"}}>
+                  {item.reward === true ? <Icon type={"trophy"}/>:null}
+                </span>
+              </li>
+              <li>
+                <span>
+                  {<Tag>{item.survey_use_case}</Tag>}
+                </span>
+              </li>
+            </ul>
           </div>
         </List.Item>
       </Link>

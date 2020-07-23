@@ -66,7 +66,7 @@ class SurveyDetailView(RetrieveAPIView):
             print("SurveyDetailView")
             queryset = Survey.objects.all()
             articleID = self.kwargs.get('pk')
-            queryset = queryset.get(article=articleID)
+            queryset = queryset.get(id=articleID)
             SurveySerializer(queryset)
             return queryset
         except ObjectDoesNotExist:

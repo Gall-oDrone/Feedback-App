@@ -19,16 +19,16 @@ class AssignmentDetail extends React.Component {
 
   componentDidMount() {
     if (this.props.token !== undefined && this.props.token !== null) {
-      const articleID = this.props.arId;
-      this.props.getSurveySDetail1(this.props.token, articleID);
+      const surveyID = this.props.match.params.id;
+      this.props.getSurveySDetail1(this.props.token, surveyID);
     }
   }
 
   componentDidUpdate(newProps) {
     if (newProps.token !== this.props.token) {
       if (newProps.token !== undefined && newProps.token !== null) {
-        const articleID = this.props.arId;
-        this.props.getSurveySDetail1(newProps.token, articleID);
+        const surveyID = this.props.match.params.id;
+        this.props.getSurveySDetail1(newProps.token, surveyID);
       }
     }
   }
