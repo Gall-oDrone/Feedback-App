@@ -1,6 +1,7 @@
 import React from "react";
 import { connect } from "react-redux";
-import { Card, Skeleton, message } from "antd";
+import { Link } from "react-router-dom";
+import { Button, Card, Result, Skeleton, message } from "antd";
 import Questions from "./SurveyQuestions";
 import Choices from "../components/Choices";
 import { getSurveySDetail } from "../store/actions/survey";
@@ -25,10 +26,11 @@ class AssignmentDetail extends React.Component {
   }
 
   componentDidUpdate(newProps) {
+    console.log("XXX: ", newProps.token, this.props.token)
     if (newProps.token !== this.props.token) {
-      if (newProps.token !== undefined && newProps.token !== null) {
+      if (this.props.token !== undefined && this.props.token !== null) {
         const surveyID = this.props.match.params.id;
-        this.props.getSurveySDetail1(newProps.token, surveyID);
+        this.props.getSurveySDetail1(this.props.token, surveyID);
       }
     }
   }
@@ -61,36 +63,54 @@ class AssignmentDetail extends React.Component {
     const { usersAnswers } = this.state;
     return (
       <Hoc>
-        {Object.keys(currentSurvey).length > 0 ? (
-          <Hoc>
-            {this.props.loading ? (
-              <Skeleton active />
-            ) : (
-              <Card title={title}>
-                <Questions
-                submit={() => this.handleSubmit()}
-                  questions={currentSurvey.survey_questions.map(q => {
-                    return (
-                      <Card
-                        style={cardStyle}
-                        type="inner"
-                        key={q.id}
-                        title={`${q.order}. ${q.question}`}
-                      >
-                        <Choices
-                          questionId={q.order}
-                          choices={q.choices}
-                          change={this.onChange}
-                          usersAnswers={usersAnswers}
-                        />
-                      </Card>
-                    );
-                  })}
-                />
-              </Card>
-            )}
-          </Hoc>
-        ) : null}
+        {this.props.username !== null ?
+          (Object.keys(currentSurvey).length > 0 ? (
+            <Hoc>
+              {this.props.loading ? (
+                <Skeleton active />
+              ) : (
+                <Card title={title}>
+                  <Questions
+                  submit={() => this.handleSubmit()}
+                    questions={currentSurvey.survey_questions.map(q => {
+                      return (
+                        <Card
+                          style={cardStyle}
+                          type="inner"
+                          key={q.id}
+                          title={`${q.order}. ${q.question}`}
+                        >
+                          <Choices
+                            questionId={q.order}
+                            choices={q.choices}
+                            change={this.onChange}
+                            usersAnswers={usersAnswers}
+                          />
+                        </Card>
+                      );
+                    })}
+                  />
+                </Card>
+              )}
+            </Hoc>
+          ) : null)
+          : (
+              <Result
+                title="You need to be Logged In"
+                extra={
+                    <Link to={{
+                        pathname: "/login",
+                        state: {from: this.props.location}
+                        }}
+                    >
+                        <Button type="primary" key="console">
+                          Login
+                        </Button>
+                    </Link>
+                }
+              />
+            )
+        }
       </Hoc>
     );
   }

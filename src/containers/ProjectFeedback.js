@@ -221,7 +221,7 @@ class ArticleFeedback extends React.Component {
                             ) : (contentListNoTitle[(this.state.noTitleKey).replace(/ +/g, "")])}
                     </Card>
                     ) : (<Result
-                        title="You need to Logged In"
+                        title="You need to be Logged In"
                         extra={
                             <Link to={{
                                 pathname: "/login",

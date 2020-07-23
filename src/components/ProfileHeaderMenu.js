@@ -95,7 +95,7 @@ class ProfileHeaderMenu extends React.Component {
           <Hoc>
             <div className="demo" style={{justifyContent:"center"}}>
                 <Popover placement="bottomRight" title={text(this.props.username)} content={content(logout, userId)}>
-                <Avatar src={this.props.profileAI.ProfileAccount.profile_avatar}>
+                <Avatar src={this.props.profileAI.ProfileAccount.profile_avatar} style={{backgroundColor:"#b0b0b0"}}>
                   <span>
                     {this.props.username[0].toUpperCase()}
                   </span>
