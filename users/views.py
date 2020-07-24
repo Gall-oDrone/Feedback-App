@@ -243,7 +243,7 @@ class UserProfileInfoView(RetrieveUpdateDestroyAPIView):
 
     def get_object(self, *args, **kwargs):
         try:
-            print("UserProfileInfoView")
+            print("UserProfileInfoView Silk Road")
             username = self.kwargs.get('username')
             user = User.objects.get(username=username)
             # articleId = Article.objects.get(title=article).id
@@ -254,7 +254,7 @@ class UserProfileInfoView(RetrieveUpdateDestroyAPIView):
             raise Http404("You do not have an active order")
             return Response({"message": "You do not have an active order"}, status=HTTP_400_BAD_REQUEST)
     
-    def udpate(self, request, *args, **kwargs):
+    def put(self, request, *args, **kwargs):
         serializer = ProfileInfoSerializer(data=request.data)
         serializer.is_valid()
         print("On update method")

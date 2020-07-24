@@ -93,19 +93,45 @@ class UserProfileInfo extends React.Component {
 
   handleSubmit = e => {
     e.preventDefault();
-    this.props.form.validateFieldsAndScroll((err, values) => {
+    const { UserAccountInfo} = this.props.profileIA;
+    this.props.form.validateFields((err, values) => {
+      console.log("handleFormSubmit values: ", JSON.stringify(values));
+      const university = 
+        values["university"] === undefined ? null : values["university"][0];
+      const attendace = 
+        values["attendace"] === undefined ? null : values["attendace"];
+      const degree = 
+        values["degree"] === undefined ? null : values["degree"];
+      const bachelor = 
+        values["bachelor"] === undefined ? null : values["bachelor"][0];
+      const master = 
+        values["master"] === undefined ? null : values["master"][0];
+      const doctorate = 
+        values["doctorate"] === undefined ? null : values["doctorate"][0];
+      const course = 
+        values["course"] === undefined ? null : values["course"][0];
+      const website = 
+        values["website"] === undefined ? null : values["website"];
+      const experience = 
+        values["work-experience"] === undefined ? null : values["work-experience"];
+
+      const postObj = {
+        profile_username: this.props.username,
+        university: university,
+        attendace: attendace,
+        degree: degree,
+        bachelor: bachelor,
+        master: master,
+        doctorate: doctorate,
+        course: course,
+        website: website,
+        experience: experience,
+      }
+      console.log("postObj: ", JSON.stringify(postObj), UserAccountInfo);
       if (!err) {
-        let is_student = false;
-        if (values.userType === "student") is_student = true;
-        this.props.onAuth(
-          values.userName,
-          values.email,
-          values.university,
-          values.password,
-          values.confirm,
-          is_student
-        );
-        // this.props.history.push("/");
+        this.props.putProfileInfo(this.props.token, this.props.userId, postObj)
+      } else{
+        console.error('Received error: ', err);
       }
     });
   };
@@ -133,10 +159,10 @@ class UserProfileInfo extends React.Component {
   };
 
   handleCountryChange = value => {
-    console.log('Country changed', value);
+    // console.log('Country changed', value);
     // this.setState({ country: value[0] })
     Object.values(options2).map((k) => {
-      console.log(JSON.stringify(k))
+      // console.log(JSON.stringify(k))
       if(k.value === value){
         return
       } 
@@ -168,6 +194,7 @@ class UserProfileInfo extends React.Component {
   handleBachelorChange = val => {
     var lab = null
     this.lab = val
+    console.log("ERMAC", val, this.lab)
     return this.lab
   };
 
@@ -204,11 +231,11 @@ class UserProfileInfo extends React.Component {
   handleDegree = val => {
     var academic_d = null
     if(val === "Bachelor's degree"){
-      academic_d = "bachelor"
+      academic_d = "Bachelor's degree"
     } else if (val === "Master's degree"){
-      academic_d = "master"
+      academic_d = "Master's degree"
     } else if (val === "Doctorate"){
-      academic_d = "doctorate"
+      academic_d = "Doctorate"
     }
     return academic_d
   }
@@ -261,15 +288,13 @@ class UserProfileInfo extends React.Component {
     }
   }
   
-  componentWillReceiveProps(newProps) {
+  componentDidUpdate(newProps) {
     if (newProps.token !== this.props.token) {
-      console.log("componentWillReceiveProps newProps: ")
-      console.log(newProps)
-      this.props.getProfileInfo(newProps.token, newProps.username)
-      this.fetchData()
-  } else {
-  }
-      
+      if (this.props.token !== undefined && this.props.token !== null) {
+        this.props.getProfileInfo(this.props.token, this.props.username)
+        this.fetchData()
+      }
+    }    
   }
 
   render() {
@@ -298,7 +323,7 @@ class UserProfileInfo extends React.Component {
           <Option value="87">+87</Option>
         </Select>,
       );
-      console.log("123, ", UserAccountInfo)
+      // console.log("123, ", UserAccountInfo)
 
       return (
         (UserAccountInfo !== undefined ? (
@@ -307,7 +332,7 @@ class UserProfileInfo extends React.Component {
           <p style={pStyle}>Basic Information</p>
           <FormItem label="Name">
             {getFieldDecorator("firstName", {
-              initialValue: (UserAccountInfo.name !== null?[`${UserAccountInfo.name}`]:null),
+              initialValue: (UserAccountInfo.name !== null?(`${UserAccountInfo.name}`):null),
               rules: [{ required: true, message: "Please input your full name!" }]
             })(
               <Input
@@ -371,16 +396,16 @@ class UserProfileInfo extends React.Component {
                 initialValue: this.handleDegree(UserAccountInfo.degree)
               })(
                 <Radio.Group >
-                  <Radio.Button value="bachelor">Bachelor's</Radio.Button>
-                  <Radio.Button value="master">Master's</Radio.Button>
-                  <Radio.Button value="doctorate">pHD</Radio.Button>
+                  <Radio.Button value="Bachelor's degree">Bachelor's</Radio.Button>
+                  <Radio.Button value="Master's degree">Master's</Radio.Button>
+                  <Radio.Button value="Doctorate">pHD</Radio.Button>
                 </Radio.Group>,
               )}
             </Form.Item>
           </>
         ):null}
 
-        {getFieldValue("degree") === "bachelor" &&
+        {getFieldValue("degree") === "Bachelor's degree" &&
           getFieldValue("attendace") === "graduate" ? (
           // {academic_degree === null ? (
             <>
@@ -395,7 +420,7 @@ class UserProfileInfo extends React.Component {
             </>
           ):null}
 
-        {getFieldValue("degree") === "master" &&
+        {getFieldValue("degree") === "Master's degree" &&
           getFieldValue("attendace") === "postgraduate" ? (
           // {academic_degree === null ? (
             <>
@@ -410,7 +435,7 @@ class UserProfileInfo extends React.Component {
             </>
           ):null}
 
-        {getFieldValue("degree") === "doctorate" &&
+        {getFieldValue("degree") === "Doctorate" &&
           getFieldValue("attendace") === "postgraduate" ? (
           // {academic_degree === null ? (
             <>
@@ -436,7 +461,7 @@ class UserProfileInfo extends React.Component {
 
           <Form.Item label="Website">
             {getFieldDecorator('website', {
-              initialValue: (UserAccountInfo.website !== null?[`${UserAccountInfo.website}`]:null),
+              initialValue: (UserAccountInfo.website !== null?`${UserAccountInfo.website}`:null),
               rules: [
                 {
                   required: false,
@@ -510,6 +535,7 @@ const mapStateToProps = state => {
   console.log("mapStateToProps: "+JSON.stringify(state))
   return {
     token: state.auth.token,
+    userId: state.auth.userId,
     username: state.auth.username,
     profileIA: state.profileInfo
   };

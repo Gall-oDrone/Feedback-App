@@ -37,7 +37,7 @@ urlpatterns = [
     path('profile/account/info/<userid>', UserProfileView.as_view()),
     path('profile/info/<username>', UserMeetingInfoView.as_view()),
     path('profile-page/<username>', ProfilePageView.as_view()),
-    path('profile/account/user/info/update/<username>', UserProfileInfoView.as_view()),
+    path('profile/account/user/info/update/<user>', UserProfileInfoView.as_view()),
     path('courses-degrees/', Degrees_and_CoursesView.as_view()),
     path('universities/', UniView.as_view()),
     path('deg/', DegView.as_view()),

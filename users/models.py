@@ -21,7 +21,7 @@ class Universities(models.Model):
     CAMBRIDGE = 'University of Cambridge'
     OXFORD = 'University of Oxford'
     STANDFORD = 'Stanford University'
-    DUKE = "Duke University"
+    DUKE = "Duke's University"
     CIDE = "Center of Teaching and Research in Economics"
     ITAM = "Autonomous Technological Institute of Mexico "
     COLMEX = "El Colegio de México"
@@ -33,7 +33,7 @@ class Universities(models.Model):
         (CAMBRIDGE, ('University of Cambridge')),
         (OXFORD, ('University of Oxford')),
         (STANDFORD, ('Stanford University')),
-        (DUKE, ("Duke University")),
+        (DUKE, ("Duke's University")),
         (CIDE, ("Center of Teaching and Research in Economics")),
         (ITAM, ("Instituto Tecnológico Autónomo de México")),
         (COLMEX, ("El Colegio de México")),

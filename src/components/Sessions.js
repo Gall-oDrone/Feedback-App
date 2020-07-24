@@ -1,13 +1,19 @@
 import React from 'react';
 import { List, Avatar, Icon } from 'antd';
 import {media_endpoint} from "../constants"
-const IconText = ({ type, text }) => (
-    <span>
-        <Icon type={type} style={{ marginRight: 8 }} />
-        {text}
-    </span>
-);
 
+function handleDegree(degree){
+    if(degree.doctorate !== null){
+        return degree.doctorate 
+    }
+    else if (degree.master !== null){
+        return degree.master 
+    }
+    else if (degree.bachelor !== null){
+        return degree.bachelor 
+    }
+    else{ return null}
+}
 
 const Articles = (props) => {
     return (
@@ -46,7 +52,7 @@ const Articles = (props) => {
                         />
                         {/* <p>{`${item.user_name.name} `}</p> */}
                         <p>{`From: ${item.user_name.university} `}</p>
-                        <p>{`Degree: ${item.user_name.bachelor} `}</p>
+                        <p>{`Degree: ${handleDegree(item.user_name)} `}</p>
                     </List.Item>
                 )}
             />

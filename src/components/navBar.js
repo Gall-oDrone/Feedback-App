@@ -89,6 +89,7 @@ class NavMenu extends React.Component {
         <NavItem icon={<BellIcon />} unviews={this.props.unviews} username={this.props.username}>
           <NotificationHeaderMenu/>
         </NavItem>
+        {/* <NavItem  icon={<MessengerIcon />}/> */}
       </Navbar>
     );
   }

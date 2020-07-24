@@ -221,18 +221,39 @@ class ProfileInfoSerializer(serializers.ModelSerializer):
     def update_account_info(self, request):
         data = request.data
         print('update_account_info data: ')
-        print(data)
-        profile = ProfileInfo(profile_username= User.objects.get(self.request.data.get("profile_username")).id)
-        profile.name = self.request.data.get("name"),
-        profile.country = self.request.data.get("country"),
-        profile.university = self.request.data.get("university"),
-        profile.graduate = self.request.data.get("graduate"),
-        profile.undergraduate = self.request.data.get("undergraduate"),
-        profile.work_experience = self.request.data.get("work_experience"),
-        profile.website = self.request.data.get("website"),
-        profile.message = self.request.data.get("message"),
-        profile.github = self.request.data.get("github")
-        profile.save()
+        print(data, data.get("profile_username"))
+        username = User.objects.get(username="q")
+        print(username)
+        profile = ProfileInfo.objects.get(profile_username = username)
+        # profile.country = data.get("country"),
+        # profile.name = data.get("name"),
+        if(data.get("university") != None):
+            profile.university = Universities.objects.get(university=data.get("university"))
+        if(data.get("attendace") != None):
+            profile.attendace = data.get("attendace")
+        if(data.get("degree") != None):
+            profile.degree = Degree.objects.get(degree=data.get("degree"))
+        if(data.get("bachelor") != None):
+            profile.bachelor = Bachelor(bachelor_degree=data.get("bachelor"))
+        if(data.get("master") != None):
+            profile.master = Master.objects.get(master_degree=data.get("master"))
+        if(data.get("doctorate") != None):
+            profile.doctorate = Doctorate.objects.get(pHd_degree=data.get("doctorate"))
+
+        profile.course = Course.objects.get(course=data.get("course"))
+
+        if(data.get("graduate") != None):
+            profile.graduate = data.get("graduate")
+        if(data.get("undergraduate") != None):
+            profile.undergraduate = data.get("undergraduate")
+        if(data.get("postgraduate") != None):
+            profile.postgraduate = data.get("postgraduate")
+            
+        profile.work_experience = data.get("experience")
+        profile.website = data.get("website")
+        profile.message = data.get("message")
+        profile.github = data.get("github")
+        œ
         return profile
 
 class ProfilePageSerializer(serializers.ListSerializer):
