@@ -18,7 +18,7 @@ import { Badge } from 'antd';
 import WebSocketInstance from "../NTFNwebsocket";
 // import { CSSTransition } from 'react-transition-group';
 
-import ResponsiveNavigation from './navBar2';
+import ResponsiveNavigation from './navBar3';
 import '../assets/navBar2.css';
 
 function Corso() {

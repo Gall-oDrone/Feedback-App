@@ -5,53 +5,17 @@ import { Menu, Card, Button, DatePicker, TimePicker, Form, Modal, Skeleton, mess
 import { Link, withRouter } from "react-router-dom";
 import Checkout from "../components/MeetingCheckout";
 import {getProfileAccountInfo, putProfileAccountInfo} from "../store/actions/profileUserInfo";
-import {profilePageURL} from "../constants"
-import MessengerBox from "../components/MessengerBox";
-import "../assets/session.css";
-import countryList from 'react-select-country-list';
+import {profilePageURL} from "../constants";
+import  Popup from "../chat_containers/Popup"
+import  Profile from "../chat_containers/Profile"
+import  Chat from "../chat_containers/Messenger"
+import "../assets/popupChatWindow.css";
 
-const pStyle = {
-  fontSize: 16,
-  color: 'rgba(0,0,0,0.85)',
-  lineHeight: '24px',
-  display: 'block',
-  marginBottom: 16,
-};
-
-const options2 = countryList().getData();
-const universities = [
-  {
-    value: 'ITAM',
-    label: 'Instituto Autónomo Tecnológico de México (ITAM)'
-  },
-  {
-    value: 'Center of Teaching and Research in Economics',
-    label: 'Centro de Investigación y Docencias Económicas (CIDE)'
-  },
-  {
-    value: 'COLMEX',
-    label: 'El Colegio de México (COLMEX)'
-  },
-  {
-    value: 'TEC_MONTERREY',
-    label: 'Instituto Tecnológico y de Estudios Superiores de Monterrey (ITESM)'
-  },
-  {
-    value: 'IBERO',
-    label: 'Universidad Iberoamericana (IBERO)'
-  },
-  {
-    value: 'Massachusetts Institute of Technology',
-    label: 'Massachusetts Institute of Technology (MIT)'
-  }
-]
-
-class ArticleDetail extends React.Component {
+class MessengerBox extends React.Component {
 
     state = {
         username: null,
         university: null,
-        country: options2,
         academic_status: null,
         academic_degree: null,
         bachelors_degree: null,
@@ -63,14 +27,23 @@ class ArticleDetail extends React.Component {
         website: null,
         work_experience: null,
         open_messenger: false,
+        showPopup: "none",
         visible: false,
     };
 
-    handleSendMessage = e => {
+    handleOpenMessenger = e => {
       this.setState({
         open_messenger: true,
+        showPopup: "inline-flex"
     });
     }
+
+    handleCloseMessenger = e => {
+    this.setState({
+      open_messenger: false,
+      showPopup: "none"
+  });
+  }
 
     handleClick = e => {
         console.log('click ', e);
@@ -93,17 +66,6 @@ class ArticleDetail extends React.Component {
         });
       };
 
-      handleCountryChange = value => {
-        console.log('Country changed', value);
-        // this.setState({ country: value[0] })
-        Object.values(options2).map((k) => {
-          // console.log(JSON.stringify(k))
-          if(k.value === value){
-            return k.label
-          } 
-        })
-        return value
-      }
     
       handleWebsiteChange = value => {
         let autoCompleteResult;
@@ -113,17 +75,6 @@ class ArticleDetail extends React.Component {
           autoCompleteResult = ['.com', '.org', '.net'].map(domain => `${value}${domain}`);
         }
         this.setState({ autoCompleteResult });
-      };
-    
-      handleUniversityChange = val => {
-        var lab = null
-        Object.values(universities).map((k, i) => {
-          if(k.value === val){
-            this.lab = val
-            return
-          } 
-        })
-        return this.lab
       };
     
       handleBachelorChange = val => {
@@ -277,79 +228,37 @@ class ArticleDetail extends React.Component {
     render() {
         console.log('this.PROPS: ' + JSON.stringify(this.props))
         console.log("this.state: " + this.state, this.state.orderId)
-        const { UserAccountInfo} = this.props.profileIA;
+        const { profileIA:{UserAccountInfo}, match:{ params: {user}}} = this.props;
         const { 
-        username,
-        university,
-        country,
-        academic_status,
-        academic_degree,
-        bachelors_degree,
-        masters_degree,
-        phD_degree,
-        course,
-        profile_avatar,
-        message,
-        website,
-        work_experience,
-        open_messenger,
-        visible, orderId, loading } = this.state
+          showPopup,
+          open_messenger,
+          loading } = this.state
         return (
             <div>
-                <Card title={username}>
-                    <Row type="flex" style={{ alignItems: 'center' }} justify="center">
-                        <Col span={12}>
-                          <Row type="flex" style={{ alignItems: 'center' }} justify="center">
-                            <div id="session-div-2">
-                            <img
-                                className="contain"
-                                alt="logo"
-                                src={`http://127.0.0.1:8000${profile_avatar}`}
-                            />
-                            </div>
-                            </Row>
-                            <Row type="flex" style={{ alignItems: 'center' }} justify="center">
-                              <Button onClick={() => this.handleSendMessage()}>
-                                Send Message
-                              </Button>
-                            </Row>
-                        </Col>
-                        <Col span={12}>
-                          <div>
-                              <p style={pStyle}>Basic Information</p>
-                              <p>{username}</p>
-                              {/* <p>{country}</p> */}
-                              <p>{message}</p>
+              <button className="open-button" onClick={()=>this.handleOpenMessenger()}>Chat</button>
+                {open_messenger === true ?
+                  <div className="form-popup" style={{display:`${showPopup}`}} id="myForm">
+                      <div className="form-container">
+                        <div id="chat-frame">
+                          <div className="chat-content">
+                            <Profile recipient={user}/>
+                            <Chat recipient={user} />
+                          </div>
+                        </div>
 
-                              <Divider />
-                              <p style={pStyle}>Academic Information</p>
-                              <p>University: {university}</p>
-                              <p>{academic_status}</p>
-                              <p>Degree: {academic_degree}</p>
-                              <p>{bachelors_degree}</p>
-                              <p>{masters_degree}</p>
-                              <p>{phD_degree}</p>
-                              <p>Course: {course}</p>
+                          {/* <label ><b>Message</b></label>
+                          <textarea placeholder="Type message.." name="msg" required></textarea>
 
-                              <Divider />
-                              <p style={pStyle}>Working experience</p>
-                              <p>Website: {website}</p>
-                              <p>Experience: {work_experience}</p>
-                              </div>
-                        </Col>
-                    </Row>
-                    <MessengerBox/>
-                </Card>
-                  {/* {open_messenger === true ? (
-                    <MessengerBox/>
-                  ):(null)} */}
+                          <button type="submit" className="btn">Send</button> */}
+                          <button type="button" className="btn cancel" onClick={()=>this.handleCloseMessenger()}>Close</button>
+                      </div>
+                  </div> 
+                  :null
+                }
             </div>
-            
         )
     }
 }
-
-const WrappedArticleCreate = Form.create()(ArticleDetail);
 
 const mapStateToProps = state => {
     return {
@@ -367,4 +276,4 @@ const mapDispatchToProps = dispatch => {
     };
   };
 
-export default withRouter(connect(mapStateToProps,mapDispatchToProps)(WrappedArticleCreate));
+export default withRouter(connect(mapStateToProps,mapDispatchToProps)(MessengerBox));

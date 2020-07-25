@@ -35,6 +35,26 @@ class WebSocketService {
     } else { return}
   }
 
+  connect_messenger(chatUrl) {
+    if(chatUrl != null || chatUrl != undefined){
+      const path = `${SOCKET_URL}/ws/chat/${chatUrl}/`;
+      this.socketRef = new WebSocket(path);
+      this.socketRef.onopen = () => {
+        console.log("WebSocket open");
+      };
+      this.socketRef.onmessage = e => {
+        this.socketNewMessage(e.data);
+      };
+      this.socketRef.onerror = e => {
+        console.error(e.message);
+      };
+      this.socketRef.onclose = () => {
+        console.log("WebSocket closed let's reopen");
+        this.connect();
+      };
+    } else { return}
+  }
+
   disconnect() {
     if( this.socketRef != null){
       this.socketRef.close();
@@ -46,9 +66,11 @@ class WebSocketService {
     const command = parsedData.command;
     console.log("NM, parsed", parsedData)
     if (Object.keys(this.callbacks).length === 0) {
-      return;
+      console.log("NNT 1")
+      // return;
     }
     if (command === "messages") {
+      console.log("NNT 2")
       this.callbacks[command](parsedData.messages);
     }
     if (command === "new_message") {
@@ -72,10 +94,29 @@ class WebSocketService {
     });
   }
 
+  fetchMesengerMessages(username, recipient, chatId) {
+    this.sendMessage({
+      command: "fetch_messages",
+      username: username,
+      to: recipient,
+      chatId: chatId
+    });
+  }
+
   newChatMessage(message) {
     this.sendMessage({
       command: "new_message",
       from: message.from,
+      message: message.content,
+      chatId: message.chatId
+    });
+  }
+
+  newMesengerMessage(message) {
+    this.sendMessage({
+      command: "new_message",
+      from: message.from,
+      to: message.to,
       message: message.content,
       chatId: message.chatId
     });
@@ -143,7 +184,7 @@ class WebSocketService {
     try {
       this.socketRef.send(JSON.stringify({ ...data }));
     } catch (err) {
-      console.log(err.message);
+      console.error(err.message);
     }
   }
 

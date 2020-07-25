@@ -48,8 +48,18 @@ class Profile extends React.Component {
   };
 
   componentDidMount() {
-    this.handleFetchDetailChat()
-    this.handleFetchChatStatus()
+    if(this.props.params !== undefined && this.props.params !== null){
+      this.handleFetchDetailChat()
+      this.handleFetchChatStatus()
+    } 
+    else if (this.props.recipient !== undefined && this.props.recipient !== null){
+      var others = [null];
+      others.push(this.props.recipient)
+      this.setState({
+        chatParts: others,
+      });
+    }
+    
   }
   
   handleFetchDetailChat = () => {
@@ -73,7 +83,7 @@ class Profile extends React.Component {
       })
       .catch(err => {
         this.setState({ error: err, loading: false });
-        console.error(err)
+        console.error("ERROR", err)
       });
   };
 
@@ -133,9 +143,10 @@ class Profile extends React.Component {
   );
 
   render() {
-    console.log("0: ", this.props)
+    console.log("0 PROPS: ", this.props)
+    console.log("1 STATE: ", this.state, this.state.chatParts)
     if (this.props.token === null) {
-      return <Redirect to="/" />;
+      return <Redirect to="/login" />;
     }
     return (
       <div className="contact-profile">

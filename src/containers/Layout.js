@@ -6,7 +6,8 @@ import * as actions from "../store/actions/auth";
 import ProfileHeaderMenu from "../components/ProfileHeaderMenu"
 import NotificationHeaderMenu from "../components/NotificationHeaderMenu"
 import NavMenu from "../components/navBar";
-import NavMenu2 from "../components/navBarWrapper";
+import NavMenu2 from "../components/navBar2";
+import NavMenu3 from "../components/navBarWrapper";
 import { ReactComponent as BellIcon } from '../icons/bell.svg';
 import {getProfileAccountDetail} from "../store/actions/profileAccountInfo"
 import CreateHeaderMenu from "../components/CreateHeaderMenu";
@@ -138,8 +139,11 @@ class CustomLayout extends React.Component {
                 <Menu.Item key="9" style= {{float: 'right', paddingLeft: "15px", paddingRight: "15px"}}>
                     <CreateHeaderMenu/>
                 </Menu.Item>
-                <Menu.Item key="" style= {{float: 'right'}}>
-                  <NavMenu/>
+                <Menu.Item key="10" style= {{float: 'right'}}>
+                    <NavMenu/>
+                </Menu.Item>
+                <Menu.Item key="11" style= {{float: 'right'}}>
+                    <NavMenu2/>
                 </Menu.Item>
                 
           </Menu> 

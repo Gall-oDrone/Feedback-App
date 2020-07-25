@@ -3,88 +3,40 @@ from asgiref.sync import async_to_sync
 from channels.generic.websocket import WebsocketConsumer
 import json
 from .models import Message, Chat, Contact, Callers, Callees
-from .views2 import get_last_10_messages, get_user_contact, get_current_chat
+from .views2 import get_last_10_messages, get_user_contact, get_current_chat, get_last_5_messages, update_user_notifications, load_more, get_views
 
 User = get_user_model()
 
 
-class ChatConsumer(WebsocketConsumer):
+class ChatConsumer3(WebsocketConsumer):
 
     def fetch_messages(self, data):
-        if("chatId" not in data):
-            try:
-                print("fetch_messages TRY")
-                from_user_contact = get_user_contact(data['username'])
-                to_user_contact = get_user_contact(data['to'])
-                checker = Chat.objects.filter(participants=from_user_contact.id).filter(participants=to_user_contact.id)
-                messages = get_last_10_messages(checker.values("id")[0].get("id"))
-                print(messages)
-                content = {
-                    'command': 'messages',
-                    'messages': self.messages_to_json(messages),
-                    'room_id': checker.values("id")[0].get("id")
-                }
-            except Exception as e:
-                print("fetch_messages EXCEPT: ", e.message, type(e))
-                content = {
-                    'command': 'messages',
-                    'messages': ""
-                }
-        else:
-            messages = get_last_10_messages(data['chatId'])
-            content = {
-                'command': 'messages',
-                'messages': self.messages_to_json(messages)
-            }
-        print("sending message back to client")
-        self.send_message(content)
-        
-
-    def new_message(self, data):
-        if("chatId" in data):
-            user_contact = get_user_contact(data['from'])
-            room_id = Chat.objects.get(id=data['chatId'])
-            message = Message.objects.create(
-                contact=user_contact,
-                content=data['message'],
-                room=room_id)
-            current_chat = get_current_chat(data['chatId'])
-        else: 
-            contact, created = Contact.objects.get_or_create(user=User.objects.get(username=data['from']))
-            print("ramiro 1", contact.friends.values())
-            contact_friends_list = [x["user_id"] for x in (contact.friends.values())]
-            print("ramiro 2", contact_friends_list)
-            print("ramiro 4", contact.contacts)
-            from_user = User.objects.get(username=data['from'])
-            to_user = User.objects.get(username=data['to'])
-            from_user_contact = get_user_contact(data['from'])
-            to_user_contact = get_user_contact(data['to'])
-            if(to_user.id not in contact_friends_list):
-                user_contact, created = Contact.objects.get_or_create(user=User.objects.get(username=data['to']))
-                contact.friends.add(user_contact)   
-                current_chat = Chat()
-                current_chat.save()
-                current_chat.participants.add(contact)
-                current_chat.participants.add(user_contact)
-                current_chat.save()
-            else:
-                checker = Chat.objects.filter(participants=from_user_contact.id).filter(participants=to_user_contact.id)
-                print(checker)
-                print(checker.values(), checker.values("id"), checker.values("id")[0])
-                if(len(checker) > 0):
-                    current_chat = Chat.objects.get(id=checker.values("id")[0].get("id"))
-            message = Message.objects.create(
-                contact=from_user_contact,
-                content=data['message'],
-                room=current_chat)
-        if(data['message'] not in self.message_to_json(message)):
-            current_chat.messages.add(message)
-            current_chat.save()
+        messages = get_last_10_messages(data['chatId'])
         content = {
-            'command': 'new_message',
-            'message': self.message_to_json(message)
+            'command': 'messages',
+            'messages': self.messages_to_json(messages)
         }
-        return self.send_chat_message(content)
+        self.send_message(content)
+
+    def update_messages(self, data):
+        update_message = update_user_messagess(data['username'])
+    
+    def message_views(self, data):
+        unviews = get_views(data['username'])
+        content = {
+            'command': 'unviews',
+            'unviews': {'unview': unviews}
+        }
+        self.send_message(content)
+
+    def more_messages(self, data):
+        ntfns, hasMore = load_more(data)
+        print("FUCKNESS", ntfns, hasMore)
+        content = {
+            'command': 'notifications',
+            'messages': {'messages':self.messages_to_json(messages), 'hasMore': hasMore}
+        }
+        self.send_message(content)
 
     def messages_to_json(self, messages):
         result = []
@@ -146,7 +98,6 @@ class ChatConsumer(WebsocketConsumer):
         for p in participants:
             ps.append(p.user.username)
         content = {
-            'command': 'new_message',
             'message': self.get_parts_to_json(ps)
         }
         return self.send_chat_message(content)
@@ -178,7 +129,7 @@ class ChatConsumer(WebsocketConsumer):
         current_chat.callerCandidates.add(caller_candidate)
         current_chat.save()
         content = {
-            'command': 'new_message',
+            # 'command': 'new_message',
             'to': data['to'],
             'message': self.candidate_to_json2(data["message"])
         }
@@ -201,7 +152,7 @@ class ChatConsumer(WebsocketConsumer):
         current_chat.answer = data['message']
         current_chat.save()
         content = {
-            'command': 'new_message',
+            # 'command': 'new_message',
             'to': data['to'],
             'message': self.offer_answer_to_json(current_chat.answer)
         }
@@ -212,7 +163,7 @@ class ChatConsumer(WebsocketConsumer):
         current_chat.offer = data['message']
         current_chat.save()
         content = {
-            'command': 'new_message',
+            # 'command': 'new_message',
             'to': data['to'],
             'message': self.offer_answer_to_json(current_chat.offer)
         }
@@ -221,7 +172,7 @@ class ChatConsumer(WebsocketConsumer):
     def add_media(self, data):
         current_chat = get_current_chat(data['chatId'])
         content = {
-            'command': 'new_message',
+            # 'command': 'new_message',
             'message': data
         }
         return self.send_chat_message(content)
@@ -233,7 +184,7 @@ class ChatConsumer(WebsocketConsumer):
         set_video_room_status(current_chat, False)
         current_chat.save()
         content = {
-            'command': 'new_message',
+            # 'command': 'new_message',
             'message': data
         }
         return self.send_chat_message(content)
@@ -244,7 +195,6 @@ class ChatConsumer(WebsocketConsumer):
     
     commands = {
         'fetch_messages': fetch_messages,
-        'new_message': new_message,
         "media": add_media,
         'offer': add_offer,
         'answer': add_answer,
@@ -259,7 +209,6 @@ class ChatConsumer(WebsocketConsumer):
 
     def connect(self):
         self.room_name = self.scope['url_route']['kwargs']['room_name']
-        print("RAMIRO: ", self.room_name)
         self.room_group_name = 'chat_%s' % self.room_name
         async_to_sync(self.channel_layer.group_add)(
             self.room_group_name,
@@ -268,7 +217,7 @@ class ChatConsumer(WebsocketConsumer):
         self.accept()
 
     def disconnect(self, close_code):
-        ws, prefix, label = self.scope['path'].strip('/').split('/')
+        ws, prefix, snd_prefix, label = self.scope['path'].strip('/').split('/')
         data = {'chatId': label}
         self.disconnect_room(data)
 

@@ -97,23 +97,32 @@ class UserProfileInfo extends React.Component {
     this.props.form.validateFields((err, values) => {
       console.log("handleFormSubmit values: ", JSON.stringify(values));
       const university = 
-        values["university"] === undefined ? null : values["university"][0];
+        values["university"] === undefined 
+        || values["university"][0] === UserAccountInfo.university ? null : values["university"][0];
       const attendace = 
-        values["attendace"] === undefined ? null : values["attendace"];
+        values["attendace"] === undefined 
+        || values["attendace"] === UserAccountInfo.attendace ? null : values["attendace"];
       const degree = 
-        values["degree"] === undefined ? null : values["degree"];
+        values["degree"] === undefined 
+        || values["degree"] === UserAccountInfo.degree ? null : values["degree"];
       const bachelor = 
-        values["bachelor"] === undefined ? null : values["bachelor"][0];
+        values["bachelor"] === undefined 
+        || values["bachelor"][0] === UserAccountInfo.bachelor ? null : values["bachelor"][0];
       const master = 
-        values["master"] === undefined ? null : values["master"][0];
+        values["master"] === undefined 
+        || values["master"][0] === UserAccountInfo.master ? null : values["master"][0];
       const doctorate = 
-        values["doctorate"] === undefined ? null : values["doctorate"][0];
+        values["doctorate"] === undefined 
+        || values["doctorate"][0] === UserAccountInfo.doctorate ? null : values["doctorate"][0];
       const course = 
-        values["course"] === undefined ? null : values["course"][0];
+        values["course"] === undefined 
+        || values["course"][0] === UserAccountInfo.course ? null : values["course"][0];
       const website = 
-        values["website"] === undefined ? null : values["website"];
+        values["website"] === undefined 
+        || values["website"] === UserAccountInfo.website ? null : values["website"];
       const experience = 
-        values["work-experience"] === undefined ? null : values["work-experience"];
+        values["work-experience"] === undefined 
+        || values["experience"] === UserAccountInfo.experience ? null : values["work-experience"];
 
       const postObj = {
         profile_username: this.props.username,
@@ -293,6 +302,8 @@ class UserProfileInfo extends React.Component {
       if (this.props.token !== undefined && this.props.token !== null) {
         this.props.getProfileInfo(this.props.token, this.props.username)
         this.fetchData()
+      } else {
+        this.props.history.push('/');
       }
     }    
   }

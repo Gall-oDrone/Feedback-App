@@ -2,27 +2,34 @@ import React from "react";
 import { connect } from "react-redux";
 import WebSocketInstance from "../websocket";
 import Hoc from "../hoc/hoc";
-import {Icon} from "antd"
-import "../assets/style.css";
+import {Icon} from "antd";
+import * as messageActions from "../store/actions/message";
+// import "../assets/style.css";
 
-class Chat extends React.Component {
+class Messenger extends React.Component {
   state = { message: "" };
 
   initialiseChat() {
     this.waitForSocketConnection(() => {
-      WebSocketInstance.fetchMessages(
+      WebSocketInstance.fetchMesengerMessages(
         this.props.username,
+        this.props.recipient,
         this.props.params
       );
     });
     // WebSocketInstance.connect(this.props.match.params.chatID);
-    WebSocketInstance.connect(this.props.params);
+    WebSocketInstance.connect_messenger(this.props.username);
   }
 
   constructor(props) {
     super(props);
+    WebSocketInstance.addCallbacks(
+      this.props.setMessages.bind(this),
+      this.props.addMessage.bind(this),
+      this.props.setRoomStatus.bind(this),
+    );
     console.log("1: ", this.props)
-    if(this.props.params !== undefined){
+    if(this.props.username !== undefined){
       this.initialiseChat();
     }
     // if(this.props.match !== undefined){
@@ -57,7 +64,7 @@ class Chat extends React.Component {
       chatId: this.props.params
       //chatId: this.props.match.params.chatID
     };
-    WebSocketInstance.newChatMessage(messageObject);
+    WebSocketInstance.newMesengerMessage(messageObject);
     this.setState({ message: "" });
     this.scrollToBottom();
   };
@@ -88,7 +95,17 @@ class Chat extends React.Component {
   renderMessages = messages => {
     const currentUser = this.props.username;
     console.log("A: ", messages)
+    // const message2= [{id: 624, author: "q", content: "la ratamarimachez del ratamarimacho t4", timestamp: "2020-07-03 23:30:58.815302"},
+    //                 {id: 625, author: "w", content: "t5", timestamp: "2020-07-03 23:30:58.815302"},
+    //                 {id: 626, author: "q", content: "t6", timestamp: "2020-07-03 23:30:58.815302"},
+    //                 {id: 627, author: "w", content: "t7", timestamp: "2020-07-03 23:30:58.815302"},
+    //                 {id: 628, author: "q", content: "FC C Klaus has his own family 🤣🤣🤣", timestamp: "2020-07-03 23:30:58.815302"},
+    //                 {id: 629, author: "w", content: "t9", timestamp: "2020-07-03 23:30:58.815302"},
+    //                 {id: 630, author: "q", content: "la ratamarimachez del ratamarimacho  t10", timestamp: "2020-07-03 23:30:58.815302"},
+    //                 {id: 631, author: "w", content: "t11", timestamp: "2020-07-03 23:30:58.815302"}]
     return messages.map((message, i, arr) => (
+      // return Object.values(message2).map((message, i, arr)=> {
+      //   return(
       <li
         key={message.id}
         // style={{ display: "block", marginBottom: arr.length - 1 === i ? "300px" : "15px" }}
@@ -105,6 +122,7 @@ class Chat extends React.Component {
         </p>
       </li>
     ));
+      // )})
   };
 
   scrollToBottom = () => {
@@ -128,32 +146,24 @@ class Chat extends React.Component {
 
   componentWillReceiveProps(newProps) {
     // if (this.props.match.params.chatID !== newProps.match.params.chatID) {
-    if (this.props.params !== newProps.params) {
-      console.log("ELG 2", this.props.params, newProps.params)
-      WebSocketInstance.disconnect();
-      this.waitForSocketConnection(() => {
-        WebSocketInstance.fetchMessages(
-          newProps.username,
-          newProps.params
-          // newProps.match.params.chatID
-        );
-      });
-      WebSocketInstance.connect(newProps.params);
-      // WebSocketInstance.connect(newProps.match.params.chatID);
-    } else {
-      console.log("ELG", this.props.params, newProps.params)
-      WebSocketInstance.disconnect();
-      WebSocketInstance.connect(this.props.params);
-      // WebSocketInstance.disconnect();
-      // this.waitForSocketConnection(() => {
-      //   WebSocketInstance.fetchMessages(
-      //     this.props.username,
-      //     this.props.params
-      //     // newProps.match.params.chatID
-      //   );
-      // });
-      // WebSocketInstance.connect(this.props.params);
-    }
+    // if (this.props.params !== newProps.params) {
+    //   console.log("ELG 2", this.props.params, newProps.params)
+    //   WebSocketInstance.disconnect();
+    //   this.waitForSocketConnection(() => {
+    //     WebSocketInstance.fetchMesengerMessages(
+    //       newProps.username,
+    //       newProps.recipient,
+    //       newProps.params
+    //       // newProps.match.params.chatID
+    //     );
+    //   });
+    //   WebSocketInstance.connect_messenger(newProps.username);
+    //   // WebSocketInstance.connect(newProps.match.params.chatID);
+    // } else {
+    //   console.log("ELG", this.props.params, newProps.params)
+    //   WebSocketInstance.disconnect();
+    //   WebSocketInstance.connect_messenger(this.props.username);
+    // }
   }
 
   render() {
@@ -203,4 +213,17 @@ const mapStateToProps = state => {
   };
 };
 
-export default connect(mapStateToProps)(Chat);
+const mapDispatchToProps = dispatch => {
+  return {
+    addMessage: message => dispatch(messageActions.addMessage(message)),
+    setMessages: messages => dispatch(messageActions.setMessages(messages)),
+    setRoomStatus: status => dispatch(messageActions.setStatus(status)),
+  };
+};
+
+// export default connect(mapStateToProps, mapDispatchToProps)(Messenger);
+export default 
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )(Messenger);

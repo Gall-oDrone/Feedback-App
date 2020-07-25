@@ -39,12 +39,27 @@ class ChatParticipantsView(ListAPIView):
 
     def get_object(self, **kwargs):
         chatId = self.kwargs.get('pk')
+        print("BULOCK")
         par = Contact.objects.filter(chats=chatId)
         pars = []
         for p in par:
             pars.append(p.user)
-        print(pars)
+        print("PARS: ", pars, par)
         return par
+
+# class ChatParticipantsView(ListAPIView):
+    # queryset = Contact.objects.all()
+    # serializer_class = Participants
+    # permission_classes = (permissions.AllowAny, )
+
+    # def get_object(self, **kwargs):
+    #     chatId = self.kwargs.get('pk')
+    #     par = Contact.objects.filter(chats=chatId)
+    #     pars = []
+    #     for p in par:
+    #         pars.append(p.user)
+    #     print(pars)
+    #     return par
 
 class ChatStatusView(RetrieveAPIView):
     queryset = Chat.objects.all()

@@ -226,7 +226,18 @@ class ProfileInfoSerializer(serializers.ModelSerializer):
         print(username)
         profile = ProfileInfo.objects.get(profile_username = username)
         # profile.country = data.get("country"),
-        # profile.name = data.get("name"),
+        if(data.get("experience") != None):
+            profile.name = data.get("name"),
+        if(data.get("experience") != None):
+            profile.work_experience = data.get("experience")
+        if(data.get("website") != None):
+            profile.website = data.get("website")
+        if(data.get("message") != None):
+            profile.message = data.get("message")
+        if(data.get("github") != None):
+            profile.github = data.get("github")
+
+        profile.save()
         if(data.get("university") != None):
             profile.university = Universities.objects.get(university=data.get("university"))
         if(data.get("attendace") != None):
@@ -239,9 +250,8 @@ class ProfileInfoSerializer(serializers.ModelSerializer):
             profile.master = Master.objects.get(master_degree=data.get("master"))
         if(data.get("doctorate") != None):
             profile.doctorate = Doctorate.objects.get(pHd_degree=data.get("doctorate"))
-
-        profile.course = Course.objects.get(course=data.get("course"))
-
+        if(data.get("course") != None):
+            profile.course = Course.objects.get(course=data.get("course"))
         if(data.get("graduate") != None):
             profile.graduate = data.get("graduate")
         if(data.get("undergraduate") != None):
@@ -249,11 +259,7 @@ class ProfileInfoSerializer(serializers.ModelSerializer):
         if(data.get("postgraduate") != None):
             profile.postgraduate = data.get("postgraduate")
             
-        profile.work_experience = data.get("experience")
-        profile.website = data.get("website")
-        profile.message = data.get("message")
-        profile.github = data.get("github")
-        œ
+        profile.save()
         return profile
 
 class ProfilePageSerializer(serializers.ListSerializer):
@@ -348,19 +354,19 @@ class testSerializer(serializers.Serializer):
     def get_master(self, obj):
         ob = []
         for d in Master.MASTER_DEGREES:
-            ob.append({"value": d[1], "label": d[0]})
+            ob.append({"value": d[0], "label": d[0]})
         obj = ob
         return obj
     def get_pHD(self, obj):
         ob = []
         for d in Doctorate.PHD_DEGREES:
-            ob.append({"value": d[1], "label": d[0]})
+            ob.append({"value": d[0], "label": d[0]})
         obj = ob
         return obj
     def get_course(self, obj):
         ob = []
         for d in Course.COURSES:
-            ob.append({"value": d[1], "label": d[0]})
+            ob.append({"value": d[0], "label": d[0]})
         obj = ob
         return obj
     # degree = StringSerializer(many=True)

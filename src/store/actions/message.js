@@ -6,6 +6,7 @@ import {
   GET_CHATS_SUCCESS
 } from "./actionTypes";
 import { HOST_URL } from "../../settings";
+import { message } from "antd";
 
 export const addMessage = message => {
   return {
@@ -15,6 +16,7 @@ export const addMessage = message => {
 };
 
 export const setMessages = messages => {
+  console.log("OH T OH T at actions: ", messages)
   return {
     type: SET_MESSAGES,
     messages: messages
