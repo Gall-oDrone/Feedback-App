@@ -99,7 +99,11 @@ function DropdownMenu(props) {
                         return(
                           <DropdownItem key={i}>
                             {/* <div className="menu-item-text"> */}
-                              <p className="menu-item-text">{el.content}</p>
+                              <div style={{display:"flex", flexDirection:"column"}}>
+                                <div>
+                                  <p style={{fontSize:"0.9em"}} className="menu-item-text">{el.content}</p>
+                                </div>
+                              </div>
                             {/* </div> */}
                           </DropdownItem>
                           )
