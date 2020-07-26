@@ -11,7 +11,7 @@ User = get_user_model()
 class ChatConsumer3(WebsocketConsumer):
 
     def fetch_messages(self, data):
-        messages = get_last_10_messages(data['chatId'])
+        messages, hasMore = get_last_5_messages(data['username'])
         content = {
             'command': 'messages',
             'messages': self.messages_to_json(messages)
@@ -45,11 +45,13 @@ class ChatConsumer3(WebsocketConsumer):
         return result
 
     def message_to_json(self, message):
+        print("CACA: ", message)
         return {
-            'id': message.id,
-            'author': message.contact.user.username,
-            'content': message.content,
-            'timestamp': str(message.timestamp)
+            'id': message["id"],
+            'author': Contact.objects.get(id=message["contact_id"]).user.username,
+            'content': message["content"],
+            'room_id': message["room_id"],
+            'timestamp': str(message["timestamp"])
         }
     
     def offer_answer_to_json(self, message):
@@ -208,7 +210,7 @@ class ChatConsumer3(WebsocketConsumer):
     }
 
     def connect(self):
-        self.room_name = self.scope['url_route']['kwargs']['room_name']
+        self.room_name = self.scope['url_route']['kwargs']['username']
         self.room_group_name = 'chat_%s' % self.room_name
         async_to_sync(self.channel_layer.group_add)(
             self.room_group_name,

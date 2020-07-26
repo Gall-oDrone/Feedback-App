@@ -33,6 +33,7 @@ import dailyRoomReducer from "./store/reducers/dailyRooms"
 import profileUserInfoReducer from "./store/reducers/profileAccountUserInfo"
 import profileAccountDetailReducer from "./store/reducers/profileAccountInfo"
 import profileNTFNListReducer from "./store/reducers/profileNTFN"
+import profileMSGSListReducer from "./store/reducers/profileMSGS"
 
 import navReducer from "./store/reducers/nav";
 import messageReducer from "./store/reducers/message";
@@ -66,6 +67,7 @@ const rootReducer = combineReducers({
   // surveyChoices: surveyChoiceReduce,
   profileSurvey: profileSurveyReducer,
   profileNTFN: profileNTFNListReducer,
+  profileMSGS: profileMSGSListReducer,
   profileInquiry: profileInquiryReducer,
 
   nav: navReducer,

@@ -12,21 +12,21 @@ import { ReactComponent as CogIcon } from '../icons/cog.svg';
 import { ReactComponent as ChevronIcon } from '../icons/chevron.svg';
 import { ReactComponent as ArrowIcon } from '../icons/arrow.svg';
 import { ReactComponent as BoltIcon } from '../icons/bolt.svg';
-import NotificationHeaderMenu from "./NotificationHeaderMenu";
+import NotificationHeaderMenu from "./MessageHeaderMenu";
 import React, { useState, useEffect, useRef } from 'react';
 import { Badge } from 'antd';
-import WebSocketInstance from "../NTFNwebsocket";
+import WebSocketInstance from "../MSGSwebsocket";
 // import { CSSTransition } from 'react-transition-group';
 
 class NavMenu extends React.Component {
 
   initialiseNTFNS() {
     this.waitForSocketConnection(() => {
-      WebSocketInstance.fetchNTFNViews(
+      WebSocketInstance.fetchMSGS(
         this.props.username,
       );
     });
-    WebSocketInstance.notification_connect(this.props.username)
+    WebSocketInstance.message_connect(this.props.username)
   }
 
   constructor(props) {
@@ -72,11 +72,11 @@ class NavMenu extends React.Component {
         if(newProps.username != undefined){
           // WebSocketInstance.disconnect();
           this.waitForSocketConnection(() => {
-            WebSocketInstance.fetchNTFNViews(
+            WebSocketInstance.fetchMSGSViews(
               newProps.username,
             );
           });
-      WebSocketInstance.notification_connect(newProps.username);
+      WebSocketInstance.message_connect(newProps.username);
       } else {
         WebSocketInstance.disconnect();
       }
@@ -87,7 +87,7 @@ class NavMenu extends React.Component {
     return (
       <Navbar>
         <NavItem icon={<MessengerIcon />} unviews={this.props.unviews} username={this.props.username}>
-          {/* <NotificationHeaderMenu/> */}
+          <NotificationHeaderMenu/>
         </NavItem>
         {/* <NavItem  icon={<MessengerIcon />}/> */}
       </Navbar>
@@ -108,10 +108,10 @@ function NavItem(props) {
 
   const handleUpdates = async () => {
     if(props.unviews != 0){
-      WebSocketInstance.updateNTFNS(
+      WebSocketInstance.updateMSGS(
         props.username,
       );
-      return( WebSocketInstance.fetchNTFNViews(
+      return( WebSocketInstance.fetchMSGSViews(
         props.username,
       ))      
     } else {

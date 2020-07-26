@@ -12,5 +12,5 @@ websocket_urlpatterns = [
     re_path(r'^ws/chat/(?P<room_name>[^/]+)/$', ChatConsumer),
     re_path(r'^ws/notification/(?P<username>[^/]+)/$', NotificationConsumer),
     re_path(r'^ws/chat/video_chat/(?P<room_name>[^/]+)/$', ChatConsumer2),
-    # re_path(r'^ws/messages/(?P<username>[^/]+)/$', ChatConsumer3),
+    re_path(r'^ws/messages/(?P<username>[^/]+)/$', ChatConsumer3),
 ]

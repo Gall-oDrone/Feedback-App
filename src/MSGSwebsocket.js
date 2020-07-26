@@ -15,7 +15,7 @@ class WebSocketService {
     this.socketRef3 = null;
   }
 
-  notification_connect(chatUrl) {
+  message_connect(chatUrl) {
     if(chatUrl != null || chatUrl != undefined){
       console.log("chatUrl is: ", chatUrl, chatUrl === null, chatUrl === undefined)
       const path = `${SOCKET_URL}/ws/messages/${chatUrl}/`;
@@ -32,7 +32,7 @@ class WebSocketService {
       };
       this.socketRef3.onclose = () => {
         console.log("WebSocket closed let's reopen");
-        this.notification_connect();
+        this.message_connect();
       };
     } else { console.log("chatUrl is: ", chatUrl)}
   }
@@ -50,7 +50,7 @@ class WebSocketService {
     if (Object.keys(this.callbacks).length === 0) {
       return;
     }
-    if (command === "notifications") {
+    if (command === "messages") {
       this.callbacks[command](parsedData.messages);
     }
     if (command === "unviews") {
@@ -98,21 +98,21 @@ class WebSocketService {
 
   fetchMSGS(username) {
     this.sendMessage({
-      command: "fetch_notifications",
+      command: "fetch_messages",
       username: username,
     });
   }
 
   updateMSGS(username) {
     this.sendMessage({
-      command: "update_notifications",
+      command: "update_messages",
       username: username,
     });
   }
 
   fetchMoreMSGS(username, offset, limit) {
     this.sendMessage({
-      command: "fetch_more_notifications",
+      command: "fetch_more_messages",
       username: username,
       offset: offset,
       limit: limit
@@ -121,7 +121,7 @@ class WebSocketService {
 
   fetchMSGSViews(username) {
     this.sendMessage({
-      command: "notification_views",
+      command: "message_views",
       username: username,
     });
   }
@@ -131,7 +131,7 @@ class WebSocketService {
   }
 
   addCallbacks(messagesCallback) {
-    this.callbacks["notifications"] = messagesCallback;
+    this.callbacks["messages"] = messagesCallback;
   }
 
   addCallbacks2(unviewsCallback) {

@@ -144,6 +144,13 @@ export const notificationDetailURL = (notificationID, username)=> `${endpoint}/n
 export const notificationUpdateURL = (notificationID, username)=> `${endpoint}/notifications/${notificationID}/detail/update/${username}/`
 export const notificationURL = (notificationID, username)=> `${endpoint}/notifications/${notificationID}/detail/delete/${username}/`
 
+export const messageListURL = (username) => `${endpoint}/chat/list/${username}/`
+export const messageListScrollerURL = (username, limit, offset) => `${endpoint}/chat/list/scroller/${username}/?limit=${limit}&offset=${offset}`
+export const messageUpdateListURL = username => `${endpoint}/chat/list/update/${username}/`
+export const messageDetailURL = (messageID, username)=> `${endpoint}/chat/${messageID}/detail/${username}/`
+export const messageUpdateURL = (messageID, username)=> `${endpoint}/chat/${messageID}/detail/update/${username}/`
+export const messageURL = (messageID, username)=> `${endpoint}/chat/${messageID}/detail/delete/${username}/`
+
 export const inquiryListURL = `${endpoint}/inquiries/list/`
 export const inquiryDetailURL = (ID)=> `${endpoint}/inquiries/${ID}`
 export const inquiryUpdateURL = (inquiryID)=> `${endpoint}/inquiries/${inquiryID}`

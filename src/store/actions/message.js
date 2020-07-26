@@ -2,6 +2,8 @@ import axios from "axios";
 import { 
   ADD_MESSAGE,
   SET_MESSAGES,
+  ADD_MSGS,
+  SET_MSGS,
   SET_STATUS,
   GET_CHATS_SUCCESS
 } from "./actionTypes";
@@ -16,9 +18,24 @@ export const addMessage = message => {
 };
 
 export const setMessages = messages => {
-  console.log("OH T OH T at actions: ", messages)
+  console.log("OH T OH T at setMessages: ", messages)
   return {
     type: SET_MESSAGES,
+    messages: messages
+  };
+};
+
+export const addMSGS = message => {
+  return {
+    type: ADD_MSGS,
+    message: message
+  };
+};
+
+export const setMSGS = messages => {
+  console.log("OH T OH T at setMSGS: ", messages)
+  return {
+    type: SET_MSGS,
     messages: messages
   };
 };
