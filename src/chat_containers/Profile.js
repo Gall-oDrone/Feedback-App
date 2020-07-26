@@ -145,9 +145,9 @@ class Profile extends React.Component {
   render() {
     console.log("0 PROPS: ", this.props)
     console.log("1 STATE: ", this.state, this.state.chatParts)
-    if (this.props.token === null) {
-      return <Redirect to="/login" />;
-    }
+    // if (this.props.token === null) {
+    //   return <Redirect to="/login" />;
+    // }
     return (
       <div className="contact-profile">
         {this.props.username !== null ? (

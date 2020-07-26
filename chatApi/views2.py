@@ -25,11 +25,11 @@ def get_last_5_messages(username):
         contact = Contact.objects.get(user=User.objects.get(username=username))
         all_messages = Contact.objects.filter(user=User.objects.get(username=username)).order_by('chats').distinct()
         chats_id_list = [x["chats"] for x in (all_messages.values("chats"))]
-        sm = Message.objects.filter(room__in=chats_id_list).exclude(contact_id=contact.id).order_by("contact_id", '-timestamp').distinct("contact_id").reverse()[:5]
+        sm = Message.objects.filter(room__in=chats_id_list).exclude(contact_id=contact.id).order_by("contact_id", 'timestamp').distinct("contact_id").reverse()[:5]
         # print("MESA 1: ", all_messages)
         # print("MESA 2: ", all_messages.values_list(flat=False))
         # print("MESA 3: ", all_messages.values("chats"))
-        print("MESA 4: ", sm.values("room_id"), sm.values("contact_id"), sm.values("content"), sm.values("content").all().count())
+        print("MESA 4: ", sm.values("room_id"), sm.values("contact_id"), sm.values("content"))
         count_all_messages = Message.objects.filter(room__in=chats_id_list).exclude(contact_id=contact.id).order_by("contact_id", '-timestamp').distinct("contact_id").count()
         first_messages = sm.values("content").count()
         hasMore = count_all_messages - first_messages

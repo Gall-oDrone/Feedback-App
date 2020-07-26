@@ -80,7 +80,7 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
-export default withRouter(
+export default (
   connect(
     mapStateToProps,
     mapDispatchToProps
