@@ -13,7 +13,8 @@ from .views import (
     UserViewSet,
     Degrees_and_CoursesView,
     UniView,
-    DegView
+    DegView,
+    ActivateView
     # BachelorView,
     # MasterView,
     # DoctorateView,
@@ -33,6 +34,7 @@ urlpatterns = [
     # path('users/', UserViewSet.as_view({'get': 'list'})),
     path('lcrequest/<pk>', UserLCRequestsView.as_view()),
     # path('friendrequest/?P<slug>[\w-]+)/$', UserFriendRequestsView.as_view()),
+    path('accounts/login/', UserProfileInfoView.as_view()),
     path('profile/account/user/info/<username>', UserProfileInfoView.as_view()),
     path('profile/account/info/<userid>', UserProfileView.as_view()),
     path('profile/info/<username>', UserMeetingInfoView.as_view()),
@@ -41,6 +43,7 @@ urlpatterns = [
     path('courses-degrees/', Degrees_and_CoursesView.as_view()),
     path('universities/', UniView.as_view()),
     path('deg/', DegView.as_view()),
+    path('activate/<str:uid>/<str:token>', ActivateView.as_view(), name='activate')
     # path('bachelor-list/', BachelorView.as_view()),
     # path('master-list/', MasterView.as_view()),
     # path('doctorate-list/', DoctorateView.as_view()),

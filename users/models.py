@@ -5,16 +5,56 @@ from django.contrib.auth.models import AbstractUser
 from django.db.models.signals import post_save
 from django_countries.fields import CountryField
 from home.settings.storage_backends import MediaStorage
+from allauth.account.signals import user_signed_up
+from django.utils.translation import ugettext_lazy as _
 
 class User(AbstractUser):
-    is_student = models.BooleanField()
-    is_teacher = models.BooleanField()
+    is_student = models.BooleanField(default=False)
+    is_teacher = models.BooleanField(default=False)
+    email = models.EmailField(unique=True, null=True)
     university = models.CharField(max_length=70, blank=True)
     partners = models.CharField(max_length=30, blank=True, null=True)
     website = models.CharField(max_length=60, blank=True, null=True)
 
+    is_active = models.BooleanField(
+        _('active'),
+        default=True,
+        help_text=_(
+            'Designates whether this user should be treated as active. '
+            'Unselect this instead of deleting accounts.'
+        ),
+    )
+    # USERNAME_FIELD = 'email'
+
     def __str__(self):
         return self.username
+    
+    def get_full_name(self):
+        return self.email
+
+    def get_short_name(self):
+        return self.email
+    # @receiver(user_signed_up)
+    # def populate_profile(sociallogin, user, **kwargs):
+
+    #     user.profile = Profile()
+
+    #     if sociallogin.account.provider == 'facebook':
+    #         user_data = user.socialaccount_set.filter(provider='facebook')[0].extra_data
+    #         picture_url = "http://graph.facebook.com/" + sociallogin.account.uid + "/picture?type=large"
+    #         email = user_data['email']
+    #         full_name = user_data['name']
+
+    #     if sociallogin.account.provider == 'google':
+    #         user_data = user.socialaccount_set.filter(provider='google')[0].extra_data
+    #         picture_url = user_data['picture']
+    #         email = user_data['email']
+    #         full_name = user_data['name']
+
+    #     user.profile.picture = picture_url
+    #     user.profile.email = email
+    #     user.profile.full_name = full_name
+    #     user.profile.save()
 
 class Universities(models.Model):
     MIT = 'Massachusetts Institute of Technology'

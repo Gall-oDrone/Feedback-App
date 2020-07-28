@@ -1,4 +1,3 @@
-
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.http import HttpResponseRedirect, Http404, JsonResponse, HttpResponse
@@ -24,6 +23,8 @@ from .serializers import (
     UniSerializer
 )
 
+from django.views import View
+
 from rest_framework.generics import (
     ListAPIView,
     RetrieveAPIView,
@@ -32,8 +33,12 @@ from rest_framework.generics import (
     RetrieveUpdateDestroyAPIView
 )
 import requests
-import json
 
+from django.contrib.auth import get_user_model, login, update_session_auth_hash
+from django.contrib.auth.forms import PasswordChangeForm
+from django.utils.encoding import force_bytes, force_text
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+from .tokens import account_activation_token
 
 class UserViewSet(viewsets.ModelViewSet):
     serializer_class = UserSerializer
@@ -347,3 +352,29 @@ class DegView(generics.ListAPIView):
     #     obj = Universities.objects.get(id= "1")
     #     print("OBJ", obj)
     #     return Response({"university": obj}, status=HTTP_200_OK)
+
+class ActivateView(View):
+    def get(self, request, uidb64, token):
+        try:
+            uid = urlsafe_base64_decode(uidb64).decode()
+            user = User.objects.get(pk=uid)
+        except(TypeError, ValueError, OverflowError, User.DoesNotExist):
+            user = None
+        if user is not None and account_activation_token.check_token(user, token):
+            # activate user and login:
+            user.is_active = True
+            user.save()
+            login(request, user)
+
+            form = PasswordChangeForm(request.user)
+            return render(request, 'activation.html', {'form': form})
+
+        else:
+            return HttpResponse('Activation link is invalid!')
+
+    def post(self, request):
+        form = PasswordChangeForm(request.user, request.POST)
+        if form.is_valid():
+            user = form.save()
+            update_session_auth_hash(request, user) # Important, to update the session with the new password
+            return HttpResponse('Password changed successfully')

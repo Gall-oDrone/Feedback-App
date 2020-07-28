@@ -14,7 +14,8 @@ import {
   Col,
 } from 'antd';
 import axios from 'axios';
-import {articleCreateURL} from "../constants"
+import {articleCreateURL} from "../constants";
+import Editor from "./Editor";
 
 const { Option } = Select;
 
@@ -188,7 +189,8 @@ class ArticleCustomForm extends React.Component {
         <Form.Item label="Content" hasFeedback>
           {getFieldDecorator('content', {
             rules: [{ required: true, message: 'Please enter a content' }],
-          })(<Input name="content" />
+          })( //<Input name="content" />
+              <Editor/>
           )}
         </Form.Item>
 

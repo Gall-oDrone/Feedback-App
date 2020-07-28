@@ -6,6 +6,10 @@ from .models import User, MeetingRequest, Universities, ProfileInfo, Profile, Un
 from django.conf import settings
 from django.core.files.storage import FileSystemStorage
 import json 
+from django.utils.encoding import force_bytes
+from django.utils.http import urlsafe_base64_encode
+from .tokens import account_activation_token
+from django.core.mail import EmailMessage
 
 class StringSerializer(serializers.StringRelatedField):
     def to_internal_value(self, value):
@@ -21,6 +25,7 @@ class CustomRegisterSerializer(RegisterSerializer):
     is_student = serializers.BooleanField()
     is_teacher = serializers.BooleanField()
     university = serializers.CharField(max_length=50, allow_blank=True)
+    print("EHMARIMACHO 0")
 
     class Meta:
         model = User
@@ -45,6 +50,7 @@ class CustomRegisterSerializer(RegisterSerializer):
         user.is_student = self.cleaned_data.get('is_student')
         user.is_teacher = self.cleaned_data.get('is_teacher')
         user.university = self.cleaned_data.get('university')
+        print("EHMARIMACHO 1")
         user.save()
         adapter.save_user(request, user, self)
 
@@ -55,6 +61,19 @@ class CustomRegisterSerializer(RegisterSerializer):
         self.add_fields(self.cleaned_data.get('university'),0, profile_info)
         # profile_info.university = Universities.objects.get(university=self.cleaned_data.get('university'))
         profile_info.save()
+
+        # Send an email to the user with the token:
+        print("EHMARIMACHO 2")
+        mail_subject = 'Activate your account.'
+        current_site = get_current_site(request)
+        uid = urlsafe_base64_encode(force_bytes(user.pk)).decode()
+        token = account_activation_token.make_token(user)
+        activation_link = "{0}/?uid={1}&token{2}".format(current_site, uid, token)
+        message = "Hello {0},\n {1}".format(user.username, activation_link)
+        to_email = "gallodiego117@gmail.com" #form.cleaned_data.get('email')
+        email = EmailMessage(mail_subject, message, to=[to_email])
+        email.send()
+        return HttpResponse('Please confirm your email address to complete the registration')
 
         return user
     
