@@ -85,7 +85,7 @@ const getProfileAccountDetailFail = error => {
 
 export const getProfileAccountDetail = (token, userId) => {
     return dispatch => {
-      console.log(" getProfileAccountDetail ")
+      console.log("getProfileAccountDetail")
         // dispatch(getMeetingDetailStart());
         axios.defaults.headers = {
             "Content-Type": "application/json",

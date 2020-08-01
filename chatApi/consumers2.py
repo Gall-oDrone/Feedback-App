@@ -215,7 +215,7 @@ class ChatConsumer2(WebsocketConsumer):
         self.accept()
 
     def disconnect(self, close_code):
-        ws, prefix, snd_prefix, label = self.scope['path'].strip('/').split('/')
+        ws, prefix, label = self.scope['path'].strip('/').split('/')
         data = {'chatId': label}
         self.disconnect_room(data)
 

@@ -5,30 +5,73 @@ from allauth.account.models import EmailAddress
 from allauth.exceptions import ImmediateHttpResponse
 from allauth.socialaccount.adapter import DefaultSocialAccountAdapter
 
+from allauth.socialaccount.providers.google.views import GoogleOAuth2Adapter
+from allauth.socialaccount.providers.google.provider import GoogleProvider
+from .providers import GoogleProviderMod
+from .serializers import send_verification_email
+# from google.auth.transport import requests
+# from google.oauth2 import id_token
 
 class MyAdapter(DefaultSocialAccountAdapter):
     def pre_social_login(self, request, sociallogin):
+        print("CANGREJO 2", sociallogin.user, sociallogin.user.id, sociallogin.user.email)
         # This isn't tested, but should work
         user = sociallogin.user
-        if user.id:
-            print("not id")
+        # social account already exists, so this is just a login
+        if sociallogin.is_existing:
+            print("sociallogin.is_existing")
             return
-        if not user.email:
-            print("not email")
+
+        # some social logins don't have an email address
+        if not sociallogin.email_addresses:
+            print("not sociallogin.email_addresses")
             return
+
+        # find the first verified email that we get from this sociallogin
+        verified_email = None
+        for email in sociallogin.email_addresses:
+            if email.verified:
+                verified_email = email
+                break
+
+        # no verified emails found, nothing more to do
+        if not verified_email:
+            print("not verified_email")
+            return
+
+        # check if given email address already exists as a verified email on
+        # an existing user's account
         try:
-            # print("LA RATA 2: ", sociallogin.email_addresses)
-            # print("LA RATA 3: ", sociallogin.user, type(sociallogin.user), sociallogin.user.id, sociallogin.user.email, type(sociallogin.user.email), sociallogin.user.email == "")
-            user = User.objects.get(email=sociallogin.user.email)
-            sociallogin.state['process'] = 'connect'                
-            perform_login(request, user, 'none')
-            # sociallogin.connect(request, user)
-            # Create a response object
-            # raise ImmediateHttpResponse(response)
-        except User.DoesNotExist:
-            pass
+            print("Try existing_email")
+            existing_email = EmailAddress.objects.get(email__iexact=email.email, verified=True)
 
+        except EmailAddress.DoesNotExist:
+            print("Except EmailAddress.DoesNotExist" )
+            return
 
+        # if it does, connect this new social login to the existing user
+        print("sociallogin.connect")
+        sociallogin.connect(request, existing_email.user)
+        send_verification_email(request, sociallogin)
+        # except Exception as e:
+        #     print("Except: ", e)
+        #     pass
+
+class GoogleProviderMod(GoogleProvider):
+    def extract_uid(self, data):
+        return str(data['sub'])
+
+class GoogleOAuth2AdapterIdToken(GoogleOAuth2Adapter):
+    print("LO RERAMIRE")
+    provider_id = GoogleProviderMod.id
+
+    def complete_login(self, request, app, token, **kwargs):
+        idinfo = id_token.verify_oauth2_token(token.token, requests.Request(), app.client_id)
+        if idinfo["iss"] not in ["accounts.google.com", "https://accounts.google.com"]:
+            raise ValueError("Wrong issuer.")
+        extra_data = idinfo
+        login = self.get_provider().sociallogin_from_response(request, extra_data)
+        return login
 
 
 # def pre_social_login(self, request, sociallogin):

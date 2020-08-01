@@ -243,7 +243,7 @@ body {
   }
 
 /* Two-column layout */
-.login-row .login-col-1 {
+.login-col-1 {
     /* float: left; */
     /* width: 50%; */
     /* display: inline-flex; */
@@ -255,6 +255,13 @@ body {
   }
 
   .login-col-2 {
+    /* width: 50%; */
+    margin: auto 0;
+    padding: 0 5px;
+    /* margin-top: 6px; */
+  }
+
+  .login-col-3 {
     float: left;
     width: 50%;
     margin: auto;
@@ -271,14 +278,14 @@ body {
   
   /* vertical line */
   .login-vl {
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%);
+    /* position: absolute; */
+    /* left: 50%;*/
+    top: 50%; 
+    /* transform: translate(-50%); */
     margin: auto;
-    /* border: 2px solid #ddd; */
-    /* height: 175px; */
-    /* width: 50px; */
+    border: 2px solid #ddd;
+    height: 175px;
+    width: 0px;
   }
   
   /* text inside the vertical line */

@@ -46,8 +46,7 @@ class CustomLayout extends React.Component {
   };
 
   render() {
-    console.log(" Layour this.props: ")
-    console.log(this.props)
+    console.log("Layout this.props: ", this.props)
 
     let searchForm = this.state.showForm ? (
       <form className="menu__search-form" method="POST">

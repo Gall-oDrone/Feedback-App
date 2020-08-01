@@ -3,7 +3,7 @@ from users.models import User
 
 class Assignment(models.Model):
     title = models.CharField(max_length=50)
-    teacher = models.ForeignKey(User, on_delete=models.CASCADE)
+    teacher = models.ForeignKey(User, null=True, blank=True,on_delete=models.SET_NULL)
     def __str__(self):
         return self.title
     

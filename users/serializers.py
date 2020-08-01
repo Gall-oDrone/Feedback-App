@@ -9,7 +9,11 @@ import json
 from django.utils.encoding import force_bytes
 from django.utils.http import urlsafe_base64_encode
 from .tokens import account_activation_token
-from django.core.mail import EmailMessage
+from django.core.mail import EmailMessage, EmailMultiAlternatives
+from django.template.loader import render_to_string, get_template
+from django.template import Context
+from django.contrib.auth import get_user_model
+from django.http import HttpResponse
 
 class StringSerializer(serializers.StringRelatedField):
     def to_internal_value(self, value):
@@ -25,7 +29,6 @@ class CustomRegisterSerializer(RegisterSerializer):
     is_student = serializers.BooleanField()
     is_teacher = serializers.BooleanField()
     university = serializers.CharField(max_length=50, allow_blank=True)
-    print("EHMARIMACHO 0")
 
     class Meta:
         model = User
@@ -61,22 +64,56 @@ class CustomRegisterSerializer(RegisterSerializer):
         self.add_fields(self.cleaned_data.get('university'),0, profile_info)
         # profile_info.university = Universities.objects.get(university=self.cleaned_data.get('university'))
         profile_info.save()
-
-        # Send an email to the user with the token:
-        print("EHMARIMACHO 2")
-        mail_subject = 'Activate your account.'
-        current_site = get_current_site(request)
-        uid = urlsafe_base64_encode(force_bytes(user.pk)).decode()
-        token = account_activation_token.make_token(user)
-        activation_link = "{0}/?uid={1}&token{2}".format(current_site, uid, token)
-        message = "Hello {0},\n {1}".format(user.username, activation_link)
-        to_email = "gallodiego117@gmail.com" #form.cleaned_data.get('email')
-        email = EmailMessage(mail_subject, message, to=[to_email])
-        email.send()
-        return HttpResponse('Please confirm your email address to complete the registration')
-
         return user
+
+    # Send an email to the user with the token:
+    def send_verification_email(request, data):
+        print("EHMARIMACHO 2: ", request, data)
+        user = User.objects.get(pk=data("id"))
+        if request.method == 'POST':
+            to_email = data.get('email')
+            if User.objects.filter(email__iexact=to_email).count() == 1:
+                mail_subject, from_email, to = 'Activate your account.', 'gallodiego117@gmail.com', "piehavok@hotmail.com"
+                current_site = get_current_site(request)
+                print("CURRENT: ", current_site)
+                uid = urlsafe_base64_encode(force_bytes(user.pk))
+                token = account_activation_token.make_token(user)
+                activation_link = "{0}/?uid={1}&token{2}".format(current_site, uid, token)
+                # message = render_to_string('activate_template.html', {
+                #                 'user': "q", 
+                #                 'domain': "127.0.0.1:8000",
+                #                 'uid': "1231231231",
+                #                 'token': "213jl1k2j31lk3j1",
+                #             })
+                message = render_to_string('activate_template.html', {
+                            'user': user.username,
+                            'domain': current_site.domain,
+                            'uid': urlsafe_base64_encode(force_bytes(user.pk)),
+                            'token': account_activation_token.make_token(user),
+                        })
+                msg = EmailMultiAlternatives(mail_subject, "text_content", from_email, [to])
+                msg.attach_alternative(message, "text/html")
+                msg.send()
+                
+                # to_email = form.cleaned_data.get('email')
+                # email = EmailMessage(mail_subject, message, to=[to_email])
+                # email.send()
+                return HttpResponse('Please confirm your email address to complete the registration')
     
+    def activate(request, uidb64, token):
+        User = get_user_model()
+        try:
+            uid = force_text(urlsafe_base64_decode(uidb64))
+            user = User.objects.get(pk=uid)
+        except(TypeError, ValueError, OverflowError, User.DoesNotExist):
+            user = None
+        if user is not None and account_activation_token.check_token(user, token):
+            user.is_active = True
+            user.save()
+            return HttpResponse('Thank you for your email confirmation. Now you can login your account.')
+        else:
+            return HttpResponse('Activation link is invalid!')
+
     def add_fields(self, field, i, university):
         f = field
         try:
@@ -144,10 +181,12 @@ class CustomRegisterSerializer(RegisterSerializer):
 class TokenSerializer(serializers.ModelSerializer):
     user_type = serializers.SerializerMethodField()
     university = serializers.SerializerMethodField()
+    # user_status = serializers.SerializerMethodField()
+    username = serializers.SerializerMethodField()
 
     class Meta:
         model = Token
-        fields = ('key', 'user', 'user_type', 'university')
+        fields = ('key', 'user', 'username', 'user_type', 'university')
 
     def get_user_type(self, obj):
         serializer_data = UserSerializer(
@@ -164,10 +203,70 @@ class TokenSerializer(serializers.ModelSerializer):
         serializer_data = UserSerializer(
             obj.user
         ).data
+        print("zoolander: ", serializer_data)
         university = serializer_data.get('university')
         return {
             'university': university
         }
+    
+    def get_username(self, obj):
+        serializer_data = UserSerializer(
+            obj.user
+        ).data
+        username = serializer_data.get('username')
+        return {
+            'username': username
+        }
+
+class SocialTokenSerializer(serializers.ModelSerializer):
+    user_type = serializers.SerializerMethodField()
+    university = serializers.SerializerMethodField()
+    username = serializers.SerializerMethodField()
+    # user_status = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Token
+        fields = ('key', 'user', 'username', 'user_type', 'university')
+
+    def get_user_type(self, obj):
+        serializer_data = UserSerializer(
+            obj.user
+        ).data
+        is_student = serializer_data.get('is_student')
+        is_teacher = serializer_data.get('is_teacher')
+        return {
+            'is_student': is_student,
+            'is_teacher': is_teacher
+        }
+
+    def get_university(self, obj):
+        serializer_data = UserSerializer(
+            obj.user
+        ).data
+        print("zoolander Tuki: ", serializer_data)
+        university = serializer_data.get('university')
+        return {
+            'university': university
+        }
+    
+    def get_username(self, obj):
+        serializer_data = UserSerializer(
+            obj.user
+        ).data
+        username = serializer_data.get('username')
+        return {
+            'username': username
+        }
+    
+    # def get_status(self, obj):
+    #     serializer_data = UserSerializer(
+    #         obj.user
+    #     ).data
+    #     print("zoolander: ", serializer_data)
+    #     status = serializer_data.get('is_active')
+    #     return {
+    #         'is_active': status
+    #     }
 
 class ProfileSerializer(serializers.ModelSerializer):
     user = StringSerializer(many=False)
@@ -486,3 +585,36 @@ class testSerializer2(serializers.Serializer):
 
     # multiplechoices = serializers.MultipleChoiceField( 
     #     choices = GEEKS_CHOICES) 
+
+def send_verification_email(request, data):
+    print("EHMARIMACHO 2: ", request, data)
+    user = User.objects.get(pk=data.user.id)
+    if request.method == 'POST':
+        to_email = data.user.email
+        if User.objects.filter(email__iexact=to_email).count() == 1:
+            mail_subject, from_email, to = 'Activate your account.', 'gallodiego117@gmail.com', "piehavok@hotmail.com"
+            current_site = "127.0.0.1:8000" #get_current_site(request)
+            print("CURRENT: ", current_site)
+            uid = urlsafe_base64_encode(force_bytes(user.pk))
+            token = account_activation_token.make_token(user)
+            activation_link = "{0}/?uid={1}&token{2}".format(current_site, uid, token)
+            # message = render_to_string('activate_template.html', {
+            #                 'user': "q", 
+            #                 'domain': "127.0.0.1:8000",
+            #                 'uid': "1231231231",
+            #                 'token': "213jl1k2j31lk3j1",
+            #             })
+            message = render_to_string('activate_template.html', {
+                        'user': user.username,
+                        'domain': "127.0.0.1:8000", #current_site.domain,
+                        'uid': urlsafe_base64_encode(force_bytes(user.pk)),
+                        'token': account_activation_token.make_token(user),
+                    })
+            msg = EmailMultiAlternatives(mail_subject, "text_content", from_email, [to])
+            msg.attach_alternative(message, "text/html")
+            msg.send()
+            
+            # to_email = form.cleaned_data.get('email')
+            # email = EmailMessage(mail_subject, message, to=[to_email])
+            # email.send()
+            return HttpResponse('Please confirm your email address to complete the registration')

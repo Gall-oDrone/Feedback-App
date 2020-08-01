@@ -14,7 +14,11 @@ from .views import (
     Degrees_and_CoursesView,
     UniView,
     DegView,
-    ActivateView
+    ActivateView,
+    GoogleLoginView,
+    GoogleLogin,
+    google_callback,
+    EmailTemplateView
     # BachelorView,
     # MasterView,
     # DoctorateView,
@@ -43,7 +47,11 @@ urlpatterns = [
     path('courses-degrees/', Degrees_and_CoursesView.as_view()),
     path('universities/', UniView.as_view()),
     path('deg/', DegView.as_view()),
-    path('activate/<str:uid>/<str:token>', ActivateView.as_view(), name='activate')
+    path('activate/<str:uid>/<str:token>', ActivateView.as_view(), name='activate'),
+    path('auth/google/', GoogleLogin.as_view(), name='google_login'),
+    path('auth/google/callback/', google_callback, name="google_callback"),
+    path('email_template/<str:uidb64>/<str:token>', ActivateView.as_view(), name="email_account_confirmation"),
+    # path('auth/google/url/', google_views.oauth2_login)
     # path('bachelor-list/', BachelorView.as_view()),
     # path('master-list/', MasterView.as_view()),
     # path('doctorate-list/', DoctorateView.as_view()),

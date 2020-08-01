@@ -128,6 +128,7 @@ const BaseRouter = () => (
     <Route exact path="/meetingReview2/" component={MeetingReviewP} />
 
     <Route exact path="/login/" component={Login} />
+    <Route exact path="/login/:uid/:token/" component={Login} />
     <Route exact path="/signup/" component={Signup} />
     
     <Route exact path="/profile/:id" component={Profile} />

@@ -5,6 +5,7 @@ const initialState = {
   token: null,
   username: null,
   university: null,
+  is_active: null,
   is_student: null,
   is_teacher: null,
   userId: null,
@@ -20,10 +21,12 @@ const authStart = (state, action) => {
 };
 
 const authSuccess = (state, action) => {
+  console.log("authScess action: ", action, action.user)
   return updateObject(state, {
     token: action.user.token,
     username: action.user.username,
     university: action.user.university,
+    is_active: action.user.is_active,
     is_student: action.user.is_student,
     is_teacher: action.user.is_teacher,
     userId: action.user.userId,

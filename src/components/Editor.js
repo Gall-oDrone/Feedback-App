@@ -1,8 +1,9 @@
 import React, {Component} from 'react';
 import { render } from 'react-dom';
-import {EditorState} from "draft-js";
+import {EditorState, convertToRaw, convertFromRaw} from "draft-js";
 import {Editor} from "react-draft-wysiwyg";
 import "../assets/editor.css";
+import debounce from 'lodash/debounce';
 
 function uploadImageCallBack(file) {
   return new Promise(
@@ -27,22 +28,52 @@ function uploadImageCallBack(file) {
 
 
 class EditorContainer extends Component{
-  constructor(props){
+  constructor(props) {
     super(props);
     this.state = {
-      editorState: EditorState.createEmpty(),
-    };
+      editorState: null
+     };
   }
 
-  onEditorStateChange: Function = (editorState) => {
-    // console.log(editorState)
+  saveContent = debounce((content) => {
+    fetch('/content', {
+      method: 'POST',
+      body: JSON.stringify({
+        content: convertToRaw(content),
+      }),
+      headers: new Headers({
+        'Content-Type': 'application/json'
+      })
+    })
+  }, 1000);
+
+  onEditorStateChange = (editorState) => {
+    const contentState = editorState.getCurrentContent();
+    this.saveContent(contentState);
     this.setState({
       editorState,
     });
-  };
+  }
+
+  componentDidMount() {
+    fetch('/content').then(val => val.json())
+    .then(rawContent => {
+      if (rawContent) {
+        this.setState({ editorState: EditorState.createWithContent(convertFromRaw(rawContent)) })
+      } else {
+        this.setState({ editorState: EditorState.createEmpty() });
+      }
+    });
+  }
 
   render(){
     const { editorState } = this.state;
+    const { content } = this.props;
+    // if (!editorState) {
+    //   return (
+    //     <h3 className="loading">Loading...</h3>
+    //   );
+    // }
     return <div className='editor'>
       <Editor
         editorState={editorState}

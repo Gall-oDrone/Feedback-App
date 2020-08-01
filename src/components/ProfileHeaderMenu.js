@@ -60,7 +60,7 @@ class ProfileHeaderMenu extends React.Component {
       )};
     const content = (logout, uId) => {return(
       <div>
-        <Menu>
+        <Menu className="profile-menu">
           <Menu.Item>
             <a target="_blank" rel="noopener noreferrer" href={`/profile/${uId}/menu/`}>
               My Profile
@@ -71,7 +71,6 @@ class ProfileHeaderMenu extends React.Component {
               My Account
             </a>
           </Menu.Item>
-          <Menu.Item>
           {this.props.auth === true ? (
               <Menu.Item key="2" onClick={this.handleLogOut}>
                 Logout
@@ -84,27 +83,27 @@ class ProfileHeaderMenu extends React.Component {
             {/* <a target="_blank" rel="noopener noreferrer" onClick={logout}>
               Log out
             </a> */}
-          </Menu.Item>
         </Menu>
       </div>
     )}
 
         return (
+          this.props.username !== undefined &&
           this.props.username !== null &&
           this.props.profileAI.ProfileAccount !== undefined ?
-          <Hoc>
-            <div className="demo" style={{justifyContent:"center"}}>
-                <Popover placement="bottomRight" title={text(this.props.username)} content={content(logout, userId)}>
-                <Avatar src={this.props.profileAI.ProfileAccount.profile_avatar} style={{backgroundColor:"#b0b0b0"}}>
-                  <span>
-                    {this.props.username[0].toUpperCase()}
-                  </span>
-                </Avatar>
-                </Popover>
-            </div>
-        </Hoc>
-        : 
-              <Link to="/login">Login</Link>
+            <Hoc>
+              <div className="demo" style={{justifyContent:"center"}}>
+                  <Popover placement="bottomRight" title={text(this.props.username)} content={content(logout, userId)}>
+                    <Avatar src={this.props.profileAI.ProfileAccount.profile_avatar} style={{backgroundColor:"#b0b0b0"}}>
+                      <span>
+                        {this.props.username[0].toUpperCase()}
+                      </span>
+                    </Avatar>
+                  </Popover>
+              </div>
+            </Hoc>
+          : 
+            <Link to="/login">Login</Link>
         )
     }
   }

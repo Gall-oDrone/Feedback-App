@@ -60,6 +60,9 @@ export const projectUpdateURL = (projectID) => `${endpoint}/projects/${projectID
 export const authLogInURL = `${localhost}/rest-auth/login/`;
 export const authSignUpURL = `${localhost}/rest-auth/registration/`;
 export const authLogOutURL = `${localhost}/rest-auth/logout/`;
+export const authGoogleLogInURL = `${endpoint}/users/auth/google/`;
+// export const authGoogleLogInURL2 = `${localhost}/users/rest-auth/google/`;
+export const authActivateUserURL = (uid, token) => `${endpoint}/users/activate/${uid}/${token}`;
 
 export const articleCommentsURL = articleID => `${endpoint}/articles/${articleID}/comments/`
 export const articleCommentURL = (articleID, commentID) => `${endpoint}/articles/${articleID}/comment/${commentID}/`

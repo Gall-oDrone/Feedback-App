@@ -1,13 +1,13 @@
 from django.conf import settings
-from django.contrib.auth import get_user_model
 from django.http import HttpResponseRedirect, Http404, JsonResponse, HttpResponse
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from django.core.exceptions import ObjectDoesNotExist
 from rest_framework.response import Response
 from rest_framework import viewsets, permissions, generics
 from rest_framework.status import HTTP_200_OK, HTTP_400_BAD_REQUEST, HTTP_201_CREATED, HTTP_400_BAD_REQUEST
 from rest_framework.parsers import MultiPartParser, FileUploadParser, FormParser, JSONParser
 import json
+import urllib.parse
 from .models import User, Profile, Universities, FriendRequest, MeetingRequest, ProfileInfo, Degree, Bachelor, Master, Doctorate, Course
 from .serializers import (
     UserSerializer, 
@@ -20,6 +20,7 @@ from .serializers import (
     testSerializer,
     testSerializer2,
     degreeSerializer,
+    SocialTokenSerializer,
     UniSerializer
 )
 
@@ -39,6 +40,12 @@ from django.contrib.auth.forms import PasswordChangeForm
 from django.utils.encoding import force_bytes, force_text
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from .tokens import account_activation_token
+
+from allauth.socialaccount.providers.google.views import GoogleOAuth2Adapter
+from allauth.socialaccount.providers.oauth2.client import OAuth2Client
+from rest_auth.registration.serializers import SocialLoginSerializer
+from rest_auth.registration.views import SocialLoginView
+from .my_adapter import GoogleOAuth2AdapterIdToken, MyAdapter
 
 class UserViewSet(viewsets.ModelViewSet):
     serializer_class = UserSerializer
@@ -355,20 +362,24 @@ class DegView(generics.ListAPIView):
 
 class ActivateView(View):
     def get(self, request, uidb64, token):
+        User = get_user_model()
+        print("User: ", User.email)
         try:
             uid = urlsafe_base64_decode(uidb64).decode()
             user = User.objects.get(pk=uid)
-        except(TypeError, ValueError, OverflowError, User.DoesNotExist):
+        # except(TypeError, ValueError, OverflowError, User.DoesNotExist):
+        except Exception as e:
+            print(e)
             user = None
         if user is not None and account_activation_token.check_token(user, token):
             # activate user and login:
             user.is_active = True
             user.save()
             login(request, user)
-
-            form = PasswordChangeForm(request.user)
-            return render(request, 'activation.html', {'form': form})
-
+            return redirect("http://localhost:8001/login/{}/{}".format(uidb64, token))
+            # return HttpResponse('Thank you for your email confirmation. Now you can login your account.')
+            # form = PasswordChangeForm(request.user)
+            # return render(request, 'activation.html', {'form': form})
         else:
             return HttpResponse('Activation link is invalid!')
 
@@ -378,3 +389,42 @@ class ActivateView(View):
             user = form.save()
             update_session_auth_hash(request, user) # Important, to update the session with the new password
             return HttpResponse('Password changed successfully')
+
+class GoogleLogin(SocialLoginView):
+    adapter_class = GoogleOAuth2Adapter
+    # serializer_class = SocialTokenSerializer
+    client_class = OAuth2Client
+    callback_url = "http://127.0.0.1:8000/api/users/auth/google/callback/"
+
+    # def post(self, request):
+    #     print("Google Login: ", request.data)
+    #     serializer = SocialTokenSerializer(data=request.data)
+    #     serializer.is_valid(raise_exception=True)
+    #     print(serializer.is_valid(), serializer.data)
+    #     return Response(serializer.data)
+    #     if serializer.is_valid():
+    #         return Response(status=HTTP_200_OK)
+    #     return Response(status=HTTP_400_BAD_REQUEST)
+
+class GoogleLoginView(SocialLoginView):
+    print("GoogleLoginView, LA COLONILLA")
+    # adapter_class = GoogleOAuth2Adapter
+    # adapter_class = GoogleOAuth2Adapter
+    # client_class = OAuth2Client
+
+    # adapter_class = GoogleOAuth2AdapterIdToken
+    callback_url = "http://127.0.0.1:8000/api/users/auth/google/callback/"
+    # client_class = OAuth2Client
+    # serializer_class = SocialLoginSerializer
+
+    # @property
+    # def callback_url(self):
+    #     return self.request.build_absolute_uri(reverse('google_callback'))
+
+def google_callback(request):
+    params = urllib.parse.urlencode(request.GET)
+    print("CORSO 3000: ", params)
+    # return redirect(f'http://localhost:8001/auth/google?{params}')
+
+class EmailTemplateView(RetrieveAPIView):
+    template_name = 'templates/email_template.html'

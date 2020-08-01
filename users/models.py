@@ -6,7 +6,9 @@ from django.db.models.signals import post_save
 from django_countries.fields import CountryField
 from home.settings.storage_backends import MediaStorage
 from allauth.account.signals import user_signed_up
+from django.dispatch import receiver
 from django.utils.translation import ugettext_lazy as _
+# from .serializers import send_verification_email
 
 class User(AbstractUser):
     is_student = models.BooleanField(default=False)
@@ -34,27 +36,43 @@ class User(AbstractUser):
 
     def get_short_name(self):
         return self.email
-    # @receiver(user_signed_up)
-    # def populate_profile(sociallogin, user, **kwargs):
 
-    #     user.profile = Profile()
+    @receiver(user_signed_up)
+    def populate_profile(sociallogin, user, **kwargs):
+        print("populate_profile METHOD")
+        profile = Profile()
+        profile_info = ProfileInfo()
 
-    #     if sociallogin.account.provider == 'facebook':
-    #         user_data = user.socialaccount_set.filter(provider='facebook')[0].extra_data
-    #         picture_url = "http://graph.facebook.com/" + sociallogin.account.uid + "/picture?type=large"
-    #         email = user_data['email']
-    #         full_name = user_data['name']
+        if sociallogin.account.provider == 'facebook':
+            user_data = user.socialaccount_set.filter(provider='facebook')[0].extra_data
+            picture_url = "http://graph.facebook.com/" + sociallogin.account.uid + "/picture?type=large"
+            email = user_data['email']
+            full_name = user_data['name']
 
-    #     if sociallogin.account.provider == 'google':
-    #         user_data = user.socialaccount_set.filter(provider='google')[0].extra_data
-    #         picture_url = user_data['picture']
-    #         email = user_data['email']
-    #         full_name = user_data['name']
+        if sociallogin.account.provider == 'google':
+            user_data = user.socialaccount_set.filter(provider='google')[0].extra_data
+            picture_url = user_data['picture']
+            email = user_data['email']
+            full_name = user_data['name']
+        
+        user = User.objects.get(pk=user_data['id'])
+        profile.user = user
+        profile.profile_avatar = picture_url
+        profile.save()
 
-    #     user.profile.picture = picture_url
-    #     user.profile.email = email
-    #     user.profile.full_name = full_name
-    #     user.profile.save()
+        profile_info.profile = profile
+        profile_info.profile_username = user
+        profile_info.name = user_data['name']
+        profile_info.save()
+
+        # if(user.is_active == False):
+        #     send_verification_email()
+
+
+        # user.profile.picture = picture_url
+        # user.profile.email = email
+        # user.profile.full_name = full_name
+        # user.profile.save()
 
 class Universities(models.Model):
     MIT = 'Massachusetts Institute of Technology'

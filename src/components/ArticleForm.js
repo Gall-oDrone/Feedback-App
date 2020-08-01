@@ -33,6 +33,7 @@ class ArticleCustomForm extends React.Component {
   state = { 
     visible: false,
     previewVisible: false,
+    content: null,
     loading: false,
     previewImage: '',
     imageThumbUrl: null,
@@ -129,6 +130,7 @@ class ArticleCustomForm extends React.Component {
         engagement: values.feedback_type,
         categories: values.categories,
       }
+      console.log("postObj: ", JSON.stringify(postObj))
       if(file !== null && file.length > 0){
         formData.append("file", file[0].originFileObj)
       } else if (file2 !== null && file2.length > 0){
@@ -138,25 +140,25 @@ class ArticleCustomForm extends React.Component {
       if (!err) {
         // axios.defaults.xsrfHeaderName = "X-CSRFTOKEN";
         // axios.defaults.xsrfCookieName = "csrftoken";
-        axios.defaults.headers = {
-          "content-type": "multipart/form-data",
-          Authorization: `Token ${this.props.token}`
-        };
-        console.log("formData: ", JSON.stringify(formData))
-        if (requestType === "post") {
-          console.log("params: " + title + " " + content + " "+ engagement)
-          console.log("before posting article")
-          axios.post(articleCreateURL, 
-          formData
-          )
-            .then(res => {
-              if (res.status === 201) {
-                this.props.history.push('/');
-              }
-            })
-            .catch(error => console.error(error))
-            console.log('Error');
-        }
+        // axios.defaults.headers = {
+        //   "content-type": "multipart/form-data",
+        //   Authorization: `Token ${this.props.token}`
+        // };
+        // console.log("formData: ", JSON.stringify(formData))
+        // if (requestType === "post") {
+        //   console.log("params: " + title + " " + content + " "+ engagement)
+        //   console.log("before posting article")
+        //   axios.post(articleCreateURL, 
+        //   formData
+        //   )
+        //     .then(res => {
+        //       if (res.status === 201) {
+        //         this.props.history.push('/');
+        //       }
+        //     })
+        //     .catch(error => console.error(error))
+        //     console.log('Error');
+        // }
 
         console.log('Received values of form: ', values);
       }
@@ -166,9 +168,12 @@ class ArticleCustomForm extends React.Component {
   render() {
     console.log("this.props: "+ JSON.stringify(this.props))
     const { getFieldDecorator, getFieldValue } = this.props.form;
+    var { content } = this.state
     const { fileList } = this.state;
     const fields = getFieldValue("upload")
     const fields2 = getFieldValue("uploadV")
+    console.log("ADA getFieldDecorator: "+ JSON.stringify(getFieldDecorator))
+    console.log("ADA getFieldValue: "+ JSON.stringify(getFieldValue))
     console.log("upload  I: "+ JSON.stringify(fields))
     console.log("upload II: "+ JSON.stringify(fields2))
     const formItemLayout = {
@@ -190,7 +195,7 @@ class ArticleCustomForm extends React.Component {
           {getFieldDecorator('content', {
             rules: [{ required: true, message: 'Please enter a content' }],
           })( //<Input name="content" />
-              <Editor/>
+              <Editor content={content} />
           )}
         </Form.Item>
 
