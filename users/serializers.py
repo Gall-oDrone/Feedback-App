@@ -1,5 +1,6 @@
 from allauth.account.adapter import get_adapter
 from rest_auth.registration.serializers import RegisterSerializer
+from django.contrib.sites.models import Site
 from rest_framework import serializers
 from rest_framework.authtoken.models import Token
 from .models import User, MeetingRequest, Universities, ProfileInfo, Profile, Universities, Degree, Bachelor, Master, Doctorate, Course
@@ -592,9 +593,9 @@ def send_verification_email(request, data):
     if request.method == 'POST':
         to_email = data.user.email
         if User.objects.filter(email__iexact=to_email).count() == 1:
-            mail_subject, from_email, to = 'Activate your account.', 'gallodiego117@gmail.com', "piehavok@hotmail.com"
-            current_site = "127.0.0.1:8000" #get_current_site(request)
-            print("CURRENT: ", current_site)
+            mail_subject, from_email, to = 'Activate your account.', 'gallodiego117@gmail.com', to_email
+            current_site = Site.objects.get_current() #get_current_site(request)
+            print("CURRENT: ", current_site, current_site.domain)
             uid = urlsafe_base64_encode(force_bytes(user.pk))
             token = account_activation_token.make_token(user)
             activation_link = "{0}/?uid={1}&token{2}".format(current_site, uid, token)
@@ -606,7 +607,7 @@ def send_verification_email(request, data):
             #             })
             message = render_to_string('activate_template.html', {
                         'user': user.username,
-                        'domain': "127.0.0.1:8000", #current_site.domain,
+                        'domain': current_site.domain,
                         'uid': urlsafe_base64_encode(force_bytes(user.pk)),
                         'token': account_activation_token.make_token(user),
                     })
