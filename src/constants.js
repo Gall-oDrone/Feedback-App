@@ -61,6 +61,7 @@ export const authLogInURL = `${localhost}/rest-auth/login/`;
 export const authSignUpURL = `${localhost}/rest-auth/registration/`;
 export const authLogOutURL = `${localhost}/rest-auth/logout/`;
 export const authGoogleLogInURL = `${endpoint}/users/auth/google/`;
+export const authFacebookLogInURL = `${endpoint}/users/auth/facebook/`;
 // export const authGoogleLogInURL2 = `${localhost}/users/rest-auth/google/`;
 export const authActivateUserURL = (uid, token) => `${endpoint}/users/activate/${uid}/${token}`;
 

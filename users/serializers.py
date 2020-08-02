@@ -23,7 +23,7 @@ class StringSerializer(serializers.StringRelatedField):
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ('email', 'university', 'username', 'password', 'is_student', 'is_teacher', 'id')
+        fields = ('email', 'university', 'is_active_user', 'username', 'password', 'is_student', 'is_teacher', 'id')
 
 
 class CustomRegisterSerializer(RegisterSerializer):
@@ -62,17 +62,18 @@ class CustomRegisterSerializer(RegisterSerializer):
         profile_info.profile_username = User.objects.get(username=user.username)
         # profile_info.name = self.cleaned_data.get('first_name')+" "+self.cleaned_data.get('last_name')
         print("self.cleaned_data.get('university')", self.cleaned_data.get('university'))
+        self.send_verification_email(request, user)
         self.add_fields(self.cleaned_data.get('university'),0, profile_info)
         # profile_info.university = Universities.objects.get(university=self.cleaned_data.get('university'))
         profile_info.save()
         return user
 
     # Send an email to the user with the token:
-    def send_verification_email(request, data):
+    def send_verification_email(request, user):
         print("EHMARIMACHO 2: ", request, data)
         user = User.objects.get(pk=data("id"))
         if request.method == 'POST':
-            to_email = data.get('email')
+            to_email = user.email
             if User.objects.filter(email__iexact=to_email).count() == 1:
                 mail_subject, from_email, to = 'Activate your account.', 'gallodiego117@gmail.com', "piehavok@hotmail.com"
                 current_site = get_current_site(request)
@@ -109,7 +110,7 @@ class CustomRegisterSerializer(RegisterSerializer):
         except(TypeError, ValueError, OverflowError, User.DoesNotExist):
             user = None
         if user is not None and account_activation_token.check_token(user, token):
-            user.is_active = True
+            user.is_active_user = True
             user.save()
             return HttpResponse('Thank you for your email confirmation. Now you can login your account.')
         else:
@@ -182,12 +183,12 @@ class CustomRegisterSerializer(RegisterSerializer):
 class TokenSerializer(serializers.ModelSerializer):
     user_type = serializers.SerializerMethodField()
     university = serializers.SerializerMethodField()
-    # user_status = serializers.SerializerMethodField()
+    is_active_user = serializers.SerializerMethodField()
     username = serializers.SerializerMethodField()
 
     class Meta:
         model = Token
-        fields = ('key', 'user', 'username', 'user_type', 'university')
+        fields = ('key', 'user', 'is_active_user', 'username', 'user_type', 'university')
 
     def get_user_type(self, obj):
         serializer_data = UserSerializer(
@@ -217,6 +218,16 @@ class TokenSerializer(serializers.ModelSerializer):
         username = serializer_data.get('username')
         return {
             'username': username
+        }
+
+    def get_is_active_user(self, obj):
+        serializer_data = UserSerializer(
+            obj.user
+        ).data
+        print(serializer_data)
+        is_active_user = serializer_data.get('is_active_user')
+        return {
+            'is_active_user': is_active_user
         }
 
 class SocialTokenSerializer(serializers.ModelSerializer):
@@ -264,9 +275,9 @@ class SocialTokenSerializer(serializers.ModelSerializer):
     #         obj.user
     #     ).data
     #     print("zoolander: ", serializer_data)
-    #     status = serializer_data.get('is_active')
+    #     status = serializer_data.get('is_active_user')
     #     return {
-    #         'is_active': status
+    #         'is_active_user': status
     #     }
 
 class ProfileSerializer(serializers.ModelSerializer):

@@ -8,7 +8,7 @@ from .models import User, Student, Profile, Degree, FriendRequest, MeetingReques
 class UserAdmin(BaseUserAdmin):
     add_fieldsets = (
         (None, {
-            'fields': ('email', 'university', 'username', 'is_student', 'is_teacher', 'password1', 'password2',"partners","website")
+            'fields': ('email', 'university', 'username', 'is_active_user', 'is_student', 'is_teacher', 'password1', 'password2',"partners","website")
         }),
         ('Permissions', {
             'fields': ('is_superuser', 'is_staff')
@@ -16,13 +16,13 @@ class UserAdmin(BaseUserAdmin):
     )
     fieldsets = (
         (None, {
-            'fields': ('email', 'university', 'username', 'is_student', 'is_teacher', 'password',"partners","website")
+            'fields': ('email', 'university', 'username', 'is_active_user', 'is_student', 'is_teacher', 'password',"partners","website")
         }),
         ('Permissions', {
             'fields': ('is_superuser', 'is_staff')
         })
     )
-    list_display = ['email', 'university', 'username', 'is_student', 'is_teacher']
+    list_display = ['email', 'university', 'username', 'is_active_user', 'is_student', 'is_teacher']
     search_fields = ('email', 'username')
     ordering = ('email',)
 

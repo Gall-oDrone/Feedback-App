@@ -49,7 +49,7 @@ class EditorContainer extends Component{
 
   onEditorStateChange = (editorState) => {
     const contentState = editorState.getCurrentContent();
-    this.saveContent(contentState);
+    this.props.content(JSON.stringify(convertToRaw(contentState)));
     this.setState({
       editorState,
     });
@@ -77,7 +77,7 @@ class EditorContainer extends Component{
     return <div className='editor'>
       <Editor
         editorState={editorState}
-        onEditorStateChange={this.onEditorStateChange}    
+        onEditorStateChange={this.onEditorStateChange.bind(this)}    
         toolbar={{
           inline: { inDropdown: true },
           list: { inDropdown: true },

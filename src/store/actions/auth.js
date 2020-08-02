@@ -9,7 +9,8 @@ import {
   authLogInURL,
   authSignUpURL,
   authLogOutURL,
-  authGoogleLogInURL
+  authGoogleLogInURL,
+  authFacebookLogInURL
 } from "../../constants"
 
 export const authStart = () => {
@@ -70,7 +71,7 @@ export const authLogin = (username, password) => {
           token: res.data.key,
           username,
           userId: res.data.user,
-          is_active: res.data.is_active,
+          is_active_user: res.data.is_active_user.is_active_user,
           is_student: res.data.user_type.is_student,
           is_teacher: res.data.user_type.is_teacher,
           university: res.data.university.university,
@@ -96,7 +97,34 @@ export const authGoogleLogin = (token) => {
           token: res.data.key,
           username: res.data.username.username,
           userId: res.data.user,
-          // is_active: res.data.user_type.is_active,
+          is_active_user: res.data.is_active_user.is_active_user,
+          is_student: res.data.user_type.is_student,
+          is_teacher: res.data.user_type.is_teacher,
+          university: res.data.university.university,
+          expirationDate: new Date(new Date().getTime() + 3600 * 1000)
+        };
+        console.log("authGoogleLogin user: ", JSON.stringify(user))
+        localStorage.setItem("user", JSON.stringify(user));
+        dispatch(authSuccess(user));
+        dispatch(checkAuthTimeout(3600));
+      })
+      .catch(err => {
+        dispatch(authFail(err));
+      });
+  };
+}
+
+export const authFacebookLogin = (token) => {
+  return dispatch => {
+    axios
+      .post(authFacebookLogInURL, { access_token: token })
+      .then(res => {
+        console.log("authFacebookLogin res.data: ", res, res.data)
+        const user = {
+          token: res.data.key,
+          username: res.data.username.username,
+          userId: res.data.user,
+          is_active_user: res.data.is_active_user.is_active_user,
           is_student: res.data.user_type.is_student,
           is_teacher: res.data.user_type.is_teacher,
           university: res.data.university.university,

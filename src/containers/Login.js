@@ -5,6 +5,7 @@ import { NavLink, Redirect } from "react-router-dom";
 import * as actions from "../store/actions/auth";
 import "../assets/authentication.css"
 import GoogleLogin from '../components/GoogleLogin';
+import FacebookLogin from '../components/FacebookLogin';
 
 const FormItem = Form.Item;
 const antIcon = <Icon type="loading" style={{ fontSize: 24 }} spin />;
@@ -63,7 +64,7 @@ class NormalLoginForm extends React.Component {
             <div className="login-col-1">
               <div className="social-login-box">
                 <h2>Social Login</h2>
-                  <a href="#" className="social-button" id="facebook-connect"> <span>Connect with Facebook</span></a>
+                    <FacebookLogin/>
                     <GoogleLogin/>
                   
                   {/* <a href="#" className="social-button" id="twitter-connect"> <span>Connect with Twitter</span></a>

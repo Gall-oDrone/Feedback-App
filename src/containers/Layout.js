@@ -1,5 +1,5 @@
 import React from "react";
-import { Layout, Menu, Breadcrumb, Button, Icon, Avatar, Input, Dropdown, Row, Col, Tooltip } from "antd";
+import { Layout, Menu, Breadcrumb, Button, Icon, Avatar, Alert, Input, Dropdown, Row, Col, Tooltip } from "antd";
 import { Link, withRouter } from "react-router-dom";
 import { connect } from "react-redux";
 import * as actions from "../store/actions/auth";
@@ -16,14 +16,6 @@ import "../assets/navBar.css";
 
 const { Search } = Input;
 const { Header, Content, Footer, Sider } = Layout;
-
-const text = (avatar) => (<span>User Account <div style={{left: '50%'}}><Avatar src={avatar} /></div></span>);
-const content = (username) => (
-  <div>
-    <p>Content</p>
-    <p>{username}</p>
-  </div>
-);
 
 class CustomLayout extends React.Component {
   state = {
@@ -48,14 +40,20 @@ class CustomLayout extends React.Component {
   render() {
     console.log("Layout this.props: ", this.props)
 
-    let searchForm = this.state.showForm ? (
-      <form className="menu__search-form" method="POST">
-          <input className="menu__search-input" placeholder="Type and hit enter" />
-      </form>
-  ) : '';
+  //   let searchForm = this.state.showForm ? (
+  //     <form className="menu__search-form" method="POST">
+  //         <input className="menu__search-input" placeholder="Type and hit enter" />
+  //     </form>
+  // ) : '';
 
     return (
       <Layout className="parent layout" >
+        {this.props.is_active === false ? 
+            <Header style={{ height: "30px"}}>
+              <Alert style={{ textAlign:"center", height:"inherit"}} message="Hi! Please confirm your email address by clicking the link in the email we sent you" type="info" />
+            </Header>
+            : null 
+        }
                <Header style={{ height: "50px", padding: "0 15px"}}>
           <Menu
             theme="dark"
@@ -63,7 +61,6 @@ class CustomLayout extends React.Component {
             selectable={false}
             style={{ lineHeight: "50px" }}
           >
-            
                 {/* <Menu.Item key="3" style= {{height: 40}}>
                 <Search placeholder="input search text" onSearch={value => console.log(value)} enterButton />
                 </Menu.Item> */}
@@ -276,6 +273,7 @@ const mapStateToProps = state => {
   return {
     userId: state.auth.userId,
     token: state.auth.token,
+    is_active: state.auth.is_active_user,
     is_student: state.auth.is_student,
     is_teacher: state.auth.is_teacher,
   };

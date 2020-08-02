@@ -165,6 +165,16 @@ class ArticleCustomForm extends React.Component {
     });
   }
 
+  handleEditorContent = (raw_text) => {
+    console.log("CANNIBALIZE: ", raw_text)
+    const { form } = this.props;
+    const content = form.getFieldValue(`content`);
+    form.setFieldsValue({
+      content: raw_text
+    });
+    // this.setState({text_content: raw_text})
+  }
+
   render() {
     console.log("this.props: "+ JSON.stringify(this.props))
     const { getFieldDecorator, getFieldValue } = this.props.form;
@@ -195,7 +205,7 @@ class ArticleCustomForm extends React.Component {
           {getFieldDecorator('content', {
             rules: [{ required: true, message: 'Please enter a content' }],
           })( //<Input name="content" />
-              <Editor content={content} />
+              <Editor content={this.handleEditorContent} />
           )}
         </Form.Item>
 

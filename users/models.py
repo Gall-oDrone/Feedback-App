@@ -18,9 +18,9 @@ class User(AbstractUser):
     partners = models.CharField(max_length=30, blank=True, null=True)
     website = models.CharField(max_length=60, blank=True, null=True)
 
-    is_active = models.BooleanField(
+    is_active_user = models.BooleanField(
         _('active'),
-        default=True,
+        default=False,
         help_text=_(
             'Designates whether this user should be treated as active. '
             'Unselect this instead of deleting accounts.'
@@ -65,7 +65,7 @@ class User(AbstractUser):
         profile_info.name = user_data['name']
         profile_info.save()
 
-        # if(user.is_active == False):
+        # if(user.is_active_user == False):
         #     send_verification_email()
 
 

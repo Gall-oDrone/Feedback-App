@@ -16,6 +16,7 @@ from .views import (
     DegView,
     ActivateView,
     GoogleLoginView,
+    FacebookLogin,
     GoogleLogin,
     google_callback,
     EmailTemplateView
@@ -49,6 +50,7 @@ urlpatterns = [
     path('deg/', DegView.as_view()),
     path('activate/<str:uid>/<str:token>', ActivateView.as_view(), name='activate'),
     path('auth/google/', GoogleLogin.as_view(), name='google_login'),
+    path('auth/facebook/', FacebookLogin.as_view(), name='facebook_login'),
     path('auth/google/callback/', google_callback, name="google_callback"),
     path('email_template/<str:uidb64>/<str:token>', ActivateView.as_view(), name="email_account_confirmation"),
     # path('auth/google/url/', google_views.oauth2_login)

@@ -1,5 +1,6 @@
 from django.conf import settings
 from django.contrib.sites.models import Site
+from allauth.account.models import EmailAddress
 from django.http import HttpResponseRedirect, Http404, JsonResponse, HttpResponse
 from django.shortcuts import render, get_object_or_404, redirect
 from django.core.exceptions import ObjectDoesNotExist
@@ -43,6 +44,7 @@ from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from .tokens import account_activation_token
 
 from allauth.socialaccount.providers.google.views import GoogleOAuth2Adapter
+from allauth.socialaccount.providers.facebook.views import FacebookOAuth2Adapter
 from allauth.socialaccount.providers.oauth2.client import OAuth2Client
 from rest_auth.registration.serializers import SocialLoginSerializer
 from rest_auth.registration.views import SocialLoginView
@@ -374,8 +376,9 @@ class ActivateView(View):
             user = None
         if user is not None and account_activation_token.check_token(user, token):
             # activate user and login:
-            user.is_active = True
+            user.is_active_user = True
             user.save()
+            EmailAddress.objects.filter(email__iexact=user.email).update(verified=True)
             login(request, user)
             return redirect("http://localhost:8001/login/{}/{}".format(uidb64, token))
             # return HttpResponse('Thank you for your email confirmation. Now you can login your account.')
@@ -392,20 +395,16 @@ class ActivateView(View):
             return HttpResponse('Password changed successfully')
 
 class GoogleLogin(SocialLoginView):
+    print("corso")
     adapter_class = GoogleOAuth2Adapter
     # serializer_class = SocialTokenSerializer
     client_class = OAuth2Client
     callback_url = "http://127.0.0.1:8000/api/users/auth/google/callback/"
 
-    # def post(self, request):
-    #     print("Google Login: ", request.data)
-    #     serializer = SocialTokenSerializer(data=request.data)
-    #     serializer.is_valid(raise_exception=True)
-    #     print(serializer.is_valid(), serializer.data)
-    #     return Response(serializer.data)
-    #     if serializer.is_valid():
-    #         return Response(status=HTTP_200_OK)
-    #     return Response(status=HTTP_400_BAD_REQUEST)
+class FacebookLogin(SocialLoginView):
+    print("QUÉ?")
+    adapter_class = FacebookOAuth2Adapter
+    # serializer_class = SocialTokenSerializer
 
 class GoogleLoginView(SocialLoginView):
     print("GoogleLoginView, LA COLONILLA")

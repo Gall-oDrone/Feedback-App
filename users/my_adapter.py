@@ -14,45 +14,44 @@ from .serializers import send_verification_email
 
 class MyAdapter(DefaultSocialAccountAdapter):
     def pre_social_login(self, request, sociallogin):
-        print("CANGREJO 2", sociallogin.user, sociallogin.user.id, sociallogin.user.email)
+        print("CANGREJO: ", "user: ", sociallogin.user, ", userId: ", sociallogin.user.id, sociallogin.user.email)
         # This isn't tested, but should work
+        print("sociallogin.account.extra_data", sociallogin.account.extra_data)
+        print("sociallogin.account.provider", sociallogin.account.provider)
         user = sociallogin.user
         # social account already exists, so this is just a login
         if sociallogin.is_existing:
             print("sociallogin.is_existing")
             return
 
-        # some social logins don't have an email address
-        if not sociallogin.email_addresses:
-            print("not sociallogin.email_addresses")
-            return
-
-        # find the first verified email that we get from this sociallogin
-        verified_email = None
-        for email in sociallogin.email_addresses:
-            if email.verified:
-                verified_email = email
-                break
-
-        # no verified emails found, nothing more to do
-        if not verified_email:
-            print("not verified_email")
-            return
+        email = sociallogin.account.extra_data.get('email', None)
+        email_verified = sociallogin.account.extra_data.get('email_verified', False)
+        # verify we have a verified email address depending on the provider
+        if sociallogin.account.provider == 'facebook':
+            if not (email):
+                print("not email and email_verified")
+                return
+        else:
+            if not (email and email_verified):
+                print("not email and email_verified")
+                return
 
         # check if given email address already exists as a verified email on
         # an existing user's account
         try:
             print("Try existing_email")
-            existing_email = EmailAddress.objects.get(email__iexact=email.email, verified=True)
+            existing_email = EmailAddress.objects.get(email__iexact=email, verified=True)
 
         except EmailAddress.DoesNotExist:
             print("Except EmailAddress.DoesNotExist" )
+            sociallogin.connect(request, user)
+            send_verification_email(request, sociallogin)
             return
 
         # if it does, connect this new social login to the existing user
         print("sociallogin.connect")
         sociallogin.connect(request, existing_email.user)
-        send_verification_email(request, sociallogin)
+        # send_verification_email(request, sociallogin)
         # except Exception as e:
         #     print("Except: ", e)
         #     pass
