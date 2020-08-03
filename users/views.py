@@ -373,12 +373,14 @@ class ActivateView(View):
             user = User.objects.get(pk=uid)
         # except(TypeError, ValueError, OverflowError, User.DoesNotExist):
         except Exception as e:
-            print(e)
+            print("Exception", e)
             user = None
         if user is not None and account_activation_token.check_token(user, token):
             # activate user and login:
             user.is_active_user = True
+            print("Corso I")
             user.save()
+            print("Corso II")
             EmailAddress.objects.filter(email__iexact=user.email).update(verified=True)
             login(request, user)
             return redirect("http://localhost:8001/login/{}/{}".format(uidb64, token))

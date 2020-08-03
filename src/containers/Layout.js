@@ -50,6 +50,7 @@ class CustomLayout extends React.Component {
   }
 
   render() {
+    // this.props.logout()
     console.log("Layout this.props: ", this.props)
     if(this.props.username === ""){
       this.props.logout()

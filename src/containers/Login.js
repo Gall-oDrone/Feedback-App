@@ -18,11 +18,13 @@ const openNotification = (message) => {
 
 class NormalLoginForm extends React.Component {
 
-  componentDidUpdate(){
-    this.props.location.state !== undefined &&
-    this.props.location.state !== null &&
-    this.props.location.state.verified === true && 
-    openNotification("Thank you, your email has been confirmed!!")
+  componentDidMount(){
+    if(this.props.location.state !== undefined){
+      openNotification("Thank you, your email has been confirmed!!")
+    }
+    // this.props.location.state !== undefined &&
+    // this.props.location.state !== null &&
+    // this.props.location.state.verified === true && 
   }
 
   handleSubmit = e => {

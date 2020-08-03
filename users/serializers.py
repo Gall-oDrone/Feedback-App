@@ -605,6 +605,7 @@ def send_verification_email(sociallogin, user, **kwargs):
     # print("EHMARIMACHO 2: ", request, data)
     # print("EHMARIMACHO 2: ", user, **kwargs)
     user = User.objects.get(pk=user.id)
+    print("user at sve: ", user, user.pk)
     if(user.is_active_user == True):
         return
     # user = User.objects.get(pk=data.user.id)
