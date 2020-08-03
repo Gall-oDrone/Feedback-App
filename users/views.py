@@ -23,7 +23,8 @@ from .serializers import (
     testSerializer2,
     degreeSerializer,
     SocialTokenSerializer,
-    UniSerializer
+    UniSerializer,
+    send_verification_email
 )
 
 from django.views import View
@@ -394,20 +395,27 @@ class ActivateView(View):
             update_session_auth_hash(request, user) # Important, to update the session with the new password
             return HttpResponse('Password changed successfully')
 
+class ResendConfirmationView(View):
+    def get(self, request):
+        user = get_user_model()
+        print("User: ", User.email)
+        return HttpResponse('User email',  User.email)
+
+    def post(self, request):
+        send_verification_email(None, request.data.user, request)
+        return HttpResponse('Resend Email Successfully!')
+
 class GoogleLogin(SocialLoginView):
-    print("corso")
     adapter_class = GoogleOAuth2Adapter
     # serializer_class = SocialTokenSerializer
     client_class = OAuth2Client
     callback_url = "http://127.0.0.1:8000/api/users/auth/google/callback/"
 
 class FacebookLogin(SocialLoginView):
-    print("QUÉ?")
     adapter_class = FacebookOAuth2Adapter
     # serializer_class = SocialTokenSerializer
 
 class GoogleLoginView(SocialLoginView):
-    print("GoogleLoginView, LA COLONILLA")
     # adapter_class = GoogleOAuth2Adapter
     # adapter_class = GoogleOAuth2Adapter
     # client_class = OAuth2Client

@@ -83,3 +83,12 @@
       width: 40%;
       height: 100vh;
     }
+
+.resend-email {
+  color: #000;
+  transition: color 0.1s, background-color 0.1s;
+}
+
+.resend-email:hover{
+  color: #11b1f0;
+}

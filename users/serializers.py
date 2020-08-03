@@ -13,6 +13,8 @@ from .tokens import account_activation_token
 from django.core.mail import EmailMessage, EmailMultiAlternatives
 from django.template.loader import render_to_string, get_template
 from django.template import Context
+from allauth.account.signals import user_signed_up
+from django.dispatch import receiver
 from django.contrib.auth import get_user_model
 from django.http import HttpResponse
 
@@ -597,36 +599,40 @@ class testSerializer2(serializers.Serializer):
 
     # multiplechoices = serializers.MultipleChoiceField( 
     #     choices = GEEKS_CHOICES) 
-
-def send_verification_email(request, data):
-    print("EHMARIMACHO 2: ", request, data)
-    user = User.objects.get(pk=data.user.id)
-    if request.method == 'POST':
-        to_email = data.user.email
-        if User.objects.filter(email__iexact=to_email).count() == 1:
-            mail_subject, from_email, to = 'Activate your account.', 'gallodiego117@gmail.com', to_email
-            current_site = Site.objects.get_current() #get_current_site(request)
-            print("CURRENT: ", current_site, current_site.domain)
-            uid = urlsafe_base64_encode(force_bytes(user.pk))
-            token = account_activation_token.make_token(user)
-            activation_link = "{0}/?uid={1}&token{2}".format(current_site, uid, token)
-            # message = render_to_string('activate_template.html', {
-            #                 'user': "q", 
-            #                 'domain': "127.0.0.1:8000",
-            #                 'uid': "1231231231",
-            #                 'token': "213jl1k2j31lk3j1",
-            #             })
-            message = render_to_string('activate_template.html', {
-                        'user': user.username,
-                        'domain': current_site.domain,
-                        'uid': urlsafe_base64_encode(force_bytes(user.pk)),
-                        'token': account_activation_token.make_token(user),
-                    })
-            msg = EmailMultiAlternatives(mail_subject, "text_content", from_email, [to])
-            msg.attach_alternative(message, "text/html")
-            msg.send()
+@receiver(user_signed_up)
+# def send_verification_email(sociallogin, request, data, **kwargs):
+def send_verification_email(sociallogin, user, **kwargs):
+    # print("EHMARIMACHO 2: ", request, data)
+    # print("EHMARIMACHO 2: ", user, **kwargs)
+    user = User.objects.get(pk=user.id)
+    if(user.is_active_user == True):
+        return
+    # user = User.objects.get(pk=data.user.id)
+    to_email = user.email
+    if User.objects.filter(email__iexact=to_email).count() == 1:
+        mail_subject, from_email, to = 'Activate your account.', 'gallodiego117@gmail.com', to_email
+        current_site = Site.objects.get_current() #get_current_site(request)
+        print("CURRENT: ", current_site, current_site.domain)
+        uid = urlsafe_base64_encode(force_bytes(user.pk))
+        token = account_activation_token.make_token(user)
+        activation_link = "{0}/?uid={1}&token{2}".format(current_site, uid, token)
+        # message = render_to_string('activate_template.html', {
+        #                 'user': "q", 
+        #                 'domain': "127.0.0.1:8000",
+        #                 'uid': "1231231231",
+        #                 'token': "213jl1k2j31lk3j1",
+        #             })
+        message = render_to_string('activate_template.html', {
+                    'user': user.username,
+                    'domain': current_site.domain,
+                    'uid': urlsafe_base64_encode(force_bytes(user.pk)),
+                    'token': account_activation_token.make_token(user),
+                })
+        msg = EmailMultiAlternatives(mail_subject, "text_content", from_email, [to])
+        msg.attach_alternative(message, "text/html")
+        msg.send()
             
-            # to_email = form.cleaned_data.get('email')
-            # email = EmailMessage(mail_subject, message, to=[to_email])
-            # email.send()
-            return HttpResponse('Please confirm your email address to complete the registration')
+        # to_email = form.cleaned_data.get('email')
+        # email = EmailMessage(mail_subject, message, to=[to_email])
+        # email.send()
+        return HttpResponse('Please confirm your email address to complete the registration')

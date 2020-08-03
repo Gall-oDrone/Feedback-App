@@ -19,13 +19,15 @@ from .views import (
     FacebookLogin,
     GoogleLogin,
     google_callback,
-    EmailTemplateView
+    EmailTemplateView,
+    ResendConfirmationView
     # BachelorView,
     # MasterView,
     # DoctorateView,
     # CourseView
 	)
 
+from .serializers import send_verification_email
 router = DefaultRouter()
 # router.register(r'', UserViewSet, base_name='users')
 # urlpatterns = router.urls
@@ -53,6 +55,7 @@ urlpatterns = [
     path('auth/facebook/', FacebookLogin.as_view(), name='facebook_login'),
     path('auth/google/callback/', google_callback, name="google_callback"),
     path('email_template/<str:uidb64>/<str:token>', ActivateView.as_view(), name="email_account_confirmation"),
+    path('auth/resend/confirmation/', ResendConfirmationView.as_view(), name="resend_confirmation_email")
     # path('auth/google/url/', google_views.oauth2_login)
     # path('bachelor-list/', BachelorView.as_view()),
     # path('master-list/', MasterView.as_view()),

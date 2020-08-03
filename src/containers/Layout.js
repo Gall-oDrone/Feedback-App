@@ -20,7 +20,8 @@ const { Header, Content, Footer, Sider } = Layout;
 class CustomLayout extends React.Component {
   state = {
     collapsed: true,
-    current: '1'
+    current: '1',
+    alertClosed: false
   };
 
   toggle = () => {
@@ -37,9 +38,22 @@ class CustomLayout extends React.Component {
     }
   };
 
+  handleCloseAlert = () => {
+    this.setState({alertClosed: true})
+  }
+
+  componentDidUpdate(){
+    if(this.props.is_active !== undefined &&
+    this.props.is_active !== null){
+      console.log("Is active", this.props.is_active)
+    }
+  }
+
   render() {
     console.log("Layout this.props: ", this.props)
-
+    if(this.props.username === ""){
+      this.props.logout()
+    }
   //   let searchForm = this.state.showForm ? (
   //     <form className="menu__search-form" method="POST">
   //         <input className="menu__search-input" placeholder="Type and hit enter" />
@@ -48,9 +62,19 @@ class CustomLayout extends React.Component {
 
     return (
       <Layout className="parent layout" >
-        {this.props.is_active === false ? 
+        {this.props.is_active === false &&
+          this.state.alertClosed === false ? 
             <Header style={{ height: "30px"}}>
-              <Alert style={{ textAlign:"center", height:"inherit"}} message="Hi! Please confirm your email address by clicking the link in the email we sent you" type="info" />
+              <Alert 
+                style={{ textAlign:"center", height:"inherit"}}
+                closable
+                onClose={this.handleCloseAlert}
+                message={
+                  <p>Hi! Please confirm your email address by clicking the link in the email we sent you.
+                    <a className="resend-email" href={"/confirmation/new/"}> Resend me the link, please</a>
+                  </p>
+                } 
+                type="info" />
             </Header>
             : null 
         }
@@ -272,6 +296,7 @@ class CustomLayout extends React.Component {
 const mapStateToProps = state => {
   return {
     userId: state.auth.userId,
+    username: state.auth.username,
     token: state.auth.token,
     is_active: state.auth.is_active_user,
     is_student: state.auth.is_student,

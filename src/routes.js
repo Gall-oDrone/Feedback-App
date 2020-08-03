@@ -5,6 +5,7 @@ import Hoc from "./hoc/hoc";
 import Login from "./containers/Login";
 import Signup from "./containers/Signup";
 import Profile from "./containers/Profile";
+import Reconfirmation from "./containers/Reconfirmation";
 import ArticleList from "./containers/ArticleList";
 import ArticleCreate from "./containers/ArticleCreate";
 import ArticleFeedback from "./containers/ArticleFeedback";
@@ -129,6 +130,7 @@ const BaseRouter = () => (
 
     <Route exact path="/login/" component={Login} />
     <Route exact path="/login/:uid/:token/" component={Login} />
+    <Route exact path="/confirmation/new/" component={Reconfirmation} />
     <Route exact path="/signup/" component={Signup} />
     
     <Route exact path="/profile/:id" component={Profile} />

@@ -25,7 +25,7 @@ class MyAdapter(DefaultSocialAccountAdapter):
             return
 
         email = sociallogin.account.extra_data.get('email', None)
-        email_verified = sociallogin.account.extra_data.get('email_verified', False)
+        email_verified = sociallogin.account.extra_data.get('verified_email', False)
         # verify we have a verified email address depending on the provider
         if sociallogin.account.provider == 'facebook':
             if not (email):
@@ -44,8 +44,8 @@ class MyAdapter(DefaultSocialAccountAdapter):
 
         except EmailAddress.DoesNotExist:
             print("Except EmailAddress.DoesNotExist" )
-            sociallogin.connect(request, user)
-            send_verification_email(request, sociallogin)
+            # sociallogin.connect(request, user)
+            # send_verification_email(request, sociallogin)
             return
 
         # if it does, connect this new social login to the existing user

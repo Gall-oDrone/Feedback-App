@@ -10,7 +10,8 @@ import {
   authSignUpURL,
   authLogOutURL,
   authGoogleLogInURL,
-  authFacebookLogInURL
+  authFacebookLogInURL,
+  authResendConfirmationURL
 } from "../../constants"
 
 export const authStart = () => {
@@ -104,9 +105,13 @@ export const authGoogleLogin = (token) => {
           expirationDate: new Date(new Date().getTime() + 3600 * 1000)
         };
         console.log("authGoogleLogin user: ", JSON.stringify(user))
-        localStorage.setItem("user", JSON.stringify(user));
-        dispatch(authSuccess(user));
-        dispatch(checkAuthTimeout(3600));
+        if(user.username === ""){
+          dispatch(logout());
+        } else {
+          localStorage.setItem("user", JSON.stringify(user));
+          dispatch(authSuccess(user));
+          dispatch(checkAuthTimeout(3600));
+        }
       })
       .catch(err => {
         dispatch(authFail(err));
@@ -130,10 +135,32 @@ export const authFacebookLogin = (token) => {
           university: res.data.university.university,
           expirationDate: new Date(new Date().getTime() + 3600 * 1000)
         };
-        console.log("authGoogleLogin user: ", JSON.stringify(user))
-        localStorage.setItem("user", JSON.stringify(user));
-        dispatch(authSuccess(user));
-        dispatch(checkAuthTimeout(3600));
+        if(user.username === ""){
+          dispatch(logout());
+        } else {
+          localStorage.setItem("user", JSON.stringify(user));
+          dispatch(authSuccess(user));
+          dispatch(checkAuthTimeout(3600));
+        }
+      })
+      .catch(err => {
+        dispatch(authFail(err));
+      });
+  };
+}
+
+export const authResendConfirmation = (token, userId, userEmail) => {
+  const user = {
+    token: token,
+    id: userId,
+    email: userEmail,
+  };
+  return dispatch => {
+    axios
+      .post(authResendConfirmationURL, { user })
+      .then(res => {
+        // dispatch(authSuccess(user));
+        // dispatch(checkAuthTimeout(3600));
       })
       .catch(err => {
         dispatch(authFail(err));

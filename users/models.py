@@ -39,7 +39,7 @@ class User(AbstractUser):
 
     @receiver(user_signed_up)
     def populate_profile(sociallogin, user, **kwargs):
-        print("populate_profile METHOD")
+        print("populate_profile METHOD", kwargs, user.username)
         profile = Profile()
         profile_info = ProfileInfo()
 
@@ -55,15 +55,23 @@ class User(AbstractUser):
             email = user_data['email']
             full_name = user_data['name']
         
-        user = User.objects.get(pk=user_data['id'])
-        profile.user = user
-        profile.profile_avatar = picture_url
-        profile.save()
+        print("user_data: ", user_data)
+        user = User.objects.get(email=user_data['email'])
+        try:
+            profile.user_id = user.id
+            print("CODSO: ", user.profile.notification_counter, ", ", user.profileinfo_set)
+            user.profile.profile_avatar = picture_url
+            # profile.save()
 
-        profile_info.profile = profile
-        profile_info.profile_username = user
-        profile_info.name = user_data['name']
-        profile_info.save()
+            # profile_info = ProfileInfo.objects.get_or_create(profile_username=user)
+            # profile_info.profile = user.profile
+            # profile_info.profile_username = user
+            # profile_info.name = user_data['name']
+            user.save()
+        except Exception as e:
+            print("Exception: ", e)
+            user.delete()
+
 
         # if(user.is_active_user == False):
         #     send_verification_email()

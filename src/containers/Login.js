@@ -18,6 +18,13 @@ const openNotification = (message) => {
 
 class NormalLoginForm extends React.Component {
 
+  componentDidUpdate(){
+    this.props.location.state !== undefined &&
+    this.props.location.state !== null &&
+    this.props.location.state.verified === true && 
+    openNotification("Thank you, your email has been confirmed!!")
+  }
+
   handleSubmit = e => {
     e.preventDefault();
     this.props.form.validateFields((err, values) => {
@@ -39,23 +46,21 @@ class NormalLoginForm extends React.Component {
     if (this.props.error) {
       errorMessage = <p>{this.props.error.message}</p>;
     }
-
     const { getFieldDecorator } = this.props.form;
     return (
       <div className="login-container">
         {errorMessage}
-        {this.props.match.params.uid !== undefined && this.props.match.params.token !== undefined ? 
+        {this.props.match.params.uid !== undefined &&
+         this.props.match.params.uid !== null &&
+         this.props.match.params.token !== undefined &&
+         this.props.match.params.token !== null ?
           <Redirect to={{
               pathname: '/login',
               state: { verified: true },
             }}
             /> : null
         }
-        {
-          this.props.location.state !== undefined &&
-          this.props.location.state.verified === true && 
-          openNotification("Thank you, your email has been confirmed!!")
-        }
+
         {this.props.loading ? (
           <Spin indicator={antIcon} />
         ) : (
