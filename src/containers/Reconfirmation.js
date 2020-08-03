@@ -25,12 +25,11 @@ class Confirmation extends React.Component {
         }
         if (!err) {
           axios.defaults.headers = {
-            "content-type": "multipart/form-data",
             Authorization: `Token ${this.props.token}`
           };
           axios.post(authResendConfirmationURL, postObj)
           .then(res => {
-            if (res.status === 201) {
+            if (res.status === 200) {
               // this.props.history.push('/');
             }
           })

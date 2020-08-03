@@ -6,7 +6,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.core.exceptions import ObjectDoesNotExist
 from rest_framework.response import Response
 from rest_framework import viewsets, permissions, generics
-from rest_framework.status import HTTP_200_OK, HTTP_400_BAD_REQUEST, HTTP_201_CREATED, HTTP_400_BAD_REQUEST
+from rest_framework.status import HTTP_200_OK, HTTP_400_BAD_REQUEST, HTTP_201_CREATED
 from rest_framework.parsers import MultiPartParser, FileUploadParser, FormParser, JSONParser
 import json
 import urllib.parse
@@ -397,15 +397,26 @@ class ActivateView(View):
             update_session_auth_hash(request, user) # Important, to update the session with the new password
             return HttpResponse('Password changed successfully')
 
-class ResendConfirmationView(View):
+class ResendConfirmationView(RetrieveUpdateDestroyAPIView):
+    permission_classes = (permissions.IsAuthenticated,)
+
     def get(self, request):
         user = get_user_model()
         print("User: ", User.email)
         return HttpResponse('User email',  User.email)
 
     def post(self, request):
-        send_verification_email(None, request.data.user, request)
-        return HttpResponse('Resend Email Successfully!')
+        user = get_user_model()
+        user = user.objects.get(email=request.data.get("email"))
+        print(request.data, user.email, user.username)
+        if(user.email == request.data.get("email")):
+            data = {
+                "email": request.data.get("email"),
+                "id": user.id
+            }
+            send_verification_email(None, data)
+            return HttpResponse('Resend Email Successfully!')
+        return HttpResponse('There was an error!')
 
 class GoogleLogin(SocialLoginView):
     adapter_class = GoogleOAuth2Adapter
