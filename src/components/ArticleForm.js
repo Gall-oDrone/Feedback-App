@@ -138,27 +138,27 @@ class ArticleCustomForm extends React.Component {
       }
       formData.append("data", JSON.stringify(postObj))
       if (!err) {
-        // axios.defaults.xsrfHeaderName = "X-CSRFTOKEN";
-        // axios.defaults.xsrfCookieName = "csrftoken";
-        // axios.defaults.headers = {
-        //   "content-type": "multipart/form-data",
-        //   Authorization: `Token ${this.props.token}`
-        // };
-        // console.log("formData: ", JSON.stringify(formData))
-        // if (requestType === "post") {
-        //   console.log("params: " + title + " " + content + " "+ engagement)
-        //   console.log("before posting article")
-        //   axios.post(articleCreateURL, 
-        //   formData
-        //   )
-        //     .then(res => {
-        //       if (res.status === 201) {
-        //         this.props.history.push('/');
-        //       }
-        //     })
-        //     .catch(error => console.error(error))
-        //     console.log('Error');
-        // }
+        axios.defaults.xsrfHeaderName = "X-CSRFTOKEN";
+        axios.defaults.xsrfCookieName = "csrftoken";
+        axios.defaults.headers = {
+          "content-type": "multipart/form-data",
+          Authorization: `Token ${this.props.token}`
+        };
+        console.log("formData: ", JSON.stringify(formData))
+        if (requestType === "post") {
+          console.log("params: " + title + " " + content + " "+ engagement)
+          console.log("before posting article")
+          axios.post(articleCreateURL, 
+          formData
+          )
+            .then(res => {
+              if (res.status === 201) {
+                this.props.history.push('/');
+              }
+            })
+            .catch(error => console.error(error))
+            console.log('Error');
+        }
 
         console.log('Received values of form: ', values);
       }
@@ -197,6 +197,7 @@ class ArticleCustomForm extends React.Component {
         this.props.articleID)}>
         <Form.Item label="Article Name" hasFeedback>
           {getFieldDecorator('title', {
+            initialValue: 'Corso',
             rules: [{ required: true, message: 'Please enter your project/product name!' }],
           })(<Input name="title" />
           )}
@@ -211,6 +212,7 @@ class ArticleCustomForm extends React.Component {
 
         <Form.Item label="Related fields">
           {getFieldDecorator('categories', {
+            initialValue: ['categories'],
             rules: [
               { required: true, message: 'Please select a field for your project!', type: 'array' },
             ],
@@ -225,7 +227,7 @@ class ArticleCustomForm extends React.Component {
 
         <Form.Item label="Feedback type">
           {getFieldDecorator('feedback_type', {
-            initialValue: ['1'],
+            initialValue: ['live chat'],
           })(
             <Checkbox.Group style={{ width: '100%' }}>
               <Row>

@@ -610,7 +610,7 @@ def send_verification_email(sociallogin, user, **kwargs):
     except: 
         user = User.objects.get(pk=user.get("id"))
     if(user.is_active_user == True):
-        return
+        return HttpResponse('You already confirmed your email!')
     # user = User.objects.get(pk=data.user.id)
     to_email = user.email
     if User.objects.filter(email__iexact=to_email).count() == 1:

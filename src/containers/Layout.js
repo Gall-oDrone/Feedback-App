@@ -280,7 +280,7 @@ class CustomLayout extends React.Component {
               </Breadcrumb.Item>
             ) : null} */}
           </Breadcrumb>
-          <div style={{ background: "#fff", padding: 24, minHeight: 480 }}>
+          <div style={{ background: "#fff", padding: 24, minHeight: 580 }}>
             {this.props.children}
           </div>
 

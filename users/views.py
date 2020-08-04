@@ -383,6 +383,7 @@ class ActivateView(View):
             print("Corso II")
             EmailAddress.objects.filter(email__iexact=user.email).update(verified=True)
             login(request, user)
+            print("Corso III")
             return redirect("http://localhost:8001/login/{}/{}".format(uidb64, token))
             # return HttpResponse('Thank you for your email confirmation. Now you can login your account.')
             # form = PasswordChangeForm(request.user)
