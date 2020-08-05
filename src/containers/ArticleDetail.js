@@ -5,17 +5,68 @@ import {articleDetailURL} from "../constants";
 import { connect } from 'react-redux';
 import { Menu, Card, Button, Skeleton, message, Divider, List, Tabs, Row, Col, Icon} from "antd";
 import { Link, withRouter } from "react-router-dom";
-import ArticleCreate from '../containers/ArticleCreate';
-import { configConsumerProps } from 'antd/lib/config-provider';
-import * as actions from "../store/actions/auth";
+import {Editor, EditorState, convertToRaw, convertFromRaw} from "draft-js";
 
 const { SubMenu } = Menu;
 const { TabPane } = Tabs;
+
+const content = {
+    "blocks": [
+        {
+            "key": "8i090",
+            "text": "Hello CodePulse!",
+            "type": "unstyled",
+            "depth": 0,
+            "inlineStyleRanges": [
+                {
+                    "offset": 0,
+                    "length": 16,
+                    "style": "BOLD"
+                }
+            ],
+            "entityRanges": [],
+            "data": {}
+        },
+        {
+            "key": "42ncd",
+            "text": "This text should be underlined.",
+            "type": "unstyled",
+            "depth": 0,
+            "inlineStyleRanges": [
+                {
+                    "offset": 0,
+                    "length": 31,
+                    "style": "UNDERLINE"
+                }
+            ],
+            "entityRanges": [],
+            "data": {}
+        },
+        {
+            "key": "327r6",
+            "text": "And this text should be italic.",
+            "type": "unstyled",
+            "depth": 0,
+            "inlineStyleRanges": [
+                {
+                    "offset": 0,
+                    "length": 31,
+                    "style": "ITALIC"
+                }
+            ],
+            "entityRanges": [],
+            "data": {}
+        }
+    ],
+    "entityMap": {}
+}
 class ArticleDetail extends React.Component {
 
     state = {
         article: {},
-        current: 'mail'
+        current: 'mail',
+        content: null,
+        // editorState: EditorState.createWithContent(stateFromHTML(props.data.description))
     };
 
     handleClick = e => {
@@ -33,7 +84,9 @@ class ArticleDetail extends React.Component {
             .then(res => {
                 console.log("res: " + JSON.stringify(res.data))
                 this.setState({
-                    article: res.data
+                    article: res.data,
+                    content: EditorState.createWithContent(convertFromRaw(JSON.parse(res.data.content)))
+                    // content: EditorState.createWithContent(convertFromRaw(JSON.parse(res.data.content)))
                 });
                 console.log("Article Detail res data: " + res.data);
             });
@@ -67,52 +120,25 @@ class ArticleDetail extends React.Component {
 
     // }
 
-    // handleUpdate = event => {
-    //     if (this.props.token !== null) {
-    //         const articleID = this.props.match.params.articleID;
-    //         axios.defaults.headers = {
-    //             "Content-Type": "aplication/json",
-    //             Authorization: `Token ${this.props.token}`
-    //         }
-    //         axios.post(`http://127.0.0.1:8000/articles/${articleID}/update/`);
-    //         this.props.history.push('/');
-    //         this.forceUpdate();
-    //     } else {
-    //         // Could not update 
-    //     }
-    // }
-
     render() {
         console.log('this.PROPS: ' + JSON.stringify(this.props))
         console.log("1) this.state.article: " + JSON.stringify(this.state.article))
-        console.log("2) this.state.article.title: " + this.state.article.title)
+        console.log("2) this.state.article.title: " + this.state.article.title, typeof(this.state.article.content), typeof(content))
         console.log("3) this.state.article.engagement: " + this.state.article.engagement)
+        // const parseContent = JSON.parse(this.state.article.content)
+        // const contentState = convertFromRaw(this.state.article.content);
+        // const editorState = EditorState.createWithContent(this.state.content);
         return (
-            // <Menu onClick={this.handleClick}
-            //     selectedKeys={[this.state.current]}
-            //     mode="horizontal"
-            // >
-            //     <Menu.Item key="mail">
-            //         <Icon type="mail" />
-            //         
-                        // <Link to="/login">Detail</Link>
-            //     </Menu.Item>
-            //     <Menu.Item key="app">
-            //         <Icon type="appstore" />
-            // <Link to="/login">Feedback</Link>
-            //     </Menu.Item>
-            // </Menu>
             <div>
                 <Card title={this.state.article.title}>
-                    {/* <Row type="flex" justify="center">
-                        <Button>
-                            Open Call To Join Project
-                        </Button>
-                    </Row> */}
                     <Row>
                         <Col span={18}>
                             <p>Content: {this.state.article.content}</p>
-                            <p>Description: {this.state.article.description}</p>
+                            {this.state.content !== undefined  &&
+                            this.state.content !== null ?
+                            <p>Description:  <Editor editorState={this.state.content} readOnly={true} /></p>
+                            : null
+                             }
                         </Col>
                         <Col span={6}>
                             <Tabs defaultActiveKey="1" tabPosition={"right"} style={{ height: 220 }}>
@@ -120,57 +146,13 @@ class ArticleDetail extends React.Component {
                                     <p>Members</p>
                                     <ul>{this.state.article.author}</ul>
                                   </TabPane>
-                                  {/* <TabPane tab="Requirements" key="2">
-                                    What we are looking for
-                                  </TabPane>
-                                  <TabPane tab="Restrictions" key="3">
-                                    Call Restrictions
-                                  </TabPane> */}
                                   <TabPane tab="Product" key="4">
                                     Web Page or Product Demo
                                   </TabPane>
                             </Tabs>
                         </Col>
                     </Row>
-                    {/* <div>
-                        <h3 align="center"> Feedback options</h3>
-                        <div>
-                            <List
-                                grid={{
-                                    gutter: 16,
-                                    xs: 1,
-                                    sm: 2,
-                                    md: 4,
-                                    lg: 4,
-                                    xl: 6,
-                                    xxl: 3,
-                                }}
-                                size="small"
-                                bordered
-                                dataSource={this.state.article.engagement}
-                                renderItem={item => this.renderItem(item)}
-                            />
-                        </div>
-                    </div> */}
                 </Card>
-                {/* <br />
-                {this.props.token !== null ? (
-                    <div>
-                            <form onSubmit={this.handleUpdate}>
-                                <Button type="primary" htmlType="submit" href="/articles/update/">
-                                    Update
-                            </Button>
-                            </form>
-                            <form onSubmit={this.handleDelete}>
-                                <Button type="danger" htmlType="submit">
-                                    Delete
-                            </Button>
-                            </form>
-                        
-                    </div>
-                ) : (
-                        null
-                    )} */}
             </div>
         )
     }

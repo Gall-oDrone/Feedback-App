@@ -195,13 +195,14 @@ class ArticleCustomForm extends React.Component {
         event,
         this.props.requestType,
         this.props.articleID)}>
-        <Form.Item label="Article Name" hasFeedback>
+        <Form.Item label="Article Title" hasFeedback>
           {getFieldDecorator('title', {
             initialValue: 'Corso',
             rules: [{ required: true, message: 'Please enter your project/product name!' }],
           })(<Input name="title" />
           )}
         </Form.Item>
+        
         <Form.Item label="Content" hasFeedback>
           {getFieldDecorator('content', {
             rules: [{ required: true, message: 'Please enter a content' }],

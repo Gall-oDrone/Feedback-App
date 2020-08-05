@@ -16,7 +16,6 @@ import { fetchRating } from "../store/actions/rating";
 import DonationDrawer from "../components/DonationDrawer";
 import "../assets/projectTab.css"
 
-
 var moment = require('moment');
 const { SubMenu } = Menu;
 const { TabPane } = Tabs;
