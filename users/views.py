@@ -24,7 +24,8 @@ from .serializers import (
     degreeSerializer,
     SocialTokenSerializer,
     UniSerializer,
-    send_verification_email
+    send_verification_email,
+    UserFollowingSerializer
 )
 
 from django.views import View
@@ -102,6 +103,11 @@ class UserFriendRequestsView(viewsets.ModelViewSet):
         frequest = FriendRequest.objects.filter(from_user=from_user, to_user=request.user).first()
         frequest.delete()
         return HttpResponseRedirect('/users/{}'.format(request.user.profile.slug))
+
+class UserFollowingViewSet(viewsets.ModelViewSet):
+    permission_classes = (IsAuthenticatedOrReadOnly,)
+    serializer_class = UserFollowingSerializer
+    queryset = models.UserFollowing.objects.all()
 
 class UserLCRequestsView(ListAPIView):
     queryset = MeetingRequest.objects.all()

@@ -282,12 +282,32 @@ class SocialTokenSerializer(serializers.ModelSerializer):
     #         'is_active_user': status
     #     }
 
+class FollowingSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = UserFollowing
+        fields = ("id", "following_user_id", "created")
+
+class FollowersSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = UserFollowing
+        fields = ("id", "user_id", "created")
+
 class ProfileSerializer(serializers.ModelSerializer):
     user = StringSerializer(many=False)
     # slug = serializers.SerializerMethodField(many=False)
+    following = serializers.SerializerMethodField()
+    followers = serializers.SerializerMethodField()
+
     class Meta:
         model = Profile
-        fields = ("__all__" )
+        fields = ("__all__",  "following",
+            "followers" )
+    
+    def get_following(self, obj):
+        return FollowingSerializer(obj.user.following.all(), many=True).data
+
+    def get_followers(self, obj):
+        return FollowersSerializer(obj.user.followers.all(), many=True).data
     
     def update_profile_info(self, request, *args):
         data = request
@@ -347,7 +367,7 @@ class ProfileInfoSerializer(serializers.ModelSerializer):
     
     def get_profile_avatar(self, obj):
         request = self.context.get('request')
-        profile = ProfileSerializer(obj.profile, many=False).data["profile_avatar"]
+        profile = ProfileSerializer(obj.profile, many=False, context={'request': request}).data["profile_avatar"]
         return profile
 
     def update_account_info(self, request):

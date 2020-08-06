@@ -304,7 +304,7 @@ class ArticleDetail extends React.Component {
                             <img
                                 className="contain"
                                 alt="logo"
-                                src={`http://127.0.0.1:8000${profile_avatar}`}
+                                src={profile_avatar}
                             />
                             </div>
                             </Row>
