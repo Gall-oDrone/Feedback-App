@@ -40,12 +40,13 @@ class ArticleDetailMenu extends React.Component {
     showC: true,
     feedback_types: {},
     updated: false,
-    activeClass: false,
+    activeClass: null,
     drawer_visible: false,
     modal_visible: false,
     key_id: null,
     feedback_t:null,
-    disableB: false
+    disableB: false,
+    items: null
   };
 
   handleShowComments(show){
@@ -79,6 +80,14 @@ class ArticleDetailMenu extends React.Component {
     else {return null}
   }
 
+  isInView = (element: HTMLElement) => {
+    const { offset } = this.props;
+    const rect = element.getBoundingClientRect();
+    return rect.top >= 0 && rect.bottom <= window.innerHeight;
+    return rect.top >= 0 - offset && rect.bottom <=     
+      window.innerHeight + offset;
+ };
+
   handleActiveClass = () => {
     const node1 = this.topRef
     const node2 = this.webRef
@@ -86,8 +95,30 @@ class ArticleDetailMenu extends React.Component {
     const node4 = this.photoRef
     const node5 = this.parentRef
     // window.scrollTo(0, node);
-    // var scrollTargetIds = Object.values(node5.children).map(function(el){if(el.nodeName === "SECTION" && el.nodeName !== undefined){return el.id}})
-
+    if(node5 !== null){
+      var scrollTargetIds = Object.values(node5.children).map(function(el){if(el.nodeName === "SECTION" && el.nodeName !== undefined){return el.id;}})
+      var activeClass = null;
+      const items = scrollTargetIds.map((el, i) => {
+        console.log("EHRENO -1: ", el)
+        if(el !== undefined){
+          const element = document.getElementById(el);
+          if (element) {
+            if(this.isInView(element) === true){
+              activeClass = element.id
+            }
+            return {
+              inView: this.isInView(element),
+              element
+            } //as SpyItem;
+          } else {
+            return;
+          }
+        }
+      })
+      console.log("EHRENO 0: ", items)
+      console.log("EHRENO: ", scrollTargetIds, node)
+      this.setState({ items: items, activeClass: activeClass});
+    }
     const { y = 0 } = (node && node.getBoundingClientRect()) || {};
 
     // this.setState({
@@ -175,6 +206,7 @@ class ArticleDetailMenu extends React.Component {
   }
 
   componentDidMount() {
+    // this.timer = window.setInterval(() => this.spy(), 100);
     window.addEventListener("scroll", this.handleActiveClass);
     const { token, userId, match:{params: { projectID }} } = this.props;
     axios.get(projectDetailURL(projectID))
@@ -267,7 +299,7 @@ class ArticleDetailMenu extends React.Component {
     console.log("like_counter: ", JSON.stringify(like_counter))
     console.log("liked: ", JSON.stringify(liked))
     console.log("this.PROPS: "+ JSON.stringify(this.props))
-    console.log("this.STATE: "+ JSON.stringify(this.state) )
+    // console.log("this.STATE: "+ JSON.stringify(this.state) )
     return (
       <div>
         {/* <List >
@@ -282,11 +314,11 @@ class ArticleDetailMenu extends React.Component {
             <div className="left-column">
               <nav>
                   <ul>
-                      <li><a className={this.state.activeClass ? "current" : "hidden"} ref={node => (this.topRef = node)} href="#overview">Overview</a></li>
-                      <li><a className={this.state.activeClass ? "current" : "hidden"} ref={node => (this.webRef = node)} href="#contributing">Contributing</a></li>
-                      <li><a className={this.state.activeClass ? "current" : "hidden"} ref={node => (this.designRef = node)} href="#credits">Credits</a></li>
-                      <li><a className={this.state.activeClass ? "current" : "hidden"} ref={node => (this.photoRef = node)} href="#feedback">Feedback</a></li>
-                      <li><a className={this.state.activeClass ? "current" : "hidden"} ref={node => (this.photoRef = node)} href="#comments">Comments</a></li>
+                      <li><a className={this.state.activeClass === "overview"  ? "current" : "hidden"} ref={node => (this.topRef = node)} name="#overview" href="#overview">Overview</a></li>
+                      <li><a className={this.state.activeClass === "contributing" ? "current" : "hidden"} ref={node => (this.webRef = node)} name="#contributing" href="#contributing">Contributing</a></li>
+                      <li><a className={this.state.activeClass === "credits" ? "current" : "hidden"} ref={node => (this.designRef = node)} name="credits" href="#credits">Credits</a></li>
+                      <li><a className={this.state.activeClass === "feedback" ? "current" : "hidden"} ref={node => (this.photoRef = node)} name="#feedback" href="#feedback">Feedback</a></li>
+                      <li><a className={this.state.activeClass === "comments" ? "current" : "hidden"} ref={node => (this.photoRef = node)} name="#comments" href="#comments">Comments</a></li>
                   </ul>
               </nav>
               <div className={"left-column-buttons"}>

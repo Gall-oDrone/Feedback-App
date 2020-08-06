@@ -8,8 +8,8 @@ from home.settings.storage_backends import MediaStorage
 from allauth.account.signals import user_signed_up
 from django.dispatch import receiver
 from django.utils.translation import ugettext_lazy as _
-from django.contrib.auth import get_user_model
-UserModel = get_user_model()
+# from django.contrib.auth import get_user_model
+# UserModel = get_user_model()
 # from .serializers import send_verification_email
 
 class User(AbstractUser):
@@ -86,8 +86,8 @@ class User(AbstractUser):
 
 class UserFollowing(models.Model):
 
-    user_id = models.ForeignKey(UserModel, related_name="following", on_delete=models.CASCADE)
-    following_user_id = models.ForeignKey(UserModel, related_name="followers", on_delete=models.CASCADE)
+    user_id = models.ForeignKey(settings.AUTH_USER_MODEL, related_name="following", on_delete=models.CASCADE)
+    following_user_id = models.ForeignKey(settings.AUTH_USER_MODEL, related_name="followers", on_delete=models.CASCADE)
     created = models.DateTimeField(auto_now_add=True, db_index=True)
 
     class Meta:

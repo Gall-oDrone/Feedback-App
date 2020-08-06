@@ -13,6 +13,7 @@ ASGI_APPLICATION = "home.asgi.routing.application"
 #             'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
 #         }
 #     }
+## La colonilla
 
 DATABASES = {
     'default': {

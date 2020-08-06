@@ -3,7 +3,7 @@ from rest_auth.registration.serializers import RegisterSerializer
 from django.contrib.sites.models import Site
 from rest_framework import serializers
 from rest_framework.authtoken.models import Token
-from .models import User, MeetingRequest, Universities, ProfileInfo, Profile, Universities, Degree, Bachelor, Master, Doctorate, Course
+from .models import User, MeetingRequest, Universities, ProfileInfo, Profile, Universities, Degree, Bachelor, Master, Doctorate, Course, UserFollowing
 from django.conf import settings
 from django.core.files.storage import FileSystemStorage
 import json 
@@ -292,6 +292,11 @@ class FollowersSerializer(serializers.ModelSerializer):
         model = UserFollowing
         fields = ("id", "user_id", "created")
 
+class UserFollowingSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = UserFollowing
+        fields = ("id", "user_id", "created")
+
 class ProfileSerializer(serializers.ModelSerializer):
     user = StringSerializer(many=False)
     # slug = serializers.SerializerMethodField(many=False)
@@ -300,8 +305,7 @@ class ProfileSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Profile
-        fields = ("__all__",  "following",
-            "followers" )
+        fields = ("__all__")
     
     def get_following(self, obj):
         return FollowingSerializer(obj.user.following.all(), many=True).data

@@ -6,11 +6,25 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.core.exceptions import ObjectDoesNotExist
 from rest_framework.response import Response
 from rest_framework import viewsets, permissions, generics
+from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from rest_framework.status import HTTP_200_OK, HTTP_400_BAD_REQUEST, HTTP_201_CREATED
 from rest_framework.parsers import MultiPartParser, FileUploadParser, FormParser, JSONParser
 import json
 import urllib.parse
-from .models import User, Profile, Universities, FriendRequest, MeetingRequest, ProfileInfo, Degree, Bachelor, Master, Doctorate, Course
+from .models import (
+    User, 
+    Profile, 
+    Universities, 
+    FriendRequest, 
+    MeetingRequest, 
+    ProfileInfo, 
+    Degree, 
+    Bachelor, 
+    Master, 
+    Doctorate, 
+    Course, 
+    UserFollowing
+    )
 from .serializers import (
     UserSerializer, 
     UserProfileLCRequestSerializer, 
@@ -107,7 +121,7 @@ class UserFriendRequestsView(viewsets.ModelViewSet):
 class UserFollowingViewSet(viewsets.ModelViewSet):
     permission_classes = (IsAuthenticatedOrReadOnly,)
     serializer_class = UserFollowingSerializer
-    queryset = models.UserFollowing.objects.all()
+    queryset = UserFollowing.objects.all()
 
 class UserLCRequestsView(ListAPIView):
     queryset = MeetingRequest.objects.all()
