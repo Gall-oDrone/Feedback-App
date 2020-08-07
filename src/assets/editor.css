@@ -1,3 +1,21 @@
+body #editor-body {
+  display: block;
+  align-items: center;
+  justify-content: center;
+  --body-min-height: 100vh;
+  padding-bottom: 15px;
+  /* background: #27ae60; */
+  font-family: "proxima-nova", "Source Sans Pro", sans-serif;
+  font-size: 1em;
+  /* letter-spacing: 5.1px; */
+  line-height: 1em;
+  --text-color: black;
+  color: #32465a;
+  text-rendering: optimizeLegibility;
+  text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.004);
+  -webkit-font-smoothing: antialiased;
+}
+
 .editorContainer {
     padding: 1em;
     margin: 1em;
@@ -12,7 +30,7 @@
   }
   
   .rdw-option-wrapper {
-    border: 1px solid #F1F1F1;
+    border: 1px solid #686464;
     padding: 5px;
     min-width: 25px;
     height: 20px;
@@ -813,9 +831,13 @@
     right: 0;
   }
   .rdw-editor-main {
-    height: 100%;
+    height: var(--body-min-height);
     border: medium double #929090;
     overflow: auto;
+    display: block;
+    padding: 0.5em;
+    padding-left: 2em;
+    /* align-self: auto; */
     box-sizing: border-box;
   }
   .rdw-editor-toolbar {
@@ -831,7 +853,7 @@
     user-select: none;
   }
   .public-DraftStyleDefault-block {
-    margin: 1em 0;
+    margin: 1em 0em;
   }
   .rdw-editor-wrapper:focus {
     outline: none;

@@ -75,6 +75,7 @@ class EditorContainer extends Component{
     //   );
     // }
     return (
+      <body id="editor-body">
           <div className='editor'>
             <Editor
               editorState={editorState}
@@ -89,6 +90,7 @@ class EditorContainer extends Component{
               }}
             />
           </div>
+      </body>
     )
   }
 }
