@@ -1,0 +1,44 @@
+<svg viewBox="0 0 28 28">
+ <g transform="matrix(1.6039 0 0 1.1355 -4.8953 -.37986)">
+  <g stroke="#000">
+   <g transform="matrix(.19849 0 0 .31133 -13.247 -4.5822)" style="mix-blend-mode:normal">
+    <rect x="84.715" y="46.99" width="50.301" height="2.4418" stroke-width=".065883"/>
+    <rect x="132.13" y="46.965" width="2.9167" height="2.3833" fill="#fff" stroke-width=".015673"/>
+    <rect x="132.88" y="46.964" width="2.158" height="2.4397" stroke-width=".01364"/>
+    <path d="m84.641 46.991v2.517l-2.1797-1.2585 1.0899-0.62923z" fill="none" stroke-width=".17326"/>
+    <path d="m83.175 47.883v0.77914l-0.67476-0.38957 0.33738-0.19479z" stroke-width=".053636"/>
+   </g>
+   <rect x="5.782" y="1.4776" width="5.5562" height="12.588" fill="#fff" stroke-width=".049715" style="mix-blend-mode:normal"/>
+   <rect x="5.7902" y="1.4543" width="5.5627" height=".81295" stroke-width=".012642" style="mix-blend-mode:normal"/>
+   <g transform="matrix(.19849 0 0 .31133 -12.978 -4.5822)" style="mix-blend-mode:normal">
+    <g stroke-width=".4">
+     <rect x="97.908" y="39.385" width="20.71" height=".46227"/>
+     <rect x="97.908" y="37.861" width="20.71" height=".46227"/>
+     <rect x="97.908" y="36.429" width="20.71" height=".46227"/>
+     <rect x="97.908" y="40.956" width="20.71" height=".46227"/>
+     <rect x="97.908" y="42.388" width="20.71" height=".46227"/>
+     <rect x="97.908" y="44.05" width="20.71" height=".46227"/>
+     <rect x="97.908" y="45.529" width="20.71" height=".46227"/>
+     <rect x="97.908" y="47.053" width="20.71" height=".46227"/>
+     <rect x="97.908" y="48.716" width="20.71" height=".46227"/>
+     <rect x="97.908" y="50.148" width="20.71" height=".46227"/>
+     <rect x="97.908" y="51.533" width="20.71" height=".46227"/>
+    </g>
+    <rect x="97.865" y="53.154" width="10.818" height=".54761" stroke-width=".31465"/>
+    <g stroke-width=".30673">
+     <rect x="108.62" y="34.858" width="10.133" height=".55554"/>
+     <rect x="108.62" y="33.38" width="10.133" height=".55554"/>
+     <rect x="108.62" y="32.087" width="10.133" height=".55554"/>
+     <rect x="108.62" y="30.47" width="10.133" height=".55554"/>
+     <rect x="108.62" y="28.899" width="10.133" height=".55554"/>
+     <rect x="108.62" y="27.56" width="10.133" height=".55554"/>
+     <rect x="108.62" y="25.943" width="10.133" height=".55554"/>
+    </g>
+   </g>
+  </g>
+  <g transform="translate(10.381 11.84)">
+   <path d="m-3.1208-8.5218h0.37964l0.69357 3.0079h-0.34313l-0.18252-0.79578h-0.73737l-0.17522 0.78118h-0.34313z" stroke="#000" stroke-width=".26458px"/>
+   <path transform="matrix(2.5005 0 0 8.302 10.505 54.213)" d="m-5.3814-7.487 0.041051 0.070519 0.056587 0.098596-0.081597 2.916e-4 -0.11368-2.916e-4 0.040546-0.070811z" fill="#fff"/>
+  </g>
+ </g>
+</svg>

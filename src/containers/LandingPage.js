@@ -1,5 +1,9 @@
 import React from "react";
-
+import { ReactComponent as ArticleIcon } from '../icons/article.svg';
+import { ReactComponent as VideoChatIcon } from '../icons/video-chat.svg';
+import { ReactComponent as ProjectsIcon } from '../icons/projects.svg';
+import { ReactComponent as AnswerIcon } from '../icons/answers.svg';
+import { ReactComponent as SurveyIcon } from '../icons/surveys.svg';
 import "../assets/landing.css";
 
 class LandingPage extends React.PureComponent {
@@ -25,27 +29,27 @@ class LandingPage extends React.PureComponent {
                     <h2>What is Mate Crunch?</h2>
                       <div className="description-banner-container">
                           <div className="description-banner-articles-container">
-                            <svg className="articles-svg"></svg>
+                            <svg className="articles-svg"><ArticleIcon/></svg>
                             <h3>Develop your writting skills</h3>
                             <p>In Mate Crunch we give the chance to students and graduates to be able to post and write about their passions, interests, and hobbies. Something that can apport to themselves and to other academic communities or just to help them to chart the path to their professional development</p>
                           </div>
                           <div className="description-banner-projects-container">
-                            <svg></svg>
+                            <svg className="articles-svg"><ProjectsIcon/></svg>
                             <h3>Develop your ideas or your projects to further stages of development</h3>
                             <p>We incentive students to become something more than just entrepreneurs. We aim for people that can apport ideas and projects with a real impact on different fields.</p>
                           </div>
                           <div className="description-banner-inquiries-container">
-                            <svg></svg>
+                            <svg className="articles-svg"><AnswerIcon/></svg>
                             <h3>Get answers to any kind of academic questions </h3>
                             <p>Homework review, problem solving, admissions, advices or other related fields</p>
                           </div>
                           <div className="description-banner-advisors-container">
-                            <svg></svg>
+                            <svg className="articles-svg"><VideoChatIcon/></svg>
                             <h3>One-to-one session meetings with either local and foreign students </h3>
                             <p>We know how valuable is time for any student or for any graduate worker. That's why you can choose a your own for handling a video chat meeting</p>
                           </div>
                           <div className="description-banner-surveys-container">
-                            <svg></svg>
+                            <svg className="articles-svg"><SurveyIcon/></svg>
                             <h3>Create and post surveys for any purpose</h3>
                             <p>For data collection, feedback or market research. You can post and customize surveys</p>
                           </div>
@@ -99,4 +103,7 @@ class LandingPage extends React.PureComponent {
   }
 }
 
+// ReactDOM.render(
+//   <LandingPage />
+// );
 export default LandingPage;
