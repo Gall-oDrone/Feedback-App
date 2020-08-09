@@ -4,6 +4,8 @@ import { ReactComponent as VideoChatIcon } from '../icons/video-chat.svg';
 import { ReactComponent as ProjectsIcon } from '../icons/projects.svg';
 import { ReactComponent as AnswerIcon } from '../icons/answers.svg';
 import { ReactComponent as SurveyIcon } from '../icons/surveys.svg';
+import { ReactComponent as WorkShopIcon } from '../icons/workshops.svg';
+
 import "../assets/landing.css";
 
 class LandingPage extends React.PureComponent {
@@ -29,7 +31,7 @@ class LandingPage extends React.PureComponent {
                     <h2>What is Mate Crunch?</h2>
                       <div className="description-banner-container">
                           <div className="description-banner-articles-container">
-                            <svg className="articles-svg"><ArticleIcon/></svg>
+                            <svg className="articles-svg"><ArticleIcon id="articlesIcon"/></svg>
                             <h3>Develop your writting skills</h3>
                             <p>In Mate Crunch we give the chance to students and graduates to be able to post and write about their passions, interests, and hobbies. Something that can apport to themselves and to other academic communities or just to help them to chart the path to their professional development</p>
                           </div>
@@ -47,6 +49,11 @@ class LandingPage extends React.PureComponent {
                             <svg className="articles-svg"><VideoChatIcon/></svg>
                             <h3>One-to-one session meetings with either local and foreign students </h3>
                             <p>We know how valuable is time for any student or for any graduate worker. That's why you can choose a your own for handling a video chat meeting</p>
+                          </div>
+                          <div className="description-banner-workshops-container">
+                            <svg className="articles-svg"><WorkShopIcon/></svg>
+                            <h3>Become a Leader</h3>
+                            <p>Share your knowledge and put on practice your communication skills with our workshop modality.</p>
                           </div>
                           <div className="description-banner-surveys-container">
                             <svg className="articles-svg"><SurveyIcon/></svg>

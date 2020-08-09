@@ -182,6 +182,20 @@
     border-radius:4px
    }
 
+   .description-banner-workshops-container {
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    flex:1 1 30%;
+    padding:20px;
+    margin:0 20px 20px;
+    border-radius:8px;
+    transition:box-shadow .3s;
+    max-width:400px;
+    text-align:center;
+    border-radius:4px
+   }
+
    .description-banner-surveys-container {
     display:flex;
     flex-direction:column;
@@ -196,19 +210,30 @@
     border-radius:4px
    }
 
-   
-   ._1z9pks3F5SARwVn6YwC3Tc:hover {
+   .articles-svg{
+    /* width: 50px; */
+    transition: color .3s,transform .3s;
+   }
+
+   .description-banner-articles-container:hover,
+    .description-banner-projects-container:hover,
+    .description-banner-inquiries-container:hover,
+    .description-banner-advisors-container:hover,
+    .description-banner-workshops-container:hover,
+    .description-banner-surveys-container:hover {
     cursor:pointer;
     box-shadow:0 0 35px -2px rgba(0,0,0,.2)
    }
-   ._1z9pks3F5SARwVn6YwC3Tc:hover ._2BVHUMSkfvQym-c2jIUgBq {
+    .description-banner-articles-container .articles-svg:hover,
+    .description-banner-projects-container .articles-svg:hover,
+    .description-banner-inquiries-container .articles-svg:hover,
+    .description-banner-advisors-container .articles-svg:hover,
+    .description-banner-workshops-container .articles-svg:hover,
+    .description-banner-surveys-container .articles-svg:hover  {
     color:#626ee3;
     transform:scale(1.2)
    }
-   ._1z9pks3F5SARwVn6YwC3Tc:hover ._1cFJadKMRsf3JtFF7E3gNK {
-    color:#890023;
-    transform:scale(1.2)
-   }
+
    @media(max-width:768px) {
     .description-banner-articles-container {
      flex:1 1 80%;
