@@ -5,6 +5,15 @@ import { ReactComponent as ProjectsIcon } from '../icons/projects.svg';
 import { ReactComponent as AnswerIcon } from '../icons/answers.svg';
 import { ReactComponent as SurveyIcon } from '../icons/surveys.svg';
 import { ReactComponent as WorkShopIcon } from '../icons/workshops.svg';
+import a from "../assets2/u-munich-logo.png"
+import b from "../assets2/university-ba-logo.png"
+import c from "../assets2/university-france-logo.png"
+import d from "../assets2/university-oxford-logo.png"
+import e from "../assets2/university-sao-pablo-logo.png"
+import f from "../assets2/university-toronto-logo.png"
+import g from "../assets2/university-unam-logo.png"
+import h from "../assets2/university-harvard-logo.png";
+import i from "../assets2/university-mit-logo.png";
 
 import "../assets/landing.css";
 
@@ -77,23 +86,52 @@ class LandingPage extends React.PureComponent {
                           <div className="universities-slider-left-bound ">
                           </div>
                           < div className="universities-slider-first-row-container">
-                            < div className="universities-slider-first-row-container-animation-1">
-                              <div className="universities-slider-img-container">
-                                  <img src="https://assets.algoexpert.io/ge79b3403bc-prod/dist/images/google.noinline.png?80f53e83"/>
+                              <div className="universities-slider-container-animation-1">
+                                <div className="universities-slider-first-row-container-animation-1">
+                                  <div className="universities-slider-img-container">
+                                      <img src={a}/>
+                                  </div>
+                                  <div className="universities-slider-img-container">
+                                      <img src={b}/>
+                                  </div>
+                                  <div className="universities-slider-img-container">
+                                      <img src={c}/>
+                                  </div>
+                                </div>
+                              </div>
+                              <div className="universities-slider-container-animation-2">
+                                <div className="universities-slider-first-row-container-animation-2">
+                                  <div className="universities-slider-img-container">
+                                    <img src={d}/>
+                                  </div>
+                                  <div className="universities-slider-img-container">
+                                    <img src={e}/>
+                                  </div>
+                                  <div className="universities-slider-img-container">
+                                    <img src={f}/>
+                                  </div>
+                                </div>
                               </div>
                             </div>
-                            < div className="universities-slider-first-row-container-animation-2">
-                            </div>
-                          </div>
                           < div className="universities-slider-second-row-container">
-                            < div className="universities-slider-first-row-container-animation-1">
-                              <div className="universities-slider-img-container">
-                                  <img src="https://assets.algoexpert.io/ge79b3403bc-prod/dist/images/google.noinline.png?80f53e83"/>
+                            <div className="universities-slider-container-animation-1">
+                              <div className="universities-slider-first-row-container-animation-1">
+                                <div className="universities-slider-img-container">
+                                    <img src={g}/>
+                                </div>
+                                <div className="universities-slider-img-container">
+                                    <img src={h}/>
+                                </div>
                               </div>
                             </div>
-                            < div className="universities-slider-first-row-container-animation-2">
-                              <div className="universities-slider-img-container">
-                                  <img src="https://assets.algoexpert.io/ge79b3403bc-prod/dist/images/google.noinline.png?80f53e83"/>
+                            <div className="universities-slider-container-animation-2">
+                              <div className="universities-slider-first-row-container-animation-2">
+                                <div className="universities-slider-img-container">
+                                    <img src={i}/>
+                                </div>
+                                <div className="universities-slider-img-container">
+                                    <img src={i}/>
+                                </div>
                               </div>
                             </div>
                           </div>

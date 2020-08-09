@@ -210,11 +210,6 @@
     border-radius:4px
    }
 
-   .articles-svg{
-    /* width: 50px; */
-    transition: color .3s,transform .3s;
-   }
-
    .description-banner-articles-container:hover,
     .description-banner-projects-container:hover,
     .description-banner-inquiries-container:hover,
@@ -224,12 +219,12 @@
     cursor:pointer;
     box-shadow:0 0 35px -2px rgba(0,0,0,.2)
    }
-    .description-banner-articles-container .articles-svg:hover,
-    .description-banner-projects-container .articles-svg:hover,
-    .description-banner-inquiries-container .articles-svg:hover,
-    .description-banner-advisors-container .articles-svg:hover,
-    .description-banner-workshops-container .articles-svg:hover,
-    .description-banner-surveys-container .articles-svg:hover  {
+    .description-banner-articles-container:hover .articles-svg,
+    .description-banner-projects-container:hover .articles-svg,
+    .description-banner-inquiries-container:hover .articles-svg,
+    .description-banner-advisors-container:hover .articles-svg,
+    .description-banner-workshops-container:hover .articles-svg,
+    .description-banner-surveys-container:hover .articles-svg {
     color:#626ee3;
     transform:scale(1.2)
    }
@@ -249,6 +244,8 @@
    }
 
    .articles-svg {
+    /* width: 50px; */
+    transition: color .3s,transform .3s;
     color:#02203c;
    }
 
@@ -295,15 +292,27 @@
    }
 
    .universities-container {
-
+    background-color: #fff;
+    max-width: 1200px;
+    border-radius: 4px;
+    box-shadow: 0 0 60px 0 rgba(0,0,0,.1);
+    padding: 60px 40px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
    }
 
    .universities-main-header-container {
-
+    font-size: 35px;
+    text-align: center;
+    padding: 0 20px;
+    margin: 0 0 10px;
    }
 
    .universities-subheader-container{
-
+    text-align: center;
+    margin: 0 0 50px;
+    font-size: 18px;
    }
 
    .universities-slider-container{
@@ -327,7 +336,7 @@
 
    .universities-slider-first-row-container{
     position: relative;
-    width: 1400px;
+    width: 1000px;
     height: 100px;
     margin: 0 0 20px;
     flex: 0 0 auto;
@@ -339,6 +348,7 @@
    position: absolute;
    width: 100%;
    height: 100%;
+   animation: _3rTYXdHGH_ciJPkM5qH3YB;
    -webkit-animation-duration: 30s;
    animation-duration: 30s;
    -webkit-animation-iteration-count: infinite;
@@ -348,23 +358,42 @@
    }
 
    .universities-slider-first-row-container-animation-1{
+    display: flex;
+    flex-direction: row;
     -webkit-animation-name: _3rTYXdHGH_ciJPkM5qH3YB;
     animation-name: _3rTYXdHGH_ciJPkM5qH3YB;
    }
 
-   .universities-slider-first-row-container-animation-2{
-    -webkit-animation-name: P0C9Z4wVPU_HTLwQV1pc4;
-    animation-name: P0C9Z4wVPU_HTLwQV1pc4;
-    left: 100%;
-   }
-
    .universities-slider-second-row-container {
     position: relative;
-    width: 1400px;
+    width: 1000px;
     height: 100px;
     margin: 0 0 20px;
     flex: 0 0 auto;
    }
+
+   .universities-slider-container-animation-2{
+    display: flex;
+    align-items: center;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    animation: P0C9Z4wVPU_HTLwQV1pc4;
+    -webkit-animation-duration: 30s;
+    animation-duration: 30s;
+    -webkit-animation-iteration-count: infinite;
+    animation-iteration-count: infinite;
+    -webkit-animation-timing-function: linear;
+    animation-timing-function: linear;
+    }
+
+    .universities-slider-first-row-container-animation-2{
+        display: flex;
+        flex-direction: row;
+        -webkit-animation-name: P0C9Z4wVPU_HTLwQV1pc4;
+        animation-name: P0C9Z4wVPU_HTLwQV1pc4;
+        left: 100%;
+       }
 
    .universities-slider-img-container {
     flex: 1 1 200px;
@@ -385,4 +414,37 @@
     object-fit: contain;
     width: 100%;
     vertical-align: middle;
+   }
+
+   @-webkit-keyframes _3rTYXdHGH_ciJPkM5qH3YB {
+    0% {
+     left:0
+    }
+    to {
+     left:-100%
+    }
+   }
+   @keyframes _3rTYXdHGH_ciJPkM5qH3YB {
+    0% {
+     left:0
+    }
+    to {
+     left:-100%
+    }
+   }
+   @-webkit-keyframes P0C9Z4wVPU_HTLwQV1pc4 {
+    0% {
+     left:100%
+    }
+    to {
+     left:0
+    }
+   }
+   @keyframes P0C9Z4wVPU_HTLwQV1pc4 {
+    0% {
+     left:100%
+    }
+    to {
+     left:0
+    }
    }
