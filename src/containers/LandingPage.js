@@ -33,7 +33,7 @@ class LandingPage extends React.PureComponent {
                     <div className="top-banner-text-container">
                       <div className="top-banner-text-container-2">
                         <h1>Mate Crunch</h1>
-                        <p>Guidance, support, interaction, and communicatoin between local and foreigners students</p>
+                        <p>Guidance, collaboration, interaction, and communication between local and international students</p>
                       </div>
                     </div>
                     <div className="top-banner-image-container">
