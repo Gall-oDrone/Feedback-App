@@ -101,7 +101,7 @@ class CustomLayout extends React.Component {
                   <Menu.Item key="2" style= {{float: 'left'}}>
                   <div className="navbar-item-in">
                       <Link to="/articles/">
-                        <Icon style={{margin:0}} type="project" />
+                        <Icon style={{margin:0}} type="edit" />
                         <span className="caption">ARTICLES</span>
                       </Link> 
                   </div>
@@ -109,7 +109,7 @@ class CustomLayout extends React.Component {
                 <Menu.Item key="3" style= {{float: 'left'}}>
                   <div className="navbar-item-in">
                       <Link to="/projects/">
-                        <Icon style={{margin:0}} type="project" />
+                        <Icon style={{margin:0}} type="rocket" />
                         <span className="caption">PROJECTS</span>
                       </Link> 
                   </div>
@@ -146,14 +146,14 @@ class CustomLayout extends React.Component {
                       </Link>
                   </div>
                 </Menu.Item>
-                {/* <Menu.Item key="7" style= {{float: 'left'}}>
+                <Menu.Item key="8" style= {{float: 'left'}}>
                   <div className="navbar-item-in">
-                      <Link to="/group-sessions/">
-                        <Icon type="team" />
-                        <span className="caption">GROUPS</span>
+                      <Link to="/workshops/">
+                        <Icon style={{margin:0}} type="schedule" />
+                        <span className="caption">WORKSHOPS</span>
                       </Link>
                   </div>
-                </Menu.Item> */}
+                </Menu.Item>
                 <Menu.Item key="8" style= {{float: 'right', paddingLeft: "15px", paddingRight: "15px"}}>
                     <ProfileHeaderMenu auth={this.props.isAuthenticated} logout={this.props.logout} userId={this.props.userId}/>
                 </Menu.Item>
@@ -287,7 +287,7 @@ class CustomLayout extends React.Component {
         </Content>
         </Layout>
         <Footer style={{ textAlign: "center" }}>
-          Ant Design ©2019 Created by Ant UED
+          Footer
         </Footer>
       </Layout>
     );

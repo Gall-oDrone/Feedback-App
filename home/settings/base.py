@@ -55,6 +55,7 @@ INSTALLED_APPS = [
     "projectsApi",
     "sessionsApi",
     "walletApi",
+    "workshopsApi",
     "storages",
 ]
 

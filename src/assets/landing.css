@@ -275,7 +275,7 @@
     min-height: 480px;
    }
 
-   .third-flex-container {
+   /* .third-flex-container {
     background-color: #fff;
     max-width: 1200px;
     border-radius: 4px;
@@ -284,7 +284,7 @@
     margin: 0 auto;
     display: flex;
     flex-direction: column;
-   }
+   } */
 
    .header2 {
     font-size: 35px;
