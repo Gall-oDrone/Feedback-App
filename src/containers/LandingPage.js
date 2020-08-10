@@ -5,6 +5,8 @@ import { ReactComponent as ProjectsIcon } from '../icons/projects.svg';
 import { ReactComponent as AnswerIcon } from '../icons/answers.svg';
 import { ReactComponent as SurveyIcon } from '../icons/surveys.svg';
 import { ReactComponent as WorkShopIcon } from '../icons/workshops.svg';
+import { ReactComponent as BrandIcon } from '../icons/brand.svg';
+
 import a from "../assets2/u-munich-logo.png"
 import b from "../assets2/university-ba-logo.png"
 import c from "../assets2/university-france-logo.png"
@@ -31,10 +33,13 @@ class LandingPage extends React.PureComponent {
                     <div className="top-banner-text-container">
                       <div className="top-banner-text-container-2">
                         <h1>Mate Crunch</h1>
-                        <p>Guidance, interaction, and socialization from within and outside academic life</p>
+                        <p>Guidance, support, interaction, and communicatoin between local and foreigners students</p>
                       </div>
                     </div>
                     <div className="top-banner-image-container">
+                        <div className="top-banner-image-container-svg">
+                          <svg className="main-icon-svg"><BrandIcon/></svg>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -80,7 +85,7 @@ class LandingPage extends React.PureComponent {
             <section className="third-section">
               <div className="third-flex-container">
                   <div className="universities-container">
-                      <h2>From Top Universities Around the Globe</h2>
+                      <h2>From top universities all around the world</h2>
                       <h4>Interactions with local and foreign students</h4>
                       < div className="universities-main-header-container">
                       </div>

@@ -60,6 +60,14 @@
         padding: 0 0 0 50px;
     }
 
+    .top-banner-image-container-svg{
+        /* flex: 1 1 50%; */
+        display:flex;
+        justify-content: space-evenly;
+        /* top: 50%; */
+        padding: 100px 0 0 0;
+    }
+
     .top-banner-image-container-2{
     position: absolute;
     width: 100%;
