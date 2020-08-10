@@ -14,6 +14,10 @@ import f from "../assets2/university-toronto-logo.png"
 import g from "../assets2/university-unam-logo.png"
 import h from "../assets2/university-harvard-logo.png";
 import i from "../assets2/university-mit-logo.png";
+import j from "../assets2/University-Cambridge-Logo.png";
+import k from "../assets2/University-Duke-Logo.png";
+import l from "../assets2/University-LSE-Logo.png";
+import m from "../assets2/university-tec-logo.png";
 
 import "../assets/landing.css";
 
@@ -42,7 +46,7 @@ class LandingPage extends React.PureComponent {
                           <div className="description-banner-articles-container">
                             <svg className="articles-svg"><ArticleIcon id="articlesIcon"/></svg>
                             <h3>Develop your writting skills</h3>
-                            <p>In Mate Crunch we give the chance to students and graduates to be able to post and write about their passions, interests, and hobbies. Something that can apport to themselves and to other academic communities or just to help them to chart the path to their professional development</p>
+                            <p>In Mate Crunch we give the chance to students and graduates to be able to post and write articles about their passions, interests, and hobbies. Something that can apport to themselves as future professionals, and also to other academic communities.</p>
                           </div>
                           <div className="description-banner-projects-container">
                             <svg className="articles-svg"><ProjectsIcon/></svg>
@@ -52,16 +56,16 @@ class LandingPage extends React.PureComponent {
                           <div className="description-banner-inquiries-container">
                             <svg className="articles-svg"><AnswerIcon/></svg>
                             <h3>Get answers to any kind of academic questions </h3>
-                            <p>Homework review, problem solving, admissions, advices or other related fields</p>
+                            <p>Homework review, problem solving, admissions, advices or other related topics</p>
                           </div>
                           <div className="description-banner-advisors-container">
                             <svg className="articles-svg"><VideoChatIcon/></svg>
-                            <h3>One-to-one session meetings with either local and foreign students </h3>
-                            <p>We know how valuable is time for any student or for any graduate worker. That's why you can choose a your own for handling a video chat meeting</p>
+                            <h3>One-to-one session meetings with local and foreign students </h3>
+                            <p>We know how valuable is time for any student or any graduate emplyoee. That's why you can get paid by handling video chat meetings</p>
                           </div>
                           <div className="description-banner-workshops-container">
                             <svg className="articles-svg"><WorkShopIcon/></svg>
-                            <h3>Become a Leader</h3>
+                            <h3>Become a Leader, a Mentor, or a Coach</h3>
                             <p>Share your knowledge and put on practice your communication skills with our workshop modality.</p>
                           </div>
                           <div className="description-banner-surveys-container">
@@ -97,18 +101,30 @@ class LandingPage extends React.PureComponent {
                                   <div className="universities-slider-img-container">
                                       <img src={c}/>
                                   </div>
+                                  <div className="universities-slider-img-container">
+                                      <img src={d}/>
+                                  </div>
+                                  <div className="universities-slider-img-container">
+                                      <img src={e}/>
+                                  </div>
                                 </div>
                               </div>
                               <div className="universities-slider-container-animation-2">
                                 <div className="universities-slider-first-row-container-animation-2">
                                   <div className="universities-slider-img-container">
-                                    <img src={d}/>
+                                    <img src={a}/>
                                   </div>
                                   <div className="universities-slider-img-container">
-                                    <img src={e}/>
+                                    <img src={b}/>
                                   </div>
                                   <div className="universities-slider-img-container">
-                                    <img src={f}/>
+                                    <img src={c}/>
+                                  </div>
+                                  <div className="universities-slider-img-container">
+                                      <img src={d}/>
+                                  </div>
+                                  <div className="universities-slider-img-container">
+                                      <img src={k}/>
                                   </div>
                                 </div>
                               </div>
@@ -117,20 +133,38 @@ class LandingPage extends React.PureComponent {
                             <div className="universities-slider-container-animation-1">
                               <div className="universities-slider-first-row-container-animation-1">
                                 <div className="universities-slider-img-container">
-                                    <img src={g}/>
+                                  <img src={f}/>
                                 </div>
                                 <div className="universities-slider-img-container">
-                                    <img src={h}/>
+                                  <img src={g}/>
+                                </div>
+                                <div className="universities-slider-img-container">
+                                  <img src={h}/>
+                                </div>
+                                <div className="universities-slider-img-container">
+                                  <img src={i}/>
+                                </div>
+                                <div className="universities-slider-img-container">
+                                  <img src={j}/>
                                 </div>
                               </div>
                             </div>
                             <div className="universities-slider-container-animation-2">
                               <div className="universities-slider-first-row-container-animation-2">
                                 <div className="universities-slider-img-container">
-                                    <img src={i}/>
+                                  <img src={f}/>
                                 </div>
                                 <div className="universities-slider-img-container">
-                                    <img src={i}/>
+                                  <img src={g}/>
+                                </div>
+                                <div className="universities-slider-img-container">
+                                  <img src={h}/>
+                                </div>
+                                <div className="universities-slider-img-container">
+                                  <img src={l}/>
+                                </div>
+                                <div className="universities-slider-img-container">
+                                  <img src={m}/>
                                 </div>
                               </div>
                             </div>
