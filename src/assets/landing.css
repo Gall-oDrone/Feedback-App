@@ -403,6 +403,16 @@
         left: 100%;
        }
 
+       .universities-slider-second-row-contaner-animation-1{
+        animation-name: _1LO251w067Lx_G32VPpMTd;
+        left: -100%;
+       }
+
+       .universities-slider-second-row-contaner-animation-1{
+        -webkit-animation-name: _3-KhWgNIGn2y4xigLSQI3w;
+        animation-name: _3-KhWgNIGn2y4xigLSQI3w;
+       }
+
    .universities-slider-img-container {
     flex: 1 1 200px;
     min-width: 0;
@@ -454,5 +464,39 @@
     }
     to {
      left:0
+    }
+   }
+   @keyframes _1LO251w067Lx_G32VPpMTd {
+    0% {
+     left:100%
+    }
+    to {
+     left:0
+    }
+   }
+
+   @-webkit-keyframes _1LO251w067Lx_G32VPpMTd {
+    0% {
+     left:-100%
+    }
+    to {
+     left:-0
+    }
+   }
+
+   @-webkit-keyframes _3-KhWgNIGn2y4xigLSQI3w {
+    0% {
+     left:0
+    }
+    to {
+     left:100%
+    }
+   }
+   @keyframes _3-KhWgNIGn2y4xigLSQI3w {
+    0% {
+     left:0
+    }
+    to {
+     left:100%
     }
    }

@@ -584,6 +584,7 @@ class ProfileInfo(models.Model):
     postgraduate = models.BooleanField(default=False)
 
     work_experience = models.BooleanField(default=False)
+    job_position = models.CharField(max_length=400, blank=True, null=True)
     website = models.CharField(max_length=50, blank=True, null=True)
     message = models.CharField(max_length=150, blank=True, null=True)
     # Position

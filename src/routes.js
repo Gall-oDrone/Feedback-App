@@ -95,6 +95,13 @@ import SessionCreate from "./containers/SessionCreate";
 import SessionDetail from "./containers/SessionDetail";
 import SessionRoomMenu from "./containers/SessionRoomMenu2"
 
+// const BaseRouter2 = () => (
+//   <Hoc>
+//     <Route exact path="/"/>
+//   </Hoc>
+//   );
+//   export default BaseRouter2;
+
 const BaseRouter = () => (
   <Hoc>
     <Route exact path="/" component={LandingPage} />

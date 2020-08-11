@@ -360,6 +360,7 @@ class ProfileInfoSerializer(serializers.ModelSerializer):
     doctorate = StringSerializer(many=False)
     course  = StringSerializer(many=False)
     work_experience = StringSerializer(many=False)
+    job_position = StringSerializer(many=False)
     website = StringSerializer(many=False)
     message = StringSerializer(many=False)
     github = StringSerializer(many=False)

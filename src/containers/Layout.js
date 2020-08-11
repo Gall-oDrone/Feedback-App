@@ -11,6 +11,7 @@ import NavMenu3 from "../components/navBarWrapper";
 import { ReactComponent as BellIcon } from '../icons/bell.svg';
 import {getProfileAccountDetail} from "../store/actions/profileAccountInfo"
 import CreateHeaderMenu from "../components/CreateHeaderMenu";
+import Landing from "./LandingPage";
 import "../assets/main.css";
 import "../assets/navBar.css";
 
@@ -62,6 +63,7 @@ class CustomLayout extends React.Component {
   // ) : '';
 
     return (
+     
       <Layout className="parent layout" >
         {this.props.is_active === false &&
           this.state.alertClosed === false ? 
@@ -223,6 +225,9 @@ class CustomLayout extends React.Component {
             </Sider>
           ):(null
           )}
+      {this.props.location.pathname === "/" ?
+      <Landing/>
+      :
         <Content style={{ padding: "0 50px", display:"inline"}}>        
           <Breadcrumb style={{ margin: "16px 0" }}>
             {/* <Breadcrumb.Item>
@@ -285,6 +290,7 @@ class CustomLayout extends React.Component {
           </div>
 
         </Content>
+  }
         </Layout>
         <Footer style={{ textAlign: "center" }}>
           Footer
