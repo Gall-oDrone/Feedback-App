@@ -118,10 +118,15 @@ class UserFriendRequestsView(viewsets.ModelViewSet):
         frequest.delete()
         return HttpResponseRedirect('/users/{}'.format(request.user.profile.slug))
 
-class UserFollowingViewSet(viewsets.ModelViewSet):
+class UserFollowingViewSet(RetrieveUpdateDestroyAPIView):
     permission_classes = (IsAuthenticatedOrReadOnly,)
     serializer_class = UserFollowingSerializer
     queryset = UserFollowing.objects.all()
+
+    def get(self, request, *args, **kwargs):
+        print("current_user QS")
+        print(current_user.id)
+        return Response({'userID': request.user.id}, status=HTTP_200_OK)
 
 class UserLCRequestsView(ListAPIView):
     queryset = MeetingRequest.objects.all()

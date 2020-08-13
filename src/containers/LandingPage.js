@@ -7,11 +7,14 @@ import { ReactComponent as SurveyIcon } from '../icons/surveys.svg';
 import { ReactComponent as WorkShopIcon } from '../icons/workshops.svg';
 import { ReactComponent as BrandIcon } from '../icons/brand.svg';
 
+// https://py3-test-app-bucket.s3.amazonaws.com/media/assets/universities/Oxford-Logo.png
+// https://py3-test-app-bucket.s3.amazonaws.com/media/assets/universities/University-Cambridge-Logo.png
 import a from "../assets2/u-munich-logo.png"
 import b from "../assets2/university-ba-logo.png"
 import c from "../assets2/university-france-logo.png"
 import d from "../assets2/university-oxford-logo.png"
 import e from "../assets2/university-sao-pablo-logo.png"
+
 import f from "../assets2/university-toronto-logo.png"
 import g from "../assets2/university-unam-logo.png"
 import h from "../assets2/university-harvard-logo.png";
@@ -135,8 +138,8 @@ class LandingPage extends React.PureComponent {
                               </div>
                             </div>
                           < div className="universities-slider-second-row-container">
-                            <div className="universities-slider-container-animation-1">
-                              <div className="universities-slider-first-row-container-animation-1">
+                            <div className="universities-slider-container-animation2-1">
+                              <div className="universities-slider-second-row-container-animation-1">
                                 <div className="universities-slider-img-container">
                                   <img src={f}/>
                                 </div>
@@ -154,8 +157,8 @@ class LandingPage extends React.PureComponent {
                                 </div>
                               </div>
                             </div>
-                            <div className="universities-slider-container-animation-2">
-                              <div className="universities-slider-first-row-container-animation-2">
+                            <div className="universities-slider-container-animation2-2">
+                              <div className="universities-slider-second-row-container-animation-2">
                                 <div className="universities-slider-img-container">
                                   <img src={f}/>
                                 </div>

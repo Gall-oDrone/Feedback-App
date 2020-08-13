@@ -28,6 +28,7 @@ export const productListURL = `${endpoint}/paymentsApi/products/`;
 export const productDetailURL = id => `${endpoint}/payments/products/${id}/`;
 export const directBuyURL = `${endpoint}/payments/direct-buy/`;
 export const sessionDirectBuyURL = `${endpoint}/payments/session-direct-buy/`;
+export const workshopDirectBuyURL = `${endpoint}/payments/workshop-direct-buy/`;
 export const addToCartURL = `${endpoint}/payments/add-to-cart/`;
 export const orderSummaryURL = `${endpoint}/payments/order-summary/`;
 export const sessionOrderSummaryURL = `${endpoint}/payments/session-order-summary/`;
@@ -105,6 +106,7 @@ export const profileAccountInfoURL = (userId) => `${endpoint}/users/profile/acco
 export const profileURL = (articleID, username) => `${endpoint}/articles/${articleID}/detail/${username}/`
 export const profileUserInfoURL = username => `${endpoint}/users/profile/info/${username}`
 export const profilePageURL = username => `${endpoint}/users/profile-page/${username}`
+export const profileFollowUser = username => `${endpoint}/users/following/${username}`
  
 export const profileAccountUserInfoURL = userID => `${endpoint}/users/profile/account/user/info/${userID}`
 export const profileAccountUserUpdateInfoURL = userID => `${endpoint}/users/profile/account/info/${userID}`
@@ -189,6 +191,24 @@ export const sessionCreateURL = `${endpoint}/sessions/session/create/`
 export const sessionDetailURL = (sessionID) => `${endpoint}/sessions/detail/${sessionID}`
 export const sessionProfileDetailURL = (sessionID, userID) => `${endpoint}/sessions/detail/${sessionID}/${userID}`
 export const sessionUpdateURL = (sessionID) => `${endpoint}/sessions/session/${sessionID}/update/`
+
+export const workshopListURL = `${endpoint}/workshops/list/`
+export const workshopCreateURL = `${endpoint}/workshops/create/`
+export const workshopDetailURL = (workshopID) => `${endpoint}/workshops/detail/${workshopID}`
+export const workshopProfileDetailURL = (workshopID, userID) => `${endpoint}/workshops/detail/${workshopID}/${userID}`
+export const workshopUpdateURL = (workshopID) => `${endpoint}/workshops/workshop/${workshopID}/update/`
+
+export const workshopCommentsURL = workshopID => `${endpoint}/workshops/${workshopID}/comments/`
+export const workshopCommentURL = (workshopID, commentID) => `${endpoint}/workshops/${workshopID}/comment/${commentID}/`
+export const workshopCreateCommentURL = data => `${endpoint}/workshops/${data.workshopID}/create-comment/`
+export const workshopUpdateCommentURL = data => `${endpoint}/workshops/${data.workshopID}/update-comment/${data.id}/`
+export const workshopUpdateCommentURL3 = (workshopID, commentID) => `${endpoint}/workshops/${workshopID}/update-comment/${commentID}/`
+
+export const workshopRatingURL = data => `${endpoint}/workshops/${data.workshopID}/rating/`
+export const fetchWorkshopRatingURL = workshopID => `${endpoint}/workshops/${workshopID}`
+export const workshopLikeUpdateURL = (workshopID, userID) => `${endpoint}/workshops/${workshopID}/likes/${userID}/`
+export const workshopLikeCreateURL = (workshopID) => `${endpoint}/workshops/${workshopID}/create-likes/`
+export const fetchWorkshopLikeCounterURL = (workshopID) => `${endpoint}/workshops/${workshopID}`
 
 export const fetchDegreesAndCoursesURL = `${endpoint}/users/courses-degrees/`
 export const fetchCategoriesAndFeedbacksURL = `${endpoint}/articles/categories-f_t/`

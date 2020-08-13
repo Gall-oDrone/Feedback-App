@@ -27,6 +27,7 @@ urlpatterns = [
     path('api/live-chat/', include('livechatApi.livechat.urls')),
     path('api/filter/', include('filterApi.filter.urls')),
     path('api/sessions/', include('sessionsApi.sessions.urls')),
+    path('api/workshops/', include('workshopsApi.workshops.urls')),
     # path('api/wallet/', include('walletApi.wallet.urls')),
     path('api/users/', include('users.urls')),
     # re_path(r'^.*', TemplateView.as_view(template_name='index.html'))

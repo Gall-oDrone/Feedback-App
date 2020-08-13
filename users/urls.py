@@ -20,7 +20,8 @@ from .views import (
     GoogleLogin,
     google_callback,
     EmailTemplateView,
-    ResendConfirmationView
+    ResendConfirmationView,
+    UserFollowingViewSet
     # BachelorView,
     # MasterView,
     # DoctorateView,
@@ -55,7 +56,8 @@ urlpatterns = [
     path('auth/facebook/', FacebookLogin.as_view(), name='facebook_login'),
     path('auth/google/callback/', google_callback, name="google_callback"),
     path('email_template/<str:uidb64>/<str:token>', ActivateView.as_view(), name="email_account_confirmation"),
-    path('auth/resend/confirmation/', ResendConfirmationView.as_view(), name="resend_confirmation_email")
+    path('auth/resend/confirmation/', ResendConfirmationView.as_view(), name="resend_confirmation_email"),
+    path('following/<username>', UserFollowingViewSet.as_view(), name="user-following")
     # path('auth/google/url/', google_views.oauth2_login)
     # path('bachelor-list/', BachelorView.as_view()),
     # path('master-list/', MasterView.as_view()),

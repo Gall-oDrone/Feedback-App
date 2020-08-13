@@ -30,13 +30,13 @@ router.register(r'', VideoViewSet, base_name='video')
 # router.register(r'', CommentViewSet, base_name='comment')
 # urlpatterns = router.urls
 urlpatterns = [
-    path('', WorkshopListView.as_view()),
+    path('list/', WorkshopListView.as_view()),
     path('create/', WorkshopCreateView.as_view()),
-    path('<pk>', WorkshopDetailView.as_view()),
+    path('detail/<pk>', WorkshopDetailView.as_view()),
     path('<pk>/update/', WorkshopUpdateView.as_view()),
     path('<pk>/delete/', WorkshopDeleteView.as_view()),
     path('list/<username>/', ProfileWorkshopListView.as_view()),
-    path('<pk>/detail/<username>/', ProfileWorkshopDetailView.as_view()),
+    path('/detail/<pk>/<username>/', ProfileWorkshopDetailView.as_view()),
 
     path('<pk>/create-likes/', CreateLike.as_view()),
     path('<pk>/likes/', LikeListView.as_view()),

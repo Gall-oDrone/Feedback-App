@@ -697,7 +697,7 @@ class ArticleCustomForm extends React.Component {
         </div>
       </div>
 
-        <Form.Item label="Session Price Per Hour" hasFeedback>
+        <Form.Item label="Workshop Price Per Hour" hasFeedback>
             {getFieldDecorator('price', {
               initialValue: 50,
               rules: [{ required: true, message: 'Please enter a valid price' }],

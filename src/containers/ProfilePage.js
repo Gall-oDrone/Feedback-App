@@ -5,7 +5,7 @@ import { Menu, Card, Button, DatePicker, TimePicker, Form, Modal, Skeleton, mess
 import { Link, withRouter } from "react-router-dom";
 import Checkout from "../components/MeetingCheckout";
 import {getProfileAccountInfo, putProfileAccountInfo} from "../store/actions/profileUserInfo";
-import {profilePageURL} from "../constants"
+import {profilePageURL, profileFollowUser} from "../constants"
 import MessengerBox from "../components/MessengerBox";
 import "../assets/session.css";
 import countryList from 'react-select-country-list';
