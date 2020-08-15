@@ -79,9 +79,9 @@ class ChatConsumer2(WebsocketConsumer):
                 'candidate': candidate["candidate"],
             }
     
-    def set_video_room_status(self, vr, status):
-        vr.video_disabled = status
-        vr.save()
+    def set_video_room_status(self, chat, status):
+        chat.video_disabled = status
+        chat.save()
 
     def get_parts_to_json(self, parts):
         return {
@@ -176,10 +176,24 @@ class ChatConsumer2(WebsocketConsumer):
     
     def end_call(self, data):
         current_chat = get_current_chat(data['chatId'])
-        current_chat.offer = None
-        current_chat.answer = None
-        set_video_room_status(current_chat, False)
+        current_chat.sdp = ""
+        current_chat.offer = ""
+        current_chat.answer = ""
+        self.set_video_room_status(current_chat, False)
         current_chat.save()
+        for caller in current_chat.callerCandidates.values():
+            Callers.objects.filter(id=caller.get("id")).delete()
+        current_chat.callerCandidates.set("")
+
+        for callee in current_chat.calleeCandidates.values():
+            Callees.objects.filter(id=callee.get("id")).delete()
+        current_chat.calleeCandidates.set("")
+        
+        # callers = Callers.objects.all()
+        # callers.delete()
+        # callees = Callees.objects.all()
+        # callees.delete()
+
         content = {
             # 'command': 'new_message',
             'message': data

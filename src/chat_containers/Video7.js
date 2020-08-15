@@ -81,6 +81,10 @@ class VideoCallFrame extends React.Component {
 
     this.state = {
       initiated: false,
+      call: false,
+      callButton: true,
+      hangupButton: true,
+      join: false,
       local:true,
       media: false,
       message: "",
@@ -118,8 +122,8 @@ class VideoCallFrame extends React.Component {
     if(message.participants) { 
       this.setState({participants: message.participants})
     }
-    console.log("A: ", this.state.participants)
-    if(this.props.username === (message.to || to_user)){
+    // console.log("A: ", this.state.participants)
+    if(this.props.username === message.to || this.props.username === to_user){
       if(message.type){
         log(`Client >>${this.props.username}<< receiving message ==> ${message.type}`);
       } else {log(`Client >>${this.props.username}<< receiving message ==> ${message.message}`);}
@@ -130,12 +134,10 @@ class VideoCallFrame extends React.Component {
       } else if (message.type === 'offer') {
         this.setState({ initiated:true})
         callee = this.props.username
-        // if (!isInitiator && !isStarted) {
-        //   this.maybeStart();
-        // }
-        // this.handleVideoOfferMsg(message)
+
         //Theirs
-        console.log("CALLEE: ", callee, caller)
+        // TODO undefined on caller
+        console.log(`CALLEE: ${callee}, CALLER: ${caller}`)
         if(callee === this.props.username){
           if(!pc){
             await this.createPeerConnection()
@@ -154,7 +156,10 @@ class VideoCallFrame extends React.Component {
             }
             //Theirs
             // this.doAnswer();
-          }
+          } 
+          // else {
+          //   pc.setRemoteDescription(new RTCSessionDescription(message)).then(() => this.doAnswer());
+          // }
           
         }
       } else if (message.type === 'answer' && isStarted) {
@@ -162,7 +167,7 @@ class VideoCallFrame extends React.Component {
         //Yours if answer
         log("  - Setting A on remote description");
         await pc.setRemoteDescription(new RTCSessionDescription(message));
-        } else { log("Couldn't set RD to Caller in Answer")}
+        } else { log("Couldn't set RemoteDescr. to Caller in Answer")}
       } else if (message.type === 'candidate') {
         if(!pc || !pc.remoteDescription){
           //push candidate onto queue...
@@ -264,6 +269,9 @@ disconnect = () => {
       //   localStream = await navigator.mediaDevices.getUserMedia(mediaStreamConstraints);
       //   this.videoRef.current.srcObject = localStream
       // }
+
+
+      // TODO insert an await fn such that it awaits until the other user joins the room
       pc.onicecandidate = this.handleIceCandidate.bind(this);
       registerPeerConnectionListeners(pc);
       
@@ -352,6 +360,7 @@ disconnect = () => {
     log(`Sending >> ${sessionDescription.type} << to Server`);
   
     if(sessionDescription.type === "offer"){
+      // callee is correct
       sendMessage(sessionDescription, "offer", this.props.username, callee);
     }
     else if(sessionDescription.type === "answer"){
@@ -392,12 +401,11 @@ disconnect = () => {
     const mediaStream = event;
     remoteVideo.current.srcObject = mediaStream;
     remoteStream = mediaStream;
-    log('On Function >> gotRemoteMediaStream << Remote peer connection received.');
+    log('On Function >> gotRemoteMediaStream << Remote peer stream received.');
   }
 
   startAction() {
-    this.setState({media:true})
-    
+    this.setState({media:true, callButton:false, hangupButton:false})
       if(localStream === null || localStream === undefined){
         navigator.mediaDevices.getUserMedia(mediaStreamConstraints)
         .then(stream => this.gotLocalMediaStream(stream, this.videoRef))
@@ -408,7 +416,6 @@ disconnect = () => {
 
   // Handles call button action: creates peer connection.
   async callAction() {
-    // this.setState({ initiated:true})
     isInitiator = true;
     caller = this.props.username
     this.state.participants.forEach(el => {
@@ -419,7 +426,29 @@ disconnect = () => {
     log(`¿ isInitiator ? ${isInitiator}`)
     log(` >> ${caller} << is the Caller`)
     log(` >> ${callee} << is the callee`)
-    pc.onnegotiationneeded = this.doCall();
+    log(`Other user ID >> ${this.state.otherUserId}`);
+    // await new Promise(resolve => setTimeout(resolve, 3000)).then((res) => {console.log("res", res)});
+    // await this.awaitingToJoin.then((res) => {if(res === true){pc.onnegotiationneeded = this.doCall()}})
+    pc.onnegotiationneeded = this.doCall()
+  }
+
+  async awaitingToJoin(){
+    console.log('Join fn')
+    return new Promise((resolve, reject) => {
+      const timer = setTimeout(() => {
+        console.log('This will run after 10 seconds!')
+        resolve(new Error('timeout')) 
+      }, 10000);
+      // clearTimeout(timer)
+      // resolve(clearTimeout(timer));
+      // request(endpoint, async function (error, response, body) {
+      //   if (!error && response.statusCode == 200) {
+      //     let ss = resolve((authorize(JSON.parse(body), listMajors, price, currency_code, c)))
+      //   }
+        
+      // })
+    })
+    // return () => resolve(clearTimeout(timer));
   }
 
   // Handles hangup action: ends up call, closes connections and resets peers.
@@ -438,14 +467,20 @@ disconnect = () => {
   }
 
   stop() {
+    this.setState({media:false, callButton:true, hangupButton:true})
     isStarted = false;
     pc.close();
+    //localStream = null
+    localStream.getTracks().forEach(function(track) {
+      track.stop();
+    });
+    this.videoRef.current.srcObject = null
     pc = null;
   }
 
   render() {
-    const { initiated, media } = this.state
-    log(`Participants: ${this.state.participants}, Par: ${this.par}`)
+    const { initiated, callButton, hangupButton, media, participants } = this.state
+    log(`Participants: ${participants}`)
     return( 
       <div id="frame">
           <div id="video-container-outer">
@@ -476,8 +511,8 @@ disconnect = () => {
             <div id="button-outer">
               <div id="button-inner">
                   <button className="button" disabled={media} onClick={() => {this.startAction()}} id="startButton">Start</button>
-                  <button className="button" disabled={initiated} onClick={() => {this.callAction()}} id="callButton">Call</button>
-                  <button className="button" onClick={() => {this.hangupAction()}} id="hangupButton">Hang Up</button>
+                  <button className="button" disabled={callButton} onClick={() => {this.callAction()}} id="callButton">Call</button>
+                  <button className="button" disabled={hangupButton} onClick={() => {this.hangupAction()}} id="hangupButton">Hang Up</button>
               </div>
             </div>
                 {/* </section> */}

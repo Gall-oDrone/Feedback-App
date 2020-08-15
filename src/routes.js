@@ -8,6 +8,7 @@ import Login from "./containers/Login";
 import Signup from "./containers/Signup";
 import Profile from "./containers/Profile";
 import Reconfirmation from "./containers/Reconfirmation";
+
 import ArticleList from "./containers/ArticleList";
 import ArticleCreate from "./containers/ArticleCreate";
 import ArticleFeedback from "./containers/ArticleFeedback";
@@ -93,7 +94,15 @@ import PeerSlideShow from "./containers/Peers/PeerSlideShow";
 import SessionList from "./containers/SessionList";
 import SessionCreate from "./containers/SessionCreate";
 import SessionDetail from "./containers/SessionDetail";
-import SessionRoomMenu from "./containers/SessionRoomMenu2"
+import SessionRoomMenu from "./containers/SessionRoomMenu2";
+
+import WorkshopList from "./containers/WorkshopList";
+import WorkshopCreate from "./containers/WorkshopCreate";
+// import WorkshopFeedback from "./containers/WorkshopFeedback";
+// import WorkshopRating from "./containers/WorkshopRating";
+// import WorkshopUpdate from "./containers/WorkshopUpdate";
+import WorkshopDetail from "./containers/WorkshopDetail";
+// import WorkshopDetailMenu from "./containers/WorkshopDetailMenu";
 
 // const BaseRouter2 = () => (
 //   <Hoc>
@@ -199,6 +208,15 @@ const BaseRouter = () => (
     <Route exact path="/sessions/:sessionID" component={SessionDetail} />
     <Route exact path="/sessions/" component={SessionList} />
     <Route exact path="/sessionFrameTest/:roomID" component={SessionRoomMenu} />
+
+    <Route exact path="/create-workshop/" component={WorkshopCreate} />
+    <Route exact path="/workshops/" component={WorkshopList} />
+    {/* <Route exact path="/workshops/update/" component={WorkshopUpdate} /> */}
+    {/* <Route exact path="/workshops/:workshopID/feedback/" component={WorkshopFeedback} /> */}
+    {/* <Route exact path="/workshops/:workshopID/rating/" component={WorkshopRating} /> */}
+    <Route exact path="/workshops/:workshopID" component={WorkshopDetail} />
+    {/* <Route exact path="/workshops/detailmenu/:workshopID" component={WorkshopDetailMenu} /> */}
+
   </Hoc>
 );
 

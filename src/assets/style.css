@@ -867,8 +867,6 @@ font-size: 60% !important;
   
   #frame #button-outer #button-inner button[disabled] {
     color: #ccc;
-  }
-  
-  #frame #button-outer #button-inner button[disabled]:hover {
-    background-color: #d84a38;
+    background-color: #ccc;
+    cursor: initial;
   }

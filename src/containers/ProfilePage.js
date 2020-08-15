@@ -66,7 +66,7 @@ class ArticleDetail extends React.Component {
         visible: false,
     };
 
-    handleSendMessage = e => {
+    handleOpenMessenger = e => {
       this.setState({
         open_messenger: true,
     });
@@ -297,6 +297,13 @@ class ArticleDetail extends React.Component {
         return (
             <div>
                 <Card title={username}>
+                    <Row type="flex" style={{ alignItems: 'left' }} >
+                        <Col span={1}>
+                          <Button>
+                            Follow
+                          </Button>
+                        </Col>
+                    </Row>
                     <Row type="flex" style={{ alignItems: 'center' }} justify="center">
                         <Col span={12}>
                           <Row type="flex" style={{ alignItems: 'center' }} justify="center">
@@ -309,7 +316,7 @@ class ArticleDetail extends React.Component {
                             </div>
                             </Row>
                             <Row type="flex" style={{ alignItems: 'center' }} justify="center">
-                              <Button onClick={() => this.handleSendMessage()}>
+                              <Button disabled={open_messenger} onClick={() => this.handleOpenMessenger()}>
                                 Send Message
                               </Button>
                             </Row>
@@ -338,7 +345,7 @@ class ArticleDetail extends React.Component {
                               </div>
                         </Col>
                     </Row>
-                    <MessengerBox/>
+                      <MessengerBox op={open_messenger}/>
                 </Card>
                   {/* {open_messenger === true ? (
                     <MessengerBox/>

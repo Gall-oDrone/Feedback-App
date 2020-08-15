@@ -1,12 +1,10 @@
 import React from 'react';
 import axios from 'axios';
 import { connect } from 'react-redux';
-import { Menu, Card, Button, DatePicker, TimePicker, Form, Modal, Skeleton, message, Divider, List, Tabs, Row, Col, Icon} from "antd";
 import { Link, withRouter } from "react-router-dom";
 import Checkout from "../components/MeetingCheckout";
 import {getProfileAccountInfo, putProfileAccountInfo} from "../store/actions/profileUserInfo";
 import {profilePageURL} from "../constants";
-import  Popup from "../chat_containers/Popup"
 import  Profile from "../chat_containers/Profile"
 import  Chat from "../chat_containers/Messenger"
 import "../assets/popupChatWindow.css";
@@ -26,8 +24,8 @@ class MessengerBox extends React.Component {
         message: null,
         website: null,
         work_experience: null,
-        open_messenger: false,
-        showPopup: "none",
+        open_messenger: true,
+        showPopup: "inline-flex",
         visible: false,
     };
 
@@ -228,34 +226,36 @@ class MessengerBox extends React.Component {
     render() {
         console.log('this.PROPS: ' + JSON.stringify(this.props))
         console.log("this.state: " + this.state, this.state.orderId)
-        const { profileIA:{UserAccountInfo}, match:{ params: {user}}} = this.props;
+        const { op, profileIA:{UserAccountInfo}, match:{ params: {user}}} = this.props;
         const { 
           showPopup,
           open_messenger,
           loading } = this.state
         return (
-            <div>
-              <button className="open-button" onClick={()=>this.handleOpenMessenger()}>Chat</button>
-                {open_messenger === true ?
-                  <div className="form-popup" style={{display:`${showPopup}`}} id="myForm">
-                      <div className="form-container">
-                        <div id="chat-frame">
-                          <div className="chat-content">
-                            <Profile recipient={user}/>
-                            <Chat recipient={user} />
+            op === true ?
+              <div>
+                <button className="open-button" onClick={()=>this.handleOpenMessenger()}>Chat</button>
+                  {open_messenger === true ?
+                    <div className="form-popup" style={{display:`${showPopup}`}} id="myForm">
+                        <div className="form-container">
+                          <div id="chat-frame">
+                            <div className="chat-content">
+                              <Profile recipient={user}/>
+                              <Chat recipient={user} />
+                            </div>
                           </div>
+
+                            {/* <label ><b>Message</b></label>
+                            <textarea placeholder="Type message.." name="msg" required></textarea>
+
+                            <button type="submit" className="btn">Send</button> */}
+                            <button type="button" className="btn cancel" onClick={()=>this.handleCloseMessenger()}>Close</button>
                         </div>
-
-                          {/* <label ><b>Message</b></label>
-                          <textarea placeholder="Type message.." name="msg" required></textarea>
-
-                          <button type="submit" className="btn">Send</button> */}
-                          <button type="button" className="btn cancel" onClick={()=>this.handleCloseMessenger()}>Close</button>
-                      </div>
-                  </div> 
-                  :null
-                }
-            </div>
+                    </div> 
+                    :null
+                  }
+              </div>
+            : null
         )
     }
 }

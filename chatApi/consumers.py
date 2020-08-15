@@ -228,10 +228,17 @@ class ChatConsumer(WebsocketConsumer):
     
     def end_call(self, data):
         current_chat = get_current_chat(data['chatId'])
-        current_chat.offer = None
-        current_chat.answer = None
+        current_chat.sdp = ""
+        current_chat.offer = ""
+        current_chat.answer = ""
         set_video_room_status(current_chat, False)
         current_chat.save()
+        current_chat.callerCandidates = None
+        current_chat.calleeCandidates = None
+        callers = Callers.objects.all()
+        callers.delete()
+        callees = Callees.objects.all()
+        callees.delete()
         content = {
             'command': 'new_message',
             'message': data

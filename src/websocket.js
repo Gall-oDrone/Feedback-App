@@ -64,7 +64,7 @@ class WebSocketService {
   socketNewMessage(data) {
     const parsedData = JSON.parse(data);
     const command = parsedData.command;
-    console.log("NM, parsed", parsedData)
+    // console.log("NM, parsed", parsedData)
     if (Object.keys(this.callbacks).length === 0) {
       console.log("NNT 1")
       // return;

@@ -215,12 +215,12 @@ class CustomLayout extends React.Component {
                     <span> Chat</span>
                   </Link>
                 </Menu.Item>
-                {/* <Menu.Item key="8">
-                  <Link to={`/video-chat/`}>
+                <Menu.Item key="8">
+                  <Link to={`/video-chat-test/`}>
                     <Icon type="video-camera"/>
                     <span> Video-Chat</span>
                   </Link>
-                </Menu.Item> */}
+                </Menu.Item>
               </Menu>
             </Sider>
           ):(null
