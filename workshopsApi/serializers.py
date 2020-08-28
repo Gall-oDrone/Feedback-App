@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from workshopsApi.models import Workshop, Video, Comment, Category, Like, Rating, Image, CommentReply
+from workshopsApi.models import Workshop, Comment, Category, Like, Rating, CommentReply
 from users.models import User, ProfileInfo
 from users.serializers import ProfileSerializer, ProfileInfoSerializer
 from django.core.files.storage import FileSystemStorage
@@ -17,20 +17,19 @@ class CommentReplySerializer(serializers.ModelSerializer):
         fields = ("id", "comment")
 
 class WorkshopSerializer(serializers.ModelSerializer):
-    engagement = StringSerializer(many=True)
     categories = StringSerializer(many=True)
     overview = StringSerializer(many=False)
     author = StringSerializer(many=False)
-    video = StringSerializer(many=False)
-    user_thumbnail = serializers.SerializerMethodField()
+    # video = StringSerializer(many=False)
+    # image = serializers.SerializerMethodField()
     user_name = serializers.SerializerMethodField()
     
-    def get_user_thumbnail(self, obj):
-        request = self.context.get('request')
-        print("COLAS: ", obj.author.profile.profile_avatar)
-        profile_thumbnail = ProfileSerializer(obj.author.profile, many=False, context={'request': request}).data["profile_avatar"]
-        print("COLAS 2: ", profile_thumbnail)
-        return profile_thumbnail
+    # def get_image(self, obj):
+    #     request = self.context.get('request')
+    #     print("COLAS: ", obj.author.profile.profile_avatar)
+    #     profile_thumbnail = ProfileSerializer(obj.author.profile, many=False, context={'request': request}).data["profile_avatar"]
+    #     print("COLAS 2: ", profile_thumbnail)
+    #     return profile_thumbnail
 
     def get_user_name(self, obj):
         profile_name = ProfileInfoSerializer(ProfileInfo.objects.get(profile_username=obj.author.id), many=False ).data.get("name")
@@ -38,11 +37,11 @@ class WorkshopSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Workshop
-        fields = ('id', 'title', 'overview', 'content', 'timestamp',
-                  'engagement', 'categories', 'author',
+        fields = ('id', 'title', 'overview', 'timestamp',
+                  'categories', 'author',
                   "comment_count", "rating_count",
                     "likes_count", "view_count", "rating_count", "avg_rating",
-                    "video", "thumbnail", "user_thumbnail", "user_name"
+                    "image", "user_name"
                   )
 
     def get_feedback_forms(self, obj):
@@ -333,16 +332,16 @@ class WorkshopFeatureSerializer(serializers.ModelSerializer):
         fields = ("__all__")
 
 
-class VideoFormSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Video
-        fields = ("__all__")
+# class VideoFormSerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model = Video
+#         fields = ("__all__")
 
 
-class ImageFormSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Image
-        fields = ("__all__")
+# class ImageFormSerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model = Image
+#         fields = ("__all__")
 
 class CategorySerializer(serializers.ModelSerializer):
     class Meta:

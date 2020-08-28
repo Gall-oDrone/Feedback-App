@@ -13,9 +13,9 @@ from rest_framework.status import(
     HTTP_400_BAD_REQUEST
 )
 from rest_framework import permissions, generics
-from workshopsApi.models import Workshop, Tag, Category, WorkshopView, Like, Rating, Comment, Video, Image
+from workshopsApi.models import Workshop, Category, WorkshopView, Like, Rating, Comment
 from users.models import User
-from .serializers import WorkshopSerializer, WorkshopFeatureSerializer, VideoFormSerializer, CommentSerializer, LikeSerializer, LikeListSerializer, RatingSerializer, CommentListSerializer, ImageFormSerializer, ProfileWorkshopListSerializer, Cat_FT_Serializer
+from .serializers import WorkshopSerializer, WorkshopFeatureSerializer, CommentSerializer, LikeSerializer, LikeListSerializer, RatingSerializer, CommentListSerializer, ProfileWorkshopListSerializer, Cat_FT_Serializer
 from analytics.models import View
 from django.http import Http404
 from rest_framework import viewsets
@@ -656,58 +656,58 @@ class UpdateComment(UpdateAPIView):
         return Response(status=HTTP_400_BAD_REQUEST)
 
 # class VideoViewSet(viewsets.ModelViewSet):
-class VideoViewSet(viewsets.ModelViewSet):
-    queryset = Video.objects.all()
-    serializer_class = VideoFormSerializer
-    parser_classes = (MultiPartParser, FileUploadParser, FormParser,)
-    permission_classes = (permissions.IsAuthenticated,)
+# class VideoViewSet(viewsets.ModelViewSet):
+#     queryset = Video.objects.all()
+#     serializer_class = VideoFormSerializer
+#     parser_classes = (MultiPartParser, FileUploadParser, FormParser,)
+#     permission_classes = (permissions.IsAuthenticated,)
 
-    def createVideo(self, request, *args, **kwargs):
-        file_serializer = VideoFormSerializer(data=request.data)
-        if file_serializer.is_valid():
-          file_serializer.save()
-          return Response(file_serializer.data, status=status.HTTP_201_CREATED)
-        else:
-          return Response(file_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+#     def createVideo(self, request, *args, **kwargs):
+#         file_serializer = VideoFormSerializer(data=request.data)
+#         if file_serializer.is_valid():
+#           file_serializer.save()
+#           return Response(file_serializer.data, status=status.HTTP_201_CREATED)
+#         else:
+#           return Response(file_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-class ImageCreateView(CreateAPIView):
-    parser_classes = (MultiPartParser, FormParser, FileUploadParser)
-    queryset = Image.objects.all()
-    serializer_class = ImageFormSerializer
-    permission_classes = (permissions.AllowAny,)
+# class ImageCreateView(CreateAPIView):
+#     parser_classes = (MultiPartParser, FormParser, FileUploadParser)
+#     queryset = Image.objects.all()
+#     serializer_class = ImageFormSerializer
+#     permission_classes = (permissions.AllowAny,)
 
-    @csrf_exempt
-    def post(self, request, *args, **kwargs):
-        print("createImage at ImageViewSet")
-        print(request.data)
-        myfile = request.FILES['file']
-        fs = FileSystemStorage()
-        filename = fs.save(myfile.name, myfile)
-        uploaded_file_url = fs.url(filename)
-        imageSerializer = ImageFormSerializer(data=request.data)
-        if imageSerializer.is_valid():
-          imageSerializer.save()
-          return Response(imageSerializer.data, status=status.HTTP_201_CREATED)
-        else:
-          return Response(imageSerializer.errors, status=status.HTTP_400_BAD_REQUEST)
+#     @csrf_exempt
+#     def post(self, request, *args, **kwargs):
+#         print("createImage at ImageViewSet")
+#         print(request.data)
+#         myfile = request.FILES['file']
+#         fs = FileSystemStorage()
+#         filename = fs.save(myfile.name, myfile)
+#         uploaded_file_url = fs.url(filename)
+#         imageSerializer = ImageFormSerializer(data=request.data)
+#         if imageSerializer.is_valid():
+#           imageSerializer.save()
+#           return Response(imageSerializer.data, status=status.HTTP_201_CREATED)
+#         else:
+#           return Response(imageSerializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-class ImageDestroyView(DestroyAPIView):
-    parser_classes = (MultiPartParser, FormParser, FileUploadParser, JSONParser)
-    queryset = Image.objects.all()
-    serializer_class = ImageFormSerializer
-    permission_classes = (permissions.IsAuthenticated,)
+# class ImageDestroyView(DestroyAPIView):
+#     parser_classes = (MultiPartParser, FormParser, FileUploadParser, JSONParser)
+#     queryset = Image.objects.all()
+#     serializer_class = ImageFormSerializer
+#     permission_classes = (permissions.IsAuthenticated,)
 
-    def delete(self, request, *args, **kwargs):
-        print("createImage at ImageViewSet")
-        print("self.request.FILES")
-        print(self.request.FILES)
-        print(request.objects.all())
-        imageSerializer = ImageFormSerializer(data=request.data)
-        if imageSerializer.is_valid():
-          imageSerializer.save()
-          return Response(imageSerializer.data, status=status.HTTP_201_CREATED)
-        else:
-          return Response(imageSerializer.errors, status=status.HTTP_400_BAD_REQUEST)
+#     def delete(self, request, *args, **kwargs):
+#         print("createImage at ImageViewSet")
+#         print("self.request.FILES")
+#         print(self.request.FILES)
+#         print(request.objects.all())
+#         imageSerializer = ImageFormSerializer(data=request.data)
+#         if imageSerializer.is_valid():
+#           imageSerializer.save()
+#           return Response(imageSerializer.data, status=status.HTTP_201_CREATED)
+#         else:
+#           return Response(imageSerializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class Categories_and_F_TView(generics.ListAPIView):
     serializer_class = (Cat_FT_Serializer)

@@ -20,9 +20,10 @@ import {workshopCreateURL} from "../constants";
 import moment from "moment";
 import axios from 'axios';
 import lodash from "lodash";
+import Lessons from "../containers/LessonCreate";
 const CheckboxGroup = Checkbox.Group;
 const { Option } = Select;
-const { MonthPicker } = DatePicker;
+const { RangePicker } = DatePicker;
 const rangeConfig = {
   rules: [{ type: 'array', required: true, message: 'Please select time!' }],
 };
@@ -131,7 +132,7 @@ class ArticleCustomForm extends React.Component {
       fileList: [],
       imagePath: '',
       disbled_dates: [],
-      chars_left: 400,
+      chars_left: 200,
       panel: null,
       open: false,
       dateArray: [],
@@ -204,7 +205,7 @@ class ArticleCustomForm extends React.Component {
     console.log(time, timeString);
     const { startTime, endTime} = this.state
     if(startTime !== null){
-      this.setState({endTime: time})
+      this.setState({endTime: false})
     }
   }
 
@@ -254,10 +255,6 @@ class ArticleCustomForm extends React.Component {
       });
     }
 
-    // if (dateArray.indexOf(stringDate) > -1) {
-    //   addSelectedDateClass = "selectedDate";
-    // }
-
     this.setState(
       {
         dateArray: newDateArray
@@ -290,8 +287,7 @@ class ArticleCustomForm extends React.Component {
 
 
   disabledDate = date => {
-    //根据选择的日期判断是否要禁用日期选择
-    //1-6为周一到周六, 周日为0
+
     console.log("CHANGES: ", moment(date).format('MM-DD'), date.months(), date.days(), date, moment().year(), date.years() ===  moment().year())
     const { defaultSelectedWeekday, defaultSelectedMonth, dateArray, currentMonth } = this.state;
 
@@ -303,6 +299,9 @@ class ArticleCustomForm extends React.Component {
     if (defaultSelectedWeekday.indexOf(date.days()) === -1) {
       return true;
     }
+
+    var futureMonth = moment(date).add(1, 'M');
+    var futureMonthEnd = moment(futureMonth).endOf('month');
     let index = dateArray.findIndex(dateV => moment(dateV).format('YYYY-MM-DD') === moment(date).format('YYYY-MM-DD'))
       return index !== -1 || date < moment().endOf('day') || date.years() !==  moment().year()
   };
@@ -337,12 +336,7 @@ class ArticleCustomForm extends React.Component {
     const style = {};
     const stringDate = currentDate.format("YYYY-MM-DD");
     const stringMonth = currentDate.format("MM");
-    // let selected = false,
-    //   disabled = false;
-    // if (currentDate.date() === 1) {
-    //   style.border = "1px solid #1890ff";
-    //   style.borderRadius = "50%";
-    // }
+    
     if (defaultSelectedWeekday.indexOf(currentDate.days()) === -1) {
       disabled = "true";
       //需要同步处理当前已选的日期, 把之前选择的日期剔除
@@ -369,16 +363,6 @@ class ArticleCustomForm extends React.Component {
       disabled = "false";
       addSelectedMonthClass = "ant-calendar-month-panel-selected-cel";
     }
-
-    // console.log(
-    // 	"日期:",
-    // 	stringDate,
-    // 	" / 星期:",
-    // 	currentDate.day(),
-    // 	"    ",
-    // 	currentDate.days(),
-    // 	this.state.dateArray
-    // );
 
     return (
       <div
@@ -502,7 +486,7 @@ class ArticleCustomForm extends React.Component {
   handleChange(event) {
     var input = event.target.value;
     this.setState({
-        chars_left: 400 - input.length
+        chars_left: 200 - input.length
     });
   }
 
@@ -513,6 +497,8 @@ class ArticleCustomForm extends React.Component {
     let formData = new FormData();
     await this.props.form.validateFields((err, values) => {
       console.log("handleFormSubmit values: ", JSON.stringify(values));
+      const title =
+        values["title"] === undefined ? null : values["title"];
       const content =
         values["content"] === undefined ? null : values["content"];
       const topic =
@@ -535,6 +521,7 @@ class ArticleCustomForm extends React.Component {
         values["upload"] === undefined ? null : values["upload"];
       const postObj = {
         user: this.props.username,
+        title: values.title,
         content: values.content,
         topics: values.topics,
         areas_experience: values.areas_experience,
@@ -600,17 +587,31 @@ class ArticleCustomForm extends React.Component {
         event,
         this.props.requestType,
         this.props.articleID)}>
-          <p>Write a brief description about yourself</p>
+
+        <p>Title</p>
+        <Form.Item label={"Workshop Title:"}>
+          {getFieldDecorator(`title`, {
+          validateTrigger: ['onChange', 'onBlur'],
+          rules: [
+            {
+              required: true,
+              message: "Please input a title.",
+            },
+          ],
+        })(<Input placeholder="Add a title" style={{ width: '60%', marginRight: 8 }} />)}
+        </Form.Item>
+
+          <p>Short description about the workshop</p>
         <Form.Item label="Description" hasFeedback>
           {getFieldDecorator('content', {
             initialValue: "C",
             rules: [{ required: true, message: 'Please enter a content' }],
-          })(<Input.TextArea maxLength={400} onChange={this.handleChange.bind(this)} />
+          })(<Input.TextArea maxLength={200} onChange={this.handleChange.bind(this)} />
           )}
             <p>Characters Left: {chars_left}</p>
         </Form.Item>
 
-      <p>What topics would you be most likely to answer?</p>
+      <p>Workshop Categories</p>
        <Form.Item label="Topics">
         {getFieldDecorator('topics', {
               initialValue: ["undergraduates"],
@@ -624,66 +625,18 @@ class ArticleCustomForm extends React.Component {
         }
         </Form.Item>
 
-        <p>What are your areas of experience?</p>
-        <Form.Item label="Areas of experience">
-          {getFieldDecorator('areas_experience', {
-            initialValue: ["undergraduates"],
-            rules: [
-              { required: true, message: 'Field required', type: 'array' },
-            ],
-          })(
-            <Select name="areas_experience" mode="tags" placeholder="Please type an area">
-            </Select>,
-          )}
-        </Form.Item>
-
-        {/* <Form.Item label={"Date-picker"}>
-          {getFieldDecorator('date-picker',
-                  { rules: [{ required: true, message: 'Filed required' }] }
-              )
-              (<DatePicker  disabledDate={this.disabledDate.bind(this)} onChange={this.onDateChange.bind(this)} />)}
-        </Form.Item> */}
-
         <div>
         <Form layout="inline">
           <Form.Item label="Datepicker" />
-          <Form.Item>
-            <CheckboxGroup
-              key={Math.random()}
-              defaultValue={this.state.defaultSelectedWeekday}
-              onChange={this.onChangeSelectWeekday}
-            >
-              <Checkbox value={1}>Mo</Checkbox>
-              <Checkbox value={2}>Tu</Checkbox>
-              <Checkbox value={3}>We</Checkbox>
-              <Checkbox value={4}>Th</Checkbox>
-              <Checkbox value={5}>Fr</Checkbox>
-              <Checkbox value={6}>Sa</Checkbox>
-              <Checkbox value={0}>Su</Checkbox>
-            </CheckboxGroup>
-          </Form.Item>
-          <Form.Item>
-            <CheckboxGroup
-              key={Math.random()}
-              defaultValue={this.state.defaultSelectedMonth}
-              onChange={this.onChangeSelectMonth}
-            >
-              <Checkbox value={0}>Ja</Checkbox>
-              <Checkbox value={1}>Fe</Checkbox>
-              <Checkbox value={2}>Ma</Checkbox>
-              <Checkbox value={3}>Ap</Checkbox>
-              <Checkbox value={4}>May</Checkbox>
-              <Checkbox value={5}>Ju</Checkbox>
-              <Checkbox value={6}>Jl</Checkbox>
-              <Checkbox value={7}>Au</Checkbox>
-              <Checkbox value={8}>Se</Checkbox>
-              <Checkbox value={9}>Oc</Checkbox>
-              <Checkbox value={10}>No</Checkbox>
-              <Checkbox value={11}>De</Checkbox>
-            </CheckboxGroup>
-          </Form.Item>
-        </Form>
-        <div className="">
+            <RangePicker 
+              disabledDate={this.disabledDate} 
+              onOpenChange={this.handleOpenChange}  
+              onPanelChange={this.handlePanelChange}
+              onChange={this.onDateChange.bind(this)}
+              dateRender={this.dateRender} size={"default"}
+            />
+          </Form>
+        {/* <div className="">
           <DatePicker
             disabledDate={this.disabledDate}
             showToday={false}
@@ -694,10 +647,10 @@ class ArticleCustomForm extends React.Component {
             dateRender={this.dateRender}
             renderExtraFooter={this.dateFooterContent}
           />
-        </div>
+        </div> */}
       </div>
 
-        <Form.Item label="Workshop Price Per Hour" hasFeedback>
+        <Form.Item label="Workshop Fee" hasFeedback>
             {getFieldDecorator('price', {
               initialValue: 50,
               rules: [{ required: true, message: 'Please enter a valid price' }],
@@ -705,7 +658,7 @@ class ArticleCustomForm extends React.Component {
               <InputNumber
                 name="price"
                 defaultValue={50}
-                min={50}
+                min={0}
                 max={100}
                 formatter={value => `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
                 parser={value => value.replace(/\$\s?|(,*)/g, '')}
@@ -713,7 +666,7 @@ class ArticleCustomForm extends React.Component {
               />
             )}
           </Form.Item>
-          <Form.Item label="Maximum hours per workshop" hasFeedback>
+          <Form.Item label="Workshop total hours" hasFeedback>
             {getFieldDecorator('max_hours', {
               initialValue: 1,
               rules: [{ required: true, message: 'Field require' }],
@@ -722,7 +675,7 @@ class ArticleCustomForm extends React.Component {
                 name="hours"
                 defaultValue={1}
                 min={1}
-                max={3}
+                max={15}
                 formatter={value => value>1 ? `${value} Hrs`:`${value} Hr`}
                 // parser={value => value.replace(/\$\s?|(,*)/g, '')}
                 onChange={this.hourOnChange}
@@ -755,7 +708,8 @@ class ArticleCustomForm extends React.Component {
               />
             )}
           </Form.Item>
-        <Form.Item label="Upload Photo" extra="2.5 MB Field">
+          <Lessons/>
+        <Form.Item label="Workshop Poster Pic" extra="2.5 MB Field">
                 {getFieldDecorator('upload', {
                   initialValue: this.handleFileList(null, null),
                   rules: [{ required: false, message: 'Please upload a photo'}],
@@ -764,11 +718,14 @@ class ArticleCustomForm extends React.Component {
                   setFieldsValue: "fileList"
                 })(
                   // <div className="clearfix">
-                  <Upload name="photo" key="workshop photo" onPreview={this.handlePreview}  listType="picture-card" customRequest={this.dummyRequest}>
+                  <Upload 
+                    name="photo" 
+                    key="workshop photo" 
+                    onPreview={this.handlePreview} 
+                    listType="picture-card" 
+                    customRequest={this.dummyRequest}
+                  >
                     {fileList.length === 1 ? null : uploadButton}
-                    {/* <Button>
-                      <Icon type="upload" /> Click to upload
-                      </Button> */}
                   </Upload>
                         //   <Modal visible={previewVisible} footer={null} onCancel={this.handleCancel}>
                         //   <img alt="example" style={{ width: '100%' }} src={previewImage} />

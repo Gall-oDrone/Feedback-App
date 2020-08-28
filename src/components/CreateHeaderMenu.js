@@ -29,12 +29,17 @@ class CreateHeaderMenu extends React.Component {
           </Menu.Item>
           <Menu.Item key="CreateHeader 2">
             <a target="_blank" rel="noopener noreferrer" href={`/create-inquiry/`}>
-              Post an inquiry
+              Post an Inquiry
             </a>
           </Menu.Item>
           <Menu.Item key="CreateHeader 3">
             <a target="_blank" rel="noopener noreferrer" href={`/create-session/`}>
-              Post a session
+              Post a Session
+            </a>
+          </Menu.Item>
+          <Menu.Item key="CreateHeader 4">
+            <a target="_blank" rel="noopener noreferrer" href={`/create-workshop/`}>
+              Post a Workshop
             </a>
           </Menu.Item>
         </Menu>

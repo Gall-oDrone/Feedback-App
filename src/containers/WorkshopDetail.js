@@ -271,103 +271,398 @@ class ArticleDetail extends React.Component {
         const {user_name} = this.state.article
         return (
             <div>
-                <Card title={user_name !== undefined ? <a className="td" href={`/profile-page/${user_name.profile_username}`}>{user_name.name}</a>:null}>
-                    <Form onSubmit={this.handleSubmit}>
-                    <Row gutter={[16, 40]}>
-                    
-                        <Col span={3}>
-                            <b>${this.state.article.price_per_hour} per hour</b>
-                        </Col>
-                        <Col span={3}>
-                            <Form.Item >
-                                {getFieldDecorator('date_picker',
-                                        { rules: [{ required: true, message: 'Filed required' }] }
-                                    )
-                                    (<DatePicker   disabledDate={this.disabledDate} onChange={this.onDateChange.bind(this)} />)}
-                            </Form.Item>
-                        </Col>
-                        <Col span={3}>
-                            <Form.Item >
-                                {getFieldDecorator('time_picker_start',
-                                        { rules: [{ required: true, message: 'Filed required' }] }
-                                    )
-                                    (
-                                        <TimePicker onChange={this.onTimeChange.bind(this)}
-                                        defaultOpenValue={moment('00', 'HH')}
-                                        placeholder = {"Start Time"}
-                                        disabledHours={this.disableHour}
-                                        format={format} />
-                                    )
-                                }
-                            </Form.Item>
-                            </Col>
-                            <Col span={3}>
-                            <Form.Item >
-                                {getFieldDecorator('time_picker_end',
-                                        { rules: [{ required: true, message: 'Filed required' }] }
-                                    )       
-                                    (
-                                        <TimePicker onChange={this.onTimeChange2.bind(this)}
-                                        defaultOpenValue={moment('00', 'HH')}
-                                        placeholder = {"End Time"}
-                                        disabledHours={this.disableHour2}
-                                        disabled= {this.handleTimeDisable()}
-                                        format={format} />
-                                    )
-                                }
-                            </Form.Item>
-                        </Col>
-                        <Col span={3}>
-                            <Form.Item wrapperCol={{ span: 12, offset: 6 }}>
-                                <Button type="primary" htmlType="submit" loading={loading} disabled={visible} >
-                                    Book a workshop
-                                </Button>
-                            </Form.Item>
-                        </Col>
-                    </Row>
-                    </Form>
-                    <Row>
-                        <Col span={15}>
-                            <div id="workshop-div-2">
-                            <img
-                                className="contain"
-                                alt="logo"
-                                src={this.state.article.workshop_photo}
-                            />
+               <div className="workshop-detail-block" id="overview">
+                    <div className="workshop-detail-overview-block-color-overlay">
+                    </div>
+                    <div className="workshop-detail-overview-block-color-overlay-border-holder">
+                        <div className="workshop-detail-overview-block-inner">
+                            <div id="element-4460">
+                                <div className="contents">
+                                    <h1>
+                                        <p></p>
+                                        <p><b><font>5 Hand-on Labs</font></b></p>
+                                        <p></p>
+                                    </h1>
+                                </div>
                             </div>
-                        </Col>
-                        <Col span={9}>
-                            <Tabs defaultActiveKey="1" tabPosition={"right"}>
-                                  <TabPane tab="University" key="1">
-                                    <p>{user_name !== undefined ? user_name.university : null}</p>
-                                    <p>{user_name !== undefined ? user_name.degree : null}</p>
-                                  </TabPane>
-                                  <TabPane tab="Course" key="2">
-                                    <p>{user_name !== undefined ? user_name.course : null}</p>
-                                  </TabPane>
-                                  <TabPane tab="About me" key="3">
-                                    <p>{this.state.article.content}</p>
-                                  </TabPane>
-                                  <TabPane tab="Topics guidance" key="4">
-                                        <li>{this.state.article.topic}</li>
-                                  </TabPane>
-                                  <TabPane tab="Areas of expertice" key="5">
-                                        <li>{this.state.article.experience}</li>
-                                  </TabPane>
-                            </Tabs>
-                        </Col>
-                    </Row>
-                </Card>
-                  {visible === true && orderId !== null ? (
-                    <Modal  
-                      visible={visible}
-                      onOk={this.handleOk}
-                      onCancel={this.handleCancel}
-                    >
-                      <Checkout orderID={orderId}/>
-                    </Modal>
-                  ):(null)}
-            </div>
+                            <div id="element-4461">
+                                <div className="contents">
+                                    <img src="//storage.googleapis.com/instapage-user-media/fc5bead4/49192380-0-Hands-on-icon-Hackst.png" alt="">
+                                    </img>
+                                </div>
+                            </div>
+                            <div className="page-element widget-container page-element-type-headline widget-headline" id="element-4383">
+                                <div className="overview-contents">
+                                    <h1>
+                                        <p></p>
+                                        <p><b><font>Workshop Overview</font></b></p>
+                                        <p></p>
+                                    </h1>
+                                </div>
+                            </div>
+                            <div id="element-4462">
+                                <div className="contents">
+                                    <h1>
+                                        <p></p>
+                                        <p><b><font>Forum for Q/A</font></b></p>
+                                        <p></p>
+                                    </h1>
+                                </div>
+                            </div>
+                            <div id="element-4463">
+                                <div className="contents">
+                                    <div className="cropped">
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="element-4464">
+                                <div className="contents">
+                                    <h1>
+                                        <p></p>
+                                        <p><b><font>Video Instruction</font></b></p>
+                                        <p></p>
+                                    </h1>
+                                </div>
+                            </div>
+                            <div id="element-4459">
+                                <div className="contents">
+                                    <div className="cropped">
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="element-4466">
+                                <div className="contents">
+                                    <h1>
+                                        <p></p>
+                                        <p><b><font color="#717e8e">Time to Complete: 4 Hours</font></b></p>
+                                        <p></p>
+                                    </h1>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+               </div>
+               <div className="workshop-detail-block" id="lessons">
+                   <div className="workshop-detail-lessons-block-color-overlay"></div>
+                    <div className="workshop-detail-lessons-block-color-overlay-border-holder">
+                        <div className="workshop-detail-lessons-block-inner">
+                            <div className="page-element-widget-container-page-element-type-box-widget-box" id="element-3407">
+                                <div className="box">
+                                </div>
+                            </div>
+                            <div className="page-element-widget-container-page-element-type-box-widget-box" id="element-3434">
+                                <div className="box">
+                                </div>
+                            </div>
+                            <div className="page-element widget-container page-element-type-headline widget-headline" id="element-3405">
+                                <div className="contents">
+                                    <h1>
+                                        <p>
+                                            <b><font>MODULE 1</font></b>
+                                        </p>
+                                    </h1>
+                                </div>
+                            </div>
+                            <div id="element-3432">
+                                <div className="contents">
+                                    <h1>
+                                        <p><font>A Lap Around the Particle Ecosystem</font></p>
+                                    </h1>
+                                </div>
+                            </div>
+                            <div id="element-3410">
+                                <div className="contents">
+                                    <h1>
+                                        <p><font>Why Particle?</font></p>
+                                    </h1>
+                                </div>
+                            </div>
+                            <div id="element-3411">
+                                <div className="contents">
+                                    <img src="//storage.googleapis.com/instapage-user-media/fc5bead4/31634666-0-check-mark-blue-thin.png"></img>
+                                </div>
+                            </div>
+                            <div id="element-3446">
+                                <div className="contents">
+                                    <h1>
+                                        <p><font>Particle Cloud And Friends</font></p>
+                                    </h1>
+                                </div>
+                            </div>
+                            <div id="element-3409">
+                                <div className="contents">
+                                    <img src="//storage.googleapis.com/instapage-user-media/fc5bead4/31634666-0-check-mark-blue-thin.png"></img>
+                                </div>
+                            </div>
+                            <div id="element-3447">
+                                <div className="contents">
+                                    <h1>
+                                        <p><font>Claiming Your First Device</font></p>
+                                    </h1>
+                                </div>
+                            </div>
+                            <div id="element-3448">
+                                <div className="contents">
+                                    <img src="//storage.googleapis.com/instapage-user-media/fc5bead4/31634666-0-check-mark-blue-thin.png"></img>
+                                </div>
+                            </div>
+                            <div id="element-3453">
+                                <div className="box">
+                                </div>
+                            </div>
+                            <div id="element-3456">
+                                <div className="contents">
+                                        <p>Claiming your first Particle device* </p>
+                                </div>
+                            </div>
+                            <div id="element-3458">
+                                <div className="contents">
+                                    <div className="cropped"></div>
+                                </div>
+                            </div>
+                            <div id="element-4296">
+                                <div className="line-horizontal">
+                                </div>
+                            </div>
+                            <div id="element-4467">
+                                <div className="contents">
+                                    <h1>
+                                        <p></p>
+                                        <p><b><font>What You'll Learn</font></b></p>
+                                        <p></p>
+                                    </h1>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div className="workshop-detail-block" id="signup">
+                   <div className="workshop-detail-signup-block-color-overlay"></div>
+                    <div className="workshop-detail-signup-block-color-overlay-border-holder">
+                        <div className="workshop-detail-signup-block-inner">
+                            <div id="element-4631">
+                                <div className="box">
+                                </div>
+                            </div>
+                            <div id="element-4632">
+                                <div className="contents">
+                                    <h1>
+                                        <p><font><b>Free</b></font></p>
+                                    </h1>
+                                </div>
+                            </div>
+                            <div id="element-4633">
+                                <div className="conversion_wrapper">
+                                    <a>
+                                        <div className="submit-btn">
+                                            Sign Up Now
+                                        </div>
+                                    </a>
+                                </div>
+                            </div>
+                            <div id="element-4634">
+                                <div className="contents">
+                                    <h1>
+                                        <p></p>
+                                        <p><font><b>Particle 101</b></font></p>
+                                        <p><b>Workshop</b></p>
+                                        <p></p>
+                                    </h1>
+                                </div>
+                            </div>
+                            <div id="element-4635">
+                                <div className="line-horizontal">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div className="workshop-detail-block" id="instructor">
+                <div className="workshop-detail-instructor-block-color-overlay"></div>
+                <div className="workshop-detail-instructor-block-color-overlay-border-holder">
+                    <div className="workshop-detail-instructor-block-inner">
+                        <div id="element-259">
+                            <div className="contents">
+                                <h1>
+                                    <p><font><b>Meet the Instructor</b></font></p>
+                                </h1>
+                            </div>
+                        </div>
+                        <div id="element-260">
+                                <div className="contents">
+                                    <p><font>Brandon has over 20 years of experience as a technology professional and has worked extensively as both a software and hardware engineer across a variety of platforms, technology stacks, and industries. An avid tinkerer, explorer, and teacher, Brandon has spoken at events all over the world, has written four books, and is most at home when leading hands-on labs and workshops.</font></p>
+                                </div>
+                            </div>
+                        <div id="element-1027">
+                                <div className="circle">
+                                </div>
+                            </div>
+                        <div id="element-1029">
+                                <div className="contents">
+                                    <h1>
+                                        <p><b><font>Brandon Satrom</font></b></p>
+                                    </h1>
+                                </div>
+                            </div>
+                        <div id="element-1030">
+                            <div className="contents">
+                                {/* <p></p>
+                                <p></p> */}
+                                <p><font><b>Sr. Manager, Developer Relations</b></font></p>
+                            </div>
+                        </div>
+                    </div>           
+                </div>
+                <div className="workshop-detail-block #earning" id="earning">
+                    <div className="workshop-detail-earning-block-color-overlay"></div>
+                    <div className="workshop-detail-earning-block-color-overlay-border-holder">
+                        <div className="workshop-detail-earning-block-inner" >
+                        <div id="element-3371">
+                            <div className="contents">
+                                <h1>
+                                    <p><font><b>What You'll Get</b></font></p>
+                                </h1>
+                            </div>
+                        </div>
+                        <div id="element-3382">
+                                <div className="box"></div>
+                            </div>
+                        <div id="element-3386">
+                            <div className="box"></div>
+                        </div>
+                        <div id="element-3372">
+                                <div className="contents">
+                                    <h1>
+                                        <p><b><font>Private forum where you can connect with the instructor and other attendees</font></b></p>
+                                    </h1>
+                                </div>
+                            </div>
+                        <div id="element-3383">
+                            <div className="box"></div>
+                        </div>
+                        <div id="element-3375">
+                            <div className="contents">
+                                <div className="cropped"></div>
+                            </div>
+                        </div>
+                        <div id="element-3384">
+                            <div className="box"></div>
+                        </div>
+                        <div id="element-3373">
+                            <div className="contents">
+                                <h1>
+                                    <p><b><font>PDF documentation of each lab performed during this workshop + resources for further learning</font></b></p>
+                                </h1>
+                            </div>
+                        </div>
+                        <div id="element-3385">
+                            <div className="box"></div>
+                        </div>
+                        <div id="element-3376">
+                            <div className="contents">
+                                <div className="cropped"></div>
+                            </div>
+                        </div>
+                        <div id="element-3374">
+                            <div className="contents">
+                                <h1>
+                                    <p><font><b>A personalized Certificate of Completion in your inbox to use for advancing your career or bragging to your friends</b></font></p>
+                                </h1>
+                            </div>
+                        </div>
+                        <div id="element-3378">
+                            <div className="contents">
+                                <div className="cropped"></div>
+                            </div>
+                        </div>
+                        <div id="element-3377">
+                            <div className="contents">
+                                <div className="cropped"></div>
+                            </div>
+                        </div>
+                        <div id="element-3381">
+                                <div className="contents">
+                                    <h1>
+                                        <p><b><font>Workshop instruction and labs taught by an industry professional</font></b></p>
+                                    </h1>
+                                </div>
+                        </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div className="workshop-detail-block" id="questions">
+                    <div className="workshop-detail-questions-block-color-overlay"></div>
+                    <div className="workshop-detail-questions-block-color-overlay-border-holder">
+                        <div className="workshop-detail-questions-block-inner">
+                        <div id="element-545">
+                            <div className="contents">
+                                <h1>
+                                    <p><font><b>Frequently Asked Questions</b></font></p>
+                                </h1>
+                            </div>
+                        </div>
+                        <div id="element-533">
+                                <div className="contents">
+                                    <p><b><font>WHEN DO I GET ACCESS TO THESE COURSES?</font></b></p>
+                                </div>
+                            </div>
+                        <div id="element-535">
+                            <div className="contents">
+                                <p><font>The workshop is on-demand and can be accessed as soon as your purchase is complete via your Hackster profile. </font></p>
+                            </div>
+                        </div>
+                        <div id="element-553">
+                                <div className="contents">
+                                    <h1>
+                                        <p><b><font>Brandon Satrom</font></b></p>
+                                    </h1>
+                                </div>
+                            </div>
+                        <div id="element-554">
+                            <div className="contents">
+                                <h1>
+                                    <p><b><font>DO I HAVE TO PURCHASE ANY HARDWARE OR SOFTWARE?</font></b></p>
+                                </h1>
+                            </div>
+                        </div>
+                        <div id="element-555">
+                            <div className="contents">
+                                {/* <p></p>
+                                <p></p> */}
+                                <p>
+                                    <font>
+                                        Yes, in order to participate in the labs you will need:
+                                    </font>
+                                    <ul>
+                                        <li>
+                                            <font>
+                                                A computer running Windows, macOS or Linux with an available USB port 
+                                            </font>
+                                        </li>
+                                    </ul>
+                                </p>
+                            </div>
+                        </div>    
+                        <div id="element-4470">
+                            <div className="contents">
+                                {/* <p></p>
+                                <p></p> */}
+                                <p><font><b>OTHER QUESTIONS?</b></font></p>
+                            </div>
+                        </div>    
+                        <div id="element-4472">
+                            <div className="contents">
+                                {/* <p></p>
+                                <p></p> */}
+                                <p><font><b>Sr. Manager, Developer Relations</b></font></p>
+                            </div>
+                        </div>                            
+                        </div>
+                    </div>
+                </div>
+            </div>     
+            </div>      
             
         )
     }

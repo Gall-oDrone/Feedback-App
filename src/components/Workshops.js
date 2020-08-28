@@ -1,6 +1,7 @@
 import React from 'react';
 import { List, Avatar, Icon } from 'antd';
 import {media_endpoint} from "../constants"
+import "../assets/workshop.css"
 
 function handleDegree(degree){
     if(degree.doctorate !== null){
@@ -29,30 +30,28 @@ const Articles = (props) => {
                 dataSource={props.data}
                 renderItem={item => (
                     <List.Item
-                        key={item.title}
-                        extra={
-                            <a href={`/workshops/${item.id}`}>
-                                  <div id="workshop-div-1">
-                                    <img
-                                        className="contain"
-                                        alt="logo"
-                                        src={item.workshop_photo}
-                                    />
-                                </div>
-                            </a>
-                            // <video width="250" controls >
-                            //     <source src={`${media_endpoint}/${item.video}`} type="video/mp4"/>
-                            //     Your browser does not support HTML5 video.
-                            // </video>
-                        }
+                        key={item.id}
                     >
-                        <List.Item.Meta
-                            title={<a href={`/workshops/${item.id}`}>{item.user_name.name}</a>}
-                            description={`$ ${item.price_per_hour} per hour`}
-                        />
-                        {/* <p>{`${item.user_name.name} `}</p> */}
-                        <p>{`From: ${item.user_name.university} `}</p>
-                        <p>{`Degree: ${handleDegree(item.user_name)} `}</p>
+                        <div className="workshop-card" key={item.id}>
+                            <div className="-col-md-4" key={item.id}>
+                                <img src={item.image}>
+                                </img>
+                                
+                            </div>
+                            <div className="-col-md-8" key={item.id}>
+                                <h2>
+                                    {item.title}
+                                </h2>
+                                <p>
+                                    {item.overview}
+                                </p>
+                                <div key={item.id}>
+                                    <a href={`/workshops/${item.id}`}>
+                                            More Info
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
                     </List.Item>
                 )}
             />

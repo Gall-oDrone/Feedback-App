@@ -16,9 +16,9 @@ from workshopsApi.views import (
     CommentDetailView,
     CreateComment,
     UpdateComment,
-    VideoViewSet,
-    ImageCreateView,
-    ImageDestroyView,
+    # VideoViewSet,
+    # ImageCreateView,
+    # ImageDestroyView,
     CommentListView,
     Categories_and_F_TView
 )
@@ -26,7 +26,7 @@ from workshopsApi.views import (
 # from workshopsApi.views import WorkshopViewSet
 
 router = DefaultRouter()
-router.register(r'', VideoViewSet, base_name='video')
+# router.register(r'', VideoViewSet, base_name='video')
 # router.register(r'', CommentViewSet, base_name='comment')
 # urlpatterns = router.urls
 urlpatterns = [
@@ -36,7 +36,7 @@ urlpatterns = [
     path('<pk>/update/', WorkshopUpdateView.as_view()),
     path('<pk>/delete/', WorkshopDeleteView.as_view()),
     path('list/<username>/', ProfileWorkshopListView.as_view()),
-    path('/detail/<pk>/<username>/', ProfileWorkshopDetailView.as_view()),
+    path('detail/<pk>/<username>/', ProfileWorkshopDetailView.as_view()),
 
     path('<pk>/create-likes/', CreateLike.as_view()),
     path('<pk>/likes/', LikeListView.as_view()),
@@ -48,10 +48,10 @@ urlpatterns = [
     path('<pk>/update-comment/<id>/', UpdateComment.as_view()),
     path('<pk>/comment/<id>/', CommentDetailView.as_view()),
     #path('<pk>/video/', VideoViewSet.as_view()),
-    path('create/images/', ImageCreateView.as_view),
-    path('destroy/images/', ImageDestroyView.as_view),
+    # path('create/images/', ImageCreateView.as_view),
+    # path('destroy/images/', ImageDestroyView.as_view),
     path('categories-f_t/', Categories_and_F_TView.as_view()),
-    url(r'^video/', include(router.urls)),
+    # url(r'^video/', include(router.urls)),
     # url(r'^comment/', include(router.urls))
 
  ]

@@ -88,7 +88,7 @@ class LandingPage extends React.PureComponent {
             <section className="third-section">
               <div className="third-flex-container">
                   <div className="universities-container">
-                      <h2>From top universities all around the world</h2>
+                      <h2>Peer Learning from top universities all around the world</h2>
                       <h4>Interactions with local and foreign students</h4>
                       < div className="universities-main-header-container">
                       </div>
