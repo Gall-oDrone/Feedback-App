@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from workshopsApi.models import Workshop, Comment, Category, Like, Rating, CommentReply
+from workshopsApi.models import Workshop, Comment, Category, Like, Rating, CommentReply, Lesson, LessonTopic
 from users.models import User, ProfileInfo
 from users.serializers import ProfileSerializer, ProfileInfoSerializer
 from django.core.files.storage import FileSystemStorage
@@ -229,6 +229,56 @@ class WorkshopSerializer(serializers.ModelSerializer):
         # grade = answered_correct_count / len(questions)
         # graded_asnt.grade = gradegraded_asnt.save()
         # return graded_asnt
+
+class WorkshopDetailSerializer(serializers.ModelSerializer):
+    categories = StringSerializer(many=True)
+    overview = StringSerializer(many=False)
+    author = StringSerializer(many=False)
+    lesson = serializers.SerializerMethodField()
+    user_name = serializers.SerializerMethodField()
+    user_pic = serializers.SerializerMethodField()
+
+    def get_lesson(self, obj):
+        lesson = LessonSerializer(Lesson.objects.filter(workshop=obj.id), many=True).data
+        print("lesson obj: ", lesson)
+        return lesson
+
+    def get_user_name(self, obj):
+        profile_name = ProfileInfoSerializer(ProfileInfo.objects.get(profile_username=obj.author.id), many=False ).data.get("name")
+        return profile_name
+    
+    def get_user_pic(self, obj):
+        request = self.context.get('request')
+        profile_pic = ProfileSerializer(obj.author.profile, many=False, context={'request': request}).data["profile_avatar"]
+        return profile_pic
+
+    class Meta:
+        model = Workshop
+        fields = ('id', 'overview', 'categories', 
+                'author', "lesson", "user_name", "user_pic")
+
+class LessonSerializer(serializers.ModelSerializer):
+    lesson_title = StringSerializer(many=False)
+    lesson_topic = serializers.SerializerMethodField()
+
+    def get_lesson_topic(self, obj):
+        # topic = LessonTopicSerializer(Lesson.objects.filter(id=obj.id), many=True).data
+        topic = LessonTopicSerializer(LessonTopic.objects.filter(lesson=obj.id), many=True).data
+        # print("lesson topic: ", topic)
+        # print("lesson topic: ", Lesson.lessontopic_set)
+        return topic
+
+    class Meta:
+        model = Lesson
+        fields = ('id', 'lesson_title', 'lesson_topic')
+
+class LessonTopicSerializer(serializers.ModelSerializer):
+    topic_title = StringSerializer(many=False)
+
+    class Meta:
+        model = LessonTopic
+        fields = ('id', 'topic_title')
+
 class ProfileWorkshopListSerializer(serializers.ListSerializer):
     child = WorkshopSerializer()
     allow_null = True

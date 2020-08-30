@@ -86,7 +86,7 @@ workshop-card {
 .workshop-detail-overview-block-color-overlay{
   width: 100%;
   height: 100%;
-  position: absolute;
+  /* position: absolute; */
   margin: 0 auto;
   background-color: rgba(0, 0, 0, 0);
   opacity: 0.5;
@@ -193,7 +193,7 @@ font-size: 14px;
 }
 
 .overview-contents p{
-  text-align: left;
+  text-align: center;
   line-height: 51px;
   font-size: 32px;
   color: rgb(55, 70, 90);
@@ -342,7 +342,7 @@ font-size: 14px;
 .workshop-detail-lessons-block-color-overlay{
   width: 100%;
   height: 100%;
-  position: absolute;
+  /* position: absolute; */
   margin: 0 auto;
   background-color: rgba(255, 255, 255, 0);
   opacity: 0.5;
@@ -373,6 +373,11 @@ font-size: 14px;
   margin: 0 auto;
   position: relative;
   width: 960px;
+  display: grid;
+  grid-template-columns: 1fr repeat(12, minmax(auto, 60px)) 1fr;
+  grid-gap: 40px;
+  padding: 60px 0;
+  
 }
 
 #element-3407{
@@ -392,6 +397,13 @@ font-size: 14px;
   outline: 0;
   padding: 0;
   vertical-align: baseline;
+
+  /* grid-column-end: span 3;
+  display: flex;
+  flex-direction: column;
+  background-color: #39393b;
+  cursor: pointer;
+  transition: all 0.3s ease 0s; */
 }
 
 #element-3407 .box {
@@ -418,6 +430,7 @@ font-size: 14px;
   top: 139px;
   z-index: 48;
   position: absolute;
+  display: flex;
 }
 
 #element-3434 .box {
@@ -447,7 +460,7 @@ font-size: 14px;
   height: 34px;
   width: 255px;
   left: 34px;
-  top: 130px;
+  top: 140px;
   z-index: 49;
   position: absolute;
 }
@@ -888,7 +901,7 @@ margin-bottom: 10px;
 }
 
 #element-4467 p {
-  text-align: left;
+  text-align: center;
   line-height: 51px;
   font-size: 32px;
   color: rgb(55, 70, 90);
@@ -906,7 +919,7 @@ margin-bottom: 10px;
 .workshop-detail-signup-block-color-overlay{
   width: 100%;
   height: 100%;
-  position: absolute;
+  /* position: absolute; */
   margin: 0 auto;
   background-color: rgba(0, 0, 0, 0);
   opacity: 0.91566265060241;
@@ -1266,7 +1279,7 @@ margin-bottom: 10px;
   border: 1px solid #fbfbfb;
   opacity: 1;
   filter: alpha(opacity=100);
-  background-image: url('//storage.googleapis.com/instapage-user-media/fc5bead4/48511095-0-Brandon-Satrom-2015-.png');
+  /* background-image: url('http://127.0.0.1:8000/media/profileAvatar/Copia_de_LogoMakr_9ZDTQ7_BXNDJe4.png'); */
   background-repeat: cover;
   background-position: 49% 99%;
   background-size: cover;

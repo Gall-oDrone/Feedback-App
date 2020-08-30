@@ -34,6 +34,10 @@ class ArticleDetail extends React.Component {
         startTime: null,
         endTime: null,
         orderId: null,
+        author: null,
+        author_pic: null,
+        lessons: null,
+        lessons_topic: null,
     };
 
     handleClick = e => {
@@ -71,6 +75,8 @@ class ArticleDetail extends React.Component {
         axios.get(workshopDetailURL(workshopID))
             .then(res => {
                 console.log("res: " + JSON.stringify(res.data))
+                res.data.lesson.map((el, i) => {console.log("denge", el.lesson_topic)})
+                res.data.lesson.map((el, i) => {console.log("denge 2", el.lesson_title)})
                 this.setState({
                     article: res.data,
                     weekdays: res.data.weekdays,
@@ -78,8 +84,11 @@ class ArticleDetail extends React.Component {
                     dates: res.data.dates,
                     maxHrs: res.data.max_hrs_per_workshop,
                     startTime: res.data.start_time,
-                    endTime: res.data.end_time
-
+                    endTime: res.data.end_time,
+                    author: res.data.user_name,
+                    author_pic: res.data.user_pic,
+                    lessons: res.data.lesson,
+                    // lessons_topic: 
                 });
                 console.log("Article Detail res data: " + res.data);
             });
@@ -267,7 +276,7 @@ class ArticleDetail extends React.Component {
         console.log("this.state: " + this.state, this.state.orderId)
         const { form } = this.props;
         const { getFieldDecorator } = this.props.form;
-        const { date, startTime, endTime, disable, visible, orderId, loading } = this.state
+        const { author, author_pic, loading, lessons } = this.state
         const {user_name} = this.state.article
         return (
             <div>
@@ -494,13 +503,13 @@ class ArticleDetail extends React.Component {
                                 </div>
                             </div>
                         <div id="element-1027">
-                                <div className="circle">
+                                <div style={{backgroundImage:`url(${author_pic})`}} className="circle">
                                 </div>
                             </div>
                         <div id="element-1029">
                                 <div className="contents">
                                     <h1>
-                                        <p><b><font>Brandon Satrom</font></b></p>
+                                        <p><b><font>{author}</font></b></p>
                                     </h1>
                                 </div>
                             </div>

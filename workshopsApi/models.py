@@ -107,14 +107,14 @@ class Rating(models.Model):
 
 class Lesson(models.Model):
     workshop = models.ForeignKey(Workshop, on_delete=models.CASCADE)
-    title = models.CharField(max_length=120)
+    lesson_title = models.CharField(max_length=120)
     practice_file = models.ManyToManyField("PracticeFile", null=True, blank=True)
     created = models.DateTimeField(auto_now_add=True)
 
 class LessonTopic(models.Model):
     lesson = models.ForeignKey(Lesson, on_delete=models.CASCADE)
-    title = models.CharField(max_length=120)
-    lesson_video = models.ForeignKey("LessonVideo", on_delete=models.CASCADE)
+    topic_title = models.CharField(max_length=120)
+    lesson_video = models.ForeignKey("LessonVideo", on_delete=models.CASCADE, null=True, blank=True)
     created = models.DateTimeField(auto_now_add=True)
 
 class LessonVideo(models.Model):

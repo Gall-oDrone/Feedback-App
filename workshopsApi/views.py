@@ -15,7 +15,7 @@ from rest_framework.status import(
 from rest_framework import permissions, generics
 from workshopsApi.models import Workshop, Category, WorkshopView, Like, Rating, Comment
 from users.models import User
-from .serializers import WorkshopSerializer, WorkshopFeatureSerializer, CommentSerializer, LikeSerializer, LikeListSerializer, RatingSerializer, CommentListSerializer, ProfileWorkshopListSerializer, Cat_FT_Serializer
+from .serializers import WorkshopSerializer, WorkshopFeatureSerializer, WorkshopDetailSerializer, CommentSerializer, LikeSerializer, LikeListSerializer, RatingSerializer, CommentListSerializer, ProfileWorkshopListSerializer, Cat_FT_Serializer
 from analytics.models import View
 from django.http import Http404
 from rest_framework import viewsets
@@ -109,7 +109,7 @@ class WorkshopListView(ListAPIView):
 
 class WorkshopDetailView(RetrieveAPIView):
     queryset = Workshop.objects.all()
-    serializer_class = WorkshopSerializer
+    serializer_class = WorkshopDetailSerializer
     permission_classes = (permissions.AllowAny,)
 
 
