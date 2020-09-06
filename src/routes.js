@@ -104,6 +104,9 @@ import WorkshopCreate from "./containers/WorkshopCreate";
 import WorkshopDetail from "./containers/WorkshopDetail";
 // import WorkshopDetailMenu from "./containers/WorkshopDetailMenu";
 
+import ProjectManagement from "./tello-src/components/Home"
+import TrelloBoard from "./tello-src/components/TrelloBoard"
+
 // const BaseRouter2 = () => (
 //   <Hoc>
 //     <Route exact path="/"/>
@@ -216,6 +219,9 @@ const BaseRouter = () => (
     {/* <Route exact path="/workshops/:workshopID/rating/" component={WorkshopRating} /> */}
     <Route exact path="/workshops/:workshopID" component={WorkshopDetail} />
     {/* <Route exact path="/workshops/detailmenu/:workshopID" component={WorkshopDetailMenu} /> */}
+
+    <Route exact path="/project-management/" component= {ProjectManagement} />
+    <Route path="/project-management/:boardID" component={TrelloBoard} />
 
   </Hoc>
 );

@@ -360,8 +360,8 @@ class ArticleDetail extends React.Component {
                                 </div>
                             </div>
                             <div className="page-element-widget-container-page-element-type-box-widget-box" id="element-3434">
-                                <div className="box">
-                                </div>
+                                {/* <div className="box">
+                                </div> */}
                             </div>
                             <div className="page-element widget-container page-element-type-headline widget-headline" id="element-3405">
                                 <div className="contents">
@@ -685,3 +685,39 @@ const mapStateToProps = state => {
     }
 }
 export default withRouter(connect(mapStateToProps)(WrappedArticleCreate));
+
+
+{/* 
+    //Courses List Conatiner 
+    <div className="page-element-widget-container-page-element-type-box-widget-box" id="element-3407">
+        //Courses List Box 
+        <div className="box">
+            //List Items Courses
+        </div>
+    </div>
+    // Top Dark-Blue Cover on Card
+    <div className="page-element-widget-container-page-element-type-box-widget-box" id="element-3434">
+        <div className="box">
+            <div className="page-element widget-container page-element-type-headline widget-headline" id="element-3405">
+                <div className="contents">
+                    <h1>
+                        <p>
+                            <b><font>MODULE 1</font></b>
+                        </p>
+                    </h1>
+                </div>
+            </div>
+            <div id="element-4296">
+                <div className="line-horizontal">
+                </div>
+            </div>
+            <div id="element-3432">
+                <div className="contents">
+                    <h1>
+                        <p><font>A Lap Around the Particle Ecosystem</font></p>
+                    </h1>
+                </div>
+            </div>
+        </div>
+    </div> 
+*/}

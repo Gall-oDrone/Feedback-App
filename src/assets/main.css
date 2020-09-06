@@ -92,3 +92,20 @@
 .resend-email:hover{
   color: #11b1f0;
 }
+
+#close {
+  float:right;
+  /* display:inline-block; */
+  padding:0.1px 1.5px;
+  color: #11b1f0;
+  border: 1px solid #91d5ff;
+}
+
+#close:hover {
+  float:right;
+  display:inline-block;
+  padding:0.1px 1.5px;
+  background:#e6f7ff;
+  color: #0699d3;
+  cursor: pointer;
+}

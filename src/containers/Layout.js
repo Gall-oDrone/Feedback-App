@@ -68,21 +68,23 @@ class CustomLayout extends React.Component {
         {this.props.is_active === false &&
           this.state.alertClosed === false ? 
             <Header style={{ height: "30px"}}>
-              <div 
+              <Alert 
                 style={{ position:"inline-block", height:"inherit", paddingTop:"2px",marginBottom:"5px",borderRadius: "5px", border: "1px solid #91d5ff", textAlign:"center", width:"inherit", background:"#e6f7ff", color:"black"}}
                 closable
                 onClose={this.handleCloseAlert}
-                // message={
-                //   <p>Hi! Please confirm your email address by clicking the link in the email we sent you.
-                //     <a className="resend-email" href={"/confirmation/new/"}> Resend me the link, please</a>
-                //   </p>
-                // } 
-                type="info">
-                   <p style={{ lineHeight:"30px"}}>
-                     Hi! Please confirm your email address by clicking the link in the email we sent you.
+                id="myDiv"
+                message={
+                  <p>Hi! Please confirm your email address by clicking the link in the email we sent you.
                     <a className="resend-email" href={"/confirmation/new/"}> Resend me the link, please</a>
                   </p>
-                </div>
+                } 
+                type="info">
+                   {/* <p style={{ lineHeight:"30px"}}>
+                     Hi! Please confirm your email address by clicking the link in the email we sent you.
+                    <a className="resend-email" href={"/confirmation/new/"}> Resend me the link, please</a>
+                    <button id="close" onclick="document.getElementById('myDiv').style.display='none'" >X</button>
+                  </p> */}
+                </Alert>
             </Header>
             : null 
         }
@@ -221,6 +223,12 @@ class CustomLayout extends React.Component {
                   </Link>
                 </Menu.Item>
                 <Menu.Item key="8">
+                  <Link to={`/project-management/`}>
+                    <Icon type="tool"/>
+                    <span> Project Management</span>
+                  </Link>
+                </Menu.Item>
+                <Menu.Item key="9">
                   <Link to={`/video-chat-test/`}>
                     <Icon type="video-camera"/>
                     <span> Video-Chat</span>

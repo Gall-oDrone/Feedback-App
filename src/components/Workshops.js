@@ -31,6 +31,7 @@ const Articles = (props) => {
                 renderItem={item => (
                     <List.Item
                         key={item.id}
+                        id="ant-list-item-no-flex"
                     >
                         <div className="workshop-card" key={item.id}>
                             <div className="-col-md-4" key={item.id}>

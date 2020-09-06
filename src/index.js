@@ -39,6 +39,12 @@ import navReducer from "./store/reducers/nav";
 import messageReducer from "./store/reducers/message";
 import notifyReducer from "./store/reducers/notification";
 
+import listsReducer from "./tello-src/reducers/listsReducer";
+import cardsReducer from "./tello-src/reducers/cardsReducer";
+import boardsReducer from "./tello-src/reducers/boardsReducer";
+import boardOrderReducer from "./tello-src/reducers/boardOrderReducer";
+import activeBoardReducer from "./tello-src/reducers/activeBoardReducer";
+
 const composeEnhances = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
 const rootReducer = combineReducers({
@@ -72,7 +78,13 @@ const rootReducer = combineReducers({
 
   nav: navReducer,
   message: messageReducer,
-  notify: notifyReducer
+  notify: notifyReducer,
+
+  lists: listsReducer,
+  cards: cardsReducer,
+  boards: boardsReducer,
+  boardOrder: boardOrderReducer,
+  activeBoard: activeBoardReducer
 
 });
 
