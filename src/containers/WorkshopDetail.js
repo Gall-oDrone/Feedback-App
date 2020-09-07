@@ -273,7 +273,7 @@ class ArticleDetail extends React.Component {
 
     render() {
         console.log('this.PROPS: ' + JSON.stringify(this.props))
-        console.log("this.state: " + this.state, this.state.orderId)
+        console.log("this.state: " + this.state, this.state.orderId, "this.state.lessons ==> ", this.state.lessons)
         const { form } = this.props;
         const { getFieldDecorator } = this.props.form;
         const { author, author_pic, loading, lessons } = this.state
@@ -355,13 +355,92 @@ class ArticleDetail extends React.Component {
                    <div className="workshop-detail-lessons-block-color-overlay"></div>
                     <div className="workshop-detail-lessons-block-color-overlay-border-holder">
                         <div className="workshop-detail-lessons-block-inner">
-                            <div className="page-element-widget-container-page-element-type-box-widget-box" id="element-3407">
+                        {/* Courses List Conatiner  */}
+                        {lessons && lessons.map((el, i) => {
+                            return(
+                                                    <li>
+                                                    <div id="element-3407-A">
+                                                        {/* Courses List Box  */}
+                                                        <div className="box">
+                                                            {/* List Items Courses */}
+                                                    {/* Top Dark-Blue Cover on Card */}
+                                                            <div className="page-element-widget-container-page-element-type-box-widget-box" id="element-3434-A">
+                                                                <div className="box-3434">
+                                                                    <div className="page-element widget-container page-element-type-headline widget-headline" id="element-3405-A">
+                                                                        <div className="contents">
+                                                                            <h1>
+                                                                                <p>
+                                                                                    <b><font>Module {el.id}</font></b>
+                                                                                </p>
+                                                                            </h1>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div id="element-4296-A">
+                                                                        <div className="line-horizontal">
+                                                                        </div>
+                                                                    </div>
+                                                                    <div id="element-3432-A">
+                                                                        <div className="contents">
+                                                                            <h1>
+                                                                                <p><font>{el.lesson_title}</font></p>
+                                                                            </h1>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div className="courses_container-A">
+                                                                    <ul>
+                                                                        {el.lesson_topic && el.lesson_topic.map((el, i) => {
+                                                                            return (
+                                                                            <li>
+                                                                                <div className="courses_container-inline-A">
+                                                                                    <div id="element-3411-A">
+                                                                                        <div className="contents">
+                                                                                            <img src="//storage.googleapis.com/instapage-user-media/fc5bead4/31634666-0-check-mark-blue-thin.png"></img>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                    <div id="element-3410-A">
+                                                                                        <div className="contents">
+                                                                                            <h1>
+                                                                                                <p><font>{el.topic_title}</font></p>
+                                                                                            </h1>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </li>
+                                                                            )    
+                                                                        })}
+                                                                    </ul>
+                                                                </div>
+                                                                <div className="labs_container-A">
+                                                                    <div id="element-3453-A">
+                                                                        <div className="box-AB">
+                                                                            <div id="element-3458-A">
+                                                                                <div className="contents">
+                                                                                    <div className="cropped"></div>
+                                                                                </div>
+                                                                            </div>
+                                                                            <div id="element-3456-A">
+                                                                                <div className="contents">
+                                                                                        <p>Claiming your first Particle device* </p>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div> 
+                                                        </div>
+                                                    </div>
+                                                </li>
+                        )
+                        })}
+
+                            {/* <div className="page-element-widget-container-page-element-type-box-widget-box" id="element-3407">
                                 <div className="box">
                                 </div>
                             </div>
                             <div className="page-element-widget-container-page-element-type-box-widget-box" id="element-3434">
-                                {/* <div className="box">
-                                </div> */}
+                                <div className="box">
+                                </div>
                             </div>
                             <div className="page-element widget-container page-element-type-headline widget-headline" id="element-3405">
                                 <div className="contents">
@@ -442,6 +521,7 @@ class ArticleDetail extends React.Component {
                                     </h1>
                                 </div>
                             </div>
+                         */}
                         </div>
                     </div>
                 </div>
@@ -671,8 +751,7 @@ class ArticleDetail extends React.Component {
                     </div>
                 </div>
             </div>     
-            </div>      
-            
+            </div>                  
         )
     }
 }
@@ -716,6 +795,33 @@ export default withRouter(connect(mapStateToProps)(WrappedArticleCreate));
                     <h1>
                         <p><font>A Lap Around the Particle Ecosystem</font></p>
                     </h1>
+                </div>
+            </div>
+        </div>
+        <div className="courses_container">
+            <ul>
+                <li>
+                    <div id="element-3411">
+                        <div className="contents">
+                            <img src="//storage.googleapis.com/instapage-user-media/fc5bead4/31634666-0-check-mark-blue-thin.png"></img>
+                        </div>
+                    </div>
+                    <div id="element-3410">
+                        <div className="contents">
+                            <h1>
+                                <p><font>Why Particle?</font></p>
+                            </h1>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+            <div id="element-3453">
+                <div className="box">
+                    <div id="element-3456">
+                        <div className="contents">
+                                <p>Claiming your first Particle device* </p>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

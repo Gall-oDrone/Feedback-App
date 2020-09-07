@@ -377,11 +377,14 @@ font-size: 14px;
   /* height: 100%; */
   margin: 0 auto;
   position: relative;
-  width: 960px;
-  display: grid;
+  width: auto;
+  /* display: grid;
   grid-template-columns: 1fr repeat(12, minmax(auto, 60px)) 1fr;
-  grid-gap: 40px;
-  padding: 60px 0;
+  grid-gap: 10px; */
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  padding: 50px 0;
   
 }
 
@@ -410,8 +413,67 @@ font-size: 14px;
   cursor: pointer;
   transition: all 0.3s ease 0s; */
 }
+/* TODO: CHANGE TO GRID DISPLAY */
+#element-3407-A{
+  height: 327px;
+  width: 302px;
+  left: 11px;
+  /* top: 139px; */
+  z-index: 47;
+  /* position: absolute; */
+
+  /* display: flex;
+  flex-wrap: wrap; */
+  /* justify-content: center; */
+  /* flex-grow: 1;
+  flex-basis: calc(16.666% - 20px); */
+
+  /* display: grid; */
+  /* grid-template-columns: 1fr repeat(12, minmax(auto, 60px)) 1fr; */
+  /* grid-template-columns: repeat(3, 1fr); */
+  /* grid-template-rows: 80px auto 80px; */
+  /* grid-gap: 30px 30px; */
+  /* grid-auto-flow: row; */
+
+  background: none repeat scroll 0 0 transparent;
+  border: 0;
+  font-family: inherit;
+  font-size: 100%;
+  font-style: inherit;
+  font-weight: inherit;
+  margin: 0;
+  outline: 0;
+  padding: 0;
+  vertical-align: baseline;
+}
 
 #element-3407 .box {
+  width: 300px !important;
+  height: 325px !important;
+  background-color: rgb(255, 255, 255) !important;
+  border-radius: 0px !important;
+  border-color: rgba(248, 0, 0, 0) !important;
+  border-width: 1px !important;
+  border-style: solid !important;
+  background-repeat: repeat !important;
+  background-position: left top !important;
+  background-size: cover !important;
+  font-family: proxima-nova-soft-1, proxima-nova-soft-2, sans-serif !important;
+  font-weight: 400 !important;
+  box-shadow: 0px 5px 20px -5px rgba(185, 185, 200, 1) !important;
+  /* border: 1px solid #d9d9d9; */
+}
+
+#element-3407 .box:nth-child(3n - 2) {
+  /* grid-column: 2 / span 2; */
+  grid-column-end: 1;
+}
+
+#element-3407-A .box {
+  /* display: flex;
+  flex-direction: column;
+  flex-wrap: wrap; */
+  /* justify-content: space-between; */
   width: 300px !important;
   height: 325px !important;
   background-color: rgb(255, 255, 255) !important;
@@ -438,6 +500,16 @@ font-size: 14px;
   display: flex;
 }
 
+#element-3434-A {
+  height: 130px;
+  width: 302px;
+  left: 11px;
+  top: 139px;
+  z-index: 48;
+  /* position: block; */
+  /* display: inline-block; */
+}
+
 #element-3434 .box {
   width: 300px;
   height: 128px;
@@ -461,6 +533,22 @@ font-size: 14px;
   margin-bottom: 10px; 
 }
 
+#element-3434-A .box-3434 {
+  width: 300px;
+  height: 128px;
+  z-index: 49;
+  background-color: #16425b;
+  border: 1px solid rgba(0,0,0,0);
+  border-radius: 4px;
+  background-repeat: repeat;
+  background-size: cover;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-position: top left;
+  margin-bottom: 10px; 
+}
+
 #element-3405 {
   height: 34px;
   width: 255px;
@@ -470,13 +558,34 @@ font-size: 14px;
   position: absolute;
 }
 
+#element-3405-A {
+  height: 34px;
+  width: 255px;
+  left: 34px;
+  /* top: 140px; */
+  z-index: 49;
+  justify-content: center;
+  position: relative;
+}
+
 #element-3405 .contents{
   font-family: proxima-nova, proxima-nova-1, proxima-nova-2, proxima-nova-web, proxima-nova-web-1, proxima-nova-web-2;
   font-weight: 400;
   word-wrap: break-word;
 }
 
+#element-3405-A .contents{
+  font-family: proxima-nova, proxima-nova-1, proxima-nova-2, proxima-nova-web, proxima-nova-web-1, proxima-nova-web-2;
+  font-weight: 400;
+  word-wrap: break-word;
+}
 #element-3405 h1{
+  font-size: 24px;
+  color: rgb(152, 160, 166);
+  line-height: 34px;
+  text-align: left;
+}
+#element-3405-A h1{
   font-size: 24px;
   color: rgb(152, 160, 166);
   line-height: 34px;
@@ -491,11 +600,19 @@ font-size: 14px;
   margin: 0;
 }
 
-#element-3405 b{
+#element-3405-A p{
+  text-align: left;
+  line-height: 34px;
+  font-size: 24px;
+  color: rgb(152, 160, 166);
+  margin: 0;
+}
+
+#element-3405, #element-3405-A b{
   font-weight: 700;
 }
 
-#element-3405 font {
+#element-3405, #element-3405-A font {
   background: none repeat scroll 0 0 transparent;
 border: 0;
 font-family: inherit;
@@ -572,14 +689,23 @@ color: #555;
 text-align: center; */
 }
 
-#element-3432 .contents {
+#element-3432-A{
+  height: 44px;
+  width: 255px;
+  left: 34px;
+  /* top: 188px; */
+  z-index: 50;
+  position: relative;
+}
+
+#element-3432, #element-3432-A .contents {
   font-family: proxima-nova, proxima-nova-1, proxima-nova-2, proxima-nova-web, proxima-nova-web-1, proxima-nova-web-2;
   font-weight: 400;
   font-id: ;
   word-wrap: break-word;
 }
 
-#element-3432 h1{
+#element-3432, #element-3432-A h1{
   font-size: 18px;
 color: rgb(152, 160, 166);
 line-height: 22px;
@@ -588,7 +714,7 @@ font-family: proxima-nova, proxima-nova-1, proxima-nova-2, proxima-nova-web, pro
 font-weight: 400;
 }
 
-#element-3432 p {
+#element-3432, #element-3432-A p {
   text-align: left;
   line-height: 22px;
   font-size: 18px;
@@ -617,7 +743,18 @@ font-weight: 400;
   vertical-align: baseline; */
 }
 
-#element-3410 .contents {
+#element-3410-A {
+  height: 25px;
+  width: 206px;
+  left: 69px;
+  /* top: 286px; */
+  z-index: 51;
+  text-align: left;
+  /* position: absolute; */
+}
+
+
+#element-3410, #element-3410-A .contents {
   font-family: proxima-nova, proxima-nova-1, proxima-nova-2, proxima-nova-web, proxima-nova-web-1, proxima-nova-web-2;
   font-weight: 400;
   word-wrap: break-word;
@@ -633,13 +770,25 @@ font-weight: 400;
   padding: 0; */
 }
 
-#element-3410 p {
+#element-3410, #element-3410-A p {
   line-height: 25px;
   font-size: 15.3846px;
   color: rgb(152, 160, 166);
   line-height: 24px;
   text-align: left;
   margin: 0;
+}
+
+.courses_container-A {
+ display: flex;
+ flex-direction: column;
+ flex-wrap: wrap;
+}
+
+.courses_container-inline-A{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
 }
 
 #element-3411{
@@ -651,7 +800,16 @@ font-weight: 400;
   position: absolute;
 }
 
-#element-3411 .contents {
+#element-3411-A {
+  height: 22px;
+  width: 22px;
+  left: 34px;
+  /* top: 288px; */
+  z-index: 52;
+  position: relative;
+}
+
+#element-3411, #element-3411-A .contents {
   font-family: proxima-nova, proxima-nova-1, proxima-nova-2, proxima-nova-web, proxima-nova-web-1, proxima-nova-web-2;
   font-weight: 400;
 
@@ -666,7 +824,7 @@ font-weight: 400;
   padding: 0; */
 }
 
-#element-3411 img{
+#element-3411, #element-3411-A img{
   margin-top: 0px;
   width: 22px;
   height: 22px;
@@ -774,6 +932,14 @@ font-weight: 400;
   margin: 0;
 }
 
+.labs_container-A{
+  /* display: flex;
+  flex-direction: column;
+  flex-wrap: wrap; */
+  position: relative;
+  bottom: 0;
+}
+
 #element-3453 {
   height: 55px;
 width: 302px;
@@ -792,6 +958,15 @@ margin: 0;
 outline: 0;
 padding: 0;
 vertical-align: baseline; */
+}
+
+#element-3453-A {
+  height: 55px;
+  width: 302px;
+  /* left: 11px; */
+  /* top: 411px; */
+  z-index: 60;
+  margin-top: auto;
 }
 
 #element-3453 .box{
@@ -817,6 +992,29 @@ background: #fff;
 margin-bottom: 10px;
 }
 
+#element-3453-A .box-AB{
+  width: 300px;
+  height: 53px;
+  background-color: #f7f9fb;
+  border: 1px solid rgba(0,0,0,0);
+  background-repeat: repeat;
+  background-size: cover;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-position: top left;
+
+    border-radius: 4px;
+    background: #fff;
+    background-color: rgb(255, 255, 255);
+    /* background-color: rgb(116, 36, 36); */
+    background-position-x: 0%;
+    background-position-y: 0%;
+    background-repeat: repeat;
+    background-size: auto;
+    margin-bottom: 10px;  
+}
+
 #element-3456 {
   height: 18px;
   width: 248px;
@@ -827,7 +1025,17 @@ margin-bottom: 10px;
   position: absolute;
 }
 
-#element-3456 .contents {
+#element-3456-A {
+  height: 18px;
+  width: 248px;
+  float: right;
+  display: inline-block;
+  /* left: 65px; */
+  /* top: 427px; */
+  z-index: 61;
+  position: relative;
+}
+#element-3456, #element-3456-A .contents {
   font-family: proxima-nova, proxima-nova-1, proxima-nova-2, proxima-nova-web, proxima-nova-web-1, proxima-nova-web-2;
   font-weight: 400;
   font-id: ;
@@ -835,11 +1043,10 @@ margin-bottom: 10px;
   font-size: 14px;
 }
 
-#element-3456 p{
+#element-3456, #element-3456-A p{
   line-height: 18px;
   font-size: 15px;
   color: rgb(152, 160, 166);
-  line-height: 18px;
   text-align: left;
   margin: 0;
 }
@@ -853,7 +1060,17 @@ margin-bottom: 10px;
   position: absolute;
 }
 
-#element-3458 .cropped {
+#element-3458-A {
+  height: 26px;
+  width: 22px;
+  left: 31px;
+  /* top: 419px; */
+  z-index: 62;
+  display: inline-block;
+  position: absolute;
+}
+
+#element-3458, #element-3458-A .cropped {
     background-image: url('//storage.googleapis.com/instapage-user-media/fc5bead4/38009311-0-lab-icon.png');
     background-position: -2px 0px;
     width: 22px;
@@ -861,7 +1078,7 @@ margin-bottom: 10px;
     background-size: 26px 26px;
 }
 
-#element-3458 .contents{
+#element-3458, #element-3458-A .contents{
   font-family: proxima-nova, proxima-nova-1, proxima-nova-2, proxima-nova-web, proxima-nova-web-1, proxima-nova-web-2;
   font-weight: 400;
 }
@@ -876,7 +1093,23 @@ margin-bottom: 10px;
   position: absolute;
 }
 
+#element-4296-A {
+  height: 23px;
+  width: 38px;
+  left: 34px;
+  /* top: 182px; */
+  z-index: 64;
+  padding-bottom: 12px;
+  position: relative;
+}
+
 #element-4296 .line-horizontal{
+  width: auto;
+  height: 10px;
+  border-bottom: 3px solid #2e9fe6;
+}
+
+#element-4296-A .line-horizontal{
   width: auto;
   height: 10px;
   border-bottom: 3px solid #2e9fe6;
@@ -1123,7 +1356,7 @@ margin-bottom: 10px;
 }
 
 #element-4634 p {
-  text-align: left;
+  text-align: center;
   line-height: 36px;
   font-size: 30px;
   color: rgb(55, 70, 90);

@@ -23,9 +23,11 @@ class Board(models.Model):
 class BoardDetail(models.Model):
     title = models.CharField(max_length=60)
     boardCard = models.ManyToManyField("Cards")
+    order = models.SmallIntegerField(default=0)
 
 class Cards(models.Model):
     title = models.CharField(max_length=60)
+    order = models.SmallIntegerField(default=0)
     members = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name="card_memebers")
     Tag = models.ManyToManyField("CardTag")
     Files = models.ManyToManyField("CardFiles")
