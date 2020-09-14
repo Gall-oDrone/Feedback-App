@@ -28,8 +28,9 @@ export const authSuccess = user => {
 };
 
 export const authFail = error => {
-  console.log("COÑO: ", error)
-  window.location.reload(false);
+  console.log("auth Show Error: ", error)
+  //Uncomment Only for Testing Purposes
+  // window.location.reload(false);
   return {
     type: AUTH_FAIL,
     error: error

@@ -1,8 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
-import { addBoard } from "../actions";
+import { addBoard, fetchBoardList } from "../actions";
 import BoardThumbnail from "./BoardThumbnail";
 
 const Thumbnails = styled.div`
@@ -34,6 +34,7 @@ const CreateInput = styled.input`
   height: 80px;
   font-size: 22px;
   padding: 10px;
+  margin-bottom: 15px;
   box-sizing: border-box;
   border-radius: 3px;
   border: none;
@@ -42,10 +43,16 @@ const CreateInput = styled.input`
   align-self: center;
 `;
 
-const Home = ({ boards, boardOrder, dispatch }) => {
+const Home = ({ boards, boardOrder, boardList, username, token, dispatch }) => {
   // this is the home site that shows you your boards and you can also create a Board here.
-
   const [newBoardTitle, setNewBoardTitle] = useState("");
+  // console.log("patas: ", boards, "boardOrder: ", boardOrder)
+
+  useEffect(() => {
+    if(username !== null && token !== null && boardList === null){
+      dispatch(fetchBoardList(username, token))
+    }
+  })
 
   const handleChange = e => {
     setNewBoardTitle(e.target.value);
@@ -53,7 +60,8 @@ const Home = ({ boards, boardOrder, dispatch }) => {
 
   const handleSubmit = e => {
     e.preventDefault();
-    dispatch(addBoard(newBoardTitle));
+    dispatch(addBoard(newBoardTitle, token));
+    setNewBoardTitle("");
   };
 
   const renderBoards = () => {
@@ -61,6 +69,7 @@ const Home = ({ boards, boardOrder, dispatch }) => {
       const board = boards[boardID];
 
       return (
+        board && board.id && (
         <Link
           key={boardID}
           to={`/project-management/${board.id}`}
@@ -68,7 +77,21 @@ const Home = ({ boards, boardOrder, dispatch }) => {
         >
           <BoardThumbnail {...board} />
         </Link>
+        )
       );
+      // return (
+      //   boardList && boardList.userBoards.map(board  => {
+      //     return(
+      //       <Link
+      //         key={boardID}
+      //         to={`/project-management/${board.id}`}
+      //         style={{ textDecoration: "none" }}
+      //       >
+      //         <BoardThumbnail {...board} />
+      //       </Link>
+      //     )
+      //   })
+      // );
     });
   };
 
@@ -79,7 +102,7 @@ const Home = ({ boards, boardOrder, dispatch }) => {
         <CreateInput
           onChange={handleChange}
           value={newBoardTitle}
-          placeholder="Your boards title..."
+          placeholder="Your board title..."
           type="text"
         />
       </form>
@@ -88,15 +111,18 @@ const Home = ({ boards, boardOrder, dispatch }) => {
 
   return (
     <HomeContainer>
-      <Thumbnails>{renderBoards()}</Thumbnails>
       {renderCreateBoard()}
+      <Thumbnails>{renderBoards()}</Thumbnails>
     </HomeContainer>
   );
 };
 
 const mapStateToProps = state => ({
   boards: state.boards,
-  boardOrder: state.boardOrder
+  boardOrder: state.boardOrder,
+  boardList: state.boardList,
+  token: state.auth.token,
+  username: state.auth.username,
 });
 
 export default connect(mapStateToProps)(Home);

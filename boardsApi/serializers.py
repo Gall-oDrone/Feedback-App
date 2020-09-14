@@ -17,13 +17,12 @@ class StringSerializer(serializers.StringRelatedField):
 #         fields = ("id", "comment")
 
 class BoardSerializer(serializers.ModelSerializer):
-    engagement = StringSerializer(many=True)
-    categories = StringSerializer(many=True)
-    overview = StringSerializer(many=False)
-    author = StringSerializer(many=False)
-    video = StringSerializer(many=False)
-    user_thumbnail = serializers.SerializerMethodField()
-    user_name = serializers.SerializerMethodField()
+    title = StringSerializer(many=False)
+    lists = serializers.SerializerMethodField()
+    # board_type = StringSerializer(many=False)
+    # createdAt = StringSerializer(many=False)
+    # background_image = StringSerializer(many=False)
+    # author = StringSerializer(many=False)
     
     def get_user_thumbnail(self, obj):
         request = self.context.get('request')
@@ -35,15 +34,16 @@ class BoardSerializer(serializers.ModelSerializer):
     def get_user_name(self, obj):
         profile_name = ProfileInfoSerializer(ProfileInfo.objects.get(profile_username=obj.author.id), many=False ).data.get("name")
         return profile_name
+    
+    def get_lists(self, obj):
+        lists = BoardDetailSerializer(obj.boardFK.all(), many=True).data
+        # print("duckman: ", BoardDetailSerializer(obj.boardFK.all(), many=True).data)
+        return lists
 
     class Meta:
         model = Board
-        fields = ('id', 'title', 'overview', 'content', 'timestamp',
-                  'engagement', 'categories', 'author',
-                  "comment_count", "rating_count",
-                    "likes_count", "view_count", "rating_count", "avg_rating",
-                    "video", "thumbnail", "user_thumbnail", "user_name"
-                  )
+        fields = ("id", "title", "lists")
+        # fields = ("id", "title", "board_type", "createdAt", "background_image", "author")
 
     def get_feedback_forms(self, obj):
         # obj is an assignment
@@ -58,95 +58,96 @@ class BoardSerializer(serializers.ModelSerializer):
         data = request
         print("DATA")
         print(data)
-        print("args: ", args)
+        print("args: ", args, self.context.get("user"))
         # print(self.args)
-        files = args[0]
+        # files = args[0]
         article = Board()
-        article.save()
         article.title = data["title"]
-        article.content = data["content"]
-        article.author = User.objects.get(username=data["user"])
-        if files is dict:
-            print("FILES I: ", files['file'])
-            print("FILES II: ", files['media'])
-            for f in files:
-                myfile = files[f]
-                print("file type: ", myfile.content_type.split('/')[0])
-                file_type = myfile.content_type.split('/')[0]
-                fs = FileSystemStorage()
-                valid_extensions = ['.pdf', '.doc', '.docx', '.jpg', '.png', '.xlsx', '.xls']
-                if file_type == "video":
-                    print("myfile.name is video")
-                    videoD = Video()
-                    filename = fs.save("videos/"+myfile.name, myfile)
-                    uploaded_file_url = fs.url(filename)
-                    videoD.videofile = "videos/"+myfile.name
-                    videoD.save()
-                    print("videoD, ", videoD)
-                    print("videoD.id, ", videoD.id)
-                    article.video= Video(id=videoD.id)
-                    # raise ValidationError('Unsupported file extension.')
-            else: 
-                print("myfile.name is image")
-                filename = fs.save("images/"+myfile.name, myfile)
-                uploaded_file_url = fs.url(filename)
-                print("uploaded_file_url")
-                print(uploaded_file_url)
-                print(myfile.name)
-                print(article.thumbnail)
-                article.thumbnail = "images/"+myfile.name
-                print("article.thumbnail")
-                print(article.thumbnail)
-
-        for e in data['engagement']:
-            try:
-                print("try")
-                print(e)
-                newE = FeedbackTypes()
-                fts = FeedbackTypes.CHOICES
-                for f in fts:
-                    if(e == f[0]):
-                        newE.feedback_type = e
-                print(newE.feedback_type)
-                print(newE)
-                ftype = FeedbackTypes.objects.get(feedback_type=newE)
-                print("ftype.id", ftype.id)
-                article.engagement.add(ftype.id)
-            except:
-                print("except")
-                print(e)
-                newE = FeedbackTypes()
-                fts = FeedbackTypes.CHOICES
-                newE.feedback_type = e
-                newE.save()
-                print("End except")
-                ftype = FeedbackTypes.objects.get(feedback_type=newE)
-                print("ftype.id", ftype.id)
-                article.engagement.add(ftype.id)
-        print("live her alo")
-        for c in data['categories']:
-            try:
-                print("try")
-                print(c)
-                print(Category.objects.all())
-                titles = []
-                for cs in Category.objects.all():
-                    titles.append(cs.title)
-                    if cs.title == c:
-                        article.categories.add(cs.id)
-                if c not in titles:
-                    newC = Category()
-                    newC.title = c
-                    newC.save()
-                    article.categories.add(newC.id)
-            except:
-                print("except")
-                newC = Category()
-                newC.title = c
-                newC.save()
-                article.categories.add(newC.id)
+        article.author = User.objects.get(username=self.context.get("user"))
         article.save()
-        return article
+        # article.content = data["content"]
+        # if files is dict:
+        #     print("FILES I: ", files['file'])
+        #     print("FILES II: ", files['media'])
+        #     for f in files:
+        #         myfile = files[f]
+        #         print("file type: ", myfile.content_type.split('/')[0])
+        #         file_type = myfile.content_type.split('/')[0]
+        #         fs = FileSystemStorage()
+        #         valid_extensions = ['.pdf', '.doc', '.docx', '.jpg', '.png', '.xlsx', '.xls']
+        #         if file_type == "video":
+        #             print("myfile.name is video")
+        #             videoD = Video()
+        #             filename = fs.save("videos/"+myfile.name, myfile)
+        #             uploaded_file_url = fs.url(filename)
+        #             videoD.videofile = "videos/"+myfile.name
+        #             videoD.save()
+        #             print("videoD, ", videoD)
+        #             print("videoD.id, ", videoD.id)
+        #             article.video= Video(id=videoD.id)
+        #             # raise ValidationError('Unsupported file extension.')
+        #     else: 
+        #         print("myfile.name is image")
+        #         filename = fs.save("images/"+myfile.name, myfile)
+        #         uploaded_file_url = fs.url(filename)
+        #         print("uploaded_file_url")
+        #         print(uploaded_file_url)
+        #         print(myfile.name)
+        #         print(article.thumbnail)
+        #         article.thumbnail = "images/"+myfile.name
+        #         print("article.thumbnail")
+        #         print(article.thumbnail)
+
+        # for e in data['engagement']:
+        #     try:
+        #         print("try")
+        #         print(e)
+        #         newE = FeedbackTypes()
+        #         fts = FeedbackTypes.CHOICES
+        #         for f in fts:
+        #             if(e == f[0]):
+        #                 newE.feedback_type = e
+        #         print(newE.feedback_type)
+        #         print(newE)
+        #         ftype = FeedbackTypes.objects.get(feedback_type=newE)
+        #         print("ftype.id", ftype.id)
+        #         article.engagement.add(ftype.id)
+        #     except:
+        #         print("except")
+        #         print(e)
+        #         newE = FeedbackTypes()
+        #         fts = FeedbackTypes.CHOICES
+        #         newE.feedback_type = e
+        #         newE.save()
+        #         print("End except")
+        #         ftype = FeedbackTypes.objects.get(feedback_type=newE)
+        #         print("ftype.id", ftype.id)
+        #         article.engagement.add(ftype.id)
+        # print("live her alo")
+        # for c in data['categories']:
+        #     try:
+        #         print("try")
+        #         print(c)
+        #         print(Category.objects.all())
+        #         titles = []
+        #         for cs in Category.objects.all():
+        #             titles.append(cs.title)
+        #             if cs.title == c:
+        #                 article.categories.add(cs.id)
+        #         if c not in titles:
+        #             newC = Category()
+        #             newC.title = c
+        #             newC.save()
+        #             article.categories.add(newC.id)
+        #     except:
+        #         print("except")
+        #         newC = Category()
+        #         newC.title = c
+        #         newC.save()
+        #         article.categories.add(newC.id)
+        # article.save()
+
+        return article, article.id
 
     def update_likes(self, request):
         data = request.data
@@ -260,6 +261,105 @@ class ProfileBoardListSerializer(serializers.ListSerializer):
     child = BoardSerializer()
     allow_null = True
     many = True
+
+class BoardDetailSerializer(serializers.ModelSerializer):
+    title = StringSerializer(many=False)
+    order = StringSerializer(many=False)
+    cards = serializers.SerializerMethodField()
+    
+    def get_user_thumbnail(self, obj):
+        request = self.context.get('request')
+        print("COLAS: ", obj.author.profile.profile_avatar)
+        profile_thumbnail = ProfileSerializer(obj.author.profile, many=False, context={'request': request}).data["profile_avatar"]
+        print("COLAS 2: ", profile_thumbnail)
+        return profile_thumbnail
+
+    def get_user_name(self, obj):
+        profile_name = ProfileInfoSerializer(ProfileInfo.objects.get(profile_username=obj.author.id), many=False ).data.get("name")
+        return profile_name
+
+    def get_cards(self, obj):
+        cards = BCardSerializer(obj.boardDFK.all(), many=True).data
+        return cards
+
+    class Meta:
+        model = BoardDetail
+        fields = ("id", "title", "order", "cards")
+
+    def create(self, request, *args):
+        data = request
+        print("DATA")
+        print(data)
+        # print(self.args)
+        # files = args[0]
+        article = BoardDetail()
+        board = Board.objects.get(id=self.context.get("boardID").split("board-", 1)[-1])
+        article.board = board
+        article.title = data["title"]
+        # article.order = data["order"]
+        article.save()
+        return article, article.id
+
+    def update_list(self, request, *args):
+        data = request
+        print("kanino: ", data)
+        BoardDetail.objects.filter(id=data["listID"].split("list-", 1)[-1], 
+        board=self.context.get("boardID").split("board-", 1)[-1]).update(title=data.newText)
+        return True
+    
+
+class BCardSerializer(serializers.ModelSerializer):
+    title = StringSerializer(many=False)
+    
+    def get_user_thumbnail(self, obj):
+        request = self.context.get('request')
+        print("COLAS: ", obj.author.profile.profile_avatar)
+        profile_thumbnail = ProfileSerializer(obj.author.profile, many=False, context={'request': request}).data["profile_avatar"]
+        print("COLAS 2: ", profile_thumbnail)
+        return profile_thumbnail
+
+    def get_user_name(self, obj):
+        profile_name = ProfileInfoSerializer(ProfileInfo.objects.get(profile_username=obj.author.id), many=False ).data.get("name")
+        return profile_name
+
+    class Meta:
+        model = Board
+        fields = ("id", "title")
+
+class CardSerializer(serializers.ModelSerializer):
+    title = StringSerializer(many=False)
+    order = StringSerializer(many=False)
+    # description = StringSerializer(many=False)
+    # cards = serializers.SerializerMethodField()
+
+    def get_cards(self, obj):
+        cards = BCardSerializer(obj.boardDFK.all(), many=True).data
+        return cards
+
+    class Meta:
+        model = Cards
+        fields = ("id", "title", "order" )
+
+    def create(self, request, *args):
+        data = request
+        print("DATA")
+        print(data)
+        # print(self.args)
+        # files = args[0]
+        article = Cards()
+        board_list = BoardDetail.objects.get(id=self.context.get("listID").split("list-", 1)[-1])
+        article.boardD = board_list
+        article.title = data["text"]
+        # article.order = data["order"]
+        article.save()
+        return article, article.id
+
+    def update_card(self, request, *args):
+        data = request
+        print("DATA => ", data)
+        Cards.objects.filter(id=data["id"].split("card-", 1)[-1], 
+        boardD=self.context.get("listID").split("list-", 1)[-1]).update(title=data["newText"])
+        return True
 
 class LikeSerializer(serializers.ModelSerializer):
     print("lero")

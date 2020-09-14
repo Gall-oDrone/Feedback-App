@@ -470,10 +470,10 @@ font-size: 14px;
 }
 
 #element-3407-A .box {
-  /* display: flex;
+  display: flex;
   flex-direction: column;
-  flex-wrap: wrap; */
-  /* justify-content: space-between; */
+  flex-wrap: wrap;
+  justify-content: space-between;
   width: 300px !important;
   height: 325px !important;
   background-color: rgb(255, 255, 255) !important;
@@ -537,6 +537,7 @@ font-size: 14px;
   width: 300px;
   height: 128px;
   z-index: 49;
+  box-sizing: border-box;
   background-color: #16425b;
   border: 1px solid rgba(0,0,0,0);
   border-radius: 4px;
@@ -779,16 +780,32 @@ font-weight: 400;
   margin: 0;
 }
 
+.box-2-container{
+  /* position:relative;
+  display: grid; */
+  /* grid-auto-rows: 100px; */
+  /* display: flex;
+  flex-wrap: wrap;; */
+  /* flex-flow: row wrap; */
+  /* flex-direction: column; */
+  /* align-content: space-between; */
+}
+
 .courses_container-A {
  display: flex;
  flex-direction: column;
  flex-wrap: wrap;
+ flex-grow: 1;
 }
 
 .courses_container-inline-A{
   display: flex;
-  flex-direction: row;
+  /* flex-direction: row; */
   justify-content: space-around;
+}
+
+.courses_container-inline-A li{
+  height: inherit;
 }
 
 #element-3411{
@@ -961,12 +978,13 @@ vertical-align: baseline; */
 }
 
 #element-3453-A {
-  height: 55px;
+  /* height: 55px; */
+  height: inherit;
   width: 302px;
   /* left: 11px; */
   /* top: 411px; */
   z-index: 60;
-  margin-top: auto;
+  margin-bottom: auto;
 }
 
 #element-3453 .box{
@@ -993,9 +1011,14 @@ margin-bottom: 10px;
 }
 
 #element-3453-A .box-AB{
+  height: inherit;
+  display: grid;
+  grid-template-columns: 40px auto;
+  grid-template-rows: auto;
+  column-gap: 10px;
+  row-gap: 5px;
+
   width: 300px;
-  height: 53px;
-  background-color: #f7f9fb;
   border: 1px solid rgba(0,0,0,0);
   background-repeat: repeat;
   background-size: cover;
@@ -1028,12 +1051,13 @@ margin-bottom: 10px;
 #element-3456-A {
   height: 18px;
   width: 248px;
-  float: right;
-  display: inline-block;
+  /* float: right; */
+  /* display: inline-block; */
   /* left: 65px; */
   /* top: 427px; */
   z-index: 61;
   position: relative;
+  align-self: center;
 }
 #element-3456, #element-3456-A .contents {
   font-family: proxima-nova, proxima-nova-1, proxima-nova-2, proxima-nova-web, proxima-nova-web-1, proxima-nova-web-2;
@@ -1061,13 +1085,16 @@ margin-bottom: 10px;
 }
 
 #element-3458-A {
-  height: 26px;
+  /* height: 26px; */
   width: 22px;
-  left: 31px;
+  /* left: 31px; */
   /* top: 419px; */
   z-index: 62;
-  display: inline-block;
-  position: absolute;
+  transform: scale(0.7, 0.7);;
+  /* display: block; */
+  position: relative;
+  justify-self: center;
+  /* align-self: center; */
 }
 
 #element-3458, #element-3458-A .cropped {
@@ -1118,10 +1145,10 @@ margin-bottom: 10px;
 #element-4467 {
   height: 51px;
   width: 490px;
-  left: 235px;
+  left: 335px;
   top: 20px;
   z-index: 110;
-  position: absolute;
+  position: relative;
 }
 
 #element-4467 .contents{
@@ -1135,7 +1162,7 @@ margin-bottom: 10px;
   font-size: 32px;
   color: rgb(55, 70, 90);
   line-height: 51px;
-  text-align: left;
+  text-align: center;
 }
 
 #element-4467 p {

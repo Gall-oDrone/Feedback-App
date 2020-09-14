@@ -12,20 +12,129 @@
        width: 100%;
    }
    .main-flex-container {
-    position: relative;
-    min-height: 540px;
-    padding: 0 0 60px;
-    color: #02203c;
     display: flex;
     flex-direction: column;
+    min-height: 100vh;
+    box-sizing: border-box;
    }
 
    .top-banner-container {
+        position: relative;
+        min-height: 540px;
+        padding: 0 0 60px;
+        color: #02203c;
+        background: linear-gradient(-90deg,#02203c,#001528);
+        display: flex;
+        flex-direction: column;
+    }
+
+    .lp_header {
+        display: flex;
+        justify-content: center;
+        margin: 20px;
+        align-items: flex-start;
+        background-color: #02203c;
+   }
+
+   .logo_container {
+        width: 210px;
+        flex: 0 0 auto;
+        width: 250px;
+        cursor: pointer;
+        text-decoration: none !important;
+        text-align: center;
+   }
+
+   .lc_first_row {
     display: flex;
-    background: linear-gradient(-90deg,#02203c,#001528);
+    align-items: center;
+    margin: 0 0 10px;
     justify-content: center;
-    flex: 1 1 auto;
-    min-height: 320px;
+   }
+
+   .lp_header #logo img {
+    height: 40px;
+    transition-duration: 1.5s;
+    margin: 0 15px 0 0;
+   }
+
+   #logo h1 {
+        font-size: 24px;
+        font-family: Jura,Helvetica,Arial,sans-serif;
+        color: #fff;
+        margin: 0;
+        font-size: 26px;
+        line-height: 1;
+        font-weight: 400;
+   }
+
+   .nav_bar {
+       margin: 10px 40px 0;
+       display: flex;
+       align-items: center;
+       flex-direction: row;
+       flex: 0 0 auto;
+       margin: 10px 80px 0;
+       box-sizing: border-box;
+   }
+
+   .login_container {
+    width: 200px;
+    flex: 0 1 auto;
+    color: #02203c;
+    text-align: center;
+    box-sizing: border-box;
+   }
+
+   .login_button_con {
+    position: relative;
+    display: inline-block;
+    box-sizing: border-box;
+   }
+
+   .tooltip #user_component {
+        margin-top: -10px;
+        color: rgb(255, 255, 255);
+        border: 1px solid rgba(0, 103, 236, 0.92);
+        background-color: rgb(255, 0, 0);
+        border-radius: 3px;
+        display: inline-block;
+        font-size: 13px;
+        left: -999em;
+        opacity: 0;
+        padding: 8px 21px;
+        position: fixed;
+        pointer-events: none;
+        transition: opacity 0.3s ease-out;
+        top: -999em;
+        visibility: hidden;
+        z-index: 999;
+   }
+
+   .button-style {
+        font-family: Open Sans,Helvetica,Arial,sans-serif;
+        background-color: transparent;
+        border-radius: 4px;
+        color: #fff;
+        font-size: 14px;
+        padding: 5px 10px;
+        margin: 3px 0 0;
+        border: 2px solid transparent;
+        transition: border .2s;
+        cursor: pointer;
+        line-height: inherit;
+    }
+
+    .button-style:focus, .button-style:hover {
+        border: 2px solid #626ee3;
+    }
+
+    .first-section {
+        display: flex;
+        background: linear-gradient(-90deg,#02203c,#001528);
+        justify-content: center;
+        flex: 1 1 auto;
+        min-height: 320px;
     }
 
     .top-banner-text-container{

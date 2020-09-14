@@ -22,6 +22,22 @@ class Collaboration_types(models.Model):
     def __str__(self):
         return self.collaboration_type
 
+class Collaboration_topic(models.Model):
+    TECHNICAL = 'Machine Learning'
+    CONSULTING = 'Arts'
+    WRITING = 'AI'
+    BUSINESS = 'Economics'
+    CHOICES = [
+        (TECHNICAL, ('technical')),
+        (CONSULTING, ('consulting')),
+        (WRITING, ('writting')),
+        (BUSINESS, ('business')),
+    ]
+    collaboration_type=models.CharField(max_length=15, choices=CHOICES, blank=True)
+
+    def __str__(self):
+        return self.collaboration_type
+        
 class Request_status(models.Model):
     REJECTED = 'rejected'
     ACCEPTED = 'accepted'

@@ -50,7 +50,7 @@ const ListTitle = styled.h4`
   }
 `;
 
-const TrelloList = ({ title, cards, listID, index, dispatch }) => {
+const TrelloList = ({ title, cards, listID, index, dispatch, token }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [listTitle, setListTitle] = useState(title);
 
@@ -80,11 +80,11 @@ const TrelloList = ({ title, cards, listID, index, dispatch }) => {
 
   const handleFinishEditing = e => {
     setIsEditing(false);
-    dispatch(editTitle(listID, listTitle));
+    dispatch(editTitle(listID, listTitle, token));
   };
 
   const handleDeleteList = () => {
-    dispatch(deleteList(listID));
+    dispatch(deleteList(listID, token));
   };
 
   return (
@@ -102,10 +102,12 @@ const TrelloList = ({ title, cards, listID, index, dispatch }) => {
                   {isEditing ? (
                     renderEditInput()
                   ) : (
+                    <div style={{display:"flex"}}>
                     <TitleContainer onClick={() => setIsEditing(true)}>
                       <ListTitle>{listTitle}</ListTitle>
-                      <DeleteButton type="delete" onClick={handleDeleteList} />
                     </TitleContainer>
+                    <DeleteButton type="delete" onClick={handleDeleteList} />
+                    </div>
                   )}
                 </div>
                 <div {...provided.droppableProps} ref={provided.innerRef}>
@@ -116,6 +118,7 @@ const TrelloList = ({ title, cards, listID, index, dispatch }) => {
                       id={card.id}
                       index={index}
                       listID={listID}
+                      token={token}
                     />
                   ))}
                   {provided.placeholder}

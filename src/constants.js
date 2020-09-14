@@ -218,34 +218,38 @@ export const collaborationUserMeetingReceivedURL = username => `${endpoint}/coll
 export const collaborationBookedURL = username => `${endpoint}/collaboration/request/booked/userlist/${username}`
 export const collaborationListDetailURL =  (articleID, userID) => `${endpoint}/collaboration/request/listdetail/${articleID}/${userID}`
 
-export const boardCreateMeetingURL = `${endpoint}/board/create/`
-export const boardListURL = username => `${endpoint}/board/list/${username}`
-export const boardDetailURL = roomName => `${endpoint}/board/detail/${roomName}`
-export const boardUpdateURL = roomName => `${endpoint}/board/update/${roomName}`
+export const boardCreateURL = `${endpoint}/boards/create/`
+export const boardListURL = username => `${endpoint}/boards/list/${username}`
+export const boardDetailURL = roomName => `${endpoint}/boards/detail/${roomName}`
+export const boardUpdateURL = roomName => `${endpoint}/boards/update/${roomName}`
 
-export const trelloCardCreateMeetingURL = `${endpoint}/board/trelloCard/create/`
-export const trelloCardListURL = username => `${endpoint}/board/trelloCard/list/${username}`
-export const trelloCardDetailURL = roomName => `${endpoint}/board/trelloCard/detail/${roomName}`
-export const trelloCardUpdateURL = roomName => `${endpoint}/board/trelloCard/update/${roomName}`
+export const trelloListCreateURL = (board) => `${endpoint}/boards/list/create/${board}`
+export const trelloListListURL = (board) => `${endpoint}/boards/list/list/${board}/`
+export const trelloListUpdateURL = (board) => `${endpoint}/boards/list/update/${board}`
 
-export const trelloCardTagCreateMeetingURL = `${endpoint}/board/trelloCard/tag/create/`
-export const trelloCardTagListURL = username => `${endpoint}/board/trelloCard/tag/list/${username}`
-export const trelloCardTagUpdateURL = roomName => `${endpoint}/board/trelloCard/tag/update/${roomName}`
+export const trelloCardCreateURL = (list) => `${endpoint}/boards/card/create/${list}`
+export const trelloCardListURL = (list, username) => `${endpoint}/boards/card/list/${list}/${username}`
+export const trelloCardDetailURL = roomName => `${endpoint}/boards/card/detail/${roomName}`
+export const trelloCardUpdateURL = (list) => `${endpoint}/boards/card/update/${list}`
 
-export const trelloCardFileCreateMeetingURL = `${endpoint}/board/trelloCard/file/create/`
-export const trelloCardFileListURL = username => `${endpoint}/board/trelloCard/file/list/${username}`
-export const trelloCardFileDetailURL = roomName => `${endpoint}/board/trelloCard/file/detail/${roomName}`
-export const trelloCardFileUpdateURL = roomName => `${endpoint}/board/trelloCard/file/update/${roomName}`
+export const trelloCardTagCreateMeetingURL = `${endpoint}/boards/trelloCard/tag/create/`
+export const trelloCardTagListURL = username => `${endpoint}/boards/trelloCard/tag/list/${username}`
+export const trelloCardTagUpdateURL = roomName => `${endpoint}/boards/trelloCard/tag/update/${roomName}`
 
-export const trelloCardChecklistCreateMeetingURL = `${endpoint}/board/trelloCard/checklist/create/`
-export const trelloCardChecklistListURL = username => `${endpoint}/board/trelloCard/checklist/list/${username}`
-export const trelloCardChecklistDetailURL = roomName => `${endpoint}/board/trelloCard/checklist/detail/${roomName}`
-export const trelloCardChecklistUpdateURL = roomName => `${endpoint}/board/trelloCard/checklist/update/${roomName}`
+export const trelloCardFileCreateMeetingURL = `${endpoint}/boards/trelloCard/file/create/`
+export const trelloCardFileListURL = username => `${endpoint}/boards/trelloCard/file/list/${username}`
+export const trelloCardFileDetailURL = roomName => `${endpoint}/boards/trelloCard/file/detail/${roomName}`
+export const trelloCardFileUpdateURL = roomName => `${endpoint}/boards/trelloCard/file/update/${roomName}`
 
-export const trelloCardChecklistTaskCreateMeetingURL = `${endpoint}/board/trelloCard/checklist/task/create/`
-export const trelloCardChecklistTaskListURL = username => `${endpoint}/board/trelloCard/checklist/task/list/${username}`
-export const trelloCardChecklistTaskDetailURL = roomName => `${endpoint}/board/trelloCard/checklist/task/detail/${roomName}`
-export const trelloCardChecklistTaskUpdateURL = roomName => `${endpoint}/board/trelloCard/checklist/task/update/${roomName}`
+export const trelloCardChecklistCreateMeetingURL = `${endpoint}/boards/trelloCard/checklist/create/`
+export const trelloCardChecklistListURL = username => `${endpoint}/boards/trelloCard/checklist/list/${username}`
+export const trelloCardChecklistDetailURL = roomName => `${endpoint}/boards/trelloCard/checklist/detail/${roomName}`
+export const trelloCardChecklistUpdateURL = roomName => `${endpoint}/boards/trelloCard/checklist/update/${roomName}`
+
+export const trelloCardChecklistTaskCreateMeetingURL = `${endpoint}/boards/trelloCard/checklist/task/create/`
+export const trelloCardChecklistTaskListURL = username => `${endpoint}/boards/trelloCard/checklist/task/list/${username}`
+export const trelloCardChecklistTaskDetailURL = roomName => `${endpoint}/boards/trelloCard/checklist/task/detail/${roomName}`
+export const trelloCardChecklistTaskUpdateURL = roomName => `${endpoint}/boards/trelloCard/checklist/task/update/${roomName}`
 
 export const fetchDegreesAndCoursesURL = `${endpoint}/users/courses-degrees/`
 export const fetchCategoriesAndFeedbacksURL = `${endpoint}/articles/categories-f_t/`

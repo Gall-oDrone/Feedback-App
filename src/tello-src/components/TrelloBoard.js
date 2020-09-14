@@ -4,7 +4,7 @@ import { connect } from "react-redux";
 import TrelloCreate from "./TrelloCreate";
 import { DragDropContext, Droppable } from "react-beautiful-dnd";
 import styled from "styled-components";
-import { sort, setActiveBoard } from "../actions";
+import { sort, setActiveBoard, fetchLists } from "../actions";
 import { Link } from "react-router-dom";
 import { Icon } from "antd";
 const ListsContainer = styled.div`
@@ -17,9 +17,30 @@ const ListsContainer = styled.div`
 class TrelloBoard extends PureComponent {
   componentDidMount() {
     // set active trello board here
-    const { boardID } = this.props.match.params;
+    const { token, match:{params} } = this.props
+    const { boardID } = params;
 
     this.props.dispatch(setActiveBoard(boardID));
+    this.props.dispatch(fetchLists(token, boardID));
+  }
+
+  getSnapshotBeforeUpdate(prevProps, prevState){
+    const { match, boards } = prevProps;
+    const { boardID } = match.params;
+    const board = boards[boardID];
+    console.log("board", board, "prevState: ", prevState)
+    if (!board) {
+      return;
+    }
+    if(board.lists.length)
+    return null
+  }
+
+  componentDidUpdate(prevProps, prevState, snapshot) {
+    console.log("Ramiro I: ", prevProps.boards, this.props.boards, "prevState: ", prevState)
+    if (snapshot !== null) {
+      console.log("Corso")
+    }
   }
 
   onDragEnd = result => {
@@ -42,13 +63,15 @@ class TrelloBoard extends PureComponent {
   };
 
   render() {
-    const { lists, cards, match, boards } = this.props;
+    const { lists, cards, match, boards, token } = this.props;
     const { boardID } = match.params;
     const board = boards[boardID];
     if (!board) {
       return <p>Board not found</p>;
     }
+
     const listOrder = board.lists;
+    console.log("CACA: ", listOrder)
 
     return (
       <div style={{height: "inherit", overflowX: "scroll", scrollMargin:"true"}}>
@@ -63,6 +86,7 @@ class TrelloBoard extends PureComponent {
             >
               {listOrder.map((listID, index) => {
                 const list = lists[listID];
+                // console.log("CACA: ", listID, "lists", lists, "list", list)
                 if (list) {
                   const listCards = list.cards.map(cardID => cards[cardID]);
 
@@ -73,12 +97,13 @@ class TrelloBoard extends PureComponent {
                       title={list.title}
                       cards={listCards}
                       index={index}
+                      token={token}
                     />
                   );
                 }
               })}
               {provided.placeholder}
-              <TrelloCreate list />
+              <TrelloCreate list token={token} boardID={boardID} order={listOrder} />
             </ListsContainer>
           )}
         </Droppable>
@@ -91,7 +116,8 @@ class TrelloBoard extends PureComponent {
 const mapStateToProps = state => ({
   lists: state.lists,
   cards: state.cards,
-  boards: state.boards
+  boards: state.boards,
+  token: state.auth.token,
 });
 
 export default connect(mapStateToProps)(TrelloBoard);

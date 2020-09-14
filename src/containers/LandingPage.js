@@ -27,12 +27,39 @@ import m from "../assets2/university-tec-logo.png";
 import "../assets/landing.css";
 
 class LandingPage extends React.PureComponent {
+
+  
+
+  // handleLoginModal = () => {
+  // }
+
   render() {
     return (
       <body id="landing-page">
         <div className="main-flex-container">
             <div className="top-banner-container">
-                <div className="top-banner-container">
+                {/* <div className="lp_header">
+                  <div id="logo">
+                    <a className="logo_container">
+                      <div className="lc_first_row">
+                        <img></img>
+                        <h1>Mate Crunch</h1>
+                      </div>
+                    </a>
+                  </div>
+                  <div className="nav_bar">
+                  </div>
+                  <div className="login_container">
+                    <div className="login_button_con">
+                      <div className="tooltip">
+                      </div>
+                      <button onClick={() => handleLoginModal()} className="button-style">
+                        Log In
+                      </button>
+                    </div>
+                  </div>
+                </div> */}
+                <div className="first-section"> 
                     <div className="top-banner-text-container">
                       <div className="top-banner-text-container-2">
                         <h1>Mate Crunch</h1>

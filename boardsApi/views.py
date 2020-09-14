@@ -9,13 +9,14 @@ from rest_framework.decorators import parser_classes
 from rest_framework.parsers import MultiPartParser, FileUploadParser, FormParser, JSONParser
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.status import(
+    HTTP_200_OK,
     HTTP_201_CREATED,
     HTTP_400_BAD_REQUEST
 )
 from rest_framework import permissions, generics
 from boardsApi.models import Board, BoardDetail, Cards, CardTag, CardFiles, CardChecklist, CardComments, CardChecklistTask
 from users.models import User
-from .serializers import BoardSerializer, BoardFeatureSerializer, VideoFormSerializer, CommentSerializer, LikeSerializer, LikeListSerializer, RatingSerializer, CommentListSerializer, ImageFormSerializer, ProfileBoardListSerializer, Cat_FT_Serializer
+from .serializers import BoardSerializer, BoardDetailSerializer, BCardSerializer, BoardFeatureSerializer, CardSerializer, VideoFormSerializer, CommentSerializer, LikeSerializer, LikeListSerializer, RatingSerializer, CommentListSerializer, ImageFormSerializer, ProfileBoardListSerializer, Cat_FT_Serializer
 from analytics.models import View
 from django.http import Http404
 from rest_framework import viewsets
@@ -110,41 +111,32 @@ class BoardListView(ListAPIView):
 class BoardDetailView(RetrieveAPIView):
     queryset = Board.objects.all()
     serializer_class = BoardSerializer
-    permission_classes = (permissions.AllowAny,)
+    permission_classes = (permissions.IsAuthenticated,)
 
 
 class BoardCreateView(CreateAPIView):
-    parser_classes = (MultiPartParser, FormParser)
+    # parser_classes = (MultiPartParser, FormParser)
     queryset = Board.objects.all()
     print("queryset Create view")
     ##print(queryset)
     serializer_class = BoardSerializer
     permission_classes = (permissions.IsAuthenticated,)
 
-    def post(self, request, *args, **kwargs):
+    def create(self, request, *args, **kwargs):
         print("request from BoardCreateView")
-        print("request", request)
-        print("req.data",request.data)
-        print("req.Files",request.FILES)
-        request_data = json.loads((self.request.data["data"]))
-        request_files = (self.request.FILES)
-        serializer = BoardSerializer(data=request_data)
+        print("request", request, args)
+        print("req.data", self.request.data)
+        # print("req.Files",request.FILES)
+        # request_data = json.loads((self.request.data["data"]))
+        # request_files = (self.request.FILES)
+        user = request.user
+        serializer = BoardSerializer(data=request.data, context={'user': user})
         serializer.is_valid()
         print(serializer.is_valid())
-        create_article = serializer.create(request_data, request_files)
+        create_article, id = serializer.create(request.data)
         if create_article:
-            return Response(status=HTTP_201_CREATED)
+            return Response(id, status=HTTP_201_CREATED)
         return Response(status=HTTP_400_BAD_REQUEST)
-
-    # def post(self, request):
-    #     print(request.data)
-    #     serializer = BoardSerializer(data=request.data)
-    #     serializer.is_valid()
-    #     creating_Board = serializer.create(request)
-    #     if creating_Board:
-    #         return Response(status=HTTP_201_CREATED)
-    #     return Response(status=HTTP_400_BAD_REQUEST)
-
 
 class BoardDeleteView(DestroyAPIView):
     queryset = Board.objects.all()
@@ -188,7 +180,7 @@ class ProfileBoardListView(RetrieveAPIView):
             user = User.objects.get(username=userId)
             # articleId = Board.objects.get(title=article).id
             profile_article_list = Board.objects.filter(author=user.id)
-            print("FILTER")
+            print("FILTER", user)
             print(profile_article_list)
             ProfileBoardListSerializer(profile_article_list)
             if len(profile_article_list) == 0:
@@ -434,6 +426,126 @@ class ProfileBoardDetailView(RetrieveUpdateDestroyAPIView):
             raise Http404("You do not have an active order")
             return Response({"message": "You do not have an active order"}, status=HTTP_400_BAD_REQUEST)
 
+class ListListView(ListAPIView):
+    print("queryset List view")
+    # ##print(queryset)
+    serializer_class = BoardDetailSerializer
+    permission_classes = (permissions.AllowAny,)
+
+    def get_queryset(self, *args, **kwargs):
+        boardId = self.kwargs.get("pk")
+        queryset = BoardDetail.objects.filter(board=boardId[-1])
+        print(queryset.values())
+        return queryset
+
+class ListCreateView(CreateAPIView):
+    queryset = BoardDetail.objects.all()
+    print("queryset Create view")
+    ##print(queryset)
+    serializer_class = BoardDetailSerializer
+    permission_classes = (permissions.IsAuthenticated,)
+
+    def create(self, request, *args, **kwargs):
+        print("request from BoardCreateView")
+        print("request", request, args)
+        print("req.data", self.request.data)
+        boardID = self.kwargs.get('board')
+        serializer = BoardDetailSerializer(data=request.data, context={'boardID': boardID})
+        serializer.is_valid()
+        print(serializer.is_valid())
+        create_article, id = serializer.create(request.data)
+        if create_article:
+            return Response(id, status=HTTP_201_CREATED)
+        return Response(status=HTTP_400_BAD_REQUEST)
+
+class ListUpdateView(RetrieveUpdateDestroyAPIView):
+    queryset = Board.objects.all()
+    print("queryset from BoardUpdateView")
+    ##print(queryset)
+    serializer_class = BoardDetailSerializer
+    permission_classes = (permissions.IsAuthenticated,)
+
+    def put(self, request, *args, **kwargs):
+        boardID = self.kwargs.get('board')
+        serializer = BoardDetailSerializer(data=request.data,  context={'boardID': boardID})
+        serializer.is_valid()
+        print("update_card", serializer.is_valid())
+        update_article = serializer.update_list(request.data)
+        if update_article:
+            return Response(status=HTTP_200_OK)
+        return Response(status=HTTP_400_BAD_REQUEST)
+    
+    def delete(self, request, *args, **kwargs):
+        serializer = BoardSerializer(data=request.data)
+        serializer.is_valid()
+        boardID = self.kwargs.get('board').split("board-", 1)[-1]
+        listID = request.data["listID"].split("list-", 1)[-1]
+        # print("delete", serializer.is_valid(), request.data, listID, boardID)
+        try:
+            BoardDetail.objects.filter(id=listID, board=boardID).delete()
+            return Response(status=HTTP_200_OK)
+        except Exception as e:
+            print("error: ", e)
+            return Response(status=HTTP_400_BAD_REQUEST)
+
+class CardListView(RetrieveAPIView):
+    queryset = Board.objects.all()
+    print("queryset List view")
+    # ##print(queryset)
+    serializer_class = BoardSerializer
+    permission_classes = (permissions.AllowAny,)
+
+class CardCreateView(CreateAPIView):
+    queryset = Cards.objects.all()
+    print("queryset Create view")
+    ##print(queryset)
+    serializer_class = CardSerializer
+    permission_classes = (permissions.AllowAny,)
+
+    def create(self, request, *args, **kwargs):
+        print("request from BoardCreateView")
+        print("request", request, args)
+        print("req.data", self.request.data)
+        # print("req.Files",request.FILES)
+        # request_data = json.loads((self.request.data["data"]))
+        # request_files = (self.request.FILES)
+        listID = self.kwargs.get('listId')
+        serializer = CardSerializer(data=request.data, context={'listID': listID})
+        serializer.is_valid()
+        print(serializer.is_valid())
+        create_article, id = serializer.create(request.data)
+        if create_article:
+            return Response(id, status=HTTP_201_CREATED)
+        return Response(status=HTTP_400_BAD_REQUEST)
+
+class CardUpdateView(RetrieveUpdateDestroyAPIView):
+    queryset = Cards.objects.all()
+    print("queryset from BoardUpdateView")
+    ##print(queryset)
+    serializer_class = CardSerializer
+    permission_classes = (permissions.IsAuthenticated,)
+
+    def put(self, request, *args, **kwargs):
+        listID = self.kwargs.get('pk')
+        serializer = CardSerializer(data=request.data,  context={'listID': listID})
+        serializer.is_valid()
+        print("update_card", serializer.is_valid())
+        update_article = serializer.update_card(request.data)
+        if update_article:
+            return Response(status=HTTP_200_OK)
+        return Response(status=HTTP_400_BAD_REQUEST)
+    
+    def delete(self, request, *args, **kwargs):
+        serializer = CardSerializer(data=request.data)
+        serializer.is_valid()
+        print("delete", serializer.is_valid())
+        listID = self.kwargs.get('pk').split("list-", 1)[-1]
+        cardID = request.data["id"].split("card-", 1)[-1]
+        try:
+            Cards.objects.filter(id=cardID, boardD=listID).delete()
+            return Response(status=HTTP_200_OK)
+        except:
+            return Response(status=HTTP_400_BAD_REQUEST)
 
 class LikeListView(RetrieveUpdateDestroyAPIView):
     print("lero")

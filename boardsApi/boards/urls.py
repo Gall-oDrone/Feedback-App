@@ -7,6 +7,16 @@ from boardsApi.views import (
     BoardCreateView,
     BoardDeleteView,
     BoardUpdateView,
+
+    ListListView, 
+    ListCreateView,
+    ListUpdateView,
+
+    CardListView, 
+    # CardDetailView, 
+    CardCreateView,
+    CardUpdateView,
+
     ProfileBoardListView,
     ProfileBoardDetailView,
     LikeListView,
@@ -37,6 +47,15 @@ urlpatterns = [
     path('<pk>/delete/', BoardDeleteView.as_view()),
     path('list/<username>/', ProfileBoardListView.as_view()),
     path('<pk>/detail/<username>/', ProfileBoardDetailView.as_view()),
+
+    path('card/list/<pk>/', CardListView.as_view()),
+    path('card/create/<listId>', CardCreateView.as_view()),
+    path('card/update/<pk>', CardUpdateView.as_view()),
+    # path('<pk>/delete/<board>', CardDeleteView.as_view()),
+
+    path('list/list/<pk>/', ListListView.as_view()),
+    path('list/create/<board>', ListCreateView.as_view()),
+    path('list/update/<board>', ListUpdateView.as_view()),
 
     path('<pk>/create-likes/', CreateLike.as_view()),
     path('<pk>/likes/', LikeListView.as_view()),

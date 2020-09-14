@@ -451,6 +451,7 @@ class GoogleLogin(SocialLoginView):
     callback_url = "http://127.0.0.1:8000/api/users/auth/google/callback/"
 
 class FacebookLogin(SocialLoginView):
+    print("LACKING")
     adapter_class = FacebookOAuth2Adapter
     # serializer_class = SocialTokenSerializer
 

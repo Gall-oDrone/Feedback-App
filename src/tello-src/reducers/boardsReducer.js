@@ -46,6 +46,7 @@ const boardsReducer = (state = initialState, action) => {
       const lists = board.lists;
       const newLists = lists.filter(id => id !== listID);
       board.lists = newLists;
+      console.log("MICAS => ", newLists, "board: ", board)
       return { ...state, [boardID]: board };
     }
 
@@ -57,8 +58,26 @@ const boardsReducer = (state = initialState, action) => {
         title,
         lists: []
       };
-
       return { ...state, [newID]: newBoard };
+    }
+
+    case CONSTANTS.FETCH_BOARDS: {
+      const { boards } = action.payload;
+      const boardlist = boards.map(el => {
+          const newID = `board-${el.id}`;
+          const title = el.title
+          const list = `list-${el.id}`;
+          const newBoard = {
+            id: newID,
+            title:title,
+            lists: el.lists.map((list_e, i) => {const list_item = `list-${list_e.id}`; return list_item })
+          };
+        return( { [newID]: newBoard } );
+      })
+      boardlist.forEach((el) => {
+        Object.assign(state, el);
+      })
+      return ( { ...state })
     }
 
     default:

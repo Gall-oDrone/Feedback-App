@@ -32,28 +32,29 @@ class TrelloCreate extends React.PureComponent {
   };
 
   handleAddList = () => {
-    const { dispatch } = this.props;
+    // console.log("RECLUSORIO: ", this.props)
+    const { token, dispatch, boardID } = this.props
     const { text } = this.state;
 
     if (text) {
       this.setState({
         text: ""
       });
-      dispatch(addList(text));
+      dispatch(addList(text, token, boardID));
     }
 
     return;
   };
 
   handleAddCard = () => {
-    const { dispatch, listID } = this.props;
+    const { token, dispatch, listID } = this.props;
     const { text } = this.state;
-
+    console.log("corso 0: ", this.props)
     if (text) {
       this.setState({
         text: ""
       });
-      dispatch(addCard(listID, text));
+      dispatch(addCard(token, listID, text));
     }
   };
 
@@ -91,6 +92,7 @@ class TrelloCreate extends React.PureComponent {
   render() {
     const { text } = this.state;
     const { list } = this.props;
+    console.log("corso: ", this.props)
     return this.state.formOpen ? (
       <TrelloForm
         text={text}

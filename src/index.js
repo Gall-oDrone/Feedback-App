@@ -44,6 +44,7 @@ import cardsReducer from "./tello-src/reducers/cardsReducer";
 import boardsReducer from "./tello-src/reducers/boardsReducer";
 import boardOrderReducer from "./tello-src/reducers/boardOrderReducer";
 import activeBoardReducer from "./tello-src/reducers/activeBoardReducer";
+import boardListReducer from "./tello-src/reducers/boardListReducer";
 
 const composeEnhances = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
@@ -84,8 +85,8 @@ const rootReducer = combineReducers({
   cards: cardsReducer,
   boards: boardsReducer,
   boardOrder: boardOrderReducer,
-  activeBoard: activeBoardReducer
-
+  activeBoard: activeBoardReducer,
+  boardList: boardListReducer,
 });
 
 const store = createStore(rootReducer, composeEnhances(applyMiddleware(thunk)));

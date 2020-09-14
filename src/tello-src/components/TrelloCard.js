@@ -44,7 +44,7 @@ const DeleteButton = styled(Icon)`
   }
 `;
 
-const TrelloCard = React.memo(({ text, id, listID, index, dispatch }) => {
+const TrelloCard = React.memo(({ text, id, listID, index, dispatch, token }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [cardText, setText] = useState(text);
 
@@ -58,14 +58,12 @@ const TrelloCard = React.memo(({ text, id, listID, index, dispatch }) => {
 
   const saveCard = e => {
     e.preventDefault();
-
-    dispatch(editCard(id, listID, cardText));
+    dispatch(editCard(id, listID, cardText, token));
     setIsEditing(false);
   };
 
   const handleDeleteCard = e => {
-    console.log(listID);
-    dispatch(deleteCard(id, listID));
+    dispatch(deleteCard(id, listID, token));
   };
 
   const renderEditForm = () => {

@@ -354,16 +354,24 @@ class ArticleDetail extends React.Component {
                <div className="workshop-detail-block" id="lessons">
                    <div className="workshop-detail-lessons-block-color-overlay"></div>
                     <div className="workshop-detail-lessons-block-color-overlay-border-holder">
+                        <div id="element-4467">
+                                    <div className="contents">
+                                        <h1>
+                                            <p></p>
+                                            <p><b><font>What You'll Learn</font></b></p>
+                                            <p></p>
+                                        </h1>
+                                    </div>
+                        </div>
                         <div className="workshop-detail-lessons-block-inner">
                         {/* Courses List Conatiner  */}
                         {lessons && lessons.map((el, i) => {
                             return(
-                                                    <li>
                                                     <div id="element-3407-A">
                                                         {/* Courses List Box  */}
                                                         <div className="box">
                                                             {/* List Items Courses */}
-                                                    {/* Top Dark-Blue Cover on Card */}
+                                                            {/* Top Dark-Blue Cover on Card */}
                                                             <div className="page-element-widget-container-page-element-type-box-widget-box" id="element-3434-A">
                                                                 <div className="box-3434">
                                                                     <div className="page-element widget-container page-element-type-headline widget-headline" id="element-3405-A">
@@ -387,50 +395,59 @@ class ArticleDetail extends React.Component {
                                                                         </div>
                                                                     </div>
                                                                 </div>
-                                                                <div className="courses_container-A">
-                                                                    <ul>
-                                                                        {el.lesson_topic && el.lesson_topic.map((el, i) => {
-                                                                            return (
-                                                                            <li>
-                                                                                <div className="courses_container-inline-A">
-                                                                                    <div id="element-3411-A">
-                                                                                        <div className="contents">
-                                                                                            <img src="//storage.googleapis.com/instapage-user-media/fc5bead4/31634666-0-check-mark-blue-thin.png"></img>
-                                                                                        </div>
-                                                                                    </div>
-                                                                                    <div id="element-3410-A">
-                                                                                        <div className="contents">
-                                                                                            <h1>
-                                                                                                <p><font>{el.topic_title}</font></p>
-                                                                                            </h1>
-                                                                                        </div>
+                                                            </div> 
+                                                            <div className="courses_container-A">
+                                                                <ul>
+                                                                    {el.lesson_topic && el.lesson_topic.map((el, i) => {
+                                                                        return (
+                                                                        <li>
+                                                                            <div className="courses_container-inline-A">
+                                                                                <div id="element-3411-A">
+                                                                                    <div className="contents">
+                                                                                        <img src="//storage.googleapis.com/instapage-user-media/fc5bead4/31634666-0-check-mark-blue-thin.png"></img>
                                                                                     </div>
                                                                                 </div>
-                                                                            </li>
-                                                                            )    
-                                                                        })}
-                                                                    </ul>
-                                                                </div>
-                                                                <div className="labs_container-A">
-                                                                    <div id="element-3453-A">
-                                                                        <div className="box-AB">
-                                                                            <div id="element-3458-A">
-                                                                                <div className="contents">
-                                                                                    <div className="cropped"></div>
+                                                                                <div id="element-3410-A">
+                                                                                    <div className="contents">
+                                                                                        <h1>
+                                                                                            <p><font>{el.topic_title}</font></p>
+                                                                                        </h1>
+                                                                                    </div>
                                                                                 </div>
                                                                             </div>
-                                                                            <div id="element-3456-A">
-                                                                                <div className="contents">
-                                                                                        <p>Claiming your first Particle device* </p>
-                                                                                </div>
+                                                                        </li>
+                                                                        )    
+                                                                    })}
+                                                                </ul>
+                                                            </div>
+                                                            <div className="labs_container-A">
+                                                                <div id="element-3453-A">
+                                                                    <div className="box-AB">
+                                                                        <div id="element-3458-A">
+                                                                            <div className="contents">
+                                                                                <div className="cropped"></div>
                                                                             </div>
                                                                         </div>
+                                                                        <div id="element-3456-A">
+                                                                            <div className="contents">
+                                                                                    <p>Claiming your first Particle device*  </p>
+                                                                            </div>
+                                                                        </div>
+                                                                        {/* <div id="element-3458-A">
+                                                                            <div className="contents">
+                                                                                <div className="cropped"></div>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div id="element-3456-A">
+                                                                            <div className="contents">
+                                                                                    <p>Claiming your first Particle device* </p>
+                                                                            </div>
+                                                                        </div> */}
                                                                     </div>
                                                                 </div>
-                                                            </div> 
+                                                            </div>
                                                         </div>
                                                     </div>
-                                                </li>
                         )
                         })}
 

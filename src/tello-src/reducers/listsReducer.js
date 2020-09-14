@@ -24,6 +24,24 @@ const listsReducer = (state = initialState, action) => {
       return newState;
     }
 
+    case CONSTANTS.FETCH_LISTS: {
+      const { lists } = action.payload;
+      const lists_con = lists.map(el => {
+        const title = el.title
+        const newList = {
+          title: title,
+          id: `list-${el.id}`,
+          cards: el.cards.map(cardEl => {return( `card-${cardEl.id}`)})
+        };
+        return( { [`list-${el.id}`]: newList } );
+    })
+      lists_con.forEach((el) => {
+        Object.assign(state, el);
+      })
+      const newState = { ...state };
+      return newState;
+    }
+
     case CONSTANTS.ADD_CARD: {
       const { listID, id } = action.payload;
       const list = state[listID];
@@ -75,7 +93,6 @@ const listsReducer = (state = initialState, action) => {
 
     case CONSTANTS.DELETE_CARD: {
       const { listID, id } = action.payload;
-
       const list = state[listID];
       const newCards = list.cards.filter(cardID => cardID !== id);
 

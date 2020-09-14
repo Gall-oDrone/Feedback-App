@@ -1,5 +1,6 @@
 import React from "react";
 import styled from "styled-components";
+import getRandomColor from "./RandomColor"; 
 
 const Thumbnail = styled.div`
   height: 180px;
@@ -13,6 +14,10 @@ const Thumbnail = styled.div`
   cursor: pointer;
   border-radius: 3px;
   box-shadow: 0 2px 4px grey;
+  transition: .2s;
+  &:hover, :focus {
+   transform: translateY(-0.8rem);
+  }
 `;
 
 const Title = styled.h4`
@@ -23,7 +28,7 @@ const Title = styled.h4`
 const BoardThumbnail = ({ title }) => {
   console.log(title);
   return (
-    <Thumbnail>
+    <Thumbnail style={{backgroundColor: getRandomColor() }} >
       <Title>{title}</Title>
     </Thumbnail>
   );
