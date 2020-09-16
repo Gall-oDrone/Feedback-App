@@ -31,7 +31,7 @@ class NavMenu extends React.Component {
 
   constructor(props) {
     super(props);
-    WebSocketInstance.addCallbacks2(
+    WebSocketInstance.addCallbackUnviewNTFNS(
       this.props.setUnviews.bind(this),
     );
     if(this.props.username !== undefined){

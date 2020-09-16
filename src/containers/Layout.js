@@ -11,7 +11,6 @@ import NavMenu3 from "../components/navBarWrapper";
 import { ReactComponent as BellIcon } from '../icons/bell.svg';
 import {getProfileAccountDetail} from "../store/actions/profileAccountInfo"
 import CreateHeaderMenu from "../components/CreateHeaderMenu";
-import Landing from "./LandingPage";
 import "../assets/main.css";
 import "../assets/navBar.css";
 
@@ -163,6 +162,14 @@ class CustomLayout extends React.Component {
                       </Link>
                   </div>
                 </Menu.Item>
+                <Menu.Item key="9" style= {{float: 'left'}}>
+                  <div className="navbar-item-in">
+                      <Link to="/collaborations/">
+                        <Icon style={{margin:0}} type="team" />
+                        <span className="caption">COLLABORATIONS</span>
+                      </Link>
+                  </div>
+                </Menu.Item>
                 <Menu.Item key="8" style= {{float: 'right', paddingLeft: "15px", paddingRight: "15px"}}>
                     <ProfileHeaderMenu auth={this.props.isAuthenticated} logout={this.props.logout} userId={this.props.userId}/>
                 </Menu.Item>
@@ -239,7 +246,9 @@ class CustomLayout extends React.Component {
           ):(null
           )}
       {this.props.location.pathname === "/" ?
-      <Landing/>
+      <div>
+        Home Page
+      </div>
       :
         <Content style={{ padding: "0 50px", display:"inline"}}>        
           <Breadcrumb style={{ margin: "16px 0" }}>

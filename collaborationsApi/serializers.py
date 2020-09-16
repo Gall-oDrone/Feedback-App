@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Collaboration_types, Request_status, Collaboration, CollaborationWorkFlow, CollaborationRequest
+from .models import CollaborationTypes, RequestStatus, Collaboration, CollaborationWorkFlow, CollaborationRequest
 from users.models import User, ProfileInfo
 from users.serializers import ProfileSerializer, ProfileInfoSerializer
 from django.core.files.storage import FileSystemStorage

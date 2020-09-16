@@ -52,10 +52,12 @@ def load_more(data):
     else:
         return None
 
+#TODO FIX METHOD FOR UNVIEWS MESSAGES
 def get_views(username):
-    userId = User.objects.get(username=username).id
-    unviewed = Chat.objects.filter(user=userId, view=False).count()
-    return unviewed
+    # userId = User.objects.get(username=username).id
+    # unviewed = Chat.objects.filter(user=userId, view=False).count()
+    print("DJAJA")
+    return 2
 
 def get_user_notifications(username):
     userId = User.objects.get(username=username).id

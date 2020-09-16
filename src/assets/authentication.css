@@ -9,6 +9,7 @@ body {
     border-radius: 5px;
     background-color: #f2f2f2;
     padding: 0px 0 0px 0;
+    margin: auto;
 }
 
 .social-login-box {
@@ -92,6 +93,8 @@ body {
     -ms-transition: all .3s ease;
     -o-transition: all .3s ease;
     transition: all .3s ease-out;
+    transform: translateY(-3px);
+    box-shadow: 0 2px 10px 2px rgba(0,0,0,.35);
 }
 
 #facebook-connect span {
@@ -131,6 +134,8 @@ body {
     -ms-transition: all .3s ease;
     -o-transition: all .3s ease;
     transition: all .3s ease-out;
+    transform: translateY(-3px);
+    box-shadow: 0 2px 10px 2px rgba(0,0,0,.35);
 }
 
 #google-connect span {
@@ -288,11 +293,52 @@ body {
     width: 0px;
   }
   
+  /* horizontal line container */
+  .login-hl-con {
+    display:flex;
+    flex-direction: row;
+     margin: 0 auto;
+    /* padding: 0 5px; */
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+  }
+
+  /* horizontal line */
+  .login-hl-l {
+      /* position: absolute; */
+      /* left: 50%; */
+      /* top: 50%; 
+      /* transform: translate(-50%); */
+      margin: auto;
+      border: 2px solid #ddd;
+      height: 0px;
+      width: 5rem;
+    }
+    .login-hl-r {
+        /* position: absolute; */
+        /* left: -50%; */
+        /* top: 50%; 
+        /* transform: translate(-50%); */
+        margin: auto;
+        border: 2px solid #ddd;
+        height: 0px;
+        width: 5rem;
+      }
   /* text inside the vertical line */
   .login-inner {
     position: absolute;
     top: 50%;
     transform: translate(-50%, -50%);
+    background-color: #f1f1f1;
+    border: 1px solid #ccc;
+    border-radius: 50%;
+    padding: 8px 10px;
+  }
+
+  .login-inner-hl {
+    position: relative;
+    /* transform: translate(-50%, -50%); */
     background-color: #f1f1f1;
     border: 1px solid #ccc;
     border-radius: 50%;

@@ -13,7 +13,7 @@ from rest_framework.status import(
     HTTP_400_BAD_REQUEST
 )
 from rest_framework import permissions, generics
-from .models import Collaboration_types, Request_status, Collaboration, CollaborationWorkFlow, CollaborationRequest
+from .models import CollaborationTypes, RequestStatus, Collaboration, CollaborationWorkFlow, CollaborationRequest
 from users.models import User
 from .serializers import CollaborationSerializer
 # CollaborationFeatureSerializer, VideoFormSerializer, CommentSerializer, LikeSerializer, LikeListSerializer, RatingSerializer, CommentListSerializer, ImageFormSerializer, ProfileCollaborationListSerializer, Cat_FT_Serializer

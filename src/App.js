@@ -16,22 +16,22 @@ class App extends Component {
 
   render() {
     return (
-      <Router>
-        <CustomLayout {...this.props}>
-          <BaseRouter />
-        </CustomLayout>
-      </Router>
-      
       // <Router>
-      //   {this.props.isAuthenticated ?
       //   <CustomLayout {...this.props}>
       //     <BaseRouter />
       //   </CustomLayout>
-      //   : <LandingPage>
-      //       <BaseRouter />
-      //     </LandingPage>
-      //   }
       // </Router>
+      
+      <Router>
+        {this.props.isAuthenticated ?
+        <CustomLayout {...this.props}>
+          <BaseRouter />
+        </CustomLayout>
+        : <LandingPage>
+            {/* <BaseRouter /> */}
+          </LandingPage>
+        }
+      </Router>
     );
   }
 }

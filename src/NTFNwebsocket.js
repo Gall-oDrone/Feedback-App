@@ -53,7 +53,7 @@ class WebSocketService {
     if (command === "notifications") {
       this.callbacks[command](parsedData.messages);
     }
-    if (command === "unviews") {
+    if (command === "unview_ntfns") {
       this.callbacks[command](parsedData.unviews);
       // if(this.callbacks[command]){
       //   console.log("NM, parsed 3")
@@ -134,8 +134,8 @@ class WebSocketService {
     this.callbacks["notifications"] = messagesCallback;
   }
 
-  addCallbacks2(unviewsCallback) {
-    this.callbacks["unviews"] = unviewsCallback;
+  addCallbackUnviewNTFNS(unviewNTFNSCallback) {
+    this.callbacks["unview_ntfns"] = unviewNTFNSCallback;
   }
 
   sendMessage(data) {

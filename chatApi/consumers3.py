@@ -21,11 +21,12 @@ class ChatConsumer3(WebsocketConsumer):
     def update_messages(self, data):
         update_message = update_user_messagess(data['username'])
     
+    #TODO FIX UNVIEWS FOR MESSAGES
     def message_views(self, data):
         unviews = get_views(data['username'])
         content = {
-            'command': 'unviews',
-            'unviews': {'unview': unviews}
+            'command': 'unview_msgs',
+            'unviews': {'unview_msg': unviews}
         }
         self.send_message(content)
 
@@ -197,6 +198,7 @@ class ChatConsumer3(WebsocketConsumer):
     
     commands = {
         'fetch_messages': fetch_messages,
+        'message_views': message_views,
         "media": add_media,
         'offer': add_offer,
         'answer': add_answer,

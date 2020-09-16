@@ -45,6 +45,7 @@ import boardsReducer from "./tello-src/reducers/boardsReducer";
 import boardOrderReducer from "./tello-src/reducers/boardOrderReducer";
 import activeBoardReducer from "./tello-src/reducers/activeBoardReducer";
 import boardListReducer from "./tello-src/reducers/boardListReducer";
+import collaborationReducer from "./store/reducers/collaborations";
 
 const composeEnhances = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
@@ -87,6 +88,7 @@ const rootReducer = combineReducers({
   boardOrder: boardOrderReducer,
   activeBoard: activeBoardReducer,
   boardList: boardListReducer,
+  collaboration: collaborationReducer
 });
 
 const store = createStore(rootReducer, composeEnhances(applyMiddleware(thunk)));

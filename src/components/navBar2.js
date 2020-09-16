@@ -20,7 +20,7 @@ import WebSocketInstance from "../MSGSwebsocket";
 
 class NavMenu extends React.Component {
 
-  initialiseNTFNS() {
+  initialiseMSGS() {
     this.waitForSocketConnection(() => {
       WebSocketInstance.fetchMSGS(
         this.props.username,
@@ -31,11 +31,9 @@ class NavMenu extends React.Component {
 
   constructor(props) {
     super(props);
-    WebSocketInstance.addCallbacks2(
-      this.props.setUnviews.bind(this),
-    );
+
     if(this.props.username !== undefined){
-      this.initialiseNTFNS();
+      this.initialiseMSGS();
     }
   }
 
@@ -222,6 +220,7 @@ function DropdownMenu() {
   );
 }
 
+//TOFIX state.message.unview
 const mapStateToProps = state => {
   return {
     username: state.auth.username,
@@ -230,6 +229,7 @@ const mapStateToProps = state => {
   };
 };
 
+//TOFIX Create unviews for messages and CHANGE IT ON mapStateToProps
 const mapDispatchToProps = dispatch => {
   return {
     logout: () => dispatch(actions.logout()),

@@ -53,7 +53,9 @@ class WebSocketService {
     if (command === "messages") {
       this.callbacks[command](parsedData.messages);
     }
-    if (command === "unviews") {
+    if (command === "unview_msgs") {
+      //unview_msgs must match with content key in py code
+      console.log("CACAS 3X: ", parsedData)
       this.callbacks[command](parsedData.unviews);
       // if(this.callbacks[command]){
       //   console.log("NM, parsed 3")
@@ -134,8 +136,8 @@ class WebSocketService {
     this.callbacks["messages"] = messagesCallback;
   }
 
-  addCallbacks2(unviewsCallback) {
-    this.callbacks["unviews"] = unviewsCallback;
+  addCallbackUnviewMSGS(unviewMSGSCallback) {
+    this.callbacks["unview_msgs"] = unviewMSGSCallback;
   }
 
   sendMessage(data) {

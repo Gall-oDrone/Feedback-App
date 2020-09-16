@@ -24,7 +24,7 @@ class NotificationConsumer(WebsocketConsumer):
     def message_views(self, data):
         unviews = get_views(data['username'])
         content = {
-            'command': 'unviews',
+            'command': 'unview_ntfns',
             'unviews': {'unview': unviews}
         }
         self.send_message(content)

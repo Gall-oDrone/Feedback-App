@@ -24,21 +24,117 @@ import k from "../assets2/University-Duke-Logo.png";
 import l from "../assets2/University-LSE-Logo.png";
 import m from "../assets2/university-tec-logo.png";
 
+import GoogleLogin from '../components/GoogleLogin';
+import FacebookLogin from '../components/FacebookLogin';
+import LPLogin from "./LPLogin";
+import Signup from "./Register";
+import "../assets/authentication.css"
 import "../assets/landing.css";
 
 class LandingPage extends React.PureComponent {
 
-  
+  state = {
+    loginModal: false,
+    register: false,
+    username: '',
+  }
 
-  // handleLoginModal = () => {
-  // }
+  handleLoginModal = () => {
+    this.setState({loginModal: true})
+  }
+
+  handleCloseModal = () => {
+    this.setState({loginModal: false})
+  }
+
+  handleRegister = (val) => {
+    this.setState({register: val})
+  }
 
   render() {
+    const { loginModal, register } = this.state
     return (
       <body id="landing-page">
         <div className="main-flex-container">
+            {loginModal === true ? 
+                <div className="login_modal_cover_container">
+                  <div className="login_modal_cover">
+                    <div className="login_modal_cover">
+                      <div className="login_modal_wrapper">
+                        <div className="login_modal_container">
+                          <div className="login_modal_container_2">
+                            <div onClick={() => this.handleCloseModal()} className="login_modal_container_close_button">
+                            </div>
+                            {register === true ? 
+                              <div>
+                                <h3>Sign up</h3>
+                                  <div className="login-row">
+                                    <Signup register={this.handleRegister}/>
+                                  </div>
+                              </div>
+                            :
+                              <div>
+                                <h3>Sign in</h3>
+                                <div className="login-row">
+
+                                  
+                                        <FacebookLogin/>
+                                        <GoogleLogin/>
+                                  <div className="login-hl-con">
+                                    <div className="login-hl-l"/>
+                                      <span className="login-inner-hl">or</span>
+                                    <div className="login-hl-r"/>
+                                  </div>
+                                  {/* <form onSubmit={this.handleSubmit}>
+                                      <div className="login_b_con">
+                                          <label><b>Username</b></label>
+                                          <input 
+                                              type="text"
+                                              name='username' 
+                                              id="fusername"
+                                              placeholder="username"
+                                          />
+                                          <label><b>Password</b></label>
+                                          <input 
+                                              type="password"
+                                              name='password' 
+                                              id="pwd"
+                                              placeholder="password"
+                                          />
+                                          <button type="submit">Login</button>
+                                      </div>
+                                    <div className="sign_up_con">
+                                      <button className="login_error_b">
+                                          <a href="/forgot-password">
+                                              ¿Can't Log in?
+                                          </a>
+                                      </button>
+                                      <a>Register</a>
+                                    </div>
+                                  </form>
+                                  */}
+                                  <LPLogin/>
+                                  <div className="sign_up_con">
+                                    <a href="/forgot-password">
+                                        ¿Can't Log in?
+                                    </a>
+                                    <div onClick={() => this.handleRegister(true)}>
+                                      <a>Register</a>
+                                    </div>
+                                  </div>
+                                </div> 
+                              </div>
+                            }
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                    : null 
+            }
             <div className="top-banner-container">
-                {/* <div className="lp_header">
+                <div className="lp_header">
                   <div id="logo">
                     <a className="logo_container">
                       <div className="lc_first_row">
@@ -48,17 +144,33 @@ class LandingPage extends React.PureComponent {
                     </a>
                   </div>
                   <div className="nav_bar">
+                    <div className="nb_first_mi">
+                      <a>What is MateCrunch?</a>
+                    </div>
+                    <div className="nb_snd_mi">
+                      <a>Content</a>
+                      <div className="nb_snd_mi_tooltip_con">
+                        <div className="nb_snd_mi_tooltip">
+                          <div className="tooltip_item">
+                            <h4>Qué?</h4>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="nb_thrd_mi">
+                      <a>Meet the Team</a>
+                    </div>
                   </div>
                   <div className="login_container">
                     <div className="login_button_con">
                       <div className="tooltip">
                       </div>
-                      <button onClick={() => handleLoginModal()} className="button-style">
+                      <button onClick={() => this.handleLoginModal()} className="button-style">
                         Log In
                       </button>
                     </div>
                   </div>
-                </div> */}
+                </div>
                 <div className="first-section"> 
                     <div className="top-banner-text-container">
                       <div className="top-banner-text-container-2">

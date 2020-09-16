@@ -42,6 +42,11 @@ class CreateHeaderMenu extends React.Component {
               Post a Workshop
             </a>
           </Menu.Item>
+          <Menu.Item key="CreateHeader 5">
+            <a target="_blank" rel="noopener noreferrer" href={`/create-collaboration/`}>
+              Post a Collaboration
+            </a>
+          </Menu.Item>
         </Menu>
       </div>
     )}
