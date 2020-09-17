@@ -11,6 +11,7 @@ import NavMenu3 from "../components/navBarWrapper";
 import { ReactComponent as BellIcon } from '../icons/bell.svg';
 import {getProfileAccountDetail} from "../store/actions/profileAccountInfo"
 import CreateHeaderMenu from "../components/CreateHeaderMenu";
+import Home from "./Home";
 import "../assets/main.css";
 import "../assets/navBar.css";
 
@@ -74,7 +75,7 @@ class CustomLayout extends React.Component {
                 id="myDiv"
                 message={
                   <p>Hi! Please confirm your email address by clicking the link in the email we sent you.
-                    <a className="resend-email" href={"/confirmation/new/"}> Resend me the link, please</a>
+                    <a style={{textDecoration: "underline"}} className="resend-email" href={"/confirmation/new/"}> Resend me the link, please</a>
                   </p>
                 } 
                 type="info">
@@ -165,7 +166,7 @@ class CustomLayout extends React.Component {
                 <Menu.Item key="9" style= {{float: 'left'}}>
                   <div className="navbar-item-in">
                       <Link to="/collaborations/">
-                        <Icon style={{margin:0}} type="team" />
+                        <Icon style={{margin:0}} type="deployment-unit" />
                         <span className="caption">COLLABORATIONS</span>
                       </Link>
                   </div>
@@ -246,9 +247,11 @@ class CustomLayout extends React.Component {
           ):(null
           )}
       {this.props.location.pathname === "/" ?
-      <div>
-        Home Page
+      <Content style={{ padding: "0 50px", display:"inline"}}>        
+      <div style={{ padding: 24, minHeight: 580 }}>
+        <Home/>
       </div>
+      </Content>
       :
         <Content style={{ padding: "0 50px", display:"inline"}}>        
           <Breadcrumb style={{ margin: "16px 0" }}>

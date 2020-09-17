@@ -28,14 +28,19 @@ import GoogleLogin from '../components/GoogleLogin';
 import FacebookLogin from '../components/FacebookLogin';
 import LPLogin from "./LPLogin";
 import Signup from "./Register";
+import RecoverPassword from "./LPPForgot";
 import "../assets/authentication.css"
 import "../assets/landing.css";
+import { Spin, Icon } from "antd";
+const antIcon = <Icon type="loading" style={{ fontSize: 24 }} spin />;
 
 class LandingPage extends React.PureComponent {
 
   state = {
     loginModal: false,
     register: false,
+    forgotPass: false,
+    loading: false,
     username: '',
   }
 
@@ -50,9 +55,16 @@ class LandingPage extends React.PureComponent {
   handleRegister = (val) => {
     this.setState({register: val})
   }
+  handlePF = (val) => {
+    this.setState({forgotPass: val})
+  }
+  handleLoading = (val) => {
+    this.setState({loading: val})
+  }
 
   render() {
-    const { loginModal, register } = this.state
+    const { loginModal, register, loading, forgotPass } = this.state
+    console.log("CACAS: ", loading)
     return (
       <body id="landing-page">
         <div className="main-flex-container">
@@ -65,65 +77,66 @@ class LandingPage extends React.PureComponent {
                           <div className="login_modal_container_2">
                             <div onClick={() => this.handleCloseModal()} className="login_modal_container_close_button">
                             </div>
-                            {register === true ? 
-                              <div>
-                                <h3>Sign up</h3>
-                                  <div className="login-row">
-                                    <Signup register={this.handleRegister}/>
-                                  </div>
-                              </div>
+                            {forgotPass === true ?
+                             <RecoverPassword handlePF={this.handlePF} />
                             :
-                              <div>
-                                <h3>Sign in</h3>
-                                <div className="login-row">
-
-                                  
-                                        <FacebookLogin/>
-                                        <GoogleLogin/>
-                                  <div className="login-hl-con">
-                                    <div className="login-hl-l"/>
-                                      <span className="login-inner-hl">or</span>
-                                    <div className="login-hl-r"/>
-                                  </div>
-                                  {/* <form onSubmit={this.handleSubmit}>
-                                      <div className="login_b_con">
-                                          <label><b>Username</b></label>
-                                          <input 
-                                              type="text"
-                                              name='username' 
-                                              id="fusername"
-                                              placeholder="username"
-                                          />
-                                          <label><b>Password</b></label>
-                                          <input 
-                                              type="password"
-                                              name='password' 
-                                              id="pwd"
-                                              placeholder="password"
-                                          />
-                                          <button type="submit">Login</button>
+                            register === true ? 
+                                <div>
+                                  <h3>Sign up</h3>
+                                    <div className="login-row">
+                                      <Signup hl={this.handleLoading} register={this.handleRegister}/>
+                                    </div>
+                                </div>
+                              :
+                                <div>
+                                  <h3>Sign in</h3>
+                                  <div className="login-row">
+                                          <FacebookLogin/>
+                                          <GoogleLogin/>
+                                    <div className="login-hl-con">
+                                      <div className="login-hl-l"/>
+                                        <span className="login-inner-hl">or</span>
+                                      <div className="login-hl-r"/>
+                                    </div>
+                                    {/* <form onSubmit={this.handleSubmit}>
+                                        <div className="login_b_con">
+                                            <label><b>Username</b></label>
+                                            <input 
+                                                type="text"
+                                                name='username' 
+                                                id="fusername"
+                                                placeholder="username"
+                                            />
+                                            <label><b>Password</b></label>
+                                            <input 
+                                                type="password"
+                                                name='password' 
+                                                id="pwd"
+                                                placeholder="password"
+                                            />
+                                            <button type="submit">Login</button>
+                                        </div>
+                                      <div className="sign_up_con">
+                                        <button className="login_error_b">
+                                            <a href="/forgot-password">
+                                                ¿Can't Log in?
+                                            </a>
+                                        </button>
+                                        <a>Register</a>
                                       </div>
+                                    </form>
+                                    */}
+                                    <LPLogin hl={this.handleLoading}/>
                                     <div className="sign_up_con">
-                                      <button className="login_error_b">
-                                          <a href="/forgot-password">
-                                              ¿Can't Log in?
-                                          </a>
-                                      </button>
-                                      <a>Register</a>
+                                      <div onClick={() => this.handlePF(true)}>
+                                        <a>¿Forgot password?</a>
+                                      </div>
+                                      <div onClick={() => this.handleRegister(true)}>
+                                        <a>Register</a>
+                                      </div>
                                     </div>
-                                  </form>
-                                  */}
-                                  <LPLogin/>
-                                  <div className="sign_up_con">
-                                    <a href="/forgot-password">
-                                        ¿Can't Log in?
-                                    </a>
-                                    <div onClick={() => this.handleRegister(true)}>
-                                      <a>Register</a>
-                                    </div>
-                                  </div>
-                                </div> 
-                              </div>
+                                  </div> 
+                                </div>
                             }
                           </div>
                         </div>
@@ -147,7 +160,7 @@ class LandingPage extends React.PureComponent {
                     <div className="nb_first_mi">
                       <a>What is MateCrunch?</a>
                     </div>
-                    <div className="nb_snd_mi">
+                    {/* <div className="nb_snd_mi">
                       <a>Content</a>
                       <div className="nb_snd_mi_tooltip_con">
                         <div className="nb_snd_mi_tooltip">
@@ -159,8 +172,8 @@ class LandingPage extends React.PureComponent {
                     </div>
                     <div className="nb_thrd_mi">
                       <a>Meet the Team</a>
-                    </div>
-                  </div>
+                    </div>*/}
+                  </div> 
                   <div className="login_container">
                     <div className="login_button_con">
                       <div className="tooltip">

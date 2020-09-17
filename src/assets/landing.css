@@ -375,6 +375,36 @@
 
     .loading_spinner_con {
         background-color: rgb(255, 255, 255);
+        justify-content: center;
+        align-items: center;
+        display: flex;
+    }
+
+    .auth_loader {
+        border: 16px solid #f3f3f3; /* Light grey */
+        border-top: 16px solid #3498db; /* Blue */
+        border-radius: 50%;
+        width: 120px;
+        height: 120px;
+        transform: translate(-50%, -50%);
+        transform: -webkit-translate(-50%, -50%);
+        transform: -moz-translate(-50%, -50%);
+        transform: -ms-translate(-50%, -50%);
+        /* z-index: 9999; */
+        /* transform:scale(0.3); */
+        animation: spin 2s linear infinite;
+      }
+      
+      @keyframes spin {
+        0% { transform: scale(0.25) rotate(0deg); }
+        100% { transform: scale(0.25) rotate(360deg); }
+      }
+    
+      @keyframes spinAndScale {
+        0% { transform: rotate(0deg) scale(1.0); }
+        10% { transform: rotate(10deg) scale(1.1); }
+        50% { transform: rotate(180deg) scale(1.5); }
+        100% { transform: rotate(360deg) scale(1.0); }
     }
 
     .forgot_password_con {
@@ -389,7 +419,7 @@
         margin-bottom: 36px;
         margin-top: 20px;
         font-style: italic;
-        font-size: 2.4rem;
+        font-size: 2.0rem;
         font-weight: 800;
     }
 
@@ -405,11 +435,11 @@
     .forgot_password_indications {
         margin-top: 4px;
         margin-bottom: 30px;
-        font-size: 2rem;
+        font-size: 1.2rem;
         color: #5c5c5c;
     }
 
-    .forgot_password_inupt #email{
+    .forgot_password_inupt {
         padding-left: 8px;
         padding-right: 8px;
         background-color: #f5f7fa;
@@ -419,7 +449,7 @@
         padding-bottom: 8px;
         padding-top: 8px;
         margin-top: 30px;
-        margin-bottom: 10px;
+        margin-bottom: 30px;
         font-size: 2rem;
         display: inline-block;
         touch-action: manipulation;
@@ -429,11 +459,11 @@
         font-family: inherit;
         font-size: inherit;
         line-height: inherit;
-        margin-top: 0px;
-        margin-bottom: 0px;
+        /* margin-top: 0px;
+        margin-bottom: 0px; */
     }
 
-    .forgot_password_inupt_invalid #email {
+    .forgot_password_inupt_invalid {
         visibility: hidden;
         margin-top: 4px;
         margin-bottom: 30px;
@@ -441,7 +471,7 @@
         color: #ea1010;
     }
 
-    .forgot_password_send_to_email button  {
+    .forgot_password_send_to_email  {
         background: linear-gradient(-90deg,#02203c,#001528);
         color: white;
         border-radius: 1px;
