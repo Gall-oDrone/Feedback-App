@@ -10,6 +10,7 @@ import {
   Input,
   Checkbox,
   Modal,
+  Radio,
   Row,
   Cascader,
   Col,
@@ -90,28 +91,6 @@ const language = [
     value: 'english',
     label: 'English'
   },
-]
-const topic = [
-  {
-    value: 'Economics',
-    label: 'Economics'
-  },
-  {
-    value: 'Finance',
-    label: 'Finance'
-  },
-  {
-    value: 'Econometrics',
-    label: 'Econometrics'
-  },
-  {
-    value: 'Machine Learning',
-    label: 'Machine Learning'
-  },
-  {
-    value: 'AI',
-    label: 'AI'
-  }
 ]
 
 class ArticleCustomForm extends React.Component {
@@ -288,7 +267,6 @@ class ArticleCustomForm extends React.Component {
     console.log("PUTO", value, mode);
   }
 
-
   disabledDate = date => {
     //根据选择的日期判断是否要禁用日期选择
     //1-6为周一到周六, 周日为0
@@ -407,7 +385,6 @@ class ArticleCustomForm extends React.Component {
     });
   };
 
-  //关闭 隐藏显示 日历选择控件
   closeDatePicker = () => {
     const { dateArray } = this.state;
     this.setState(
@@ -581,10 +558,7 @@ class ArticleCustomForm extends React.Component {
     const { getFieldDecorator, getFieldValue } = this.props.form;
     const { fileList, previewVisible, previewImage, chars_left, endTime } = this.state;
     const contact_option = form.getFieldValue(`contact_options`);
-    console.log("contact_option  I: "+ JSON.stringify(contact_option))
     const fields = getFieldValue("upload")
-    console.log("upload  I: "+ JSON.stringify(fields))
-    console.log("upload II: "+ getFieldValue("fileList"), getFieldValue("upload"), fileList.length, fileList)
     const formItemLayout = {
       labelCol: { span: 6 },
       wrapperCol: { span: 14 },
@@ -600,25 +574,42 @@ class ArticleCustomForm extends React.Component {
         event,
         this.props.requestType,
         this.props.articleID)}>
-          <p>Write a brief description about yourself</p>
-        <Form.Item label="Description" hasFeedback>
-          {getFieldDecorator('content', {
-            initialValue: "C",
-            rules: [{ required: true, message: 'Please enter a content' }],
-          })(<Input.TextArea maxLength={400} onChange={this.handleChange.bind(this)} />
-          )}
-            <p>Characters Left: {chars_left}</p>
-        </Form.Item>
-
-      <p>What topics would you be most likely to answer?</p>
-       <Form.Item label="Topics">
-        {getFieldDecorator('topics', {
-              initialValue: ["undergraduates"],
+{/* 
+      <p>Required Position</p>
+       <Form.Item label="Position">
+        {getFieldDecorator('position', {
               rules: [
-                { required: true, message: 'Please select or type a topic!', type: 'array' },
+                { required: true,  message: 'Please select a desired position!', type: 'array' },
               ],
             })(
-              <Select name="topics" mode="tags" placeholder="Please select or type a topic">
+              <Select name="positions" mode="tags" onChange={this.onChange} placeholder="Please select a position">
+                  <Option value="developer">Developer</Option>
+                  <Option value="designer">Designer</Option>
+                  <Option value="financeExpert">Finance Expert</Option>
+                  <Option value="projectManager">Project Manager</Option>
+                  <Option value="productManager">Product Manager</Option>
+              </Select>,
+            )
+        }
+        </Form.Item> */}
+
+      <p>Project Field</p>
+       <Form.Item label="Field">
+        {getFieldDecorator('fields', {
+              rules: [
+                { required: true, message: 'Please select a field!', type: 'array' },
+              ],
+            })(
+              <Select name="topics" onChange={this.onChange} placeholder="Please select a field">
+                  <Option value="economics">Economics</Option>
+                  <Option value="finance">Finance</Option>
+                  <Option value="machine_learning">Machine Learning</Option>
+                  <Option value="a_i">Artificial Inteligence</Option>
+                  <Option value="big_data">Big Data</Option>
+                  <Option value="biology">Biology</Option>
+                  <Option value="music">Music</Option>
+                  <Option value="law">Law</Option>
+                  <Option value="medicine">Medicine</Option>
               </Select>,
             )
         }
@@ -627,24 +618,29 @@ class ArticleCustomForm extends React.Component {
         <p>What are your areas of experience?</p>
         <Form.Item label="Areas of experience">
           {getFieldDecorator('areas_experience', {
-            initialValue: ["undergraduates"],
             rules: [
               { required: true, message: 'Field required', type: 'array' },
             ],
           })(
             <Select name="areas_experience" mode="tags" placeholder="Please type an area">
+                <Option value="developer">Developer</Option>
+                <Option value="designer">Designer</Option>
+                <Option value="financeExpert">Finance Expert</Option>
+                <Option value="projectManager">Project Manager</Option>
+                <Option value="productManager">Product Manager</Option>
             </Select>,
           )}
         </Form.Item>
 
-        {/* <Form.Item label={"Date-picker"}>
-          {getFieldDecorator('date-picker',
-                  { rules: [{ required: true, message: 'Filed required' }] }
-              )
-              (<DatePicker  disabledDate={this.disabledDate.bind(this)} onChange={this.onDateChange.bind(this)} />)}
-        </Form.Item> */}
-
         <div>
+
+        <Form.Item label="Availability">
+          <Radio.Group defaultValue="a" buttonStyle="solid">
+            <Radio.Button value="season">Seasonal</Radio.Button>
+            <Radio.Button value="full">Full Time</Radio.Button>
+          </Radio.Group>
+        </Form.Item>
+
         <Form layout="inline">
           <Form.Item label="Datepicker" />
           <Form.Item>
@@ -696,94 +692,6 @@ class ArticleCustomForm extends React.Component {
           />
         </div>
       </div>
-
-        <Form.Item label="Session Price Per Hour" hasFeedback>
-            {getFieldDecorator('price', {
-              initialValue: 50,
-              rules: [{ required: true, message: 'Please enter a valid price' }],
-            })(
-              <InputNumber
-                name="price"
-                defaultValue={50}
-                min={50}
-                max={100}
-                formatter={value => `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
-                parser={value => value.replace(/\$\s?|(,*)/g, '')}
-                onChange={this.priceOnChange}
-              />
-            )}
-          </Form.Item>
-          <Form.Item label="Maximum hours per workshop" hasFeedback>
-            {getFieldDecorator('max_hours', {
-              initialValue: 1,
-              rules: [{ required: true, message: 'Field require' }],
-            })(
-              <InputNumber
-                name="hours"
-                defaultValue={1}
-                min={1}
-                max={3}
-                formatter={value => value>1 ? `${value} Hrs`:`${value} Hr`}
-                // parser={value => value.replace(/\$\s?|(,*)/g, '')}
-                onChange={this.hourOnChange}
-              />
-            )}
-          </Form.Item>
-          <Form.Item label="Start Time" hasFeedback>
-            {getFieldDecorator('start_time', {
-              // initialValue: 1,
-              rules: [{ required: true, message: 'Field require' }],
-            })(
-              <TimePicker 
-                onChange={this.onTimeChange.bind(this)} 
-                defaultOpenValue={moment('00', 'HH')} 
-                format={"HH"}
-              />
-            )}
-          </Form.Item>
-          <Form.Item label="End Time" hasFeedback>
-            {getFieldDecorator('end_time', {
-              // initialValue: 1,
-              rules: [{ required: true, message: 'Field require' }],
-            })(
-              <TimePicker 
-                onChange={this.onTimeChange2.bind(this)} 
-                defaultOpenValue={moment('00', 'HH')} 
-                disabledHours={this.disableHour}
-                format={"HH"}
-                disabled={endTime}
-              />
-            )}
-          </Form.Item>
-        <Form.Item label="Upload Photo" extra="2.5 MB Field">
-                {getFieldDecorator('upload', {
-                  initialValue: this.handleFileList(null, null),
-                  rules: [{ required: false, message: 'Please upload a photo'}],
-                  valuePropName: 'fileList',
-                  getValueFromEvent: this.normFile,
-                  setFieldsValue: "fileList"
-                })(
-                  // <div className="clearfix">
-                  <Upload name="photo" key="workshop photo" onPreview={this.handlePreview}  listType="picture-card" customRequest={this.dummyRequest}>
-                    {fileList.length === 1 ? null : uploadButton}
-                    {/* <Button>
-                      <Icon type="upload" /> Click to upload
-                      </Button> */}
-                  </Upload>
-                        //   <Modal visible={previewVisible} footer={null} onCancel={this.handleCancel}>
-                        //   <img alt="example" style={{ width: '100%' }} src={previewImage} />
-                        // </Modal>
-                        // </div>
-                )}
-                     <Modal visible={previewVisible} footer={null} onCancel={this.handleCancel}>
-                           <img alt="example" style={{ width: '100%' }} src={previewImage} />
-                         </Modal>
-        </Form.Item>
-        <Form.Item wrapperCol={{ span: 12, offset: 6 }}>
-          <Button type="primary" htmlType="submit" >
-            Post
-          </Button>
-        </Form.Item>
       </Form>
     );
   }

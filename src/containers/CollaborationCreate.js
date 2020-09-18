@@ -2,7 +2,7 @@ import React from 'react';
 import Articles from '../components/Articles';
 import axios from 'axios';
 import { connect } from 'react-redux';
-import ArticleCustomForm from "../components/SessionForm"
+import ArticleCustomForm from "../components/CollaborationForm"
 import { Button } from 'antd';
 
 

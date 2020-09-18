@@ -1,0 +1,57 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&display=swap');
+
+.card-list{
+    display:flex;
+    padding: 3rem;
+    /* overflow-x: scroll; */
+}
+
+.card{
+display:flex;
+position:relative;
+flex-direction: column;
+height: 350px;
+width: 400px;
+min-width: 250px;
+padding: 1.5rem;
+
+border-radius:16px;
+background: #001529;;
+box-shadow: -1rem 1rem 3rem #000;
+
+transition: .2s;
+cursor: pointer;
+}
+.card:hover {
+    transform: translateY(-1rem);
+}
+.card:hover~.card {
+    transform: translateX(130px);
+}
+.card-header{
+    margin-bottom: auto;
+}
+
+.card-header p {
+    font-size: 14px;
+    margin: 0 0 1rem;
+    line-height: 1rem;
+    color: #d39715;
+}
+
+.card-header h2 {
+    font-size: 20px;
+    margin: .25rem 0 auto;
+    text-decoration: none;
+    color: #e7880a;
+    border: 0;
+    display: inline-block;
+}
+
+.card-image {
+    position: relative;
+    display: grid;
+    grid-template-columns: 75px;
+    align-items: center;
+
+}

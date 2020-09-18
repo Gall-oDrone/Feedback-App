@@ -14,15 +14,13 @@ import CreateHeaderMenu from "../components/CreateHeaderMenu";
 import Home from "./Home";
 import "../assets/main.css";
 import "../assets/navBar.css";
-
-const { Search } = Input;
+import VA from "../components/VerifiyAlert";
 const { Header, Content, Footer, Sider } = Layout;
 
 class CustomLayout extends React.Component {
   state = {
     collapsed: true,
     current: '1',
-    alertClosed: false
   };
 
   toggle = () => {
@@ -38,10 +36,6 @@ class CustomLayout extends React.Component {
       // <Link to={`/profile/${this.props.userId}/meetings`}>Meetings</Link>
     }
   };
-
-  handleCloseAlert = () => {
-    this.setState({alertClosed: true})
-  }
 
   componentDidUpdate(){
     if(this.props.is_active !== undefined &&
@@ -65,30 +59,11 @@ class CustomLayout extends React.Component {
     return (
      
       <Layout className="parent layout" >
-        {this.props.is_active === false &&
-          this.state.alertClosed === false ? 
-            <Header style={{ height: "30px"}}>
-              <Alert 
-                style={{ position:"inline-block", height:"inherit", paddingTop:"2px",marginBottom:"5px",borderRadius: "5px", border: "1px solid #91d5ff", textAlign:"center", width:"inherit", background:"#e6f7ff", color:"black"}}
-                closable
-                onClose={this.handleCloseAlert}
-                id="myDiv"
-                message={
-                  <p>Hi! Please confirm your email address by clicking the link in the email we sent you.
-                    <a style={{textDecoration: "underline"}} className="resend-email" href={"/confirmation/new/"}> Resend me the link, please</a>
-                  </p>
-                } 
-                type="info">
-                   {/* <p style={{ lineHeight:"30px"}}>
-                     Hi! Please confirm your email address by clicking the link in the email we sent you.
-                    <a className="resend-email" href={"/confirmation/new/"}> Resend me the link, please</a>
-                    <button id="close" onclick="document.getElementById('myDiv').style.display='none'" >X</button>
-                  </p> */}
-                </Alert>
-            </Header>
+        {this.props.is_active === false ? 
+              <VA/>
             : null 
         }
-               <Header style={{ height: "50px", padding: "0 15px"}}>
+        <Header style={{ height: "50px", padding: "0 15px"}}>
           <Menu
             theme="dark"
             mode="horizontal"
