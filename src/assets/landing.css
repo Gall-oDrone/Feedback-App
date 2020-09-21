@@ -18,14 +18,27 @@
     box-sizing: border-box;
    }
 
+   .top-header-container {
+    position: relative;
+    padding: 0 0 0px;
+    color: #02203c;
+    background: linear-gradient(-90deg,#02203c,#001528);
+    display: flex;
+    flex-direction: column;
+   }
+
    .top-banner-container {
         position: relative;
-        min-height: 540px;
+        min-height: 440px;
         padding: 0 0 60px;
         color: #02203c;
         background: linear-gradient(-90deg,#02203c,#001528);
         display: flex;
         flex-direction: column;
+    }
+
+    .top-banner-container #main  {
+        min-height: 0px;
     }
 
     .lp_header {
@@ -58,6 +71,11 @@
     margin: 0 15px 0 0;
    }
 
+   .logo-img {
+    height: 30px;
+    margin: 0 15px 0 0;
+   }
+
    #logo h1 {
         font-size: 24px;
         font-family: Jura,Helvetica,Arial,sans-serif;
@@ -86,7 +104,7 @@
    }
 
    .nb_first_mi, .nb_snd_mi, .nb_thrd_mi a {
-    border-bottom: 1px solid #fff;
+    /* border-bottom: 1px solid #fff; */
     display: inline-block;
     color: #fff !important;
     font-size: 14px;
@@ -582,6 +600,30 @@
         perspective: 700px;
     }
 
+    .first-section-meet-team-sec {
+        color: #fff;
+        max-width: 720px;
+        width: 100%;
+        margin: 0 auto;
+        padding: 0 20px;
+        text-align: center;
+        flex: 1 1 auto;
+        display: flex;
+        align-items: center;
+    }
+
+    .first-section-meet-team-con {
+        margin: 0 auto;
+    }
+
+    .first-section-meet-team-con h1 {
+        color: #fff;
+        font-size: 38px;
+        margin: 0 0 30px;
+        line-height: 1.2;
+        font-weight: 400;
+    }
+
    .second-section {
     margin:150px 0;
     padding:0 20px
@@ -996,4 +1038,76 @@
     to {
      left:100%
     }
+   }
+
+   .snd_s_con{
+        padding: 100px 20px;
+   }
+
+   .snd_s_fb {
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        align-items: flex-start;
+        max-width: 1200px;
+        margin: 0 auto 50px;
+   }
+
+   .member_con{
+        margin: 0 80px 0 0;
+        display: flex;
+        flex-direction: column;
+        flex: 1 1 50%;
+        align-items: center;
+        justify-content: center;
+        max-width: 600px;
+        box-sizing: border-box;
+   }
+
+   .member_con h2{
+    font-size: 35px;
+    margin: 0 0 10px;
+    font-weight: 400;
+    font-family: Ubuntu,Helvetica,Arial,sans-serif;
+    color: #02203c;
+    line-height: 1.3;
+   }
+
+   .member_con h4{
+    text-align: center;
+    font-size: 18px;
+    margin: 0 0 40px;
+    color: #445d6e;
+    font-family: Open Sans,Helvetica,Arial,sans-serif;
+    font-size: 18px;
+    font-weight: 400;
+   }
+
+   .member_con a {
+    text-decoration: none;
+   }
+
+   .member_con p {
+    text-align: justify;
+    font-family: Open Sans,Helvetica,Arial,sans-serif;
+    font-size: inherit;
+    margin: 0;
+    font-size: 14px;
+    line-height: 1.7;
+    color: #445d6e;
+   }
+
+   .team_pic {
+    height: 250px;
+    width: 250px;
+    border-radius: 50%;
+    box-shadow: 0 10px 30px 1px rgba(0,0,0,.3);
+    margin: 0 0 40px;
+    background-color: #d7d7db;
+    vertical-align: middle;
+   }
+
+   .svg_sm_logo {
+    margin: 0 0 -120px -20px;
+    width: 30px;
    }

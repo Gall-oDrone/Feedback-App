@@ -6,11 +6,11 @@ import {
   const collab_ops = [
     {
       type: 'Project',
-      desc: 'Build a project from scratch with other mates or join a team'
+      desc: 'Request a collaboration pull for your projects or a collaboration push to join an ongoing project'
     },
     {
       type: 'Articles',
-      desc: 'Coworking on writting articles for trending topics or for sharing opinions'
+      desc: 'Coworking on writting articles for trending topics or for sharing any opinion'
     },
     {
       type: 'Workshop',
@@ -26,29 +26,43 @@ import {
     // },
   ]
 
-  const collabTypes = ( {val} ) => {
+  const collabTypes = ( {val, props} ) => {
+      const { getFieldDecorator, getFieldValue } = props;
       return(
-        <Form.Item style={{width:"100%"}}>
-        <div className="card-list">
-          {collab_ops.map(el => {
-              return(
-                <div onClick={() => {val(el.type)} }className="card">
-                  <header className="card-header">
-                    <h2>{el.type}</h2>
-                    <p>{el.desc}</p>
-                  </header>
-                  <div className="card-image">
-                    <span class="image-cover">
-                      <img></img>
-                    </span>
-                  </div>
-                </div>
+
+        <div>
+        <h2>Choose a Collaboration Type</h2>
+          <Form.Item style={{width:"100%"}}>
+            {getFieldDecorator('project_type', {
+            preserve:true,
+                rules: [
+                  { required: true, message: 'Please select a field!', type: 'string' },
+                ],
+              })(
+              <div className="card-list">
+                {collab_ops.map(el => {
+                    return(
+                      <div onClick={() => {val(el.type)} }className="card">
+                        <header className="card-header">
+                          <h2>{el.type}</h2>
+                          <p>{el.desc}</p>
+                        </header>
+                        <div className="card-image">
+                          <span class="image-cover">
+                            <img></img>
+                          </span>
+                        </div>
+                      </div>
+                    )
+                  })
+                }
+              </div>
               )
-            })
-          }
+            }
+        </Form.Item>
         </div>
-      </Form.Item>
       )
   }
 
-export default Form.create({})(collabTypes);;
+  const WrappedArticleCreate = Form.create({})(collabTypes);;
+  export default WrappedArticleCreate

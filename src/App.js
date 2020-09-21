@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { BrowserRouter as Router } from "react-router-dom";
 import { connect } from "react-redux";
 import BaseRouter  from "./routes";
+import LPRouter from "./routes2";
 import "antd/dist/antd.css";
 
 import * as actions from "./store/actions/auth";
@@ -15,6 +16,7 @@ class App extends Component {
   }
 
   render() {
+    console.log("AUTH => ", this.props.isAuthenticated, this.props.loading)
     return (
       // <Router>
       //   <CustomLayout {...this.props}>
@@ -27,8 +29,8 @@ class App extends Component {
         <CustomLayout {...this.props}>
           <BaseRouter />
         </CustomLayout>
-        : <LandingPage>
-            {/* <BaseRouter /> */}
+        : <LandingPage {...this.props}>
+            <LPRouter />
           </LandingPage>
         }
       </Router>
@@ -38,7 +40,8 @@ class App extends Component {
 
 const mapStateToProps = state => {
   return {
-    isAuthenticated: state.auth.token !== null
+    isAuthenticated: state.auth.token !== null,
+    loading: state.auth.loading
   };
 };
 

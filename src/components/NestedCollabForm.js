@@ -17,7 +17,7 @@ import {
   DatePicker,
   TimePicker
 } from 'antd';
-import {workshopCreateURL} from "../constants";
+import {fetchDisciplinesURL, workshopCreateURL} from "../constants";
 import moment from "moment";
 import axios from 'axios';
 import lodash from "lodash";
@@ -98,482 +98,112 @@ class ArticleCustomForm extends React.Component {
   constructor(props) {
     super(props);
     this.state = { 
-      visible: false,
-      previewVisible: false,
-      loading: false,
-      previewImage: '',
-      imageThumbUrl: null,
-      imageUrl: null,
-      topic: null,
-      inquirty_type: null,
-      language: null,
-      fileList: [],
-      imagePath: '',
-      disbled_dates: [],
-      chars_left: 400,
-      panel: null,
-      open: false,
-      dateArray: [],
-      currentMonth: moment().months(),
-      monthArray: [],
-      defaultSelectedWeekday: [1, 2, 3, 4, 5, 6, 0],
-      defaultSelectedMonth: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
-      startTime:null,
-      endTime:true,
+      academic_disciplines: null,
     };
   }
 
-  dummyRequest = ({ file, onSuccess }) => {
-    setTimeout(() => {
-      onSuccess("ok");
-    }, 5000);
-  };
-
-  priceOnChange(value) {
-    console.log('changed', value);
-  }
-
-  handleTopic = value => {
-    console.log('handleTopic', value);
-    this.setState({ topic: value[0] })
-  }
-
-  handleInquiryType = value => {
-    console.log('handleInquiryType', value);
-    this.setState({ inquirty_type: value[0] })
-  }
-
-  handleLanguage = value => {
-    console.log('handleLanguage', value);
-    this.setState({ language: value[0] })
-  }
-
-  normFile = e => {
-    console.log('Upload fileList:', (e), 
-    // e.currentTarget, 
-    // e.currentTarget.ref, 
-    // e.target, 
-    // e.currentTarget,
-    // e.currentTarget.fileList,
-    // e.target.files[0],
-    // e.target.fileList,
-    // e.currentTarget.files[0]);
-    )
-    let fileList = [...e.fileList];
-    fileList = fileList.slice(-1);
-    console.log('Upload fileList:', JSON.stringify(fileList));
-    // console.log('Upload file.name:', fileList[0].name);
-    if (Array.isArray(e)) {
-      return e;
+  fetchData = () => {
+    axios.defaults.headers = {
+      "Content-Type": "application/json"
     }
-    if (fileList.length == 0){
-      this.setState({fileList: []})
-    } else {
-      this.setState({fileList: [...fileList]})
-    }
-    return e && fileList;
-  };
-
-  onTimeChange(time, timeString) {
-    console.log("EHRENO: ", time.hour(), timeString);
-    const { startTime, endTime} = this.state
-    this.setState({startTime: time, endTime:false})
-  }
-  onTimeChange2(time, timeString) {
-    console.log(time, timeString);
-    const { startTime, endTime} = this.state
-    if(startTime !== null){
-      this.setState({endTime: time})
-    }
-  }
-
-  onDateChange(date, dateString, e) {
-    console.log("puto 1: ", date, dateString, date.date());
-    let newDateArray = [...this.state.dateArray];
-    let addSelectedDateClass = "selectedDate";
-    if (lodash.includes(newDateArray, date) === false) {
-      newDateArray.push(date);
-    } else {
-      lodash.remove(newDateArray, item => {
-        return item === date;
-      });
-    }
-    this.setState(
-      {
-        dateArray: newDateArray,
-        currentMonth: date.months()
-      },
-      () => {
-        // console.log(this.state.dateArray, "当前选中的日期")
-      }
-    );
-    return (
-      <div
-        data-disabled={false}
-        data-date={dateString}
-        className={`ant-calendar-date multdate ${addSelectedDateClass}`}
-      >
-        {date.date()}
-      </div>
-    );
-  }
-
-  handleDefaultValue = currentDate => {
-    const { defaultValue = [] } = this.props;
-    this.state.dateArray = defaultValue;
-  };
-
-  handleDateArray = ({ date, ischecked }) => {
-    let newDateArray = [...this.state.dateArray];
-    if (ischecked === true) {
-      newDateArray.push(date);
-    } else {
-      lodash.remove(newDateArray, item => {
-        return item === date;
-      });
-    }
-
-    // if (dateArray.indexOf(stringDate) > -1) {
-    //   addSelectedDateClass = "selectedDate";
-    // }
-
-    this.setState(
-      {
-        dateArray: newDateArray
-      },
-      () => {
-        // console.log(this.state.dateArray, "当前选中的日期")
-      }
-    );
-  };
-
-  handlePanelChange =  (value, mod) => {
-    console.log("TIRA PA: ", value, mod)
-    this.setState({
-      currentMonth: value.months(),
-      panel: mod
-    });
-  }
-
-  handleOpenChange = open => {
-    if (open) {
+    axios.get(fetchDisciplinesURL)
+    .then(res => {
+      console.log("resData at UI: ", (res))
       this.setState({
-        open
+        academic_disciplines:res.data[0].academic_disc,
       });
-    }
-  };
-
-  handleOnSelect(value, mode) {
-    console.log("PUTO", value, mode);
+    })
+    .catch(err =>
+      console.error("ERROR 123: ", err.message));
   }
 
-  disabledDate = date => {
-    //根据选择的日期判断是否要禁用日期选择
-    //1-6为周一到周六, 周日为0
-    console.log("CHANGES: ", moment(date).format('MM-DD'), date.months(), date.days(), date, moment().year(), date.years() ===  moment().year())
-    const { defaultSelectedWeekday, defaultSelectedMonth, dateArray, currentMonth } = this.state;
-
-    if (defaultSelectedMonth.indexOf(date.months()) === -1 ) {
-      return true;
-    }
-
-    console.log("CHANGES 2.5: ", dateArray)
-    if (defaultSelectedWeekday.indexOf(date.days()) === -1) {
-      return true;
-    }
-    let index = dateArray.findIndex(dateV => moment(dateV).format('YYYY-MM-DD') === moment(date).format('YYYY-MM-DD'))
-      return index !== -1 || date < moment().endOf('day') || date.years() !==  moment().year()
-  };
-
-  disabledMonth = date => {
-    //根据选择的日期判断是否要禁用日期选择
-    //1-6为周一到周六, 周日为0
-    // console.log("CHANGES 2: ", moment(date).format('MM-DD'), date.months(), currentMonth, date.days())
-    // const { defaultSelectedWeekday, dateArray, currentMonth } = this.state;
-    // if (defaultSelectedWeekday.indexOf(date.days()) === -1 && date.months() === currentMonth) {
-    //   return true;
-    // }
-    // let index = dateArray.findIndex(dateV => moment(dateV).format('YYYY-MM-DD') === moment(date).format('YYYY-MM-DD'))
-    //   return index !== -1 || date < moment().startOf('day')
-  };
-
-  disableHour = value => {
-    console.log(value)
-    const { startTime, endTime} = this.state
-    let disabled_hrs = []
-    for(var i=0; i<=(startTime.hour()); i++){
-      disabled_hrs.push(i)
-    }
-    return disabled_hrs;
-  }
-
-  dateRender = (currentDate, today) => {
-    const { defaultSelectedWeekday, defaultSelectedMonth, panel, dateArray, monthArray } = this.state;
-    let disabled = "false";
-    let addSelectedDateClass = "";
-    let addSelectedMonthClass = "";
-    const style = {};
-    const stringDate = currentDate.format("YYYY-MM-DD");
-    const stringMonth = currentDate.format("MM");
-    // let selected = false,
-    //   disabled = false;
-    // if (currentDate.date() === 1) {
-    //   style.border = "1px solid #1890ff";
-    //   style.borderRadius = "50%";
-    // }
-    if (defaultSelectedWeekday.indexOf(currentDate.days()) === -1) {
-      disabled = "true";
-      //需要同步处理当前已选的日期, 把之前选择的日期剔除
-      lodash.remove(this.state.dateArray, item => {
-        return item === stringDate;
-      });
-    }
-
-    if (defaultSelectedMonth.indexOf(currentDate.months()) === -1) {
-      disabled = "true";
-      addSelectedMonthClass = "ant-calendar-month-panel-cell-disabled";
-      lodash.remove(this.state.monthArray, item => {
-        return item === stringMonth;
-      });
-    }
-
-    //输出日期的时候判断是否在选择的日期列表中 , 存在则添加一个样式
-    if (dateArray.indexOf(stringDate) < -1) {
-      disabled = "false";
-      addSelectedDateClass = "selectedDate";
-    }
-
-    if (monthArray.indexOf(stringMonth) < -1) {
-      disabled = "false";
-      addSelectedMonthClass = "ant-calendar-month-panel-selected-cel";
-    }
-
-    // console.log(
-    // 	"日期:",
-    // 	stringDate,
-    // 	" / 星期:",
-    // 	currentDate.day(),
-    // 	"    ",
-    // 	currentDate.days(),
-    // 	this.state.dateArray
-    // );
-
-    return (
-      <div
-        data-disabled={disabled}
-        data-date={stringDate}
-        className={`ant-calendar-date multdate ${addSelectedDateClass}`}
-        style={style}
-      >
-        {currentDate.date()}
-      </div>
-    );
-  };
-
-  //获取选择的 星期
-  onChangeSelectWeekday = checked => {
-    // console.log(checked, "onChangeSelectWeekday");
-    this.setState({
-      defaultSelectedWeekday: checked
-    });
-  };
-
-  onChangeSelectMonth = checked => {
-    // console.log(checked, "onChangeSelectWeekday");
-    this.setState({
-      defaultSelectedMonth: checked
-    });
-  };
-
-  closeDatePicker = () => {
-    const { dateArray } = this.state;
-    this.setState(
-      {
-        open: false
-      },
-      () => {
-        try {
-          this.props.onChange(dateArray);
-        } catch (error) {}
+  componentDidMount() {
+    if (this.props.token !== undefined && this.props.token !== null) {
+      if(this.props.username !== null){
+        // this.props.getProfileInfo(this.props.token, this.props.username)
+        this.fetchData()
       }
-    );
-
-    // console.log(dateArray, "最终选择的日期");
-  };
-
-  //日历控件 底下的内容
-  dateFooterContent = mode => {
-    return (
-      <div align="right">
-        <Button
-          onClick={this.closeDatePicker}
-          type="primary"
-          size="small"
-          style={{ marginRight: 10 }}
-        >
-          OK
-        </Button>
-
-        <Button
-          onClick={this.closeDatePicker}
-          style={{ marginRight: 10 }}
-          size="small"
-        >
-          Cancel
-        </Button>
-
-        <Button
-          onClick={() => {
-            this.setState({
-              defaultSelectedWeekday: [1, 2, 3, 4, 5, 6, 0],
-              defaultSelectedMonth: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
-              dateArray: []
-            });
-          }}
-          type="danger"
-          size="small"
-        >
-          Restart
-        </Button>
-      </div>
-    );
-  };
-
-
-  // disabledDate(current) {
-  //   // Can not select days before today and today
-  //   console.log("PUTO 2: ", current, moment('2020-06-16').format('YYYYMMDD')) ;
-  //   const dates = ['2020-06-16', '2020-06-20', '2020-06-11', '2020-06-18', '2020-06-25', '2020-06-04'];
-  //   let index = dates.findIndex(date => date === moment(current).format('YYYY-MM-DD'))
-  //   return index !== -1 && true
-  //   return current && current < moment().endOf('day') && !!dates.find(d=>current === moment(d));
-  // }
-
-  handleFileList = (thumbnail, fileList) => {
-    console.log("IUO")
-    console.log(JSON.stringify(thumbnail))
-    if (fileList !== null){
-      console.log(JSON.stringify(fileList[0].thumbUrl))
-      fileList[0].thumbUrl = thumbnail
-      console.log(JSON.stringify(fileList[0].thumbUrl))
-      return fileList
-    } else {
-      return
     }
   }
+  
+  componentDidUpdate(newProps) {
+    if (newProps.token !== this.props.token) {
+      if (this.props.token !== undefined && this.props.token !== null) {
+        // this.props.getProfileInfo(this.props.token, this.props.username)
+        this.fetchData()
+      } else {
+        this.props.history.push('/');
+      }
+    }    
+  }
 
-  handleCancel = () => this.setState({ previewVisible: false });
-
-  handlePreview = async file => {
-    console.log("CORSO 555555")
-    console.log(JSON.stringify(file))
-    if (!file.url && !file.preview) {
-      file.preview = await getBase64(file.originFileObj);
-    }
-    this.setState({
-      previewImage: file.url || file.preview,
-      previewVisible: true,
-    });
+  handleADChange = val => {
+    var lab = null
+    this.lab = val
+    console.log("ERMAC", val, this.lab)
+    return this.lab
   };
-
-  handleChange(event) {
-    var input = event.target.value;
-    this.setState({
-        chars_left: 400 - input.length
-    });
-  }
-
-  handleFormSubmit = async (event) => {
-    event.preventDefault();
-    const { defaultSelectedWeekday, defaultSelectedMonth, dateArray } = this.state
-    console.log("handleFormSubmit", dateArray, defaultSelectedWeekday)
-    let formData = new FormData();
-    await this.props.form.validateFields((err, values) => {
-      console.log("handleFormSubmit values: ", JSON.stringify(values));
-      const content =
-        values["content"] === undefined ? null : values["content"];
-      const topic =
-        values["topic"] === undefined ? null : values["topic"];
-      const inquiry =
-        values["topics"] === undefined ? null : values["topics"];
-      const university =
-        values["areas_experience"] === undefined ? null : values["areas_experience"];
-      const datepicker =
-        values["date-picker"] === undefined ? null : values["date-picker"];
-      const price =
-        values["price"] === undefined ? null : values["price"];
-      const max_hours =
-        values["max_hours"] === undefined ? null : values["max_hours"];
-      const start_time =
-        values["start_time"] === undefined ? null : values["start_time"];
-      const end_time =
-        values["end_time"] === undefined ? null : values["end_time"];
-      const file = 
-        values["upload"] === undefined ? null : values["upload"];
-      const postObj = {
-        user: this.props.username,
-        content: values.content,
-        topics: values.topics,
-        areas_experience: values.areas_experience,
-        datepicker: values.datepicker,       
-        price: values.price,       
-        max_hours: values.max_hours,
-        start_time: values.start_time,
-        end_time: values.end_time,
-        weekdays: defaultSelectedWeekday,
-        months: defaultSelectedMonth,
-        dates: dateArray
-      }
-      console.log("postObj: ", JSON.stringify(postObj))
-      if (file !== null){
-        formData.append("file", file[0].originFileObj)
-      }
-      formData.append("data", JSON.stringify(postObj))
-      if (!err) {
-        axios.defaults.headers = {
-          "content-type": "multipart/form-data",
-          Authorization: `Token ${this.props.token}`
-        };
-          axios.post(workshopCreateURL, 
-          formData
-          )
-            .then(res => {
-              if (res.status === 201) {
-                this.props.history.push('/');
-              }
-            })
-            .catch(error => console.error(error))
-            console.log('Error');
-        
-        console.log('Received values of form: ', values);
-      } else{
-        console.log('Received error: ', err);
-      }
-    });
-  }
 
   render() {
     console.log("props & state: "+ JSON.stringify(this.props), this.state)
     const { form } = this.props;
+    const { academic_disciplines } = this.state
     const { getFieldDecorator, getFieldValue } = this.props.form;
-    const { fileList, previewVisible, previewImage, chars_left, endTime } = this.state;
-    const contact_option = form.getFieldValue(`contact_options`);
-    const fields = getFieldValue("upload")
     const formItemLayout = {
       labelCol: { span: 6 },
       wrapperCol: { span: 14 },
     };
-    const uploadButton = (
-      <div>
-        <Icon type="plus" />
-        <div className="ant-upload-text">Upload</div>
-      </div>
-    );
+
     return (
-      <Form {...formItemLayout} onSubmit={event => this.handleFormSubmit(
-        event,
-        this.props.requestType,
-        this.props.articleID)}>
+    <div>
+      <p>Project Area Field</p>
+       <Form.Item label="Field">
+       {getFieldDecorator("project_field", {
+                  initialValue: [this.handleADChange()],
+                  rules: [
+                    { type: 'array', required: true, message: 'Please select a cateogry' },
+                  ],
+                })(<Cascader options={academic_disciplines} />)}
+        </Form.Item>
+
+        {/* <p>What are your areas of experience?</p>
+        <Form.Item label="Areas of experience">
+          {getFieldDecorator('areas_experience', {
+            initialValue: ["developer"],
+            rules: [
+              { required: true, message: 'Field required', type: 'array' },
+            ],
+          })(
+            <Select name="areas_experience" mode="tags" placeholder="Please type an area">
+                <Option value="developer">Developer</Option>
+                <Option value="designer">Designer</Option>
+                <Option value="financeExpert">Finance Expert</Option>
+                <Option value="projectManager">Project Manager</Option>
+                <Option value="productManager">Product Manager</Option>
+            </Select>,
+          )}
+        </Form.Item> */}
+      </div>
+      // </Form>
+    );
+  }
+}
+
+const WrappedArticleCreate = Form.create()(ArticleCustomForm);
+
+const mapStateToProps = state => {
+  return {
+    token: state.auth.token,
+    username: state.auth.username
+  }
+}
+export default connect(mapStateToProps)(WrappedArticleCreate);
+
+
+      // <Form {...formItemLayout} onSubmit={event => this.handleFormSubmit(
+      //   event,
+      //   this.props.requestType,
+      //   this.props.articleID)}>
 {/* 
       <p>Required Position</p>
        <Form.Item label="Position">
@@ -591,118 +221,19 @@ class ArticleCustomForm extends React.Component {
               </Select>,
             )
         }
+        </Form.Item> 
+        
+       <p>Request Type</p>
+        <Form.Item label="Request for: ">
+          {getFieldDecorator('request_type', {
+                rules: [
+                  { required: true, message: 'Please select a field!', type: 'string' },
+                ],
+              })(
+            <Radio.Group defaultValue="a" buttonStyle="solid">
+              <Radio.Button value="a"> My project</Radio.Button>
+              <Radio.Button value="b"> An user project </Radio.Button>
+            </Radio.Group>,
+              )
+            }
         </Form.Item> */}
-
-      <p>Project Field</p>
-       <Form.Item label="Field">
-        {getFieldDecorator('fields', {
-              rules: [
-                { required: true, message: 'Please select a field!', type: 'array' },
-              ],
-            })(
-              <Select name="topics" onChange={this.onChange} placeholder="Please select a field">
-                  <Option value="economics">Economics</Option>
-                  <Option value="finance">Finance</Option>
-                  <Option value="machine_learning">Machine Learning</Option>
-                  <Option value="a_i">Artificial Inteligence</Option>
-                  <Option value="big_data">Big Data</Option>
-                  <Option value="biology">Biology</Option>
-                  <Option value="music">Music</Option>
-                  <Option value="law">Law</Option>
-                  <Option value="medicine">Medicine</Option>
-              </Select>,
-            )
-        }
-        </Form.Item>
-
-        <p>What are your areas of experience?</p>
-        <Form.Item label="Areas of experience">
-          {getFieldDecorator('areas_experience', {
-            rules: [
-              { required: true, message: 'Field required', type: 'array' },
-            ],
-          })(
-            <Select name="areas_experience" mode="tags" placeholder="Please type an area">
-                <Option value="developer">Developer</Option>
-                <Option value="designer">Designer</Option>
-                <Option value="financeExpert">Finance Expert</Option>
-                <Option value="projectManager">Project Manager</Option>
-                <Option value="productManager">Product Manager</Option>
-            </Select>,
-          )}
-        </Form.Item>
-
-        <div>
-
-        <Form.Item label="Availability">
-          <Radio.Group defaultValue="a" buttonStyle="solid">
-            <Radio.Button value="season">Seasonal</Radio.Button>
-            <Radio.Button value="full">Full Time</Radio.Button>
-          </Radio.Group>
-        </Form.Item>
-
-        <Form layout="inline">
-          <Form.Item label="Datepicker" />
-          <Form.Item>
-            <CheckboxGroup
-              key={Math.random()}
-              defaultValue={this.state.defaultSelectedWeekday}
-              onChange={this.onChangeSelectWeekday}
-            >
-              <Checkbox value={1}>Mo</Checkbox>
-              <Checkbox value={2}>Tu</Checkbox>
-              <Checkbox value={3}>We</Checkbox>
-              <Checkbox value={4}>Th</Checkbox>
-              <Checkbox value={5}>Fr</Checkbox>
-              <Checkbox value={6}>Sa</Checkbox>
-              <Checkbox value={0}>Su</Checkbox>
-            </CheckboxGroup>
-          </Form.Item>
-          <Form.Item>
-            <CheckboxGroup
-              key={Math.random()}
-              defaultValue={this.state.defaultSelectedMonth}
-              onChange={this.onChangeSelectMonth}
-            >
-              <Checkbox value={0}>Ja</Checkbox>
-              <Checkbox value={1}>Fe</Checkbox>
-              <Checkbox value={2}>Ma</Checkbox>
-              <Checkbox value={3}>Ap</Checkbox>
-              <Checkbox value={4}>May</Checkbox>
-              <Checkbox value={5}>Ju</Checkbox>
-              <Checkbox value={6}>Jl</Checkbox>
-              <Checkbox value={7}>Au</Checkbox>
-              <Checkbox value={8}>Se</Checkbox>
-              <Checkbox value={9}>Oc</Checkbox>
-              <Checkbox value={10}>No</Checkbox>
-              <Checkbox value={11}>De</Checkbox>
-            </CheckboxGroup>
-          </Form.Item>
-        </Form>
-        <div className="">
-          <DatePicker
-            disabledDate={this.disabledDate}
-            showToday={false}
-            open={this.state.open}
-            onOpenChange={this.handleOpenChange}
-            onPanelChange={this.handlePanelChange}
-            onChange={this.onDateChange.bind(this)}
-            dateRender={this.dateRender}
-            renderExtraFooter={this.dateFooterContent}
-          />
-        </div>
-      </div>
-      </Form>
-    );
-  }
-}
-
-const WrappedArticleCreate = Form.create()(ArticleCustomForm);
-
-const mapStateToProps = state => {
-  return {
-    token: state.auth.token,
-    username: state.auth.username
-  }
-}
-export default connect(mapStateToProps)(WrappedArticleCreate);

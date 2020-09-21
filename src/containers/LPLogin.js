@@ -24,6 +24,7 @@ class NormalLoginForm extends React.Component {
 
   handleSubmit = e => {
     e.preventDefault();
+    this.props.hl(true)
     this.props.form.validateFields((err, values) => {
       if (!err) {
         this.props.onAuth(values.userName, values.password);

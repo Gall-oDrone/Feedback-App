@@ -251,8 +251,16 @@ export const trelloCardChecklistTaskListURL = username => `${endpoint}/boards/tr
 export const trelloCardChecklistTaskDetailURL = roomName => `${endpoint}/boards/trelloCard/checklist/task/detail/${roomName}`
 export const trelloCardChecklistTaskUpdateURL = roomName => `${endpoint}/boards/trelloCard/checklist/task/update/${roomName}`
 
+export const collabListURL = `${endpoint}/collaborations/`
+export const collabCreateURL = `${endpoint}/collaborations/create/`
+export const collabDetailURL = (collabID) => `${endpoint}/collaborations/${collabID}`
+export const collabProfileDetailURL = (collabID, userID) => `${endpoint}/collaborations/detail/${collabID}/${userID}`
+export const collabUpdateURL = (collabID) => `${endpoint}/collaborations/${collabID}/update/`
+export const collabSentRequestURL = (collabID) => `${endpoint}/collaborations/sent-request/${collabID}`
+
 export const fetchDegreesAndCoursesURL = `${endpoint}/users/courses-degrees/`
 export const fetchCategoriesAndFeedbacksURL = `${endpoint}/articles/categories-f_t/`
+export const fetchDisciplinesURL = `${endpoint}/collaborations/ad-list/`
 
 // export const walletURL = username => `${endpoint}/wallet/userlist/${username}`
 export const walletBalanceURL = username => `${endpoint}/wallet/balance/${username}`

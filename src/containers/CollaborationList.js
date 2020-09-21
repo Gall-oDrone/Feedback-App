@@ -1,8 +1,8 @@
 import React from 'react';
-import Articles from '../components/Sessions';
-import Filter from "./SessionFilterForm";
+import Articles from '../components/Collaborations';
+import Filter from "./CollaborationFilterForm";
 import axios from 'axios';
-import {sessionListURL} from "../constants";
+import {collabListURL} from "../constants";
 
 
 class ArticleList extends React.Component {
@@ -13,7 +13,7 @@ class ArticleList extends React.Component {
 
 
     fetchArticles = () => {
-        axios.get(sessionListURL)
+        axios.get(collabListURL)
         .then(res => {
             this.setState({
                 articles: res.data

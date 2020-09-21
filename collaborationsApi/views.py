@@ -13,9 +13,10 @@ from rest_framework.status import(
     HTTP_400_BAD_REQUEST
 )
 from rest_framework import permissions, generics
-from .models import CollaborationTypes, RequestStatus, Collaboration, CollaborationWorkFlow, CollaborationRequest
+from .models import CollaborationTypes, RequestStatus, Collaboration, CollaborationWorkFlow, CollaborationRequest, AcademicDisciplines
 from users.models import User
-from .serializers import CollaborationSerializer
+from .constants import ACADEMIC_DISCIPLINES_CHOICES
+from .serializers import CollaborationSerializer, CollabRequestSerializer, academicDiscListSerializer
 # CollaborationFeatureSerializer, VideoFormSerializer, CommentSerializer, LikeSerializer, LikeListSerializer, RatingSerializer, CommentListSerializer, ImageFormSerializer, ProfileCollaborationListSerializer, Cat_FT_Serializer
 from analytics.models import View
 from django.http import Http404
@@ -113,9 +114,18 @@ class CollaborationDetailView(RetrieveAPIView):
     serializer_class = CollaborationSerializer
     permission_classes = (permissions.AllowAny,)
 
+    def get_object(self, *args, **kwargs):
+        try:
+            collabId = self.kwargs.get('pk')
+            meetingList = Collaboration.objects.get(id=collabId)
+            # SessionSerializer(meetingList)
+            return meetingList
+        except ObjectDoesNotExist:
+            raise Http404("There was an error, please try again!")
+            return Response({"message": "There was an error, please try again!"}, status=HTTP_400_BAD_REQUEST)
+
 
 class CollaborationCreateView(CreateAPIView):
-    parser_classes = (MultiPartParser, FormParser)
     queryset = Collaboration.objects.all()
     print("queryset Create view")
     ##print(queryset)
@@ -127,12 +137,10 @@ class CollaborationCreateView(CreateAPIView):
         print("request", request)
         print("req.data",request.data)
         print("req.Files",request.FILES)
-        request_data = json.loads((self.request.data["data"]))
-        request_files = (self.request.FILES)
-        serializer = CollaborationSerializer(data=request_data)
+        serializer = CollaborationSerializer(data=request.data)
         serializer.is_valid()
         print(serializer.is_valid())
-        create_article = serializer.create(request_data, request_files)
+        create_article = serializer.create(request.data)
         if create_article:
             return Response(status=HTTP_201_CREATED)
         return Response(status=HTTP_400_BAD_REQUEST)
@@ -174,6 +182,37 @@ class CollaborationUpdateView(UpdateAPIView):
         if update_article:
             return Response(status=HTTP_201_CREATED)
         return Response(status=HTTP_400_BAD_REQUEST)
+
+class CollabRequestView(CreateAPIView):
+    queryset = CollaborationRequest.objects.all()
+    serializer_class = CollabRequestSerializer
+    permission_classes = (permissions.IsAuthenticated,)
+        
+    def post(self, request, *args, **kwargs):
+        serializer = CollabRequestSerializer(data=request.data)
+        serializer.is_valid()
+        print(serializer.is_valid())
+        create_article = serializer.create(request.data)
+        if create_article:
+            return Response(status=HTTP_201_CREATED)
+        return Response(status=HTTP_400_BAD_REQUEST)
+
+class AcademicDisciplinesListView(ListAPIView):
+    serializer_class = (academicDiscListSerializer)
+    permission_classes = (permissions.AllowAny,)
+
+    if(len(AcademicDisciplines.objects.all()) == 0):
+        for ad in ACADEMIC_DISCIPLINES_CHOICES:
+            for ad_sub_cat in ad:            
+                if(type(ad_sub_cat) is list):
+                    for disc in ad_sub_cat:
+                        ads = AcademicDisciplines.objects.create(a_d=disc[0])
+    
+    def get_queryset(self):
+        print("Lacking")
+        qs = {"data"}
+        print(qs)
+        return qs
 
 # class ProfileCollaborationListView(RetrieveAPIView):
 #     queryset = Collaboration.objects.all()

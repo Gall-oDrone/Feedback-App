@@ -5,10 +5,11 @@ from projectsApi.models import Project
 from articlesApi.models import Article
 from workshopsApi.models import Workshop
 from boardsApi.models import Board, BoardDetail, Cards
+from .constants import ACADEMIC_DISCIPLINES_CHOICES 
 
 class CollaborationTypes(models.Model):
     PROJECT = 'project'
-    WORKSHOP = 'worokshop'
+    WORKSHOP = 'workshop'
     ARTICLE = 'article'
     RESEARCH = 'research'
     VOLUNTEERING = 'volunteering'
@@ -19,10 +20,51 @@ class CollaborationTypes(models.Model):
         (RESEARCH, ('research')),
         (VOLUNTEERING, ('volunteering')),
     ]
-    collaboration_type=models.CharField(max_length=15, choices=CHOICES, blank=True)
+    collaboration_type=models.CharField(max_length=50, choices=CHOICES, blank=True)
 
     def __str__(self):
         return self.collaboration_type
+
+class AcademicDisciplines(models.Model):
+    ACADEMIC_DISCIPLINES_CHOICES
+    a_d=models.CharField(max_length=100, choices=ACADEMIC_DISCIPLINES_CHOICES, blank=True)
+
+    def __str__(self):
+        return self.a_d
+
+# class IndustryFields(models.Model):
+#     Agriculture = 'Agriculture',
+#     Artist = 'Artist',
+#     Business = 'Business',
+#     Communications = 'Communications',
+#     Education = 'Education',
+#     Engineering = 'Engineering',
+#     Environment = 'Environment',
+#     Financial = 'Financial',
+#     Government = 'Government',
+#     Health = 'Health',
+#     Legal = 'Legal',
+#     Manufacturing = 'Manufacturing',
+#     Service = 'Service S
+#     Technical = 'Technical',
+#     Technology = 'Technology ',
+#     INDUSTRY_FIELDS_CHOICES
+#     i_f=models.CharField(max_length=15, choices=INDUSTRY_FIELDS_CHOICES, blank=True)
+
+#     def __str__(self):
+#         return self.i_f
+
+# class CollaborationCategory(models.Model):
+#     Academic = 'project'
+#     Industry = 'industry'
+#     CHOICES = [
+#         (Academic, ('Academic')),
+#         (Industry, ('Industry')),
+#     ]
+#     collaboration_cateogry=models.CharField(max_length=15, choices=CHOICES, blank=True)
+
+#     def __str__(self):
+#         return self.collaboration_cateogry
 
 # class CollaborationTopic(models.Model):
 #     TECHNICAL = 'Machine Learning'
@@ -150,7 +192,9 @@ class ColaborationStatus(models.Model):
 
 class Collaboration(models.Model):
     collaboration_type = models.ForeignKey(CollaborationTypes, on_delete=models.CASCADE, null=True, blank=True)
+    collaboration_ad = models.ForeignKey(AcademicDisciplines, on_delete=models.CASCADE, null=True, blank=True)
     collaborators = models.ManyToManyField(settings.AUTH_USER_MODEL)
+    timestamp = models.DateTimeField(auto_now_add=True, null=True)
     # desired_skills = models.ManyToManyField(CollabSkills)
     prefered_universities = models.ForeignKey(Universities, on_delete=models.CASCADE, null=True, blank=True)
     prefered_degree = models.ForeignKey(Degree, on_delete=models.CASCADE, null=True, blank=True)
@@ -165,7 +209,8 @@ class CollaborationWorkFlow(models.Model):
     Card = models.ForeignKey(Cards, on_delete=models.CASCADE, null=True, blank=True)
 
 class CollaborationRequest(models.Model):
+    collaboration = models.ForeignKey(Collaboration, related_name="req_collab", on_delete=models.CASCADE, null=True, blank=True)
     requester = models.ForeignKey(settings.AUTH_USER_MODEL, related_name="req_requester", on_delete=models.CASCADE, null=True)
     recipient = models.ForeignKey(settings.AUTH_USER_MODEL, related_name="req_recipient", on_delete=models.CASCADE, null=True)
-    timestamp = models.DateTimeField(auto_now_add=False, null=True)
+    timestamp = models.DateTimeField(auto_now_add=True, null=True)
     status = models.ForeignKey(RequestStatus, on_delete=models.CASCADE, null=True, blank=True)

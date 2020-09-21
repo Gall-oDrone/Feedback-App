@@ -4,7 +4,7 @@ import {
   Form,
   Button,
 } from 'antd';
-import {workshopCreateURL} from "../constants";
+import {collabCreateURL} from "../constants";
 import axios from 'axios';
 import Types from "./CollaborationTypes";
 import NestedForms from "./NestedCollabForm";
@@ -21,71 +21,40 @@ class ArticleCustomForm extends React.Component {
   }
 
   handleType = (val) => {
+    const { setFieldsValue } = this.props.form;
+    setFieldsValue({project_type:val})
     this.setState({type: val})
   }
 
   handleFormSubmit = async (event) => {
     event.preventDefault();
-    const { defaultSelectedWeekday, defaultSelectedMonth, dateArray } = this.state
-    console.log("handleFormSubmit", dateArray, defaultSelectedWeekday)
-    let formData = new FormData();
     await this.props.form.validateFields((err, values) => {
       console.log("handleFormSubmit values: ", JSON.stringify(values));
-      const content =
-        values["content"] === undefined ? null : values["content"];
-      const topic =
-        values["topic"] === undefined ? null : values["topic"];
-      const inquiry =
-        values["topics"] === undefined ? null : values["topics"];
-      const university =
+      const type =
+        values["project_type"] === undefined ? null : values["project_type"];
+      const field =
+        values["project_field"] === undefined ? null : values["project_field"];
+      const experience =
         values["areas_experience"] === undefined ? null : values["areas_experience"];
-      const datepicker =
-        values["date-picker"] === undefined ? null : values["date-picker"];
-      const price =
-        values["price"] === undefined ? null : values["price"];
-      const max_hours =
-        values["max_hours"] === undefined ? null : values["max_hours"];
-      const start_time =
-        values["start_time"] === undefined ? null : values["start_time"];
-      const end_time =
-        values["end_time"] === undefined ? null : values["end_time"];
-      const file = 
-        values["upload"] === undefined ? null : values["upload"];
       const postObj = {
         user: this.props.username,
-        content: values.content,
-        topics: values.topics,
-        areas_experience: values.areas_experience,
-        datepicker: values.datepicker,       
-        price: values.price,       
-        max_hours: values.max_hours,
-        start_time: values.start_time,
-        end_time: values.end_time,
-        weekdays: defaultSelectedWeekday,
-        months: defaultSelectedMonth,
-        dates: dateArray
+        type: type,
+        field: field,
+        experience: experience,
       }
-      console.log("postObj: ", JSON.stringify(postObj))
-      if (file !== null){
-        formData.append("file", file[0].originFileObj)
-      }
-      formData.append("data", JSON.stringify(postObj))
       if (!err) {
         axios.defaults.headers = {
-          "content-type": "multipart/form-data",
+          "content-type": "application/json",
           Authorization: `Token ${this.props.token}`
         };
-          axios.post(workshopCreateURL, 
-          formData
-          )
+          axios.post(collabCreateURL, postObj)
             .then(res => {
               if (res.status === 201) {
                 this.props.history.push('/');
               }
             })
             .catch(error => console.error(error))
-            console.log('Error');
-        
+            console.log('Error');        
         console.log('Received values of form: ', values);
       } else{
         console.log('Received error: ', err);
@@ -96,8 +65,7 @@ class ArticleCustomForm extends React.Component {
   render() {
     console.log("props & state: "+ JSON.stringify(this.props), this.state)
     const { form } = this.props;
-    const { getFieldDecorator, getFieldValue } = this.props.form;
-    const { visible, type } = this.state;
+    const { type } = this.state;
     const formItemLayout = {
       labelCol: { span: 6 },
       wrapperCol: { span: 14 },
@@ -109,8 +77,8 @@ class ArticleCustomForm extends React.Component {
         this.props.requestType,
         this.props.articleID)}>
           {type ?
-            <NestedForms/>
-            :<Types val={this.handleType}/>
+            <NestedForms form={form}/>
+            :<Types props={form} val={this.handleType}/>
           }
 
         <Form.Item wrapperCol={{ span: 12, offset: 6 }}>

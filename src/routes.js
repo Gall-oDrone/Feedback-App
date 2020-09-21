@@ -2,8 +2,6 @@ import React from "react";
 import { Route } from "react-router-dom";
 import Hoc from "./hoc/hoc";
 
-import LandingPage from "./containers/LandingPage";
-
 import Login from "./containers/Login";
 import Signup from "./containers/Signup";
 import Profile from "./containers/Profile";
@@ -120,7 +118,6 @@ import CollaborationDetail from "./containers/CollaborationDetail";
 
 const BaseRouter = () => (
   <Hoc>
-    <Route exact path="/" component={LandingPage} />
     <Route exact path="/create/" component={AssignmentChoices} />
     <Route exact path="/articles/" component={ArticleList} />
 

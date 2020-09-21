@@ -1,6 +1,7 @@
 import React from 'react';
-import { List, Avatar, Icon } from 'antd';
+import { List, Avatar, Icon, Tag } from 'antd';
 import {media_endpoint} from "../constants"
+import "../assets/session.css"
 
 function handleDegree(degree){
     if(degree.doctorate !== null){
@@ -16,6 +17,7 @@ function handleDegree(degree){
 }
 
 const Articles = (props) => {
+    console.log("ehreno", props)
     return (
             <List
                 itemLayout="vertical"
@@ -29,17 +31,15 @@ const Articles = (props) => {
                 dataSource={props.data}
                 renderItem={item => (
                     <List.Item
-                        key={item.title}
+                        key={item.id}
                         extra={
-                            <a href={`/sessions/${item.id}`}>
                                   <div id="session-div-1">
                                     <img
                                         className="contain"
                                         alt="logo"
-                                        src={item.session_photo}
+                                        src={item.user_info.profile_avatar}
                                     />
                                 </div>
-                            </a>
                             // <video width="250" controls >
                             //     <source src={`${media_endpoint}/${item.video}`} type="video/mp4"/>
                             //     Your browser does not support HTML5 video.
@@ -47,12 +47,11 @@ const Articles = (props) => {
                         }
                     >
                         <List.Item.Meta
-                            title={<a href={`/sessions/${item.id}`}>{item.user_name.name}</a>}
-                            description={`$ ${item.price_per_hour} per hour`}
+                            title={<a href={`/collaboration/${item.id}`}>{item.user_info.name}</a>}
                         />
-                        {/* <p>{`${item.user_name.name} `}</p> */}
-                        <p>{`From: ${item.user_name.university} `}</p>
-                        <p>{`Degree: ${handleDegree(item.user_name)} `}</p>
+                        <p>Type: <Tag>{`${item.collaboration_type.toUpperCase()}`}</Tag></p>
+                        <p>Field: <Tag>{`${item.collaboration_ad.toUpperCase()}`}</Tag></p>
+                        <p>From: <Tag>{`${item.user_info.university} `}</Tag></p>
                     </List.Item>
                 )}
             />
