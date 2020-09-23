@@ -24,6 +24,8 @@ export const endpoint = `${localhost}${apiURL}`
 const image_endpoint = `${files}${imageURL}`
 export const media_endpoint = `${files}${mediaURL}`
 
+export const homeListURL = `${endpoint}/filter/featured_list/`;
+
 export const productListURL = `${endpoint}/paymentsApi/products/`;
 export const productDetailURL = id => `${endpoint}/payments/products/${id}/`;
 export const directBuyURL = `${endpoint}/payments/direct-buy/`;
@@ -256,11 +258,12 @@ export const collabCreateURL = `${endpoint}/collaborations/create/`
 export const collabDetailURL = (collabID) => `${endpoint}/collaborations/${collabID}`
 export const collabProfileDetailURL = (collabID, userID) => `${endpoint}/collaborations/detail/${collabID}/${userID}`
 export const collabUpdateURL = (collabID) => `${endpoint}/collaborations/${collabID}/update/`
-export const collabSentRequestURL = (collabID) => `${endpoint}/collaborations/sent-request/${collabID}`
+export const collabCreateRequestURL = (collabID) => `${endpoint}/collaborations/${collabID}/create-request/`
 
 export const fetchDegreesAndCoursesURL = `${endpoint}/users/courses-degrees/`
 export const fetchCategoriesAndFeedbacksURL = `${endpoint}/articles/categories-f_t/`
 export const fetchDisciplinesURL = `${endpoint}/collaborations/ad-list/`
+export const fetchCollabAllChoices = `${endpoint}/collaborations/all-list/`
 
 // export const walletURL = username => `${endpoint}/wallet/userlist/${username}`
 export const walletBalanceURL = username => `${endpoint}/wallet/balance/${username}`

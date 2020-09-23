@@ -16,6 +16,20 @@ class CommentReplySerializer(serializers.ModelSerializer):
         model = CommentReply
         fields = ("id", "comment")
 
+class FeaturedWorkshopSerializer(serializers.ModelSerializer):
+    overview = StringSerializer(many=False)
+    categories = StringSerializer(many=True)
+    title = StringSerializer(many=False)
+    image = serializers.SerializerMethodField()
+    class Meta:
+        model = Workshop
+        fields = ('id', 'title', 'overview', 'categories', 'image')
+    
+    def get_image(self, obj):
+        request = self.context.get('request')
+        photo_url = obj.image.url
+        return request.build_absolute_uri(photo_url)
+
 class WorkshopSerializer(serializers.ModelSerializer):
     categories = StringSerializer(many=True)
     overview = StringSerializer(many=False)

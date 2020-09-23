@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import { Menu, Card, Button, DatePicker, TimePicker, Form, Modal, Skeleton, message, Divider, List, Tabs, Row, Col, Icon} from "antd";
 import { Link, withRouter } from "react-router-dom";
 import Checkout from "../components/MeetingCheckout";
-import { collabDetailURL, collabSentRequestURL } from "../constants";
+import { collabDetailURL, collabCreateRequestURL } from "../constants";
 import * as actions from "../store/actions/auth";
 import { authAxios } from '../utils';
 import "../assets/session.css"
@@ -38,52 +38,29 @@ class ArticleDetail extends React.Component {
             });
         }
 
-    handleSubmit = async e => {
-        e.preventDefault()
-        this.setState({action_send: true})
-        this.props.form.validateFields((err, values) => {
-        console.log("handleFormSubmit values: ", JSON.stringify(values));
-        const hrs =
-            values["hrs"] === undefined ? null : values["hrs"];
-        const content =
-            values["date_picker"] === undefined ? null : values["date_picker"];
-        const topic =
-            values["time_picker_start"] === undefined ? null : values["time_picker_start"];
-        const inquiry =
-            values["time_picker_end"] === undefined ? null : values["time_picker_end"];
-
+    handleSubmit = () => {
+        this.setState({action_send: true, loading: true})
         const postObj = {
             user: this.props.username,
-            hrs: 1,
-            session_id: this.props.match.params.sessionID,
-            date: values.date_picker,
-            start_time: this.handleDateFormat(topic, content),
-            end_time: this.handleDateFormat(inquiry, content),  
+            recipient: this.state.article.user_info.profile_username,
+            collabId: this.props.match.params.collabID
         }
-        console.log("handleFormSubmit postObj: ", postObj.start_time.month, postObj);
-        if (!err) {
-            axios.defaults.headers = {
-                "Content-Type": "application/json",
-                Authorization: `Token ${this.props.token}`
-            }
-            axios.post(collabSentRequestURL, 
-            postObj
-            )
-                .then(res => {
-                    if (res.status === 200) {
-                       this.setState({ orderId: res.data, loading: false, action_send: true})
-                     } else {
-                       this.setState({ loading: false})
-                     }
-                })
-                .catch(error => console.error(error))
-                console.log('Error');
-            
-            console.log('Received values of form: ', values);
-        } else{
-            console.log('Received error: ', err);
+        console.log("elv: ", postObj)
+        axios.defaults.headers = {
+            "Content-Type": "application/json",
+            Authorization: `Token ${this.props.token}`
         }
-        });
+        axios.post(collabCreateRequestURL(postObj.collabId), postObj)
+            .then(res => {
+                if (res.status === 201) {
+                   this.setState({loading: false, action_send: false})
+                 }
+            })
+            .catch(error => {
+                console.error(error) 
+                this.setState({loading: false, action_send: false})
+            })
+            console.log('Error');
     }
 
 
@@ -94,21 +71,21 @@ class ArticleDetail extends React.Component {
         const {user_info} = this.state.article
         return (
             <div>
-                <Card title={user_info ? <a className="td" href={`/profile-page/${user_info.profile_username}`}>{user_info.name}</a>:null}>
-                    <Row>
-                        <Col span={15}>
-                            <div id="session-div-2">
-                            <img
-                                className="contain"
-                                alt="logo"
-                                src={user_info ? user_info.profile_avatar: null}
-                            />
-                             <Button type="primary" htmlType="submit" loading={loading} disabled={action_send} >
-                            Send Request 
-                        </Button>
+                <Card>
+                    <Row gutter={[16, 48]}>
+                        <Col style={{justifyContent:"center"}} span={15}>
+                            <div style={{display:"flex", justifyContent:"center", width:"100%"}}>
+                                <div id="session-div-2">
+                                    <img
+                                        className="contain"
+                                        alt="logo"
+                                        src={user_info ? user_info.profile_avatar: null}
+                                    />
+                                </div>
                             </div>
                         </Col>
                         <Col span={9}>
+                            {user_info ? <a className="td" href={`/profile-page/${user_info.profile_username}`}><h2>{user_info.name}</h2></a>:null}
                             <Tabs defaultActiveKey="1" tabPosition={"right"}>
                                   <TabPane tab="University" key="1">
                                     <p>{user_info ? user_info.university : null}</p>
@@ -129,6 +106,13 @@ class ArticleDetail extends React.Component {
                             </Tabs>
                         </Col>
                     </Row>
+                    <div style={{display:"flex", justifyContent:"center", width:"100%"}}>
+                        <div >
+                            <Button onClick={() => this.handleSubmit()} loading={loading} disabled={action_send} >
+                            Send Request 
+                            </Button>
+                        </div>
+                    </div>
                 </Card>
             </div>
             
@@ -140,7 +124,8 @@ const WrappedArticleCreate = Form.create()(ArticleDetail);
 
 const mapStateToProps = state => {
     return {
-        token: state.auth.token
+        token: state.auth.token,
+        username: state.auth.username
     }
 }
 export default withRouter(connect(mapStateToProps)(WrappedArticleCreate));

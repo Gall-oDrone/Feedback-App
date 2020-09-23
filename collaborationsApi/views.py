@@ -13,10 +13,11 @@ from rest_framework.status import(
     HTTP_400_BAD_REQUEST
 )
 from rest_framework import permissions, generics
-from .models import CollaborationTypes, RequestStatus, Collaboration, CollaborationWorkFlow, CollaborationRequest, AcademicDisciplines
-from users.models import User
-from .constants import ACADEMIC_DISCIPLINES_CHOICES
-from .serializers import CollaborationSerializer, CollabRequestSerializer, academicDiscListSerializer
+from .models import CollaborationTypes, RequestStatus, CollaborationCategory, Collaboration, CollaborationWorkFlow, CollaborationRequest, AcademicDisciplines, IndustryFields, RequestCollabPosition, RequestStatus, ColaborationStatus
+from notificationsApi.models import Notification
+from users.models import User, Profile
+from .constants import *
+from .serializers import CollaborationSerializer, CollabRequestSerializer, academicDiscListSerializer, ChoicesListSerializer
 # CollaborationFeatureSerializer, VideoFormSerializer, CommentSerializer, LikeSerializer, LikeListSerializer, RatingSerializer, CommentListSerializer, ImageFormSerializer, ProfileCollaborationListSerializer, Cat_FT_Serializer
 from analytics.models import View
 from django.http import Http404
@@ -187,6 +188,9 @@ class CollabRequestView(CreateAPIView):
     queryset = CollaborationRequest.objects.all()
     serializer_class = CollabRequestSerializer
     permission_classes = (permissions.IsAuthenticated,)
+    if(len(RequestStatus.objects.all()) == 0):
+        for status in RequestStatus.CHOICES:
+            status = RequestStatus.objects.create(req_status=status[0])
         
     def post(self, request, *args, **kwargs):
         serializer = CollabRequestSerializer(data=request.data)
@@ -194,6 +198,24 @@ class CollabRequestView(CreateAPIView):
         print(serializer.is_valid())
         create_article = serializer.create(request.data)
         if create_article:
+            #SEND NOTIFICATION
+            user = User.objects.get(username=request.data["user"])
+            recipient = self.request.data.get("recipient")
+            notify = Notification()
+            notify.user = user
+            notify.actor = recipient
+            notify.verb = "Sent"
+            notify.action = "Collaboration Response"
+            notify.target = "1"
+            notify.description = f"{user.username} wants to collaborate with you."
+            notify.save()
+            notification_counter = Profile.objects.update_or_create(
+                user_id=user,
+                defaults={"notification_counter": CollaborationRequest.objects.filter(
+                    recipient=User.objects.get(username=recipient))
+                    .count(),
+                })
+
             return Response(status=HTTP_201_CREATED)
         return Response(status=HTTP_400_BAD_REQUEST)
 
@@ -208,6 +230,35 @@ class AcademicDisciplinesListView(ListAPIView):
                     for disc in ad_sub_cat:
                         ads = AcademicDisciplines.objects.create(a_d=disc[0])
     
+    def get_queryset(self):
+        print("Lacking")
+        qs = {"data"}
+        print(qs)
+        return qs
+
+class AllCascadeListView(ListAPIView):
+    serializer_class = (ChoicesListSerializer)
+    permission_classes = (permissions.AllowAny,)
+
+    if(len(AcademicDisciplines.objects.all()) == 0):
+        for ad in ACADEMIC_DISCIPLINES_CHOICES:
+            for ad_sub_cat in ad:            
+                if(type(ad_sub_cat) is list):
+                    for disc in ad_sub_cat:
+                        ads = AcademicDisciplines.objects.create(a_d=disc[0])
+    if(len(IndustryFields.objects.all()) == 0):
+        for indflds in INDUSTRY_FIELDS_CHOICES:
+            indfs = IndustryFields.objects.create(i_f=indflds[0])
+    if(len(RequestCollabPosition.objects.all()) == 0):
+        for col_pos in COLLABORATION_POSITIONS:
+            cpos = RequestCollabPosition.objects.create(collab_pos=col_pos[0])
+    if(len(ColaborationStatus.objects.all()) == 0):
+        for c_stat in ColaborationStatus.CHOICES:
+            cs = ColaborationStatus.objects.create(collaboration_status=c_stat[0])
+    if(len(CollaborationCategory.objects.all()) == 0):
+        for c_stat in CollaborationCategory.CHOICES:
+            cs = CollaborationCategory.objects.create(collaboration_cateogry=c_stat[0])
+
     def get_queryset(self):
         print("Lacking")
         qs = {"data"}

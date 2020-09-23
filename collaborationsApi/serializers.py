@@ -1,7 +1,7 @@
 from rest_framework import serializers
-from .models import CollaborationTypes, RequestStatus, Collaboration, CollaborationWorkFlow, CollaborationRequest, AcademicDisciplines
+from .models import CollaborationTypes, RequestStatus, Collaboration, CollaborationWorkFlow, CollaborationRequest, AcademicDisciplines, ColaborationStatus, CollaborationCategory, IndustryFields, RequestCollabPosition
 from users.models import User, ProfileInfo
-from .constants import ACADEMIC_DISCIPLINES_CHOICES
+from .constants import *
 from users.serializers import ProfileSerializer, ProfileInfoSerializer
 from django.core.files.storage import FileSystemStorage
 from django.contrib.auth import get_user_model
@@ -20,10 +20,17 @@ class CommentReplySerializer(serializers.ModelSerializer):
     #     model = CommentReply
     #     fields = ("id", "comment")
 
+class FeaturedCollaborationSerializer(serializers.ModelSerializer):
+    collaboration_type = StringSerializer(many=False)
+    class Meta:
+        model = Collaboration
+        fields = ('id', 'collaboration_type')
+
 class CollaborationSerializer(serializers.ModelSerializer):
     collaboration_type = StringSerializer(many=False)
-    collaborators = StringSerializer(many=False)
     collaboration_ad = StringSerializer(many=False)
+    collaboration_cat = StringSerializer(many=False)
+    collaboration_if = StringSerializer(many=False)
     timesamp = StringSerializer(many=False)
     user_info = serializers.SerializerMethodField()
     
@@ -44,7 +51,7 @@ class CollaborationSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Collaboration
-        fields = ('id', 'collaboration_type', "timesamp", "collaboration_ad", "collaborators", "user_info")
+        fields = ('id', 'collaboration_type', "timesamp", "collaboration_ad", "collaboration_cat", "collaboration_if", "user_info")
 
     def get_feedback_forms(self, obj):
         # obj is an assignment
@@ -63,9 +70,14 @@ class CollaborationSerializer(serializers.ModelSerializer):
         article = Collaboration()
 
         self.add_fields(data['type'].lower(), 0, article)
-        self.add_fields(data['field'][1], 1, article)
+        self.add_fields(data['category'][0], 1, article)
+        if(data['academic'] is not None):
+            self.add_fields(data['academic'][1], 2, article)
+        if(data['industry'] is not None):
+            self.add_fields(data['industry'][0], 3, article)
+            self.add_fields(data['position'][0], 4, article)
         article.save()
-        print("DATA CORSO")
+
         article.collaborators.add(User.objects.get(username=data["user"]) )
         # print("HASATTRB: ", hasattr(data, "project_crowdfunding_type"))
         # if("project_crowdfunding_type" in data):
@@ -128,12 +140,16 @@ class CollaborationSerializer(serializers.ModelSerializer):
 
     def scher1(self, i):
         ct = CollaborationTypes()
+        cc = CollaborationCategory()
         ad = AcademicDisciplines()
-        # ct = CrowdfundingTypes()
+        indf = IndustryFields()
+        cp = RequestCollabPosition()
         switcher={
                 0:ct,
-                1:ad,
-                # 2:ct,
+                1:cc,
+                2:ad,
+                3:indf,
+                4:cp,
             }
         print("switcher: ", switcher.get(i))
         return switcher.get(i,"Invalid day of week")
@@ -141,7 +157,10 @@ class CollaborationSerializer(serializers.ModelSerializer):
     def scher2(self, i):
         switcher={
                 0:CollaborationTypes.CHOICES,
-                1:ACADEMIC_DISCIPLINES_CHOICES,
+                1:CollaborationCategory.CHOICES,
+                2:ACADEMIC_DISCIPLINES_CHOICES,
+                3:INDUSTRY_FIELDS_CHOICES,
+                4:COLLABORATION_POSITIONS,
                 # 2:CrowdfundingTypes.CHOICES,
             }
         return switcher.get(i,"Invalid day of week")
@@ -152,19 +171,27 @@ class CollaborationSerializer(serializers.ModelSerializer):
             m.collaboration_type = f        
             return m
         elif(i == 1):
-            m.a_d = f
+            m.collaboration_cateogry = f
             return m
         elif(i == 2):
-            m.crowdfunding_type = f
+            m.a_d = f
+            return m
+        elif(i == 3):
+            m.i_f = f
+            return m
+        elif(i == 2):
+            m.collab_pos = f
             return m
         else:
-            return "Invalid day of week"
+            return "Invalid"
     
     def scher4(self, i):
         switcher={
                 0:CollaborationTypes,
-                1:AcademicDisciplines,
-                # 2:CrowdfundingTypes,
+                1:CollaborationCategory,
+                2:AcademicDisciplines,
+                3:IndustryFields,
+                4:RequestCollabPosition
             }
         return switcher.get(i,"Invalid day of week")
 
@@ -184,6 +211,16 @@ class CollaborationSerializer(serializers.ModelSerializer):
                 university.collaboration_type = mt
             return 
         elif(i == 1):
+            mt = sch.objects.get(collaboration_cateogry=m)    
+            #ManyToMany
+            try:
+                university.collaboration_cat.add(mt)
+            #Foreign Key
+            except Exception as e:
+                print("except at scher5: ", e)
+                university.collaboration_cat = mt
+            return 
+        elif(i == 2):
             mt = sch.objects.get(a_d=m)    
             print("KONGOS KUDOS II: ", mt)
             #ManyToMany
@@ -195,10 +232,25 @@ class CollaborationSerializer(serializers.ModelSerializer):
                 print("except at scher5: ", e)
                 university.collaboration_ad = mt
             return 
-        elif(i == 2):
-            mt = sch.objects.get(crowdfunding_type=m)    
-            print("CACAS: ", mt)
-            university.project_crowdfunding_type = mt
+        elif(i == 3):
+            mt = sch.objects.get(i_f=m)    
+            #ManyToMany
+            try:
+                university.collaboration_if.add(mt)
+            #Foreign Key
+            except Exception as e:
+                print("except at scher5: ", e)
+                university.collaboration_if = mt
+            return 
+        elif(i == 4):
+            mt = sch.objects.get(collab_pos=m)    
+            #ManyToMany
+            try:
+                university.collaboration_pos.add(mt)
+            #Foreign Key
+            except Exception as e:
+                print("except at scher5: ", e)
+                university.collaboration_pos = mt
             return 
         else:
             return "Invalid day of week"
@@ -216,10 +268,9 @@ class CollabRequestSerializer(serializers.Serializer):
         print(data)
         print("args: ", args)
         article = CollaborationRequest()
-        article.requester = data["user"]
-        article.recipient = data["author"]
-        collab = Collaboration()
-        article.collaboration = collab.get(id=data["collabId"])
+        article.requester = User.objects.get(username=data["user"])
+        article.recipient = User.objects.get(username=data["recipient"])
+        article.collaboration = Collaboration.objects.get(id=data["collabId"])
 
         article.save()
         return article
@@ -248,4 +299,58 @@ class academicDiscListSerializer(serializers.Serializer):
     class Meta:
         fields = (
             "academic_disc",
+        )
+
+class ChoicesListSerializer(serializers.Serializer):
+    academic_disc = serializers.SerializerMethodField()
+    industry_fields = serializers.SerializerMethodField()
+    collab_position = serializers.SerializerMethodField()
+    collab_categories = serializers.SerializerMethodField()
+
+    def get_academic_disc(self, obj):
+        ob = []
+        index = 0
+        for ad in ACADEMIC_DISCIPLINES_CHOICES:
+            jsonobj = {}
+            for ad_sub_cat in ad:            
+                if(type(ad_sub_cat) is list):
+                    nList = []
+                    for disc in ad_sub_cat:
+                        nList.append({"value": disc[0], "label": disc[1]})
+                    dest = {**jsonobj, "children": nList}
+                    ob.append( dest )
+                else:
+                    jsonobj = {"value": ad_sub_cat, "label": ad_sub_cat.upper()}
+
+        obj = ob
+        return obj
+    
+    def get_industry_fields(self, obj):
+        ob = []
+        for d in INDUSTRY_FIELDS_CHOICES:
+            ob.append({"value": d[0], "label": d[1]})
+        obj = ob
+        return obj
+
+    def get_collab_position(self, obj):
+        ob = []
+        for d in COLLABORATION_POSITIONS:
+            ob.append({"value": d[0], "label": d[1]})
+        obj = ob
+        return obj
+    
+    def get_collab_categories(self, obj):
+        ob = []
+        for d in CollaborationCategory.CHOICES:
+            ob.append({"value": d[0], "label": d[1]})
+        obj = ob
+        return obj
+
+    
+    class Meta:
+        fields = (
+            "academic_disc",
+            "industry_fields",
+            "collab_position",
+            "collab_categories"
         )

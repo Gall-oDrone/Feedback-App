@@ -5,7 +5,7 @@ from projectsApi.models import Project
 from articlesApi.models import Article
 from workshopsApi.models import Workshop
 from boardsApi.models import Board, BoardDetail, Cards
-from .constants import ACADEMIC_DISCIPLINES_CHOICES 
+from .constants import *
 
 class CollaborationTypes(models.Model):
     PROJECT = 'project'
@@ -25,6 +25,30 @@ class CollaborationTypes(models.Model):
     def __str__(self):
         return self.collaboration_type
 
+# class JoinType(models.Model):
+#     Academic = 'academic'
+#     Industry = 'industry'
+#     CHOICES = [
+#         (Academic, ('Academic')),
+#         (Industry, ('Industry')),
+#     ]
+#     collaboration_cateogry=models.CharField(max_length=10, choices=CHOICES, blank=True)
+
+#     def __str__(self):
+#         return self.collaboration_cateogry
+
+class CollaborationCategory(models.Model):
+    Academic = 'academic'
+    Industry = 'industry'
+    CHOICES = [
+        (Academic, ('Academic')),
+        (Industry, ('Industry')),
+    ]
+    collaboration_cateogry=models.CharField(max_length=10, choices=CHOICES, blank=True)
+
+    def __str__(self):
+        return self.collaboration_cateogry
+
 class AcademicDisciplines(models.Model):
     ACADEMIC_DISCIPLINES_CHOICES
     a_d=models.CharField(max_length=100, choices=ACADEMIC_DISCIPLINES_CHOICES, blank=True)
@@ -32,39 +56,12 @@ class AcademicDisciplines(models.Model):
     def __str__(self):
         return self.a_d
 
-# class IndustryFields(models.Model):
-#     Agriculture = 'Agriculture',
-#     Artist = 'Artist',
-#     Business = 'Business',
-#     Communications = 'Communications',
-#     Education = 'Education',
-#     Engineering = 'Engineering',
-#     Environment = 'Environment',
-#     Financial = 'Financial',
-#     Government = 'Government',
-#     Health = 'Health',
-#     Legal = 'Legal',
-#     Manufacturing = 'Manufacturing',
-#     Service = 'Service S
-#     Technical = 'Technical',
-#     Technology = 'Technology ',
-#     INDUSTRY_FIELDS_CHOICES
-#     i_f=models.CharField(max_length=15, choices=INDUSTRY_FIELDS_CHOICES, blank=True)
+class IndustryFields(models.Model):
+    INDUSTRY_FIELDS_CHOICES
+    i_f=models.CharField(max_length=100, choices=INDUSTRY_FIELDS_CHOICES, blank=True)
 
-#     def __str__(self):
-#         return self.i_f
-
-# class CollaborationCategory(models.Model):
-#     Academic = 'project'
-#     Industry = 'industry'
-#     CHOICES = [
-#         (Academic, ('Academic')),
-#         (Industry, ('Industry')),
-#     ]
-#     collaboration_cateogry=models.CharField(max_length=15, choices=CHOICES, blank=True)
-
-#     def __str__(self):
-#         return self.collaboration_cateogry
+    def __str__(self):
+        return self.i_f
 
 # class CollaborationTopic(models.Model):
 #     TECHNICAL = 'Machine Learning'
@@ -85,21 +82,12 @@ class AcademicDisciplines(models.Model):
 # class Collaboration_langaugue_topic(models.Model):
 #     PRACTICE_LANGUAGE = 'practice language'
     
-# class RequestTechinalPosition(models.Model):
-#     PROGRAMMER = 'Programmer'
-#     PROJECT_MANAGER = 'Project Manager'
-#     DATA_ANALYST = 'Data Analyst'
-#     Business_ANALYST = 'Economics'
-#     CHOICES = [
-#         (TECHNICAL, ('technical')),
-#         (CONSULTING, ('consulting')),
-#         (WRITING, ('writting')),
-#         (BUSINESS, ('business')),
-#     ]
-#     collaboration_type=models.CharField(max_length=15, choices=CHOICES, blank=True)
+class RequestCollabPosition(models.Model):
+    COLLABORATION_POSITIONS
+    collab_pos=models.CharField(max_length=100, choices=COLLABORATION_POSITIONS, blank=True)
 
-#     def __str__(self):
-#         return self.collaboration_type
+    def __str__(self):
+        return self.collab_pos
 # Developer
 #     DevelopersSkills
 # Designer
@@ -134,9 +122,9 @@ class RequestStatus(models.Model):
     ACCEPTED = 'accepted'
     EVALUATING = 'evaluating'
     CHOICES = [
-        (REJECTED, ('rejected')),
-        (ACCEPTED, ('accepted')),
-        (EVALUATING, ('evaluating')),
+        (REJECTED, ('Rejected')),
+        (ACCEPTED, ('Accepted')),
+        (EVALUATING, ('Evaluating')),
     ]
     req_status=models.CharField(max_length=15, choices=CHOICES, blank=True)
 
@@ -192,7 +180,12 @@ class ColaborationStatus(models.Model):
 
 class Collaboration(models.Model):
     collaboration_type = models.ForeignKey(CollaborationTypes, on_delete=models.CASCADE, null=True, blank=True)
+    collaboration_cat = models.ForeignKey(CollaborationCategory, on_delete=models.CASCADE, null=True, blank=True)
+    collaboration_if = models.ForeignKey(IndustryFields, on_delete=models.CASCADE, null=True, blank=True)
     collaboration_ad = models.ForeignKey(AcademicDisciplines, on_delete=models.CASCADE, null=True, blank=True)
+    collaboration_status = models.ForeignKey(ColaborationStatus, on_delete=models.CASCADE, null=True, blank=True)
+    collaboration_pos = models.ForeignKey(RequestCollabPosition, on_delete=models.CASCADE, null=True, blank=True)
+
     collaborators = models.ManyToManyField(settings.AUTH_USER_MODEL)
     timestamp = models.DateTimeField(auto_now_add=True, null=True)
     # desired_skills = models.ManyToManyField(CollabSkills)

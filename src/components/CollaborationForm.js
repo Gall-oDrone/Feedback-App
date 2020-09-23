@@ -32,15 +32,22 @@ class ArticleCustomForm extends React.Component {
       console.log("handleFormSubmit values: ", JSON.stringify(values));
       const type =
         values["project_type"] === undefined ? null : values["project_type"];
-      const field =
-        values["project_field"] === undefined ? null : values["project_field"];
-      const experience =
-        values["areas_experience"] === undefined ? null : values["areas_experience"];
+      const category =
+        values["collab_category"] === undefined ? null : values["collab_category"];
+      const academic =
+        values["project_academic_field"] === undefined ? null : values["project_academic_field"];
+      const industry =
+        values["project_industry_field"] === undefined ? null : values["project_industry_field"];
+      const position =
+        values["project_position"] === undefined ? null : values["project_position"];
       const postObj = {
         user: this.props.username,
         type: type,
-        field: field,
-        experience: experience,
+        category: category,
+        academic: academic,
+        industry: industry,
+        position: position,
+        
       }
       if (!err) {
         axios.defaults.headers = {
@@ -65,6 +72,7 @@ class ArticleCustomForm extends React.Component {
   render() {
     console.log("props & state: "+ JSON.stringify(this.props), this.state)
     const { form } = this.props;
+    const { getFieldValue } = this.props.form;
     const { type } = this.state;
     const formItemLayout = {
       labelCol: { span: 6 },
@@ -81,11 +89,17 @@ class ArticleCustomForm extends React.Component {
             :<Types props={form} val={this.handleType}/>
           }
 
-        <Form.Item wrapperCol={{ span: 12, offset: 6 }}>
-          <Button type="primary" htmlType="submit" >
-            Post
-          </Button>
-        </Form.Item>
+        {
+          (getFieldValue("project_academic_field") && getFieldValue("project_academic_field")[0]) ||
+          (getFieldValue("project_position") && getFieldValue("project_position")[0])
+          ?
+            <Form.Item wrapperCol={{ span: 12, offset: 6 }}>
+              <Button type="primary" htmlType="submit" >
+                Post
+              </Button>
+            </Form.Item>
+          : null
+        }
       </Form>
     );
   }

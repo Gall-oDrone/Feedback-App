@@ -16,6 +16,21 @@ class CommentReplySerializer(serializers.ModelSerializer):
         model = CommentReply
         fields = ("id", "comment")
 
+class FeaturedArticleSerializer(serializers.ModelSerializer):
+    overview = StringSerializer(many=False)
+    author = StringSerializer(many=False)
+    categories = StringSerializer(many=True)
+    title = StringSerializer(many=False)
+    thumbnail = serializers.SerializerMethodField()
+    class Meta:
+        model = Article
+        fields = ('id', 'title', 'overview', 'author', 'thumbnail', 'categories')
+    
+    def get_thumbnail(self, obj):
+        request = self.context.get('request')
+        photo_url = obj.thumbnail.url
+        return request.build_absolute_uri(photo_url)
+
 class ArticleSerializer(serializers.ModelSerializer):
     engagement = StringSerializer(many=True)
     categories = StringSerializer(many=True)

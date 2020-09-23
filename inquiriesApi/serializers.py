@@ -15,6 +15,15 @@ class CommentReplySerializer(serializers.ModelSerializer):
         model = CommentReply
         fields = ("id", "comment")
 
+class FeaturedInquirySerializer(serializers.ModelSerializer):
+    inquiry_type = StringSerializer(many=True)
+    inquiry_topic = StringSerializer(many=True)
+    author = StringSerializer(many=False)
+
+    class Meta:
+        model = Inquiry
+        fields = ('id', "inquiry_type", "inquiry_topic", "author",)
+
 class InquirySerializer(serializers.ModelSerializer):
     inquiry_type = StringSerializer(many=True)
     inquiry_topic = StringSerializer(many=True)

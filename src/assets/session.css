@@ -72,3 +72,105 @@ img {
   .td:hover{ 
     color:rgb(0, 132, 255);
     }
+
+    .session-summary {
+      float:left;
+      width:630px;
+      display:flex;
+      flex-direction: column;
+      justify-content: space-around;
+     }
+     .summary h3 {
+      font-size:15px;
+      line-height:1.4;
+      margin-bottom:.5em
+     }
+     .excerpt {
+      padding:0;
+      padding-bottom:5px;
+      margin:0
+     }
+     .excerpt .started {
+      float:right;
+      width:185px;
+      height:55px;
+      margin-top:5px
+     }
+     .excerpt p {
+      margin-bottom:3px
+     }
+     .excerpt .tags {
+      width:410px;
+      margin-top:5px
+     }
+     .tags {
+      line-height:18px;
+      float:right
+     }
+     .tags a:hover {
+      text-decoration:none
+     }
+     .started {
+      width:200px;
+      float:right;
+      line-height:18px
+     }
+  
+     .started img {
+      vertical-align:baseline
+     }
+     .started .user-action-time {
+      margin-bottom:2px
+     }
+     .started .reputation-score,
+     .started .user-info {
+      color:var(--black-400)
+     }
+     .started .mod-flair,
+     .started a:not(.started-link) {
+      font-size:12px;
+      color:var(--blue-600)
+     }
+     .started .mod-flair:hover,
+     .started a:not(.started-link):hover {
+      color:var(--blue-500)
+     }
+     .started-link {
+      font-size:12px;
+      color:var(--black-350)
+     }
+     .started-link:hover {
+      color:var(--blue-600)
+     }
+
+     .summary-fst-row-con, .summary-last-row-con{}
+     .views, .author{
+      flex:1 auto;
+      width:auto;
+      float:left;
+      margin:0;
+      overflow:hidden
+    }
+  
+    .college, .time {
+        flex:1 auto;
+        width:auto;
+        float:right;
+        margin:0;
+        overflow:hidden;
+        font-size: 0.9em;
+        line-height:18px;
+    }
+
+  .more-info-button a{
+    color: #fff;
+    background-color: #40a9ff;
+    border-color: 1px #40a9ff;
+    padding: 10px;
+    box-shadow: 3px 3px 5px 1px #bdbbbb;
+  }
+
+  .more-info-button a:hover{
+    background: #fff;
+    background-color: rgb(255, 255, 255);
+  }

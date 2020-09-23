@@ -49,22 +49,22 @@ class EditorContainer extends Component{
 
   onEditorStateChange = (editorState) => {
     const contentState = editorState.getCurrentContent();
-    this.props.content(JSON.stringify(convertToRaw(contentState)));
+    // this.props.content(JSON.stringify(convertToRaw(contentState)));
     this.setState({
       editorState,
     });
   }
 
-  componentDidMount() {
-    fetch('/content').then(val => val.json())
-    .then(rawContent => {
-      if (rawContent) {
-        this.setState({ editorState: EditorState.createWithContent(convertFromRaw(rawContent)) })
-      } else {
-        this.setState({ editorState: EditorState.createEmpty() });
-      }
-    });
-  }
+  // componentDidMount() {
+  //   fetch('/content').then(val => val.json())
+  //   .then(rawContent => {
+  //     if (rawContent) {
+  //       this.setState({ editorState: EditorState.createWithContent(convertFromRaw(rawContent)) })
+  //     } else {
+  //       this.setState({ editorState: EditorState.createEmpty() });
+  //     }
+  //   });
+  // }
 
   render(){
     const { editorState } = this.state;

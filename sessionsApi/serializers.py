@@ -19,6 +19,14 @@ class SessionTestSerializer(serializers.ModelSerializer):
         model = Profile
         fields = ("__all__")
 
+class FeaturedSessionSerializer(serializers.ModelSerializer):
+    user = StringSerializer(many=False)
+    user_photo = StringSerializer(many=False)
+
+    class Meta:
+        model = Session
+        fields = ('id', "user", "user_photo")
+
 class SessionTest2Serializer(serializers.ModelSerializer):
     name = StringSerializer(many=False)
     university = StringSerializer(many=False)

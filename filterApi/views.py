@@ -5,14 +5,24 @@ from articlesApi.models import Article, Category, Tag
 from users.models import User, ProfileInfo, Universities, Degree, Bachelor, Master, Doctorate, Course
 from surveyApi.models import Survey
 from inquiriesApi.models import Inquiry, InquiryType, TargetAudience, Topic, PreferLanguage
-from sessionsApi.models import Topic, Experience
+from sessionsApi.models import Topic, Experience, Session
+from workshopsApi.models import Workshop
+from projectsApi.models import Project
+from collaborationsApi.models import Collaboration
 from .serializers import JournalSerializer
-from articlesApi.serializers import ArticleSerializer
-from inquiriesApi.serializers import InquirySerializer
-from sessionsApi.serializers import SessionSerializer
+from articlesApi.serializers import ArticleSerializer, FeaturedArticleSerializer
+from projectsApi.serializers import FeaturedProjectSerializer
+from inquiriesApi.serializers import InquirySerializer, FeaturedInquirySerializer
+from sessionsApi.serializers import SessionSerializer, FeaturedSessionSerializer
+from collaborationsApi.serializers import FeaturedCollaborationSerializer
+from workshopsApi.serializers import FeaturedWorkshopSerializer
 from surveyApi.serializers import SurveySerializer
+
+
+FeaturedProjectSerializer
 from rest_framework import generics, permissions
 from rest_framework.response import Response
+from rest_framework.decorators import api_view
 
 def is_valid_queryparam(param):
     return param != '' and param != 'null' and param is not None
@@ -112,4 +122,19 @@ class ReactFilterView(generics.ListAPIView):
         qs = inquiry_filter(self.request)
         print("ReactFilterView qs: ",qs)
         return qs
-        
+    
+@api_view(["GET"])
+def showMultipleModels(request):
+    # request = self.context.get('request')
+    articles = Article.objects.order_by("-timestamp")[0:5]
+    workshops = Workshop.objects.all()
+    collaborations = Collaboration.objects.all()
+    inquiries = Inquiry.objects.all()
+    projects = Project.objects.all()
+    articleSerializer = FeaturedArticleSerializer(articles, many=True, context={'request': request})
+    workshopSerializer = FeaturedWorkshopSerializer(workshops, many=True, context={'request': request})
+    collaborationSerializer = FeaturedCollaborationSerializer(collaborations, many=True)
+    inquirySerializer = FeaturedInquirySerializer(inquiries, many=True)
+    projectSerializer = FeaturedProjectSerializer(projects, many=True)
+    resultModel = {"articles": articleSerializer.data, "workshops": workshopSerializer.data, "collabs": collaborationSerializer.data, "inquiries":  inquirySerializer.data, "projects":  projectSerializer.data}
+    return Response(resultModel)

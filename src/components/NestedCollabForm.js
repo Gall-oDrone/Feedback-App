@@ -17,81 +17,10 @@ import {
   DatePicker,
   TimePicker
 } from 'antd';
-import {fetchDisciplinesURL, workshopCreateURL} from "../constants";
+import {fetchDisciplinesURL, fetchCollabAllChoices} from "../constants";
 import moment from "moment";
 import axios from 'axios';
 import lodash from "lodash";
-const CheckboxGroup = Checkbox.Group;
-const { Option } = Select;
-const { MonthPicker } = DatePicker;
-const rangeConfig = {
-  rules: [{ type: 'array', required: true, message: 'Please select time!' }],
-};
-const TimeRelatedForm = () => {
-  const onFinish = fieldsValue => {
-    // Should format date value before submit.
-    const rangeValue = fieldsValue['range-picker'];
-    const rangeTimeValue = fieldsValue['range-time-picker'];
-    const values = {
-      ...fieldsValue,
-      'date-picker': fieldsValue['date-picker'].format('YYYY-MM-DD'),
-      'date-time-picker': fieldsValue['date-time-picker'].format('YYYY-MM-DD HH:mm:ss'),
-      'month-picker': fieldsValue['month-picker'].format('YYYY-MM'),
-      'range-picker': [rangeValue[0].format('YYYY-MM-DD'), rangeValue[1].format('YYYY-MM-DD')],
-      'range-time-picker': [
-        rangeTimeValue[0].format('YYYY-MM-DD HH:mm:ss'),
-        rangeTimeValue[1].format('YYYY-MM-DD HH:mm:ss'),
-      ],
-      'time-picker': fieldsValue['time-picker'].format('HH:mm:ss'),
-    };
-    console.log('Received values of form: ', values);
-  };
-}
-function getBase64(file) {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.readAsDataURL(file);
-    reader.onload = () => resolve(reader.result);
-    reader.onerror = error => reject(error);
-  });
-}
-
-const i_type = [
-  {
-    value: 'homework review',
-    label: 'Homework Review'
-  },
-  {
-    value: 'admissions',
-    label: 'Admissions'
-  },
-  {
-    value: 'college information',
-    label: 'College Information'
-  },
-  {
-    value: 'scholarships',
-    label: 'Scholarships'
-  },
-  {
-    value: 'class review',
-    label: 'Class Review'
-  },
-  {
-    value: 'other',
-    label: 'Other'
-  }
-]
-const language = [
-  {
-    value: 'spanish',
-    label: 'Spanish'
-  },
-  {
-    value: 'english',
-    label: 'English'
-  },
-]
 
 class ArticleCustomForm extends React.Component {
 
@@ -99,6 +28,9 @@ class ArticleCustomForm extends React.Component {
     super(props);
     this.state = { 
       academic_disciplines: null,
+      industry_fields: null,
+      collab_position: null,
+      collab_categories: null,
     };
   }
 
@@ -106,11 +38,15 @@ class ArticleCustomForm extends React.Component {
     axios.defaults.headers = {
       "Content-Type": "application/json"
     }
-    axios.get(fetchDisciplinesURL)
+    // axios.get(fetchDisciplinesURL)
+    axios.get(fetchCollabAllChoices)
     .then(res => {
       console.log("resData at UI: ", (res))
       this.setState({
         academic_disciplines:res.data[0].academic_disc,
+        industry_fields:res.data[0].industry_fields,
+        collab_position:res.data[0].collab_position,
+        collab_categories:res.data[0].collab_categories,
       });
     })
     .catch(err =>
@@ -146,45 +82,76 @@ class ArticleCustomForm extends React.Component {
 
   render() {
     console.log("props & state: "+ JSON.stringify(this.props), this.state)
-    const { form } = this.props;
-    const { academic_disciplines } = this.state
+    const { collab_categories, academic_disciplines, industry_fields, collab_position } = this.state
     const { getFieldDecorator, getFieldValue } = this.props.form;
-    const formItemLayout = {
-      labelCol: { span: 6 },
-      wrapperCol: { span: 14 },
-    };
 
     return (
-    <div>
-      <p>Project Area Field</p>
-       <Form.Item label="Field">
-       {getFieldDecorator("project_field", {
-                  initialValue: [this.handleADChange()],
-                  rules: [
-                    { type: 'array', required: true, message: 'Please select a cateogry' },
-                  ],
-                })(<Cascader options={academic_disciplines} />)}
-        </Form.Item>
+      <div>
 
-        {/* <p>What are your areas of experience?</p>
-        <Form.Item label="Areas of experience">
-          {getFieldDecorator('areas_experience', {
-            initialValue: ["developer"],
-            rules: [
-              { required: true, message: 'Field required', type: 'array' },
-            ],
-          })(
-            <Select name="areas_experience" mode="tags" placeholder="Please type an area">
-                <Option value="developer">Developer</Option>
-                <Option value="designer">Designer</Option>
-                <Option value="financeExpert">Finance Expert</Option>
-                <Option value="projectManager">Project Manager</Option>
-                <Option value="productManager">Product Manager</Option>
-            </Select>,
-          )}
-        </Form.Item> */}
-      </div>
-      // </Form>
+        <p>Project Category</p>
+        <Form.Item label="Field">
+        {getFieldDecorator("collab_category", {
+                    initialValue: [this.handleADChange()],
+                    rules: [
+                      { type: 'array', required: true, message: 'Please select a cateogry' },
+                    ],
+                  })(<Cascader options={collab_categories} />)}
+          </Form.Item>
+        
+        {getFieldValue("collab_category").map(el => {
+          if(!el){return}
+          if(el === "academic"){
+            return (
+                <div>
+                  <p>Academic Field</p>
+                    <Form.Item label="Field">
+                    {getFieldDecorator("project_academic_field", {
+                                initialValue: [this.handleADChange()],
+                                rules: [
+                                  { type: 'array', required: true, message: 'Please select a discipline' },
+                                ],
+                              })(<Cascader options={academic_disciplines} />)}
+                      </Form.Item>
+                </div>
+            )
+          } else {
+            return(
+                <div>
+                  <p>Industry Field</p>
+                  <Form.Item label="Field">
+                  {getFieldDecorator("project_industry_field", {
+                              initialValue: [this.handleADChange()],
+                              rules: [
+                                { type: 'array', required: true, message: 'Please select a field' },
+                              ],
+                            })(<Cascader options={industry_fields} />)}
+                    </Form.Item>
+                </div>
+            )
+          }
+        })
+      }
+
+        {getFieldValue("project_industry_field") && getFieldValue("project_industry_field").map(el => {
+          if(!el){return}
+          else{
+            return(
+                <div>
+                  <p>Project Position</p>
+                    <Form.Item label="Collaborate as">
+                      {getFieldDecorator("project_position", {
+                                  initialValue: [this.handleADChange()],
+                                  rules: [
+                                    { type: 'array', required: true, message: 'Please select a position' },
+                                  ],
+                                })(<Cascader options={collab_position} />)
+                      }
+                    </Form.Item>
+                </div>
+            )
+          }
+        })}
+        </div>
     );
   }
 }

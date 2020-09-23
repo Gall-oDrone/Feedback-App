@@ -17,6 +17,15 @@ class CommentReplySerializer(serializers.ModelSerializer):
         model = CommentReply
         fields = ("id", "comment")
 
+class FeaturedProjectSerializer(serializers.ModelSerializer):
+    author = StringSerializer(many=False)
+    category = StringSerializer(many=True)
+    content = StringSerializer(many=False)
+
+    class Meta:
+        model = Project
+        fields = ('id', "category", "content", "author")
+
 class ProjectAuthorInfoSerializer(serializers.ModelSerializer):
     name = StringSerializer(many=False)
     university = StringSerializer(many=False)

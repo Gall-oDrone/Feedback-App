@@ -44,20 +44,63 @@ ACADEMIC_DISCIPLINES_CHOICES = [
 ]
 
 INDUSTRY_FIELDS_CHOICES = [
-    ('Agriculture', 'Agriculture'),
-    ('Artist', 'Artist'),
-    ('Business', 'Business'),
-    ('Communications', 'Communications'),
-    ('Education', 'Education'),
-    ('Engineering', 'Engineering'),
-    ('Environment', 'Environment'),
-    ('Financial', 'Financial'),
-    ('Government', 'Government'),
-    ('Health', 'Health'),
-    ('Legal', 'Legal'),
-    ('Manufacturing', 'Manufacturing'),
-    ('Service Sector', 'Service Sector'),
-    ('Technical', 'Technical'),
-    ('Technology ', 'Technology '),
-    ('Technology - non-Compute', 'Technology - non-Compute'),
+    ('agriculture', 'Agriculture'),
+    ('artist', 'Artist'),
+    ('business', 'Business'),
+    ('communications', 'Communications'),
+    ('education', 'Education'),
+    ('engineering', 'Engineering'),
+    ('environment', 'Environment'),
+    ('financial', 'Financial'),
+    ('government', 'Government'),
+    ('health', 'Health'),
+    ('legal', 'Legal'),
+    ('manufacturing', 'Manufacturing'),
+    ('service_sector', 'Service Sector'),
+    ('technical', 'Technical'),
+    ('technology ', 'Technology '),
+    ('technology_non_compute', 'Technology - non-Compute'),
 ]
+
+PROGRAMMER = 'programmer'
+PROJECT_MANAGER = 'project_manager'
+DATA_ANALYST = 'data_analyst'
+BUSINESS_ANALYST = 'business_analyst'
+OTHER = 'other'
+COLLABORATION_POSITIONS = [
+    (PROGRAMMER, ('Programmer')),
+    (PROJECT_MANAGER, ('Project Manager')),
+    (DATA_ANALYST, ('Data Analyst')),
+    (BUSINESS_ANALYST, ('Business Analyst')),
+    (OTHER, ('Other')),
+]
+
+REJECTED = 'rejected'
+ACCEPTED = 'accepted'
+EVALUATING = 'evaluating'
+COLLABORATI_STATUS = [
+    (REJECTED, ('Rejected')),
+    (ACCEPTED, ('Accepted')),
+    (EVALUATING, ('Evaluating')),
+]
+
+# POSITIONS = [
+#     Developer
+#         DevelopersSkills
+#     Designer
+#         UX
+#         UI
+#     ProductDesigner
+#     FinanceExpert
+#         Financial Modeling Consultants
+#         Venture Capital Consultants
+#         Market Research Analyst
+#     ProjectManager
+#         Web Project Managers
+#         Mobile Project
+#         Agile Conslutants
+#     ProductManager
+#         Ideation & Validation
+#         MVP & Go-To-MarketStrategy
+#         Product Framework and Transformation
+# ]

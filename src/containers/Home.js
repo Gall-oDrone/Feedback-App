@@ -2,14 +2,21 @@ import React from "react";
 import { Link, withRouter } from "react-router-dom";
 import { connect } from "react-redux";
 import * as actions from "../store/actions/auth";
+import axios from 'axios';
 import "../assets/home.css";
 import "../assets/navBar.css";
+import { homeListURL } from "../constants";
 
 class CustomLayout extends React.Component {
   state = {
     collapsed: true,
     current: '1',
-    alertClosed: false
+    alertClosed: false,
+    articles: null,
+    workshops: null,
+    collabs: null,
+    inquiries  : null,
+    projects: null,
   };
 
   toggle = () => {
@@ -29,6 +36,28 @@ class CustomLayout extends React.Component {
     this.setState({alertClosed: true})
   }
 
+  componentDidMount(){
+    axios.defaults.headers = {
+      "content-type": "application/json",
+      Authorization: `Token ${this.props.token}`
+    };
+      axios.get(homeListURL)
+        .then(res => {
+          if (res.status === 200) {
+            console.log('res.Data: ', res.data);  
+            this.setState({
+              articles: res.data.articles,
+              workshops: res.data.workshops,
+              collabs: res.data.collabs,
+              inquiries: res.data.inquiries,
+              projects: res.data.projects,
+            })
+          }
+        })
+        .catch(error => console.error(error))
+    
+  }
+
   componentDidUpdate(){
     if(this.props.is_active !== undefined &&
     this.props.is_active !== null){
@@ -37,6 +66,7 @@ class CustomLayout extends React.Component {
   }
 
   render() {
+    const { articles, workshops, collabs, inquiries, projects } = this.state
     return (
      <div className="main_container">
          <main className="main_1">
@@ -50,36 +80,45 @@ class CustomLayout extends React.Component {
                 <div className="nested_large_content">
                   <div>
                     <ul>
+                      {articles && articles.map(el => {
+                        return(
                       <li>
                         <div className="item">
-                          <a className="link">
+                          <a href={`articles/detailmenu/${el.id}`} className="link">
                             <div className="thumbnail">
-                              <span><img src="https://ph-files.imgix.net/d13cede3-f250-477a-840a-5ddb36eeb515.png?auto=format&auto=compress&codec=mozjpeg&cs=strip&w=80&h=80&fit=crop"></img></span>
+                              <span><img src={el.thumbnail}></img></span>
                             </div>
                             <div className="list_content">
-                              <h3>New Mailbrew</h3>
-                              <p>Here's an all-new Mailbrew, re-made from the ground up.</p>
+                              <h3>{el.title}</h3>
+                              <p>{el.overview}</p>
                               <div className="metaShadow"></div>
                             </div>
                           </a>
                             <div className="meta_data">
                               <div className="nested_large_actions">
-                                <a>
-                                  <span>
-                                    <span><svg></svg>61</span>
+                                <a className="action_button">
+                                  <span className="font_1">
+                                    <span className="font_2"><svg></svg></span>
+                                    61
+                                  </span>
+                                </a>
+                              </div>
+                              <div className="nested_large_actions_info">
+                                <a className="info_topic">
+                                  <span className="info_font_1">
+                                    {el.categories.map(el => {
+                                      return(
+                                            el
+                                      )})
+                                    }
                                   </span>
                                 </a>
                               </div>
                             </div>
-                            <div className="nested_large_actions_info">
-                              <a>
-                                <span>
-                                  Productivity
-                                </span>
-                              </a>
-                            </div>
                         </div>
                       </li>
+                        )
+                      })}
                     </ul>
                   </div>
                 </div>
@@ -90,30 +129,34 @@ class CustomLayout extends React.Component {
         <aside className="sidebar_home">
           <div className="sidebar_fst_con">
             <div className="sidebar_fst_header">
-              <span className="fst_header_font"><span>Upcoming Products</span></span>
+              <span className="fst_header_font"><span>On Demand Workshops</span></span>
             </div>
             <div className="sidebar_fst_content">
               <ul>
-                <li>
-                  <a>
-                    <div>
-                      <div className="fst_font">
-                        Booommm
-                      </div>
-                      <div className="snd_font">
-                        Senior and Executive job offers for developers
-                      </div>
-                      <div className="trd_font">
-                        <svg></svg>FOLLOW
-                      </div>
-                    </div>
-                    <div className="fth_font">
-                      <img src="https://ph-files.imgix.net/6a9301fb-0120-426f-8ebf-6303950245bd?auto=format&auto=compress&codec=mozjpeg&cs=strip&w=40&h=40&fit=crop&bm=normal&bf=max&bh=20&bw=20"></img>
-                    </div>
-                  </a>
-                </li>
+                {workshops && workshops.map(el => {
+                  return(
+                      <li>
+                        <a href={`workshops/${el.id}`}>
+                          <div>
+                            <div className="fst_font">
+                              {el.title}
+                            </div>
+                            <div className="snd_font">
+                              {el.categories.map(el => {return(el)})}
+                            </div>
+                            <div className="trd_font">
+                              <svg></svg>FOLLOW
+                            </div>
+                          </div>
+                          <div className="fth_font">
+                            <img className="aside_img" src={el.image}></img>
+                          </div>
+                        </a>
+                      </li>
+                  )
+                })}
               </ul>
-              <a className="sider_button">
+              <a href="workshops/" className="sider_button">
                 <span className="view_all">
                   View All
                 </span>
