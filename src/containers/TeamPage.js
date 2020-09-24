@@ -27,7 +27,7 @@ class TeamPage extends React.PureComponent {
                     </picture>
                     <svg className="svg_sm_logo"></svg>
                   </a>
-                  <p>Graduated in Economics from Center of Resesarch and Teaching in Economics (CIDE).</p>
+                  <p>Graduated in Economics from the Center of Research and Teaching in Economics (CIDE).</p>
                 </div>
               </div>
             </div>

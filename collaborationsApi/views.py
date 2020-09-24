@@ -10,14 +10,15 @@ from rest_framework.parsers import MultiPartParser, FileUploadParser, FormParser
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.status import(
     HTTP_201_CREATED,
-    HTTP_400_BAD_REQUEST
+    HTTP_400_BAD_REQUEST,
+    HTTP_200_OK
 )
 from rest_framework import permissions, generics
-from .models import CollaborationTypes, RequestStatus, CollaborationCategory, Collaboration, CollaborationWorkFlow, CollaborationRequest, AcademicDisciplines, IndustryFields, RequestCollabPosition, RequestStatus, ColaborationStatus
+from .models import CollaborationTypes, RequestStatus, CollaborationCategory, Collaboration, CollaborationWorkFlow, CollaborationRequest, AcademicDisciplines, IndustryFields, RequestCollabPosition, RequestStatus, ColaborationStatus, RecruitmentForm
 from notificationsApi.models import Notification
 from users.models import User, Profile
 from .constants import *
-from .serializers import CollaborationSerializer, CollabRequestSerializer, academicDiscListSerializer, ChoicesListSerializer
+from .serializers import CollaborationSerializer, CollabRequestSerializer, academicDiscListSerializer, ChoicesListSerializer, UserCollabRequestListSerializer
 # CollaborationFeatureSerializer, VideoFormSerializer, CommentSerializer, LikeSerializer, LikeListSerializer, RatingSerializer, CommentListSerializer, ImageFormSerializer, ProfileCollaborationListSerializer, Cat_FT_Serializer
 from analytics.models import View
 from django.http import Http404
@@ -206,7 +207,7 @@ class CollabRequestView(CreateAPIView):
             notify.actor = recipient
             notify.verb = "Sent"
             notify.action = "Collaboration Response"
-            notify.target = "1"
+            notify.target = "1" 
             notify.description = f"{user.username} wants to collaborate with you."
             notify.save()
             notification_counter = Profile.objects.update_or_create(
@@ -218,6 +219,90 @@ class CollabRequestView(CreateAPIView):
 
             return Response(status=HTTP_201_CREATED)
         return Response(status=HTTP_400_BAD_REQUEST)
+
+class UserCollabListView(RetrieveUpdateDestroyAPIView):
+    queryset = CollaborationRequest.objects.all()
+    serializer_class = UserCollabRequestListSerializer
+    # serializer_class = CollabRequestSerializer
+    permission_classes = (permissions.AllowAny,)
+
+
+    # def get_serializer(self, *args, **kwargs):
+    #     if "data" in kwargs:
+    #         data = kwargs["data"]
+    #         # check if many is required
+    #         kwargs["many"] = True
+    #         serializer_class = self.get_serializer_class()
+    #         print("badass: serializer_class", data)
+    #         return serializer_class(data=data, many=True, ) 
+    #         if isinstance(data, list):
+    #             kwargs["many"] = True
+
+    def get_object(self, *args, **kwargs):
+        try:
+            username = User.objects.get(username=self.kwargs.get('pk'))
+            # username =self.kwargs.get('pk')
+            serializer = UserCollabRequestListSerializer(context={'user': username})
+            # received = CollaborationRequest.objects.filter(recipient=username)
+            # sent = CollaborationRequest.objects.filter(requester=username)
+            # queryset = [{"timestamp":received}, {"sent":sent}]
+            # for d in queryset: 
+            #     data.append(d)
+            # serializer = CollabRequestSerializer(queryset,
+            #         # many=isinstance(data, list),
+            #         many=True)
+            # sd = CollabRequestSerializer(data, many=True)
+            # serialized = CollabRequestSerializer(data_1, many=True)
+            return serializer
+        except ObjectDoesNotExist:
+            raise Http404("There was an error, please try again!")
+            return Response({"message": "There was an error, please try again!"}, status=HTTP_400_BAD_REQUEST)
+
+    def update(self, request, *args, **kwargs):
+        serializer = CollabRequestSerializer(data=request.data)
+        serializer.is_valid()
+        if (request.data.get("status") == "accepted"):
+            status_obj = RequestStatus.objects.get(req_status="accepted")
+            request = CollaborationRequest.objects.get(id=request.data.get("requestId"))
+            request.status = status_obj
+            request.save()
+
+            ## User how response to request
+            user = User.objects.get(username = User.objects.get(username=self.kwargs.get('pk')))
+            ## User how sent request and its reciving response
+            recipient = User.objects.get(username = User.objects.get(username=self.request.data["recipient"]))
+
+            #ADD COLLABORATOR TO COLLABORATION & CREATE TEAM
+            request.collaboration.collaborators.add(recipient)
+            # newTeam = Team()
+            # newTeam.members.add(recipient)
+
+            #NOTIFICATION
+            notify = Notification()
+            notify.user = user
+            notify.actor = self.request.data.get("recipient")[0]
+            notify.verb = "Response"
+            notify.action = "Collaboration Request Response"
+            notify.target = "1"
+            notify.description = f"{user} accepted your collaboration request"
+            notify.save()
+            notification_counter = Profile.objects.update_or_create(
+                user_id=recipient.id,
+                defaults={"notification_counter": CollaborationRequest.objects.filter(
+                    recipient=recipient.id)
+                    .count(),
+                }
+            )
+
+        elif(self.request.data.get("status") == "rejected"):
+            status_obj = RequestStatus.objects.get(req_status="rejected")
+            request = CollaborationRequest.objects.get(id=request.data.get("requestId"))
+            request.status = status_obj
+            request.save()
+
+        return Response(status=HTTP_200_OK)
+
+
 
 class AcademicDisciplinesListView(ListAPIView):
     serializer_class = (academicDiscListSerializer)
@@ -246,6 +331,9 @@ class AllCascadeListView(ListAPIView):
                 if(type(ad_sub_cat) is list):
                     for disc in ad_sub_cat:
                         ads = AcademicDisciplines.objects.create(a_d=disc[0])
+    if(len(RecruitmentForm.objects.all()) == 0):
+        for recr_form in RECRUITMENT_FORM_CHOCIES:
+            rf = RecruitmentForm.objects.create(r_f=recr_form[0])
     if(len(IndustryFields.objects.all()) == 0):
         for indflds in INDUSTRY_FIELDS_CHOICES:
             indfs = IndustryFields.objects.create(i_f=indflds[0])

@@ -129,12 +129,21 @@ def showMultipleModels(request):
     articles = Article.objects.order_by("-timestamp")[0:5]
     workshops = Workshop.objects.all()
     collaborations = Collaboration.objects.all()
-    inquiries = Inquiry.objects.all()
+    inquiries = Inquiry.objects.order_by("-timestamp")[0:4]
     projects = Project.objects.all()
+    sessions = Session.objects.all()
     articleSerializer = FeaturedArticleSerializer(articles, many=True, context={'request': request})
     workshopSerializer = FeaturedWorkshopSerializer(workshops, many=True, context={'request': request})
-    collaborationSerializer = FeaturedCollaborationSerializer(collaborations, many=True)
+    collaborationSerializer = FeaturedCollaborationSerializer(collaborations, many=True, context={'request': request})
     inquirySerializer = FeaturedInquirySerializer(inquiries, many=True)
-    projectSerializer = FeaturedProjectSerializer(projects, many=True)
-    resultModel = {"articles": articleSerializer.data, "workshops": workshopSerializer.data, "collabs": collaborationSerializer.data, "inquiries":  inquirySerializer.data, "projects":  projectSerializer.data}
+    projectSerializer = FeaturedProjectSerializer(projects, many=True, context={'request': request})
+    sessionSerializer = FeaturedSessionSerializer(sessions, many=True, context={'request': request})
+    resultModel = {
+        "articles": articleSerializer.data, 
+        "workshops": workshopSerializer.data, 
+        "collabs": collaborationSerializer.data, 
+        "inquiries":  inquirySerializer.data, 
+        "projects":  projectSerializer.data,
+        "sessions":  sessionSerializer.data
+    }
     return Response(resultModel)

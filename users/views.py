@@ -248,6 +248,7 @@ class UserMeetingInfoView(RetrieveAPIView):
         try:
             print("UserProfileInfoView")
             username = self.kwargs.get('username')
+            print("COLAS: ", username)
             user = User.objects.get(username=username)
             # articleId = Article.objects.get(title=article).id
             userInfo = ProfileInfo.objects.get(profile_username=user.id)

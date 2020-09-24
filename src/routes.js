@@ -108,6 +108,7 @@ import TrelloBoard from "./tello-src/components/TrelloBoard"
 import CollaborationList from "./containers/CollaborationList";
 import CollaborationCreate from "./containers/CollaborationCreate";
 import CollaborationDetail from "./containers/CollaborationDetail";
+import ProfileCollaborations from "./containers/ProfileCollaborations"
 
 // const BaseRouter2 = () => (
 //   <Hoc>
@@ -227,6 +228,7 @@ const BaseRouter = () => (
     <Route exact path="/create-collaboration/" component={CollaborationCreate} />
     <Route exact path="/collaboration/:collabID" component={CollaborationDetail} />
     <Route exact path="/collaborations/" component={CollaborationList} />
+    <Route exact path="/profile/:id/collaborations/" component={ProfileCollaborations} />
 
   </Hoc>
 );

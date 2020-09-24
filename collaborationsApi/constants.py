@@ -84,6 +84,12 @@ COLLABORATI_STATUS = [
     (EVALUATING, ('Evaluating')),
 ]
 
+PUSH = 'push'
+PULL = 'pull'
+RECRUITMENT_FORM_CHOCIES = [
+    (PUSH, ('Push')),
+    (PULL, ('Pull')),
+]
 # POSITIONS = [
 #     Developer
 #         DevelopersSkills

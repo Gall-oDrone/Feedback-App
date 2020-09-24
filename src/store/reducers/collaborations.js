@@ -1,76 +1,85 @@
-import * as actionTypes from "../actions/actionTypes";
+import axios from "axios";
+import {
+  GET_USER_COLLABORATION_LIST_START,
+  GET_USER_COLLABORATION_LIST_FAIL,
+  GET_USER_COLLABORATION_LIST_SUCCESS,
+  PUT_USER_COLLABORATION_START,
+  PUT_USER_COLLABORATION_FAIL,
+  PUT_USER_COLLABORATION_SUCCESS,
+} from "../actions/actionTypes";
+
 import { updateObject } from "../utility";
 
 const initialState = {
-  articles: [],
-  currentProject: {},
+  collabs: [],
   error: null,
   loading: false
 };
 
-const getProjectListStart = (state, action) => {
-  console.log("1) Reducers getProjectListStart")
+const getCollaborationListStart = (state, action) => {
+  console.log("1) Reducers getCollaborationListStart")
   return updateObject(state, {
     error: null,
     loading: true
   });
 };
 
-const getProjectListSuccess = (state, action) => {
-  console.log("2) Reducers getProjectListSuccess")
+const getCollaborationListSuccess = (state, action) => {
+  console.log("2) Reducers getCollaborationListSuccess")
   return updateObject(state, {
-    articles: action.articles,
+    collabs: action.meetingList,
     error: null,
     loading: false
   });
 };
 
-const getProjectListFail = (state, action) => {
+const getCollaborationListFail = (state, action) => {
   return updateObject(state, {
     error: action.error,
     loading: false
   });
 };
 
-const getProjectDetailStart = (state, action) => {
+const createCollaborationStart = (state, action) => {
+  console.log("1) Reducers createCollaborationStart")
   return updateObject(state, {
     error: null,
     loading: true
   });
 };
 
-const getProjectDetailSuccess = (state, action) => {
+const createCollaborationSuccess = (state, action) => {
+  console.log("2) Reducers createCollaborationSuccess")
   return updateObject(state, {
-    currentProject: action.article,
     error: null,
     loading: false
   });
 };
 
-const getProjectDetailFail = (state, action) => {
+const createCollaborationFail = (state, action) => {
   return updateObject(state, {
     error: action.error,
     loading: false
   });
 };
 
-const createProjectStart = (state, action) => {
-  console.log("1) Reducers createProjectStart")
+const putCollaborationStart = (state, action) => {
+  console.log("1) Reducers putCollaborationStart")
   return updateObject(state, {
     error: null,
     loading: true
   });
 };
 
-const createProjectSuccess = (state, action) => {
-  console.log("2) Reducers createProjectSuccess")
+const putCollaborationSuccess = (state, action) => {
+  console.log("2) Reducers putCollaborationSuccess")
   return updateObject(state, {
     error: null,
     loading: false
   });
 };
 
-const createProjectFail = (state, action) => {
+const putCollaborationFail = (state, action) => {
   return updateObject(state, {
     error: action.error,
     loading: false
@@ -79,24 +88,24 @@ const createProjectFail = (state, action) => {
 
 const reducer = (state = initialState, action) => {
   switch (action.type) {
-    case actionTypes.GET_PROJECT_LIST_START:
-      return getProjectListStart(state, action);
-    case actionTypes.GET_PROJECTS_LIST_SUCCESS:
-      return getProjectListSuccess(state, action);
-    case actionTypes.GET_PROJECTS_LIST_FAIL:
-      return getProjectListFail(state, action);
-    case actionTypes.GET_PROJECT_DETAIL_START:
-      return getProjectDetailStart(state, action);
-    case actionTypes.GET_PROJECT_DETAIL_SUCCESS:
-      return getProjectDetailSuccess(state, action);
-    case actionTypes.GET_PROJECT_DETAIL_FAIL:
-      return getProjectDetailFail(state, action);
-    case actionTypes.CREATE_PROJECT_START:
-      return createProjectStart(state, action);
-    case actionTypes.CREATE_PROJECT_SUCCESS:
-      return createProjectSuccess(state, action);
-    case actionTypes.CREATE_PROJECT_FAIL:
-      return createProjectFail(state, action);
+    case GET_USER_COLLABORATION_LIST_START:
+      return getCollaborationListStart(state, action);
+    case GET_USER_COLLABORATION_LIST_SUCCESS:
+      return getCollaborationListSuccess(state, action);
+    case GET_USER_COLLABORATION_LIST_FAIL:
+      return getCollaborationListFail(state, action);
+    // case CREATE_USER_COLLABORATION_START:
+    //   return createCollaborationStart(state, action);
+    // case CREATE_USER_COLLABORATION_SUCCESS:
+    //   return createCollaborationSuccess(state, action);
+    // case CREATE_USER_COLLABORATION_FAIL:
+    //   return createCollaborationFail(state, action);
+    case PUT_USER_COLLABORATION_START:
+      return putCollaborationStart(state, action);
+    case PUT_USER_COLLABORATION_SUCCESS:
+      return putCollaborationSuccess(state, action);
+    case PUT_USER_COLLABORATION_FAIL:
+      return putCollaborationFail(state, action);
     default:
       return state;
   }

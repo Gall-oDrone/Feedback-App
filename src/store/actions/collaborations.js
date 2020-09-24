@@ -1,119 +1,95 @@
 import axios from "axios";
-import * as actionTypes from "./actionTypes";
+import {
+  GET_USER_COLLABORATION_LIST_START,
+  GET_USER_COLLABORATION_LIST_FAIL,
+  GET_USER_COLLABORATION_LIST_SUCCESS,
+  PUT_USER_COLLABORATION_START,
+  PUT_USER_COLLABORATION_FAIL,
+  PUT_USER_COLLABORATION_SUCCESS,
+} from "./actionTypes";
+import { UserListCollaborationRequestURL, UserCollaborationRequestUpdateURL } from "../../constants";
 
-const getProjectListStart = () => {
-  console.log("1) Actions getProjectListStart")
+const getUserCollaborationListStart = () => {
   return {
-    type: actionTypes.GET_PROJECT_LIST_START
+    type: GET_USER_COLLABORATION_LIST_START
   };
 };
 
-const getProjectListSuccess = articles => {
-  console.log("2) Actions getProjectListSuccess")
+const getUserCollaborationListSuccess = meetingList => {
+  console.log("getUserCollaborationListSuccess at actions: ", meetingList)
   return {
-    type: actionTypes.GET_PROJECTS_LIST_SUCCESS,
-    articles
+    type: GET_USER_COLLABORATION_LIST_SUCCESS,
+    meetingList
   };
 };
 
-const getProjectListFail = error => {
+const getUserCollaborationListFail = error => {
   return {
-    type: actionTypes.GET_PROJECTS_LIST_FAIL,
+    type: GET_USER_COLLABORATION_LIST_FAIL,
     error: error
   };
 };
 
-export const getProject = token => {
-    return dispatch => {
-      console.log(" getProject: ")
-        dispatch(getProjectListStart());
-        axios.defaults.headers = {
-            "Content-Type": "application/json",
-            Authorization: `Token ${token}`
-        }
-        axios.get("http://127.0.0.1:8000/articles/")
-        .then(res => {
-            const articles = res.data;
-            dispatch(getProjectListSuccess(articles));
-        })
-        .catch(err => {
-            dispatch(getProjectListFail());
-        })
-    }
-}
-
-const getProjectDetailStart = () => {
-  return {
-    type: actionTypes.GET_PROJECT_DETAIL_START
+export const getUserCollaborations = (username, token) => {
+  console.log(username)
+  console.log(token)
+  return dispatch => {
+    dispatch(getUserCollaborationListStart());
+    axios.defaults.headers = {
+      "Content-Type": "application/json",
+      Authorization: `Token ${token}`
+    };
+    axios
+      .get(UserListCollaborationRequestURL(username))
+      .then(res => {
+        const meetingList = res.data;
+        dispatch(getUserCollaborationListSuccess(meetingList));
+      })
+      .catch(err => {
+        dispatch(getUserCollaborationListFail(err));
+      });
   };
 };
 
-const getProjectDetailSuccess = article => {
+const putUserCollaborationListStart = () => {
   return {
-    type: actionTypes.GET_PROJECT_DETAIL_SUCCESS,
-    article
+    type: PUT_USER_COLLABORATION_START
   };
 };
 
-const getProjectDetailFail = error => {
+const putUserCollaborationListSuccess = meetingList => {
   return {
-    type: actionTypes.GET_PROJECT_DETAIL_FAIL,
+    type: PUT_USER_COLLABORATION_SUCCESS,
+    meetingList
+  };
+};
+
+const putUserCollaborationListFail = error => {
+  return {
+    type: PUT_USER_COLLABORATION_FAIL,
     error: error
   };
 };
 
-export const getProjectDetail = (token, articleID) => {
-    return dispatch => {
-        dispatch(getProjectDetailStart());
-        axios.defaults.headers = {
-            "Content-Type": "application/json",
-            Authorization: `Token ${token}`
-        }
-        axios.get(`http://127.0.0.1:8000/articles/${articleID}/`)
-        .then(res => {
-            const article = res.data;
-            dispatch(getProjectDetailSuccess(article));
-        })
-        .catch(err => {
-            dispatch(getProjectDetailFail());
-        })
-    }
-}
-
-const createProjectStart = () => {
-  return {
-    type: actionTypes.CREATE_PROJECT_START
+export const putCollaborationRequest = (username, token, obj) => {
+  console.log(username)
+  console.log(token)
+  return dispatch => {
+    dispatch(putUserCollaborationListStart());
+    axios.defaults.headers = {
+      "Content-Type": "application/json",
+      Authorization: `Token ${token}`
+    };
+    axios
+      .put(UserListCollaborationRequestURL(username), obj)
+      .then(res => {
+        console.log("EHRENO")
+        const meetingList = res.data;
+        console.log("EHRENO 2")
+        dispatch(putUserCollaborationListSuccess(meetingList));
+      })
+      .catch(err => {
+        dispatch(putUserCollaborationListFail(err));
+      });
   };
 };
-
-const createProjectSuccess = article => {
-  return {
-    type: actionTypes.CREATE_PROJECT_SUCCESS,
-    article
-  };
-};
-
-const createProjectFail = error => {
-  return {
-    type: actionTypes.CREATE_PROJECT_FAIL,
-    error: error
-  };
-};
-
-export const createProject = (token, article) => {
-    return dispatch => {
-        dispatch(createProjectStart());
-        axios.defaults.headers = {
-            "Content-Type": "application/json",
-            Authorization: `Token ${token}`
-        }
-        axios.post(`http://127.0.0.1:8000/articles/`, article)
-        .then(res => {
-            
-            dispatch(createProjectSuccess());
-        })
-        .catch(err => {
-            dispatch(createProjectFail());
-        })
-    }
-}

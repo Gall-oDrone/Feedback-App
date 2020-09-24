@@ -20,12 +20,16 @@ class SessionTestSerializer(serializers.ModelSerializer):
         fields = ("__all__")
 
 class FeaturedSessionSerializer(serializers.ModelSerializer):
-    user = StringSerializer(many=False)
-    user_photo = StringSerializer(many=False)
+    user_info = serializers.SerializerMethodField()
 
     class Meta:
         model = Session
-        fields = ('id', "user", "user_photo")
+        fields = ('id', "session_photo", "user_info")
+    
+    def get_user_info(self, obj):
+        request = self.context.get('request')
+        user_info = ProfileInfoSerializer(obj.user_name, many=False, context={'request': request}).data
+        return user_info
 
 class SessionTest2Serializer(serializers.ModelSerializer):
     name = StringSerializer(many=False)

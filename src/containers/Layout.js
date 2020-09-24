@@ -174,9 +174,9 @@ class CustomLayout extends React.Component {
                   </Link>
                 </Menu.Item>
                 <Menu.Item key="2">
-                  <Link to={`profile/${this.props.userId}/account/articles/list/`}>
-                    <Icon type="project" />
-                    <span>My articles</span>
+                  <Link to={`/profile/${this.props.userId}/collaborations`}>
+                    <Icon type="team" />
+                    <span>Collaborations</span>
                   </Link>
                 </Menu.Item>
                 

@@ -63,6 +63,13 @@ class IndustryFields(models.Model):
     def __str__(self):
         return self.i_f
 
+class RecruitmentForm(models.Model):
+    RECRUITMENT_FORM_CHOCIES
+    r_f=models.CharField(max_length=100, choices=RECRUITMENT_FORM_CHOCIES, blank=True)
+
+    def __str__(self):
+        return self.r_f
+
 # class CollaborationTopic(models.Model):
 #     TECHNICAL = 'Machine Learning'
 #     CONSULTING = 'Arts'
@@ -185,6 +192,7 @@ class Collaboration(models.Model):
     collaboration_ad = models.ForeignKey(AcademicDisciplines, on_delete=models.CASCADE, null=True, blank=True)
     collaboration_status = models.ForeignKey(ColaborationStatus, on_delete=models.CASCADE, null=True, blank=True)
     collaboration_pos = models.ForeignKey(RequestCollabPosition, on_delete=models.CASCADE, null=True, blank=True)
+    collaboration_rf = models.ForeignKey(RecruitmentForm, on_delete=models.CASCADE, null=True, blank=True)
 
     collaborators = models.ManyToManyField(settings.AUTH_USER_MODEL)
     timestamp = models.DateTimeField(auto_now_add=True, null=True)

@@ -260,6 +260,9 @@ export const collabProfileDetailURL = (collabID, userID) => `${endpoint}/collabo
 export const collabUpdateURL = (collabID) => `${endpoint}/collaborations/${collabID}/update/`
 export const collabCreateRequestURL = (collabID) => `${endpoint}/collaborations/${collabID}/create-request/`
 
+export const UserListCollaborationRequestURL = username => `${endpoint}/collaborations/request/userlist/${username}`
+export const UserCollaborationRequestUpdateURL = username => `${endpoint}/collaborations/request/userlist/update/${username}`
+
 export const fetchDegreesAndCoursesURL = `${endpoint}/users/courses-degrees/`
 export const fetchCategoriesAndFeedbacksURL = `${endpoint}/articles/categories-f_t/`
 export const fetchDisciplinesURL = `${endpoint}/collaborations/ad-list/`

@@ -172,5 +172,6 @@ img {
 
   .more-info-button a:hover{
     background: #fff;
+    color: #40a9ff;
     background-color: rgb(255, 255, 255);
   }

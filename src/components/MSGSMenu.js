@@ -1,7 +1,5 @@
 import axios from "axios";
 import '../assets/navBar.css';
-import { ReactComponent as CogIcon } from '../icons/cog.svg';
-import { ReactComponent as ChevronIcon } from '../icons/chevron.svg';
 import { messageListScrollerURL } from "../constants";
 import React, { useState, useEffect, useRef } from 'react';
 
@@ -19,7 +17,7 @@ function DropdownMenu(props) {
     useEffect(() => {
       // setMenuHeight(dropdownRef.current?.firstChild.offsetHeight)
       if (ntfns.length !== props.NTFNS.length) {            
-        setNTFNS(props.NTFNS)
+        // setNTFNS(props.NTFNS)
         // return(props.NTFNS)
       }
       if (hasMore !== props.hasMore) {            
@@ -28,10 +26,10 @@ function DropdownMenu(props) {
       }
     }, [props])
   
-    function calcHeight(el) {
-      const height = el.offsetHeight;
-      setMenuHeight(height);
-    }
+    // function calcHeight(el) {
+    //   const height = el.offsetHeight;
+    //   setMenuHeight(height);
+    // }
   
     function DropdownItem(props) {
       return (

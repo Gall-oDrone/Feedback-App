@@ -2,12 +2,9 @@ import '../assets/navBar.css';
 import { connect } from 'react-redux';
 import * as actions from "../store/actions/auth";
 import { withRouter } from "react-router-dom";
-import { ReactComponent as BellIcon } from '../icons/bell.svg';
 import * as messageActions from "../store/actions/notification";
 
 import { ReactComponent as MessengerIcon } from '../icons/messenger.svg';
-import { ReactComponent as CaretIcon } from '../icons/caret.svg';
-import { ReactComponent as PlusIcon } from '../icons/plus.svg';
 import { ReactComponent as CogIcon } from '../icons/cog.svg';
 import { ReactComponent as ChevronIcon } from '../icons/chevron.svg';
 import { ReactComponent as ArrowIcon } from '../icons/arrow.svg';
@@ -84,7 +81,9 @@ class NavMenu extends React.Component {
   render() {
     return (
       <Navbar>
-        <NavItem icon={<MessengerIcon />} unviews={this.props.unviews} username={this.props.username}>
+        {/* For testing purposes unviews is 0 */}
+        <NavItem icon={<MessengerIcon />} unviews={0} username={this.props.username}>
+        {/* <NavItem icon={<MessengerIcon />} unviews={this.props.unviews} username={this.props.username}> */}
           <NotificationHeaderMenu/>
         </NavItem>
         {/* <NavItem  icon={<MessengerIcon />}/> */}
@@ -219,13 +218,15 @@ function DropdownMenu() {
     </div>
   );
 }
-
-//TOFIX state.message.unview
+////////// WARNING /////////////////
+//////////TOFIX state.message.unview
+// This is the reason unview notifications are display also in unview messages
+///////////////////////////////////
 const mapStateToProps = state => {
   return {
     username: state.auth.username,
     token: state.auth.token,
-    unviews: state.notify.unview,
+    // unviews: state.notify.unview,
   };
 };
 
@@ -233,7 +234,7 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
   return {
     logout: () => dispatch(actions.logout()),
-    setUnviews: unviews => dispatch(messageActions.setUnviews(unviews)),
+    // setUnviews: unviews => dispatch(messageActions.setUnviews(unviews)),
   };
 };
 

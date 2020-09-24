@@ -7,6 +7,7 @@ import {
 import {collabCreateURL} from "../constants";
 import axios from 'axios';
 import Types from "./CollaborationTypes";
+import JoinForms from "./CollaborationJoinForm";
 import NestedForms from "./NestedCollabForm";
 import "../assets/collaboration.css"
 
@@ -17,6 +18,7 @@ class ArticleCustomForm extends React.Component {
     this.state = { 
       visible: false,
       type: null,
+      join: null
     };
   }
 
@@ -26,12 +28,20 @@ class ArticleCustomForm extends React.Component {
     this.setState({type: val})
   }
 
+  handleJF = (val) => {
+    const { setFieldsValue } = this.props.form;
+    setFieldsValue({recruitment:val})
+    this.setState({join: val})
+  }
+
   handleFormSubmit = async (event) => {
     event.preventDefault();
     await this.props.form.validateFields((err, values) => {
       console.log("handleFormSubmit values: ", JSON.stringify(values));
       const type =
         values["project_type"] === undefined ? null : values["project_type"];
+      const recruitment =
+        values["recruitment"] === undefined ? null : values["recruitment"];
       const category =
         values["collab_category"] === undefined ? null : values["collab_category"];
       const academic =
@@ -43,6 +53,7 @@ class ArticleCustomForm extends React.Component {
       const postObj = {
         user: this.props.username,
         type: type,
+        recruitment: recruitment,
         category: category,
         academic: academic,
         industry: industry,
@@ -73,7 +84,7 @@ class ArticleCustomForm extends React.Component {
     console.log("props & state: "+ JSON.stringify(this.props), this.state)
     const { form } = this.props;
     const { getFieldValue } = this.props.form;
-    const { type } = this.state;
+    const { type, join } = this.state;
     const formItemLayout = {
       labelCol: { span: 6 },
       wrapperCol: { span: 14 },
@@ -84,9 +95,13 @@ class ArticleCustomForm extends React.Component {
         event,
         this.props.requestType,
         this.props.articleID)}>
-          {type ?
+          {type && join ?
             <NestedForms form={form}/>
-            :<Types props={form} val={this.handleType}/>
+            :   
+                type ? 
+                  <JoinForms props={form} val={this.handleJF}/>
+                : <Types props={form} val={this.handleType}/>
+            
           }
 
         {

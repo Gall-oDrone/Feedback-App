@@ -10,6 +10,7 @@ from collaborationsApi.views import (
     CollabRequestView,
     AcademicDisciplinesListView,
     AllCascadeListView,
+    UserCollabListView,
     # ProfileCollaborationListView,
     # ProfileCollaborationDetailView,
     # LikeListView,
@@ -41,7 +42,8 @@ urlpatterns = [
     path('ad-list/', AcademicDisciplinesListView.as_view()),
     path('all-list/', AllCascadeListView.as_view()),
     path('<collabID>/create-request/', CollabRequestView.as_view()),
-    
+    path('request/userlist/<pk>', UserCollabListView.as_view()), 
+
     # path('list/<username>/', ProfileCollaborationListView.as_view()),
     # path('<pk>/detail/<username>/', ProfileCollaborationDetailView.as_view()),
 

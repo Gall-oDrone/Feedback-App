@@ -22,7 +22,7 @@ class FeaturedInquirySerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Inquiry
-        fields = ('id', "inquiry_type", "inquiry_topic", "author",)
+        fields = ('id', "title", "inquiry_type", "inquiry_topic", "author",)
 
 class InquirySerializer(serializers.ModelSerializer):
     inquiry_type = StringSerializer(many=True)

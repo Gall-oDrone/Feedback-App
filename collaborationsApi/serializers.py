@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import CollaborationTypes, RequestStatus, Collaboration, CollaborationWorkFlow, CollaborationRequest, AcademicDisciplines, ColaborationStatus, CollaborationCategory, IndustryFields, RequestCollabPosition
+from .models import CollaborationTypes, RequestStatus, Collaboration, CollaborationWorkFlow, CollaborationRequest, AcademicDisciplines, ColaborationStatus, CollaborationCategory, IndustryFields, RequestCollabPosition, RecruitmentForm
 from users.models import User, ProfileInfo
 from .constants import *
 from users.serializers import ProfileSerializer, ProfileInfoSerializer
@@ -71,11 +71,12 @@ class CollaborationSerializer(serializers.ModelSerializer):
 
         self.add_fields(data['type'].lower(), 0, article)
         self.add_fields(data['category'][0], 1, article)
+        self.add_fields(data['recruitment'][0], 2, article)
         if(data['academic'] is not None):
-            self.add_fields(data['academic'][1], 2, article)
+            self.add_fields(data['academic'][1], 3, article)
         if(data['industry'] is not None):
-            self.add_fields(data['industry'][0], 3, article)
-            self.add_fields(data['position'][0], 4, article)
+            self.add_fields(data['industry'][0], 4, article)
+            self.add_fields(data['position'][0], 5, article)
         article.save()
 
         article.collaborators.add(User.objects.get(username=data["user"]) )
@@ -140,16 +141,18 @@ class CollaborationSerializer(serializers.ModelSerializer):
 
     def scher1(self, i):
         ct = CollaborationTypes()
+        rf = RecruitmentForm()
         cc = CollaborationCategory()
         ad = AcademicDisciplines()
         indf = IndustryFields()
         cp = RequestCollabPosition()
         switcher={
                 0:ct,
-                1:cc,
-                2:ad,
-                3:indf,
-                4:cp,
+                1:rf,
+                2:cc,
+                3:ad,
+                4:indf,
+                5:cp,
             }
         print("switcher: ", switcher.get(i))
         return switcher.get(i,"Invalid day of week")
@@ -157,10 +160,11 @@ class CollaborationSerializer(serializers.ModelSerializer):
     def scher2(self, i):
         switcher={
                 0:CollaborationTypes.CHOICES,
-                1:CollaborationCategory.CHOICES,
-                2:ACADEMIC_DISCIPLINES_CHOICES,
-                3:INDUSTRY_FIELDS_CHOICES,
-                4:COLLABORATION_POSITIONS,
+                1:RECRUITMENT_FORM_CHOCIES,
+                2:CollaborationCategory.CHOICES,
+                3:ACADEMIC_DISCIPLINES_CHOICES,
+                4:INDUSTRY_FIELDS_CHOICES,
+                5:COLLABORATION_POSITIONS,
                 # 2:CrowdfundingTypes.CHOICES,
             }
         return switcher.get(i,"Invalid day of week")
@@ -171,15 +175,18 @@ class CollaborationSerializer(serializers.ModelSerializer):
             m.collaboration_type = f        
             return m
         elif(i == 1):
+            m.r_f = f
+            return m
+        elif(i == 2):
             m.collaboration_cateogry = f
             return m
-        elif(i == 2):
+        elif(i == 3):
             m.a_d = f
             return m
-        elif(i == 3):
+        elif(i == 4):
             m.i_f = f
             return m
-        elif(i == 2):
+        elif(i == 5):
             m.collab_pos = f
             return m
         else:
@@ -188,10 +195,11 @@ class CollaborationSerializer(serializers.ModelSerializer):
     def scher4(self, i):
         switcher={
                 0:CollaborationTypes,
-                1:CollaborationCategory,
-                2:AcademicDisciplines,
-                3:IndustryFields,
-                4:RequestCollabPosition
+                1:RecruitmentForm,
+                2:CollaborationCategory,
+                3:AcademicDisciplines,
+                4:IndustryFields,
+                5:RequestCollabPosition
             }
         return switcher.get(i,"Invalid day of week")
 
@@ -221,6 +229,16 @@ class CollaborationSerializer(serializers.ModelSerializer):
                 university.collaboration_cat = mt
             return 
         elif(i == 2):
+            mt = sch.objects.get(r_t=m)    
+            #ManyToMany
+            try:
+                university.collaboration_rf.add(mt)
+            #Foreign Key
+            except Exception as e:
+                print("except at scher5: ", e)
+                university.collaboration_rf = mt
+            return 
+        elif(i == 3):
             mt = sch.objects.get(a_d=m)    
             print("KONGOS KUDOS II: ", mt)
             #ManyToMany
@@ -232,7 +250,7 @@ class CollaborationSerializer(serializers.ModelSerializer):
                 print("except at scher5: ", e)
                 university.collaboration_ad = mt
             return 
-        elif(i == 3):
+        elif(i == 4):
             mt = sch.objects.get(i_f=m)    
             #ManyToMany
             try:
@@ -242,7 +260,7 @@ class CollaborationSerializer(serializers.ModelSerializer):
                 print("except at scher5: ", e)
                 university.collaboration_if = mt
             return 
-        elif(i == 4):
+        elif(i == 5):
             mt = sch.objects.get(collab_pos=m)    
             #ManyToMany
             try:
@@ -256,11 +274,14 @@ class CollaborationSerializer(serializers.ModelSerializer):
             return "Invalid day of week"
 
 class CollabRequestSerializer(serializers.Serializer):
-    collaboration_type = StringSerializer(many=False)
+    requester = StringSerializer(many=False)
+    recipient = StringSerializer(many=False)
+    timestamp = StringSerializer(many=False)
+    id = StringSerializer(many=False)
 
     class Meta:
         model = CollaborationRequest
-        fields = ("requester", "recipient", "timestamp")
+        fields = ("id", "requester", "recipient", "timestamp")
 
     def create(self, request, *args):
         data = request
@@ -274,6 +295,25 @@ class CollabRequestSerializer(serializers.Serializer):
 
         article.save()
         return article
+
+class UserCollabRequestListSerializer(serializers.Serializer):
+    received = serializers.SerializerMethodField()
+    sent = serializers.SerializerMethodField()
+
+    class Meta:
+        model = CollaborationRequest
+        fields = ('received', 'sent')
+    
+    def get_received(self, obj):
+        user = obj.context['user']
+        received = CollabRequestSerializer(CollaborationRequest.objects.filter(recipient=user), many=True).data
+        # print("a2: ", received, user)
+        return received
+
+    def get_sent(self, obj):
+        user = self.context.get("user")
+        sent = CollabRequestSerializer(CollaborationRequest.objects.filter(requester=user), many=True).data
+        return sent
 
 class academicDiscListSerializer(serializers.Serializer):
     academic_disc = serializers.SerializerMethodField()
