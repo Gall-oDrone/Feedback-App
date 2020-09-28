@@ -4,6 +4,8 @@ import {
   AUTH_SUCCESS,
   AUTH_FAIL,
   AUTH_LOGOUT,
+  RESEND_EMAIL_SUCCESS,
+  RESEND_EMAIL_FAIL,
 } from '../actions/actionTypes';
 import {
   authLogInURL,
@@ -26,6 +28,7 @@ export const authSuccess = user => {
     user
   };
 };
+
 
 export const authFail = error => {
   console.log("auth Show Error: ", error)
@@ -150,6 +153,20 @@ export const authFacebookLogin = (token) => {
   };
 }
 
+export const resendEmailSuccess = () => {
+  return {
+    type: RESEND_EMAIL_SUCCESS,
+  };
+};
+
+
+export const resendEmailFail = error => {
+  return {
+    type: RESEND_EMAIL_FAIL,
+    error: error
+  };
+};
+
 export const authResendConfirmation = (token, userId, userEmail) => {
   const user = {
     token: token,
@@ -160,11 +177,10 @@ export const authResendConfirmation = (token, userId, userEmail) => {
     axios
       .post(authResendConfirmationURL, { user })
       .then(res => {
-        // dispatch(authSuccess(user));
-        // dispatch(checkAuthTimeout(3600));
+        dispatch(resendEmailSuccess(user));
       })
       .catch(err => {
-        dispatch(authFail(err));
+        dispatch(resendEmailFail(err));
       });
   };
 }

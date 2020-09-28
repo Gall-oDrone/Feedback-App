@@ -12,7 +12,8 @@ class Confirmation extends React.Component {
   state = {
     confirmDirty: false,
     autoCompleteResult: [],
-    college: null
+    college: null,
+    error: null
   };
 
   handleSubmit = e => {
@@ -33,7 +34,10 @@ class Confirmation extends React.Component {
               // this.props.history.push('/');
             }
           })
-          .catch(error => console.error(error))
+          .catch(error => {
+            console.error(error) 
+            this.setState({error:error.message})
+          })
           console.log('Error'); 
           }
       });
@@ -41,6 +45,7 @@ class Confirmation extends React.Component {
 
   render() {
     const { getFieldDecorator } = this.props.form;
+    const { error } = this.state
     const formItemLayout = {
         labelCol: {
           xs: { span: 24 },
@@ -72,6 +77,7 @@ class Confirmation extends React.Component {
                           })(<Input />)}
                       </Form.Item>
                       <Button  type="primary" htmlType="submit"> Resend Email</Button>
+                      {error ? <div><span style={{color:"red"}}><p>{error}</p></span></div> : null}
                   </Form>
               </Card>
             </Col>
@@ -88,6 +94,7 @@ const mapStateToProps = state => {
       userId: state.auth.userId,
       token: state.auth.token,
       is_active: state.auth.is_active_user,
+      error: state.auth.error
     };
   };
   

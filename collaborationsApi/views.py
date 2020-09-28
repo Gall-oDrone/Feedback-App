@@ -18,7 +18,12 @@ from .models import CollaborationTypes, RequestStatus, CollaborationCategory, Co
 from notificationsApi.models import Notification
 from users.models import User, Profile
 from .constants import *
-from .serializers import CollaborationSerializer, CollabRequestSerializer, academicDiscListSerializer, ChoicesListSerializer, UserCollabRequestListSerializer
+from .serializers import (CollaborationSerializer, 
+                        CollabRequestSerializer, 
+                        academicDiscListSerializer, 
+                        ChoicesListSerializer, 
+                        UserCollabRequestListSerializer,
+                        CollaborationDetailSerializer)
 # CollaborationFeatureSerializer, VideoFormSerializer, CommentSerializer, LikeSerializer, LikeListSerializer, RatingSerializer, CommentListSerializer, ImageFormSerializer, ProfileCollaborationListSerializer, Cat_FT_Serializer
 from analytics.models import View
 from django.http import Http404
@@ -113,7 +118,7 @@ class CollaborationListView(ListAPIView):
 
 class CollaborationDetailView(RetrieveAPIView):
     queryset = Collaboration.objects.all()
-    serializer_class = CollaborationSerializer
+    serializer_class = CollaborationDetailSerializer
     permission_classes = (permissions.AllowAny,)
 
     def get_object(self, *args, **kwargs):

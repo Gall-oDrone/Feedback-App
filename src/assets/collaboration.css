@@ -122,6 +122,16 @@ cursor: pointer;
         border-radius: 4px;
     }
 
+    .project-photo_wrapper {
+        border-radius: 4px;
+        display: flex;
+    }
+
+    #collab-img-con{
+        width: 100%;
+        height: 400px;
+    }
+
 .resume_top-photo_wrapper::before {
     content: "";
     position: absolute;
@@ -144,6 +154,14 @@ cursor: pointer;
     left: 50%;
     transform: translate(-50%,-50%);
 }
+
+.project-photo_wrapper img {
+    object-fit: fill;
+    width: 100%;
+    height: 100%;
+    position: relative;
+}
+
 .resume_top-photo {
     border-radius: 4px;
     display: block;
@@ -376,6 +394,18 @@ cursor: pointer;
         box-shadow: none;
         text-shadow: none;
     }
+    .is-grey {
+        background: #8f9191f5;
+        /* font-weight: 600;
+        font-size: 20px;
+        border: none;
+        line-height: 1em;
+        padding: 9px 33px; */
+        text-transform: none;
+        cursor: default;
+        box-shadow: none;
+        text-shadow: none;
+    }
     .button, .button.is-green_candy {
         font-family: Proxima Nova,Arial,"sans-serif";
     }
@@ -384,7 +414,7 @@ cursor: pointer;
         padding: 15px 20px;
         text-transform: none; */
     }
-    .button.is-green_candy {
+    .button.is-green_candy, .button.is-grey {
         /* background: #3dbe8b;
         background: linear-gradient(#43c692,#39b885); */
         border-radius: 4px;

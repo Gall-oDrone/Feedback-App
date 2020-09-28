@@ -310,6 +310,7 @@ class SessionSerializer(serializers.ModelSerializer):
     def scher8(self, i, c, session):
         sch = self.scher4(i)
         if(i == 0):
+            print("CACAS 2 I: ", "c: ", c, "i: ", i)
             mt = sch.objects.get(topic=c)
             session.topic.add(mt.id)
             return 
@@ -324,11 +325,11 @@ class SessionSerializer(serializers.ModelSerializer):
             if len(cgrs) == 0:
                 self.scher7(i, c, session)
             else:
-                print("CACAS 2: ", cgrs, c.replace(" ", "").upper())
+                print("CACAS 2: ", "List: ", cgrs, "TOPIC TO CHECK:", c.replace(" ", "").upper())
                 if(c.replace(" ", "").upper() not in cgrs):
-                    self.scher7(i, c, session)
+                    self.scher7(i, c.lower(), session)
                 else:
-                    self.scher8(i, c, session)
+                    self.scher8(i, c.lower(), session)
         return session
 
 class SessionUserListSerializer(serializers.ModelSerializer):

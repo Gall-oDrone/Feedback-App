@@ -10,6 +10,10 @@ from projectsApi.models import Project
 from articlesApi.models import Article
 from workshopsApi.models import Workshop
 
+from projectsApi.serializers import ProjectSerializer
+from articlesApi.serializers import ArticleSerializer
+from workshopsApi.serializers import WorkshopSerializer
+
 import json
 
 class StringSerializer(serializers.StringRelatedField):
@@ -50,8 +54,8 @@ class CollaborationSerializer(serializers.ModelSerializer):
     def get_user_info(self, obj):
         # print("COLAS SX: ", obj.collaborators.get(username="q").profileinfo_set.all().values("name")[0] )
         request = self.context.get('request')
-        # userId = obj.collaborators.all().values()[0]["id"]
-        userId = "1"
+        userId = obj.collaborators.all().values()[0]["id"]
+        # userId = "1"
         profile_info = ProfileInfoSerializer(ProfileInfo.objects.get(profile_username=userId), many=False, context={'request': request} ).data
         # profile_name = obj.collaborators.get(username="q").profileinfo_set.all().values("name")
         return profile_info
@@ -336,6 +340,56 @@ class CollaborationSerializer(serializers.ModelSerializer):
         elif(i == 2):
             university.workshop = req_mod
   
+class CollaborationDetailSerializer(serializers.ModelSerializer):
+    collaboration_type = StringSerializer(many=False)
+    collaboration_rf = StringSerializer(many=False)
+    collaboration_cat = StringSerializer(many=False)
+    timesamp = StringSerializer(many=False)
+    category = serializers.SerializerMethodField()
+    user_info = serializers.SerializerMethodField()
+    selected_project = serializers.SerializerMethodField()
+    
+    def get_category(self, obj):
+        request = self.context.get('request')
+        if(obj.collaboration_cat.collaboration_cateogry == "academic"):
+            return {"field":obj.collaboration_ad.a_d}
+        else:
+            return {"field":obj.collaboration_if.i_f, "position":obj.collaboration_pos.collab_pos}
+
+    def get_selected_project(self, obj):
+        request = self.context.get('request')
+        if(obj.project is not None):
+            project = ProjectSerializer(obj.project, many=False, context={'request': request}).data
+            return {x: project.get(x) for x in ["title", "content","category", "project_image"]}
+        if(obj.article is not None):
+            article = ArticleSerializer(obj.article, many=False, context={'request': request}).data
+            return {x: article.get(x) for x in ["title", "overview","categories", "thumbnail"]}
+        if(obj.workshop is not None):
+            workshop = WorkshopSerializer(obj.workshop, many=False, context={'request': request}).data
+            return {x: workshop.get(x) for x in ["title", "overview","categories", "image"]}
+        return None
+
+    def get_user_info(self, obj):
+        # print("COLAS SX: ", obj.collaborators.get(username="q").profileinfo_set.all().values("name")[0] )
+        request = self.context.get('request')
+        userId = obj.collaborators.all().values()[0]["id"]
+        # userId = "1"
+        profile_info = ProfileInfoSerializer(ProfileInfo.objects.get(profile_username=userId), many=False, context={'request': request} ).data
+        # profile_name = obj.collaborators.get(username="q").profileinfo_set.all().values("name")
+        return profile_info
+
+    class Meta:
+        model = Collaboration
+        fields = (
+            'id', 
+            'collaboration_type', 
+            "collaboration_cat",
+            "timesamp", 
+            "collaboration_rf",
+            "category",
+            "selected_project",
+            "user_info",
+            )
 
 
 class CollabRequestSerializer(serializers.Serializer):

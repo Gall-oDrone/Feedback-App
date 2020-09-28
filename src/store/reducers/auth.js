@@ -55,6 +55,21 @@ const authLogout = (state, action) => {
   });
 };
 
+const resendEmailSuccess = (state, action) => {
+  console.log("resendEmailSuccess action: ", action)
+  return updateObject(state, {
+    error: null,
+    loading: false
+  });
+};
+
+const resendEmailFail = (state, action) => {
+  return updateObject(state, {
+    error: action.error,
+    loading: false
+  });
+};
+
 const reducer = (state = initialState, action) => {
   switch (action.type) {
     case actionTypes.AUTH_START:
@@ -65,6 +80,10 @@ const reducer = (state = initialState, action) => {
       return authFail(state, action);
     case actionTypes.AUTH_LOGOUT:
       return authLogout(state, action);
+    case actionTypes.RESEND_EMAIL_SUCCESS:
+      return resendEmailSuccess(state, action);
+    case actionTypes.RESEND_EMAIL_FAIL:
+      return resendEmailFail(state, action);
     default:
       return state;
   }
