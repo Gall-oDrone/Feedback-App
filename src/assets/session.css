@@ -88,7 +88,7 @@ img {
      .excerpt {
       padding:0;
       padding-bottom:5px;
-      margin:0
+      margin:0;
      }
      .excerpt .started {
       float:right;
@@ -102,6 +102,9 @@ img {
      .excerpt .tags {
       width:410px;
       margin-top:5px
+     }
+     .excerpt .join {
+      float:left;
      }
      .tags {
       line-height:18px;
@@ -144,7 +147,7 @@ img {
      }
 
      .summary-fst-row-con, .summary-last-row-con{}
-     .views, .author{
+     .views, .author, .join{
       flex:1 auto;
       width:auto;
       float:left;

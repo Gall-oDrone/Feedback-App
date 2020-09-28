@@ -8,6 +8,7 @@ from home.settings.storage_backends import MediaStorage
 from allauth.account.signals import user_signed_up
 from django.dispatch import receiver
 from django.utils.translation import ugettext_lazy as _
+from collaborationsApi.constants import *
 # from django.contrib.auth import get_user_model
 # UserModel = get_user_model()
 # from .serializers import send_verification_email
@@ -565,6 +566,58 @@ class Profile(models.Model):
         if self.pk == pk:
             return self.profile_avatar
 
+class UserBachelor(models.Model):
+        degree = models.CharField(max_length=100, choices=BACHELOR_DEGREES, blank=True)
+        from_date = models.DateTimeField(auto_now_add=False)
+        to_date = models.DateTimeField(auto_now_add=False)
+        institution=UNIVERSITIES
+
+class UserMaster(models.Model):
+        degree = models.CharField(max_length=100, choices=MASTER_DEGREES, blank=True)
+        from_date = models.DateTimeField(auto_now_add=False)
+        to_date = models.DateTimeField(auto_now_add=False)
+        institution=UNIVERSITIES
+
+class UserDoctorate(models.Model):
+        degree = models.CharField(max_length=100, choices=PHD_DEGREES, blank=True)
+        from_date = models.DateTimeField(auto_now_add=False)
+        to_date = models.DateTimeField(auto_now_add=False)
+        institution=UNIVERSITIES
+
+# class UserDiploma(models.Model):
+#         degree = models.CharField(max_length=100, choices=BACHELOR_DEGREES, blank=True)
+#         from_date = models.DateTimeField(auto_now_add=False)
+#         to_date = models.DateTimeField(auto_now_add=False)
+#         institution=UNIVERSITIES
+
+
+### TODO #######
+# class Education(models.Model):
+#     bachelor = models.ManyToManyField(UserBachelor, blank=True)
+#     master = models.ManyToManyField(UserMaster, blank=True)
+#     phd = models.ManyToManyField(UserDoctorate, blank=True)
+
+# class JobActivity(models.Model):
+#     job_activity = models.TextField(max_length=100, blank=True)
+
+# class TechnologyUsed(models.Model):
+#     technology = models.CharField(max_length=100, choices=TECHNOLOGIES, blank=True)
+
+# class JobPosition(models.Model):
+#         position = models.CharField(max_length=100, choices=JOB_POSITIONS, blank=True)
+#         enterprise = models.CharField(max_length=100, choices=JOB_POSITIONS, blank=True)
+#         location = models.CharField(max_length=100, choices=JOB_POSITIONS, blank=True)
+#         from_date = models.DateTimeField(auto_now_add=False)
+#         to_date = models.DateTimeField(auto_now_add=False)
+#         job_activities = models.ManyToManyField(JobActivity, blank=True)
+#         technologies_used = models.ManyToManyField(TechnologyUsed, blank=True)
+
+# class Employment(models.Model):
+#     job_positions = models.ManyToManyField(JobPosition, blank=True)
+
+# class Experience(models.Model):
+#     experience_tags(many to many)
+#         experience_tag
 
 class ProfileInfo(models.Model):
     profile = models.ForeignKey(Profile, related_name="user_profile", on_delete=models.CASCADE)

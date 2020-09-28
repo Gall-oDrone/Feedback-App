@@ -135,7 +135,7 @@ def showMultipleModels(request):
     articleSerializer = FeaturedArticleSerializer(articles, many=True, context={'request': request})
     workshopSerializer = FeaturedWorkshopSerializer(workshops, many=True, context={'request': request})
     collaborationSerializer = FeaturedCollaborationSerializer(collaborations, many=True, context={'request': request})
-    inquirySerializer = FeaturedInquirySerializer(inquiries, many=True)
+    inquirySerializer = FeaturedInquirySerializer(inquiries, many=True, context={'request': request})
     projectSerializer = FeaturedProjectSerializer(projects, many=True, context={'request': request})
     sessionSerializer = FeaturedSessionSerializer(sessions, many=True, context={'request': request})
     resultModel = {

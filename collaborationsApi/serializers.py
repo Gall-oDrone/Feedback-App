@@ -6,6 +6,10 @@ from users.serializers import ProfileSerializer, ProfileInfoSerializer
 from django.core.files.storage import FileSystemStorage
 from django.contrib.auth import get_user_model
 
+from projectsApi.models import Project
+from articlesApi.models import Article
+from workshopsApi.models import Workshop
+
 import json
 
 class StringSerializer(serializers.StringRelatedField):
@@ -31,6 +35,8 @@ class CollaborationSerializer(serializers.ModelSerializer):
     collaboration_ad = StringSerializer(many=False)
     collaboration_cat = StringSerializer(many=False)
     collaboration_if = StringSerializer(many=False)
+    collaboration_rf = StringSerializer(many=False)
+    collaboration_pos = StringSerializer(many=False)
     timesamp = StringSerializer(many=False)
     user_info = serializers.SerializerMethodField()
     
@@ -44,14 +50,25 @@ class CollaborationSerializer(serializers.ModelSerializer):
     def get_user_info(self, obj):
         # print("COLAS SX: ", obj.collaborators.get(username="q").profileinfo_set.all().values("name")[0] )
         request = self.context.get('request')
-        userId = obj.collaborators.all().values()[0]["id"]
+        # userId = obj.collaborators.all().values()[0]["id"]
+        userId = "1"
         profile_info = ProfileInfoSerializer(ProfileInfo.objects.get(profile_username=userId), many=False, context={'request': request} ).data
         # profile_name = obj.collaborators.get(username="q").profileinfo_set.all().values("name")
         return profile_info
 
     class Meta:
         model = Collaboration
-        fields = ('id', 'collaboration_type', "timesamp", "collaboration_ad", "collaboration_cat", "collaboration_if", "user_info")
+        fields = (
+            'id', 
+            'collaboration_type', 
+            "timesamp", 
+            "collaboration_ad", 
+            "collaboration_cat", 
+            "collaboration_if", 
+            "collaboration_rf",
+            "collaboration_pos",
+            "user_info",
+            )
 
     def get_feedback_forms(self, obj):
         # obj is an assignment
@@ -70,16 +87,29 @@ class CollaborationSerializer(serializers.ModelSerializer):
         article = Collaboration()
 
         self.add_fields(data['type'].lower(), 0, article)
-        self.add_fields(data['category'][0], 1, article)
-        self.add_fields(data['recruitment'][0], 2, article)
+        self.add_fields(data['recruitment'].lower(), 1, article)
+        self.add_fields(data['category'][0], 2, article)
+        if(data['project'][0] is not None):
+            if(data['type'].lower() == "project"):
+                self.add_models(data['project'][0], 0, article)
+            elif(data['type'].lower() == "articles"):
+                self.add_models(data['project'][0], 1, article)
+            elif(data['type'].lower() == "workshop"):
+                self.add_models(data['project'][0], 2, article)
+
         if(data['academic'] is not None):
             self.add_fields(data['academic'][1], 3, article)
         if(data['industry'] is not None):
             self.add_fields(data['industry'][0], 4, article)
-            self.add_fields(data['position'][0], 5, article)
+            if(data['recruitment'].lower() == "pull"):
+                for pos in data['position']:
+                    self.add_fields(pos, 5, article)
+            else:
+                self.add_fields(data['position'][0], 5, article)
         article.save()
 
         article.collaborators.add(User.objects.get(username=data["user"]) )
+
         # print("HASATTRB: ", hasattr(data, "project_crowdfunding_type"))
         # if("project_crowdfunding_type" in data):
         #     self.add_fields(data['project_crowdfunding_type'], 2, project)
@@ -219,6 +249,16 @@ class CollaborationSerializer(serializers.ModelSerializer):
                 university.collaboration_type = mt
             return 
         elif(i == 1):
+            mt = sch.objects.get(r_f=m)    
+            #ManyToMany
+            try:
+                university.collaboration_rf.add(mt)
+            #Foreign Key
+            except Exception as e:
+                print("except at scher5: ", e)
+                university.collaboration_rf = mt
+            return 
+        elif(i == 2):
             mt = sch.objects.get(collaboration_cateogry=m)    
             #ManyToMany
             try:
@@ -227,16 +267,6 @@ class CollaborationSerializer(serializers.ModelSerializer):
             except Exception as e:
                 print("except at scher5: ", e)
                 university.collaboration_cat = mt
-            return 
-        elif(i == 2):
-            mt = sch.objects.get(r_t=m)    
-            #ManyToMany
-            try:
-                university.collaboration_rf.add(mt)
-            #Foreign Key
-            except Exception as e:
-                print("except at scher5: ", e)
-                university.collaboration_rf = mt
             return 
         elif(i == 3):
             mt = sch.objects.get(a_d=m)    
@@ -273,15 +303,51 @@ class CollaborationSerializer(serializers.ModelSerializer):
         else:
             return "Invalid day of week"
 
+    def add_models(self, model_id, model_index, university):
+        m_id = model_id
+        index = model_index
+        try:
+            print("try on !List model type")
+            print("mod 0: ", m_id, index)
+            mod = self.scherM1(index)
+            print("mod I: ", mod, mod.objects.get(id=index), type(mod))
+            ms = self.scherM2(index, mod, m_id, university)
+        except Exception as e:
+            print("except on !List model type: ", e)
+
+    def scherM1(self, i):
+        project = Project
+        article = Article
+        workshop = Workshop
+        switcher={
+                0:project,
+                1:article,
+                2:workshop,
+            }
+        return switcher.get(i,"Invalid day of week")
+    
+    def scherM2(self, i, mod, id, university):
+        req_mod = mod.objects.get(id=id)
+        print("mod II: ", req_mod, i)
+        if(i == 0):
+            university.project = req_mod
+        elif(i == 1):
+            university.article = req_mod
+        elif(i == 2):
+            university.workshop = req_mod
+  
+
+
 class CollabRequestSerializer(serializers.Serializer):
     requester = StringSerializer(many=False)
     recipient = StringSerializer(many=False)
     timestamp = StringSerializer(many=False)
+    status = StringSerializer(many=False)
     id = StringSerializer(many=False)
 
     class Meta:
         model = CollaborationRequest
-        fields = ("id", "requester", "recipient", "timestamp")
+        fields = ("id", "requester", "recipient", "timestamp", "status")
 
     def create(self, request, *args):
         data = request
@@ -298,11 +364,11 @@ class CollabRequestSerializer(serializers.Serializer):
 
 class UserCollabRequestListSerializer(serializers.Serializer):
     received = serializers.SerializerMethodField()
-    sent = serializers.SerializerMethodField()
+    accepted = serializers.SerializerMethodField()
 
     class Meta:
         model = CollaborationRequest
-        fields = ('received', 'sent')
+        fields = ('received', 'accepted')
     
     def get_received(self, obj):
         user = obj.context['user']
@@ -310,11 +376,11 @@ class UserCollabRequestListSerializer(serializers.Serializer):
         # print("a2: ", received, user)
         return received
 
-    def get_sent(self, obj):
-        user = self.context.get("user")
-        sent = CollabRequestSerializer(CollaborationRequest.objects.filter(requester=user), many=True).data
-        return sent
-
+    def get_accepted(self, obj):
+        user = obj.context.get("user")
+        accepted = CollabRequestSerializer(CollaborationRequest.objects.filter(recipient=user, status__req_status="accepted"), many=True).data
+        return accepted
+    
 class academicDiscListSerializer(serializers.Serializer):
     academic_disc = serializers.SerializerMethodField()
     

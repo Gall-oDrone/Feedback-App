@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from .models import Inquiry, Comment, InquiryType, Like, Rating, File, CommentReply, InquiryStatus, TargetAudience, Topic, ContactOption, PreferLanguage
 from users.models import User, ProfileInfo, Universities
+from users.serializers import ProfileSerializer
 from django.core.files.storage import FileSystemStorage
 import json
 
@@ -18,11 +19,17 @@ class CommentReplySerializer(serializers.ModelSerializer):
 class FeaturedInquirySerializer(serializers.ModelSerializer):
     inquiry_type = StringSerializer(many=True)
     inquiry_topic = StringSerializer(many=True)
-    author = StringSerializer(many=False)
+    profile_avatar = serializers.SerializerMethodField()
 
     class Meta:
         model = Inquiry
-        fields = ('id', "title", "inquiry_type", "inquiry_topic", "author",)
+        fields = ('id', "title", "inquiry_type", "inquiry_topic", "profile_avatar",)
+    
+    def get_profile_avatar(self, obj):
+        request = self.context.get('request')   
+        if(obj.author):
+            profile = ProfileSerializer(obj.author.profile, many=False, context={'request': request}).data["profile_avatar"]
+            return profile
 
 class InquirySerializer(serializers.ModelSerializer):
     inquiry_type = StringSerializer(many=True)

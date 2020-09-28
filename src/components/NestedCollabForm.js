@@ -3,24 +3,14 @@ import { connect } from 'react-redux';
 import {
   Form,
   Select,
-  InputNumber,
-  Button,
-  Upload,
-  Icon,
-  Input,
-  Checkbox,
-  Modal,
-  Radio,
-  Row,
   Cascader,
-  Col,
-  DatePicker,
-  TimePicker
 } from 'antd';
 import {fetchDisciplinesURL, fetchCollabAllChoices} from "../constants";
 import moment from "moment";
 import axios from 'axios';
 import lodash from "lodash";
+import FetchProject from "./CollaborationActivity";
+const { Option } = Select;
 
 class ArticleCustomForm extends React.Component {
 
@@ -31,6 +21,7 @@ class ArticleCustomForm extends React.Component {
       industry_fields: null,
       collab_position: null,
       collab_categories: null,
+      children:null,
     };
   }
 
@@ -42,11 +33,16 @@ class ArticleCustomForm extends React.Component {
     axios.get(fetchCollabAllChoices)
     .then(res => {
       console.log("resData at UI: ", (res))
+      const children = [];
+      for (let i = 0; i < res.data[0].collab_position.length; i++) {
+        children.push(<Option key={res.data[0].collab_position[i].value}>{res.data[0].collab_position[i].label}</Option>);
+      }
       this.setState({
         academic_disciplines:res.data[0].academic_disc,
         industry_fields:res.data[0].industry_fields,
         collab_position:res.data[0].collab_position,
         collab_categories:res.data[0].collab_categories,
+        children: children
       });
     })
     .catch(err =>
@@ -82,12 +78,12 @@ class ArticleCustomForm extends React.Component {
 
   render() {
     console.log("props & state: "+ JSON.stringify(this.props), this.state)
-    const { collab_categories, academic_disciplines, industry_fields, collab_position } = this.state
+    const { collab_categories, academic_disciplines, industry_fields, collab_position, children } = this.state
     const { getFieldDecorator, getFieldValue } = this.props.form;
+    const joinFrom = getFieldValue("recruitment")
 
     return (
       <div>
-
         <p>Project Category</p>
         <Form.Item label="Field">
         {getFieldDecorator("collab_category", {
@@ -138,6 +134,7 @@ class ArticleCustomForm extends React.Component {
             return(
                 <div>
                   <p>Project Position</p>
+                  {joinFrom === "Push" ? 
                     <Form.Item label="Collaborate as">
                       {getFieldDecorator("project_position", {
                                   initialValue: [this.handleADChange()],
@@ -147,6 +144,25 @@ class ArticleCustomForm extends React.Component {
                                 })(<Cascader options={collab_position} />)
                       }
                     </Form.Item>
+                    :
+                    <Form.Item label="Required Roles">
+                      {getFieldDecorator("project_position", {
+                                  initialValue: [],
+                                  rules: [
+                                    { type: 'array', required: true, message: 'Please select a position' },
+                                  ],
+                                })(
+                                  <Select
+                                    mode="multiple"
+                                    style={{ width: '100%' }}
+                                    placeholder="Please select"
+                                  >
+                                    {children}
+                                  </Select>,
+                                  )
+                      }
+                    </Form.Item>
+                  }
                 </div>
             )
           }
@@ -165,42 +181,3 @@ const mapStateToProps = state => {
   }
 }
 export default connect(mapStateToProps)(WrappedArticleCreate);
-
-
-      // <Form {...formItemLayout} onSubmit={event => this.handleFormSubmit(
-      //   event,
-      //   this.props.requestType,
-      //   this.props.articleID)}>
-{/* 
-      <p>Required Position</p>
-       <Form.Item label="Position">
-        {getFieldDecorator('position', {
-              rules: [
-                { required: true,  message: 'Please select a desired position!', type: 'array' },
-              ],
-            })(
-              <Select name="positions" mode="tags" onChange={this.onChange} placeholder="Please select a position">
-                  <Option value="developer">Developer</Option>
-                  <Option value="designer">Designer</Option>
-                  <Option value="financeExpert">Finance Expert</Option>
-                  <Option value="projectManager">Project Manager</Option>
-                  <Option value="productManager">Product Manager</Option>
-              </Select>,
-            )
-        }
-        </Form.Item> 
-        
-       <p>Request Type</p>
-        <Form.Item label="Request for: ">
-          {getFieldDecorator('request_type', {
-                rules: [
-                  { required: true, message: 'Please select a field!', type: 'string' },
-                ],
-              })(
-            <Radio.Group defaultValue="a" buttonStyle="solid">
-              <Radio.Button value="a"> My project</Radio.Button>
-              <Radio.Button value="b"> An user project </Radio.Button>
-            </Radio.Group>,
-              )
-            }
-        </Form.Item> */}

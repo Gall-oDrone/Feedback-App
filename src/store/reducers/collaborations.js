@@ -13,7 +13,7 @@ import { updateObject } from "../utility";
 const initialState = {
   collabs: [],
   error: null,
-  loading: false
+  loading: false,
 };
 
 const getCollaborationListStart = (state, action) => {

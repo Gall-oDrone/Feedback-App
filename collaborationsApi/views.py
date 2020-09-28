@@ -200,20 +200,22 @@ class CollabRequestView(CreateAPIView):
         create_article = serializer.create(request.data)
         if create_article:
             #SEND NOTIFICATION
+            # user == collab req recipient
+            # actor == collab req requester
             user = User.objects.get(username=request.data["user"])
-            recipient = self.request.data.get("recipient")
+            recipient = User.objects.get(username=request.data.get("recipient"))
             notify = Notification()
-            notify.user = user
-            notify.actor = recipient
+            notify.user = recipient
+            notify.actor = user.username
             notify.verb = "Sent"
             notify.action = "Collaboration Response"
             notify.target = "1" 
-            notify.description = f"{user.username} wants to collaborate with you."
+            notify.description = f"{recipient.username} wants to collaborate with you."
             notify.save()
             notification_counter = Profile.objects.update_or_create(
-                user_id=user,
+                user_id=recipient,
                 defaults={"notification_counter": CollaborationRequest.objects.filter(
-                    recipient=User.objects.get(username=recipient))
+                    recipient=recipient)
                     .count(),
                 })
 
@@ -268,9 +270,9 @@ class UserCollabListView(RetrieveUpdateDestroyAPIView):
             request.save()
 
             ## User how response to request
-            user = User.objects.get(username = User.objects.get(username=self.kwargs.get('pk')))
+            user = User.objects.get(username=self.kwargs.get('pk'))
             ## User how sent request and its reciving response
-            recipient = User.objects.get(username = User.objects.get(username=self.request.data["recipient"]))
+            recipient = User.objects.get(username=self.request.data["recipient"])
 
             #ADD COLLABORATOR TO COLLABORATION & CREATE TEAM
             request.collaboration.collaborators.add(recipient)
@@ -279,9 +281,9 @@ class UserCollabListView(RetrieveUpdateDestroyAPIView):
 
             #NOTIFICATION
             notify = Notification()
-            notify.user = user
-            notify.actor = self.request.data.get("recipient")[0]
-            notify.verb = "Response"
+            notify.user = recipient
+            notify.actor = user
+            notify.verb = "Responded"
             notify.action = "Collaboration Request Response"
             notify.target = "1"
             notify.description = f"{user} accepted your collaboration request"

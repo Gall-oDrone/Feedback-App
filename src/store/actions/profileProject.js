@@ -16,19 +16,19 @@ import {
   projectListURL,
   projectDetailURL,
   projectCreateURL,
-  profileInquiryListURL,
-  profileInquiryDetailURL,
+  profileProjectListURL,
+  profileProjectDetailURL,
   projectURL
 } from "../../constants"
 
-const getProfileInquiryListStart = () => {
+const getProfileProjectListStart = () => {
   console.log("1) Actions getMeetingDetailStart")
   return {
     type: GET_PROFILE_PROJECT_LIST_START
   };
 };
 
-const getProfileInquiryListSuccess = data => {
+const getProfileProjectListSuccess = data => {
   console.log("2) Actions getMeetingDetailSuccess")
   return {
     type: GET_PROFILE_PROJECT_LIST_SUCCESS ,
@@ -36,41 +36,41 @@ const getProfileInquiryListSuccess = data => {
   };
 };
 
-const getProfileInquiryListFail = error => {
+const getProfileProjectListFail = error => {
   return {
     type: GET_PROFILE_PROJECT_LIST_FAIL,
     error: error
   };
 };
 
-export const getProfileInquiryList = (token, username) => {
+export const getProfileProjectList = (token, username) => {
     return dispatch => {
-      console.log(" getProfileInquiryList ")
+      console.log(" getProfileProjectList ")
         // dispatch(getMeetingDetailStart());
         axios.defaults.headers = {
             "Content-Type": "application/json",
             Authorization: `Token ${token}`
         }
-        axios.get(profileInquiryListURL(username))
+        axios.get(profileProjectListURL(username))
         .then(res => {
             const data = res.data;
             console.log("data: "+ JSON.stringify(data))
-            dispatch(getProfileInquiryListSuccess(data));
+            dispatch(getProfileProjectListSuccess(data));
         })
         .catch(err => {
-            dispatch(getProfileInquiryListFail(err));
+            dispatch(getProfileProjectListFail(err));
         })
     }
 }
 
-const getProfileInquiryDetailStart = () => {
+const getProfileProjectDetailStart = () => {
   console.log("1) Actions getMeetingDetailStart")
   return {
     type: GET_PROFILE_PROJECT_DETAIL_START
   };
 };
 
-const getProfileInquiryDetailSuccess = data => {
+const getProfileProjectDetailSuccess = data => {
   console.log("2) Actions getMeetingDetailSuccess")
   return {
     type: GET_PROFILE_PROJECT_DETAIL_SUCCESS ,
@@ -78,14 +78,14 @@ const getProfileInquiryDetailSuccess = data => {
   };
 };
 
-const getProfileInquiryDetailFail = error => {
+const getProfileProjectDetailFail = error => {
   return {
     type: GET_PROFILE_PROJECT_DETAIL_FAIL,
     error: error
   };
 };
 
-export const getProfileInquiryDetail = (token, projectID, username) => {
+export const getProfileProjectDetail = (token, projectID, username) => {
     return dispatch => {
       console.log(" getDetailMeetingList ")
         // dispatch(getMeetingDetailStart());
@@ -93,44 +93,44 @@ export const getProfileInquiryDetail = (token, projectID, username) => {
             "Content-Type": "application/json",
             Authorization: `Token ${token}`
         }
-        axios.get(profileInquiryDetailURL(projectID, username))
+        axios.get(profileProjectDetailURL(projectID, username))
         .then(res => {
             const data = res.data;
             console.log("data: "+ JSON.stringify(data))
-            dispatch(getProfileInquiryDetailSuccess(data));
+            dispatch(getProfileProjectDetailSuccess(data));
         })
         .catch(err => {
-            dispatch(getProfileInquiryDetailFail(err));
+            dispatch(getProfileProjectDetailFail(err));
         })
     }
 }
 
-const putProfileInquiryDetailStart = () => {
-  console.log("1) Actions putProfileInquiryDetailStart")
+const putProfileProjectDetailStart = () => {
+  console.log("1) Actions putProfileProjectDetailStart")
   return {
     type: PUT_PROFILE_PROJECT_DETAIL_START
   };
 };
 
-const putProfileInquiryDetailSuccess = data => {
-  console.log("2) Actions putProfileInquiryDetailSuccess")
+const putProfileProjectDetailSuccess = data => {
+  console.log("2) Actions putProfileProjectDetailSuccess")
   return {
     type: PUT_PROFILE_PROJECT_DETAIL_FAIL,
     data
   };
 };
 
-const putProfileInquiryDetailFail = error => {
+const putProfileProjectDetailFail = error => {
   return {
     type: PUT_PROFILE_PROJECT_DETAIL_SUCCESS,
     error: error
   };
 };
 
-export const putProfileInquiryDetail = (token, projectID, username, data) => {
+export const putProfileProjectDetail = (token, projectID, username, data) => {
     return dispatch => {
-      console.log(" putProfileInquiryDetail ")
-      console.log(" putProfileInquiryDetail data: "+JSON.stringify(data))
+      console.log(" putProfileProjectDetail ")
+      console.log(" putProfileProjectDetail data: "+JSON.stringify(data))
         // dispatch(getMeetingDetailStart());
         axios.defaults.headers = {
           //'Accept': 'application/json, application/pdf, application/xml, text/plain, text/html, *.*',
@@ -138,35 +138,35 @@ export const putProfileInquiryDetail = (token, projectID, username, data) => {
             // "Content-Type": "application/json",
             Authorization: `Token ${token}`
         }
-        axios.put(profileInquiryDetailURL(projectID, username), data)
+        axios.put(profileProjectDetailURL(projectID, username), data)
         .then(res => {
             const data = res.data;
             console.log("data: "+ JSON.stringify(data))
-            dispatch(putProfileInquiryDetailSuccess(data));
+            dispatch(putProfileProjectDetailSuccess(data));
         })
         .catch(err => {
-            dispatch(putProfileInquiryDetailFail(err));
+            dispatch(putProfileProjectDetailFail(err));
         })
     }
 }
 
-const deleteProfileInquiryDetailSuccess = () => {
-  console.log("2) Actions deleteProfileInquiryDetailSuccess")
+const deleteProfileProjectDetailSuccess = () => {
+  console.log("2) Actions deleteProfileProjectDetailSuccess")
   return {
     type: DELETE_PROFILE_PROJECT_DETAIL_SUCCESS,
   };
 };
 
-const deleteProfileInquiryDetailFail = error => {
+const deleteProfileProjectDetailFail = error => {
   return {
     type: DELETE_PROFILE_PROJECT_DETAIL_FAIL,
     error: error
   };
 };
 
-export const deleteProfileInquiryDetail = (token, projectID, username) => {
+export const deleteProfileProjectDetail = (token, projectID, username) => {
     return dispatch => {
-      console.log(" putProfileInquiryDetail ")
+      console.log(" putProfileProjectDetail ")
         // dispatch(getMeetingDetailStart());
         axios.defaults.headers = {
           //'Accept': 'application/json, application/pdf, application/xml, text/plain, text/html, *.*',
@@ -174,12 +174,12 @@ export const deleteProfileInquiryDetail = (token, projectID, username) => {
             // "Content-Type": "application/json",
             Authorization: `Token ${token}`
         }
-        axios.delete(profileInquiryDetailURL(projectID, username))
+        axios.delete(profileProjectDetailURL(projectID, username))
         .then(res => {
-            dispatch(deleteProfileInquiryDetailSuccess());
+            dispatch(deleteProfileProjectDetailSuccess());
         })
         .catch(err => {
-            dispatch(deleteProfileInquiryDetailFail(err));
+            dispatch(deleteProfileProjectDetailFail(err));
         })
     }
 }

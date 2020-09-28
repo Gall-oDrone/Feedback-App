@@ -34,6 +34,8 @@ import profileUserInfoReducer from "./store/reducers/profileAccountUserInfo"
 import profileAccountDetailReducer from "./store/reducers/profileAccountInfo"
 import profileNTFNListReducer from "./store/reducers/profileNTFN"
 import profileMSGSListReducer from "./store/reducers/profileMSGS"
+import profileProjectReducer from "./store/reducers/profileProject"
+import profileWorkshopReducer from "./store/reducers/profileWorkshop"
 
 import navReducer from "./store/reducers/nav";
 import messageReducer from "./store/reducers/message";
@@ -77,6 +79,8 @@ const rootReducer = combineReducers({
   profileNTFN: profileNTFNListReducer,
   profileMSGS: profileMSGSListReducer,
   profileInquiry: profileInquiryReducer,
+  profileProject: profileProjectReducer,
+  profileWorkshop: profileWorkshopReducer,
 
   nav: navReducer,
   message: messageReducer,

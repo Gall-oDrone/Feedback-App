@@ -87,7 +87,11 @@ const Articles = (props) => {
                                     <Tag>
                                         {item.collaboration_ad ? 
                                             item.collaboration_ad.toUpperCase()
-                                            :item.collaboration_if.toUpperCase()
+                                            :
+                                              item.collaboration_if ?
+                                                  item.collaboration_if.toUpperCase()
+                                                :
+                                                  null
                                         }
                                     </Tag>
                                   </div>
@@ -112,7 +116,9 @@ const Articles = (props) => {
                               </h3>
                             </div>
                             <div className="excerpt">
-                              {/* {item.content} */}
+                              <div className="join">
+                                <Tag color="blue">{item.collaboration_rf.toUpperCase()}</Tag>
+                              </div>
                             </div>
                             <div className="summary-last-row-con">
                                 <div className="views">

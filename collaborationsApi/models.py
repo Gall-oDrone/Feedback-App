@@ -95,24 +95,6 @@ class RequestCollabPosition(models.Model):
 
     def __str__(self):
         return self.collab_pos
-# Developer
-#     DevelopersSkills
-# Designer
-#     UX
-#     UI
-#     ProductDesigner
-# FinanceExpert
-#     Financial Modeling Consultants
-#     Venture Capital Consultants
-#     Market Research Analyst
-# ProjectManager
-#     Web Project Managers
-#     Mobile Project
-#     Agile Conslutants
-# ProductManager
-#     Ideation & Validation
-#     MVP & Go-To-MarketStrategy
-#     Product Framework and Transformation
 
 # class RequestConsultingPosition(models.Model):
 
@@ -150,6 +132,11 @@ class ColaborationStatus(models.Model):
     def __str__(self):
         return self.collaboration_status
 
+# class RequiredRole(models.Model):
+#     r_r=models.CharField(max_length=100, choices=ROLE_CHOCIES, blank=True)
+
+#     def __str__(self):
+#         return self.r_r
 # class Collaboration_Skills(models.Model):
 
 

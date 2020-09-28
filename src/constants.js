@@ -109,6 +109,8 @@ export const profileURL = (articleID, username) => `${endpoint}/articles/${artic
 export const profileUserInfoURL = username => `${endpoint}/users/profile/info/${username}`
 export const profilePageURL = username => `${endpoint}/users/profile-page/${username}`
 export const profileFollowUser = username => `${endpoint}/users/following/${username}`
+export const profileWorkshopListURL = username => `${endpoint}/workshops/list/${username}/`
+export const profileWorkshopDetailURL = (articleID, username) => `${endpoint}/workshops/${articleID}/detail/${username}/`
  
 export const profileAccountUserInfoURL = userID => `${endpoint}/users/profile/account/user/info/${userID}`
 export const profileAccountUserUpdateInfoURL = userID => `${endpoint}/users/profile/account/info/${userID}`

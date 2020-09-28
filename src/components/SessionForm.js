@@ -16,7 +16,7 @@ import {
   DatePicker,
   TimePicker
 } from 'antd';
-import {workshopCreateURL} from "../constants";
+import {sessionCreateURL} from "../constants";
 import moment from "moment";
 import axios from 'axios';
 import lodash from "lodash";
@@ -557,7 +557,7 @@ class ArticleCustomForm extends React.Component {
           "content-type": "multipart/form-data",
           Authorization: `Token ${this.props.token}`
         };
-          axios.post(workshopCreateURL, 
+          axios.post(sessionCreateURL, 
           formData
           )
             .then(res => {
@@ -713,7 +713,7 @@ class ArticleCustomForm extends React.Component {
               />
             )}
           </Form.Item>
-          <Form.Item label="Maximum hours per workshop" hasFeedback>
+          <Form.Item label="Maximum hours per session" hasFeedback>
             {getFieldDecorator('max_hours', {
               initialValue: 1,
               rules: [{ required: true, message: 'Field require' }],

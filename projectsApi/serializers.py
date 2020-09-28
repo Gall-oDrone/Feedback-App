@@ -1,4 +1,5 @@
 from django.conf import settings
+from django.core.files.storage import default_storage
 from rest_framework import serializers
 from projectsApi.models import Project, Video, Comment, Category, Like, Upvote, Rating, Image, CommentReply, FeedbackTypes, DevPhases, CrowdfundingTypes
 from users.models import User, ProfileInfo
@@ -21,10 +22,26 @@ class FeaturedProjectSerializer(serializers.ModelSerializer):
     author = StringSerializer(many=False)
     category = StringSerializer(many=True)
     content = StringSerializer(many=False)
+    media = serializers.SerializerMethodField()
+    profile_avatar = serializers.SerializerMethodField()
 
     class Meta:
         model = Project
-        fields = ('id', "category", "content", "author")
+        fields = ('id', "category", "content", "author", "media", "profile_avatar")
+
+    def get_media(self, obj):
+        request = self.context.get('request')
+        if(obj.project_image):
+            image_url = obj.project_image.url
+            return {"image": request.build_absolute_uri(image_url)}
+        else: 
+            video_url = obj.project_video.videofile.url
+            return {"video": request.build_absolute_uri(video_url)}
+
+    def get_profile_avatar(self, obj):
+        request = self.context.get('request')
+        profile = ProfileSerializer(obj.author.profile, many=False, context={'request': request}).data["profile_avatar"]
+        return profile
 
 class ProjectAuthorInfoSerializer(serializers.ModelSerializer):
     name = StringSerializer(many=False)
@@ -321,6 +338,13 @@ class ProjectSerializer(serializers.ModelSerializer):
             .annotate(Count("tags__tag"))        
         return queryset
 
+class ProjectMediaSerializer(serializers.ModelSerializer):
+    project_image = StringSerializer(many=False)
+    project_video = StringSerializer(many=False)
+
+    class Meta:
+        model = Project
+        fields = ("project_image", "project_video")
 
         # data2 = request.data.keys()
         # # data = request.GET.get('project_feedback')

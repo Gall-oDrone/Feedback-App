@@ -31,7 +31,9 @@ import {
 import { updateObject } from "../utility";
 
 const initialState = {
-  loading: false
+  loading: false,
+  articleList: [],
+
 };
 
 const getProfileMRStart = (state, action) => {

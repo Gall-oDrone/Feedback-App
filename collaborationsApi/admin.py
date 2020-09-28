@@ -5,7 +5,8 @@ from .models import(
     Collaboration, CollaborationWorkFlow,
     CollaborationRequest, RequestCollabPosition,
     AcademicDisciplines, IndustryFields,
-    CollaborationCategory, ColaborationStatus
+    CollaborationCategory, ColaborationStatus,
+    RecruitmentForm
 ) 
 
 # class RatingAdmin(admin.ModelAdmin):
@@ -21,3 +22,4 @@ admin.site.register(RequestCollabPosition)
 admin.site.register(IndustryFields)
 admin.site.register(CollaborationCategory)
 admin.site.register(ColaborationStatus)
+admin.site.register(RecruitmentForm)

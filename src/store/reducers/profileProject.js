@@ -12,10 +12,12 @@ import {
 import { updateObject } from "../utility";
 
 const initialState = {
-  loading: false
+  loading: false,
+  projectList: [],
+
 };
 
-const getProfileInquiryListStart = (state, action) => {
+const getProfileProjectListStart = (state, action) => {
   console.log("1) Reducers createMeetingStart")
   console.log("1.1) Reducers actions: "+ JSON.stringify(action))
   return updateObject(state, {
@@ -24,24 +26,24 @@ const getProfileInquiryListStart = (state, action) => {
   });
 };
 
-const getProfileInquiryListSuccess = (state, action) => {
-  console.log("2) Reducers getProfileInquiryListSuccess")
+const getProfileProjectListSuccess = (state, action) => {
+  console.log("2) Reducers getProfileProjectListSuccess")
   return updateObject(state, {
-    inquiryList: action.data,
+    projectList: action.data,
     error: null,
     loading: false
   });
 };
 
-const getProfileInquiryListFail = (state, action) => {
+const getProfileProjectListFail = (state, action) => {
   return updateObject(state, {
     error: action.error,
     loading: false
   });
 };
 
-const getProfileInquiryDetailStart = (state, action) => {
-  console.log("1) Reducers getProfileInquiryDetailStart")
+const getProfileProjectDetailStart = (state, action) => {
+  console.log("1) Reducers getProfileProjectDetailStart")
   console.log("1.1) Reducers actions: "+ JSON.stringify(action))
   return updateObject(state, {
     error: null,
@@ -49,24 +51,24 @@ const getProfileInquiryDetailStart = (state, action) => {
   });
 };
 
-const getProfileInquiryDetailSuccess = (state, action) => {
-  console.log("2) Reducers getProfileInquiryDetailSuccess")
+const getProfileProjectDetailSuccess = (state, action) => {
+  console.log("2) Reducers getProfileProjectDetailSuccess")
   return updateObject(state, {
-    inquiryDetail: action.data,
+    projectDetail: action.data,
     error: null,
     loading: false
   });
 };
 
-const getProfileInquiryDetailFail = (state, action) => {
+const getProfileProjectDetailFail = (state, action) => {
   return updateObject(state, {
     error: action.error,
     loading: false
   });
 };
 
-const putProfileInquiryDetailStart = (state, action) => {
-  console.log("1) Reducers putProfileInquiryDetailStart")
+const putProfileProjectDetailStart = (state, action) => {
+  console.log("1) Reducers putProfileProjectDetailStart")
   console.log("1.1) Reducers actions: "+ JSON.stringify(action))
   return updateObject(state, {
     error: null,
@@ -74,15 +76,15 @@ const putProfileInquiryDetailStart = (state, action) => {
   });
 };
 
-const putProfileInquiryDetailSuccess = (state, action) => {
-  console.log("2) Reducers putProfileInquiryDetailSuccess")
+const putProfileProjectDetailSuccess = (state, action) => {
+  console.log("2) Reducers putProfileProjectDetailSuccess")
   return updateObject(state, {
     error: null,
     loading: false
   });
 };
 
-const putProfileInquiryDetailFail = (state, action) => {
+const putProfileProjectDetailFail = (state, action) => {
   return updateObject(state, {
     error: action.error,
     loading: false
@@ -92,23 +94,23 @@ const putProfileInquiryDetailFail = (state, action) => {
 const reducer = (state = initialState, action) => {
   switch (action.type) {
     case GET_PROFILE_PROJECT_LIST_START:
-      return getProfileInquiryListStart(state, action);
+      return getProfileProjectListStart(state, action);
     case GET_PROFILE_PROJECT_LIST_FAIL:
-      return getProfileInquiryListFail(state, action);
+      return getProfileProjectListFail(state, action);
     case GET_PROFILE_PROJECT_LIST_SUCCESS:
-      return getProfileInquiryListSuccess(state, action);
+      return getProfileProjectListSuccess(state, action);
     case GET_PROFILE_PROJECT_DETAIL_START:
-      return getProfileInquiryDetailStart(state, action);
+      return getProfileProjectDetailStart(state, action);
     case GET_PROFILE_PROJECT_DETAIL_FAIL:
-      return getProfileInquiryDetailFail(state, action);
+      return getProfileProjectDetailFail(state, action);
     case GET_PROFILE_PROJECT_DETAIL_SUCCESS:
-      return getProfileInquiryDetailSuccess(state, action);
+      return getProfileProjectDetailSuccess(state, action);
     case PUT_PROFILE_PROJECT_DETAIL_START:
-      return putProfileInquiryDetailStart(state, action);
+      return putProfileProjectDetailStart(state, action);
     case PUT_PROFILE_PROJECT_DETAIL_FAIL:
-      return putProfileInquiryDetailFail(state, action);
+      return putProfileProjectDetailFail(state, action);
     case PUT_PROFILE_PROJECT_DETAIL_SUCCESS:
-      return putProfileInquiryDetailSuccess(state, action);
+      return putProfileProjectDetailSuccess(state, action);
     default:
       return state;
   }

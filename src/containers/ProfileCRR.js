@@ -1,39 +1,54 @@
 import React from 'react';
 import { connect } from "react-redux";
-import { withRouter } from "react-router-dom";
-import { Button, Table, Divider, Tag, DatePicker, Tab, Icon, Popover } from 'antd';
+import { Button, Table, Divider, Icon } from 'antd';
 import {putCollaborationRequest} from "../store/actions/collaborations";
 import {getProfileMeetingInfo} from "../store/actions/profileUserInfo";
 import UProfInfo from "../components/UserProfileInfo";
-const { Column, ColumnGroup } = Table;
+const { Column } = Table;
 var moment = require('moment');
-
-const buttonWidth = 70;
 
 class receivedReceived extends React.Component {
 
   state = {
     dataList: {},
     dateNow: moment( new Date().toJSON().slice(0, 10) ).format("DD-MM-YYYY HH:mm"),
-    iconLoading: false,
-    loading: false
+    received: this.props.received
   }
 
+  // getSnapshotBeforeUpdate(prevProps, prevState) {
+  //   console.log('SNAP LOADING + ' + "MIERDA", prevProps.loading, this.props.loading)
+  //   return null;
+  // }
+
+  // static getDerivedStateFromProps(props, state){
+  // console.log('DERIVED LOADING + ' + "MIERDA", props.loading)
+  // }
+
+  // componentDidUpdate(prevProps, prevState) {
+  //   console.log('LOADING UP ' + "MIERDA", prevProps.loading, this.props.loading)
+  //   if (prevProps.loading !== this.props.loading) {
+      
+  //   }
+  // }
+
   handleReqRes(index, data, status){
-    // this.setState({loading: true})
+    const { received } = this.state
+    const update = {...received}
+    update[index].status = status
     const putObj = {
       requestId: data.id,
       status: status,
       recipient: data.requester
     }
     this.props.putUserRequest(this.props.username, this.props.token, putObj)
+    this.setState({received: {...update} })
   }
 
 render(){
-  console.log('this.PROPS: ' + JSON.stringify(this.props))
+  console.log('this.PROPS: ' + JSON.stringify(this.props) )
   console.log('this.state: ' + JSON.stringify(this.state))
-  const {username, received, token} = this.props;
-  console.log('received: ' +received)
+  const {username, token} = this.props;
+  const { received } = this.state
 
   return(
     <div>
@@ -58,7 +73,7 @@ render(){
                       )}
                     />
                     <Column
-                      title="User"
+                      title="Profile Info"
                       dataIndex="notified"
                       key={`userInfo${received.id}`}
                       render={(record, date, index) => (
@@ -75,28 +90,18 @@ render(){
                     />
                     <Column
                       title="Action"
-                      dataIndex="action"
+                      dataIndex="status"
                       key={`action${received.id}`}
-                      render={(scheduled, record, index) => (
-                          scheduled === true ? (
-                          <div>
+                      render={(status, record, index) => (
+                          status === "accepted" ? (
                               <div>
                                 <Icon type="check-circle" key={`scheduled: ${index}`} theme="twoTone" twoToneColor="#52c41a" />
-                                  <span key={`${index}`}>
-                                    ACCEPTED
-                                  </span>
                               </div>     
-                          </div>
                         ) : (
-                          received[index].canceled === true ? (
-                              <div>
+                          status === "rejected" ? (
                                   <div>
                                     <Icon type="close-circle" key={`canceled: ${index}`} theme="twoTone" twoToneColor="#F5222D" />
-                                      <span key={`${index}`}>
-                                        REJECTED
-                                      </span>
                                   </div>     
-                              </div>
                             ) : (
                                 <span>
                                   <Button type="primary" key={`accept: ${index}`} loading={this.state.iconLoading} onClick={() => this.handleReqRes(index, received[index], "accepted")} size={"small"}>
@@ -125,9 +130,7 @@ const mapStateToProps = state => {
   return {
     token: state.auth.token,
     username: state.auth.username,
-    meeting: state.meetings,
     pInfo: state.profileInfo,
-    loading: state.meetings.loading
   };
 };
 
@@ -135,7 +138,7 @@ const mapDispatchToProps = dispatch => {
   console.log("mapDispatchToProps: ")
   return {
     putUserRequest: (usename, token, obj) => dispatch(putCollaborationRequest(usename, token, obj)),
-    getInfo: (username, token) => dispatch(getProfileMeetingInfo(username, token)),
+    getInfo: (username, token) => dispatch(getProfileMeetingInfo(username, token))
   };
 };
 

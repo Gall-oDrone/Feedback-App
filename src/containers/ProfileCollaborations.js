@@ -1,22 +1,23 @@
 import React from 'react';
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
-import { Button, Table, Divider, Tag, DatePicker, Tabs, Result, Card } from 'antd';
+import { Spin, Icon, Card } from 'antd';
 import { getUserCollaborations } from "../store/actions/collaborations";
 import ProfileMRSent from "./ProfileCRS"
 import ProfileMRR from "./ProfileCRR"
 import ProfileMRB from "./ProfileCRB"
 
+const antIcon = <Icon type="loading" style={{ fontSize: 24 }} spin />;
+
 class ProfileCollaborations extends React.PureComponent {
 
   state = {
-    article: ['sent', 'received', 'team' ],
+    article: [ 'received', 'collaborators' ],
     noTitleKey: 'sent',
   }
   tabListContent= {
-    sent: <div><ProfileMRSent sent={this.props.collabs.collabs.sent}/></div>,
     received: <div><ProfileMRR received={this.props.collabs.collabs.received}  /></div>,
-    booked: <div><ProfileMRB /></div>,
+    collaborators: <div><ProfileMRB accepted={this.props.collabs.collabs.accepted} /></div>,
   }
 
   onTabChange = (key, type) => {
@@ -33,12 +34,10 @@ class ProfileCollaborations extends React.PureComponent {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    console.log('LOADING: ' + "MIERDA", prevProps.collabs.collabs, this.props.collabs.collabs)
     if (prevProps.collabs.collabs.length !== this.props.collabs.collabs.length) {
       this.tabListContent= {
-        sent: <div><ProfileMRSent sent={this.props.collabs.collabs.sent}/></div>,
         received: <div><ProfileMRR received={this.props.collabs.collabs.received}  /></div>,
-        booked: <div><ProfileMRB /></div>,
+        collaborators: <div><ProfileMRB accepted={this.props.collabs.collabs.accepted} /></div>,
       }
     }
   }
@@ -63,7 +62,7 @@ class ProfileCollaborations extends React.PureComponent {
 
   render() {
     console.log('this.PROPS & this.state: ' + JSON.stringify(this.props), this.state)
-    const { username, token, collabs, loading } = this.props;
+    const { loading } = this.props;
     
     return (
       <div>
@@ -80,7 +79,7 @@ class ProfileCollaborations extends React.PureComponent {
               {this.tabListContent[(this.state.noTitleKey)]}
             </Card>
           </div>    
-          ) : null
+          ) : <antIcon/>
         }
       </div>
     )
