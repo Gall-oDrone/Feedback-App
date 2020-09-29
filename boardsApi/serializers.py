@@ -304,7 +304,7 @@ class BoardDetailSerializer(serializers.ModelSerializer):
         data = request
         print("kanino: ", data)
         BoardDetail.objects.filter(id=data["listID"].split("list-", 1)[-1], 
-        board=self.context.get("boardID").split("board-", 1)[-1]).update(title=data.newText)
+        board=self.context.get("boardID").split("board-", 1)[-1]).update(title=data["newTitle"])
         return True
     
 

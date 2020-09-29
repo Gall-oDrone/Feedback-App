@@ -1,6 +1,8 @@
 from django.db import models
 import urllib.request
 from django.core.files.storage import FileSystemStorage
+# import ssl
+# ssl._create_default_https_context = ssl._create_unverified_context
 
 Humanities = 'humanities'
 SocialSciences = 'social_sciences'
@@ -128,9 +130,16 @@ ROLE_CHOICES = [
 #     def __str__(self):
 #         return str(self.logo)
 
+# url="https://lh3.googleusercontent.com/proxy/HI-PKoMzsC3aHXrNWMphdmebgkc_nESj2FkXma9gY3FeOr0JNTFmFSBLGXBdUs6DNpw3J6kPtt0CKvHs-qXYMLxJx7xDryd53A7lufqfjYJSH1pmx6-DCNbKwvAXJ1zrx8nfJMOAi7NU76fjuf_xIpeUbX9vGME"
+# import os
+# current_path = os.path.dirname(__file__)
+# image_folder = os.path.join(current_path, mediafiles)
+# print("CACAS: ", current_path)
 # def create_logo(self, url, institution_name, obj):
 #     institution = institution_name.upper()
-#     is_file = urllib.request.urlretrieve(url, f"{institution}-logo.jpg")
+#     urllib.request.urlretrieve(url, '/Users/diegogallovalenzuela/djreact/Feedback-App/mediafiles/logos/institution/{}-logo.jpg'.format(institution_name))
+
+# create_logo("self", url, "MIT", "obj")
 #     if is_file:
 #         print("FILES -I: ", is_file)
 #         for f in files:

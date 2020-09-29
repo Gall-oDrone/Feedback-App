@@ -154,13 +154,13 @@ class ArticleDetail extends React.Component {
                             </ul>
                           </div>
                           <h2 className="resume_section-title has-default_offset">
-                            YOU WILL COLLABORATE WITH {user_info ? 
+                            DO YOU WANT TO COLLABORATE WITH {user_info ? 
                                   <a className="td" href={`/profile-page/${user_info.profile_username}`}>
                                     {user_info.name.toUpperCase()}
                                   </a>
                                 :
                                   null
-                                }
+                                } ?
                           </h2>
                           <Card>
                               <Row gutter={[16, 48]}>

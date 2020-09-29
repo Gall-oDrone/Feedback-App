@@ -641,7 +641,7 @@ class ProfileInfo(models.Model):
     website = models.CharField(max_length=50, blank=True, null=True)
     message = models.CharField(max_length=150, blank=True, null=True)
     # Position
-    # Responsibilities
+    # Responsabilities
     # Department
     # Skills
     github = models.CharField(max_length=50, blank=True, null=True)
