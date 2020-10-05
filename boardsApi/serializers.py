@@ -262,10 +262,26 @@ class ProfileBoardListSerializer(serializers.ListSerializer):
     allow_null = True
     many = True
 
+class BoardTitleSerializer(serializers.ModelSerializer):
+    board_title = serializers.SerializerMethodField()
+    action = serializers.SerializerMethodField()
+
+    def get_board_title(self, obj):
+        print("rompope: ", obj)
+        return obj
+
+    def get_action(self, obj):
+        return "retrieve"
+
+    class Meta:
+        model = Board
+        fields = ("id", "board_title", "action")
+
 class BoardDetailSerializer(serializers.ModelSerializer):
     title = StringSerializer(many=False)
     order = StringSerializer(many=False)
     cards = serializers.SerializerMethodField()
+    board_title = serializers.SerializerMethodField()
     
     def get_user_thumbnail(self, obj):
         request = self.context.get('request')
@@ -278,13 +294,17 @@ class BoardDetailSerializer(serializers.ModelSerializer):
         profile_name = ProfileInfoSerializer(ProfileInfo.objects.get(profile_username=obj.author.id), many=False ).data.get("name")
         return profile_name
 
+    def get_board_title(self, obj):
+        print("RAMIRO: ", obj.board.title)
+        return obj.board.title
+
     def get_cards(self, obj):
         cards = BCardSerializer(obj.boardDFK.all(), many=True).data
         return cards
 
     class Meta:
         model = BoardDetail
-        fields = ("id", "title", "order", "cards")
+        fields = ("id", "title", "order", "cards", "board_title")
 
     def create(self, request, *args):
         data = request

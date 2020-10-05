@@ -97,11 +97,18 @@ export const deleteList = (listID, token) => {
   };
 };
 
-const getListSuccess = (lists) => {
-  return {
-    type: CONSTANTS.FETCH_LISTS, 
-    payload: { lists }
-  };
+const getListSuccess = (lists, boardId) => {
+  if(lists[0].action){
+    return {
+      type: CONSTANTS.FETCH_NO_LISTS, 
+      payload: { lists, boardId }
+    };  
+  } else {
+    return {
+      type: CONSTANTS.FETCH_LISTS, 
+      payload: { lists, boardId }
+    };
+  }
 };
 
 export const fetchLists = ( token, boardId ) => {
@@ -113,8 +120,9 @@ export const fetchLists = ( token, boardId ) => {
     axios.get(trelloListListURL(boardId))
       .then(res => {
         if (res.status === 200) {
+          console.log("MR CORSO: ", res.data)
           const lists = res.data
-          dispatch (getListSuccess(lists))
+          dispatch (getListSuccess(lists, boardId))
         }
       })
       .catch(error => console.error(error))

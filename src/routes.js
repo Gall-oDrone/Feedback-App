@@ -6,6 +6,7 @@ import Login from "./containers/Login";
 import Signup from "./containers/Signup";
 import Profile from "./containers/Profile";
 import Reconfirmation from "./containers/Reconfirmation";
+import CredentialsModal from "./containers/CredentialsModal";
 
 import ArticleList from "./containers/ArticleList";
 import ArticleCreate from "./containers/ArticleCreate";
@@ -162,6 +163,7 @@ const BaseRouter = () => (
     <Route exact path="/userProfile/" component={MeetingReview} />
     <Route exact path="/profile-page/:user" component={ProfilePage} />
     <Route exact path="/profile/:id/meetings/" component={ProfileMeetings} />
+    <Route exact path="/resume/" component={CredentialsModal} />
 
     <Route exact path="/profile/:id/account/info/" component={ProfileAccountInfo} />
     <Route exact path="/profile/:id/account/user/info/" component={ProfileAccountUserInfo} />

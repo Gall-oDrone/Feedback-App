@@ -3,7 +3,7 @@ from rest_auth.registration.serializers import RegisterSerializer
 from django.contrib.sites.models import Site
 from rest_framework import serializers
 from rest_framework.authtoken.models import Token
-from .models import User, MeetingRequest, Universities, ProfileInfo, Profile, Universities, Degree, Bachelor, Master, Doctorate, Course, UserFollowing
+from .models import User, MeetingRequest, Universities, ProfileInfo, Profile, Degree, Bachelor, Master, Doctorate, Course, UserFollowing
 from django.conf import settings
 from django.core.files.storage import FileSystemStorage
 import json 
@@ -316,7 +316,10 @@ class ProfileSerializer(serializers.ModelSerializer):
     def update_profile_info(self, request, *args):
         data = request
         print('update_profile_info data: ', data)
-        profile = Profile.objects.get(user=data["user_id"])
+        try:
+            profile = Profile.objects.get(user=data["user_id"])
+        except:
+            profile = Profile.objects.get(user__username=data["profile_username"])
         files = args[0]
         if files:
             print("FILES -I: ", files)
@@ -496,6 +499,8 @@ class testSerializer(serializers.Serializer):
     master = serializers.SerializerMethodField()
     pHD = serializers.SerializerMethodField()
     course = serializers.SerializerMethodField()
+    university = serializers.SerializerMethodField()
+
     def get_degree(self, obj):
         ob = []
         for d in Degree.DEGREES:
@@ -526,6 +531,12 @@ class testSerializer(serializers.Serializer):
             ob.append({"value": d[0], "label": d[0]})
         obj = ob
         return obj
+    def get_university(self, obj):
+        ob = []
+        for u in Universities.UNIVERSITIES:
+            ob.append({"value": u[0], "label": u[0]})
+        obj = ob
+        return obj
     # degree = StringSerializer(many=True)
     # bachelor = StringSerializer(many=True)
     # master = StringSerializer(many=True)
@@ -551,6 +562,7 @@ class testSerializer(serializers.Serializer):
             "master",
             "pHD",
             "course",
+            "university",
             "data"
             # "Degree.DEGREES",
             # "Bachelor.BACHELOR_DEGREES",
@@ -590,6 +602,9 @@ class testSerializer2(serializers.Serializer):
         obj = Doctorate.PHD_DEGREES
         return obj
     def get_course(self, obj):
+        obj = Course.COURSES
+        return obj
+    def get_university(self, obj):
         obj = Course.COURSES
         return obj
     # degree = StringSerializer(many=True)

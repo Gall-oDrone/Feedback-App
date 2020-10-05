@@ -87,24 +87,24 @@ class ProfileHeaderMenu extends React.Component {
     }
   }
   
-  componentWillReceiveProps(newProps) {
-    if (newProps.token !== this.props.token) {
-      console.log("newProps.token !== this.props.token")
-      WebSocketInstance.disconnect();
-      if(newProps.username !== undefined){
-      this.waitForSocketConnection(() => {
-        WebSocketInstance.fetchNTFNS(
-          newProps.username,
-        );
-      });
-      WebSocketInstance.notification_connect(newProps.username);
-    } else {
-      WebSocketInstance.disconnect();
-    }
-  } else {
-      console.log("newProps.token !== this.props.token NOT")
-  }   
-  }
+  // componentDidUpdate(prevProps) {
+  //   if (newProps.token !== this.props.token) {
+  //     console.log("newProps.token !== this.props.token")
+  //     WebSocketInstance.disconnect();
+  //     if(newProps.username !== undefined){
+  //     this.waitForSocketConnection(() => {
+  //       WebSocketInstance.fetchNTFNS(
+  //         newProps.username,
+  //       );
+  //     });
+  //     WebSocketInstance.notification_connect(newProps.username);
+  //   } else {
+  //     WebSocketInstance.disconnect();
+  //   }
+  // } else {
+  //     console.log("newProps.token !== this.props.token NOT")
+  // }   
+  // }
 
   handleViewNTFN = async () => {
     if(this.props.unviews === "0"){

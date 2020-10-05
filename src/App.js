@@ -25,10 +25,10 @@ class App extends Component {
       
       <Router>
         {this.props.isAuthenticated ?
-        <CustomLayout {...this.props}>
+        <CustomLayout key="main" {...this.props}>
           <BaseRouter />
         </CustomLayout>
-        : <LandingPage {...this.props}>
+        : <LandingPage key="landing" {...this.props}>
             <LPRouter />
           </LandingPage>
         }

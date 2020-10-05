@@ -16,7 +16,7 @@ from rest_framework.status import(
 from rest_framework import permissions, generics
 from boardsApi.models import Board, BoardDetail, Cards, CardTag, CardFiles, CardChecklist, CardComments, CardChecklistTask
 from users.models import User
-from .serializers import BoardSerializer, BoardDetailSerializer, BCardSerializer, BoardFeatureSerializer, CardSerializer, VideoFormSerializer, CommentSerializer, LikeSerializer, LikeListSerializer, RatingSerializer, CommentListSerializer, ImageFormSerializer, ProfileBoardListSerializer, Cat_FT_Serializer
+from .serializers import BoardSerializer, BoardDetailSerializer, BCardSerializer, BoardTitleSerializer, BoardFeatureSerializer, CardSerializer, VideoFormSerializer, CommentSerializer, LikeSerializer, LikeListSerializer, RatingSerializer, CommentListSerializer, ImageFormSerializer, ProfileBoardListSerializer, Cat_FT_Serializer
 from analytics.models import View
 from django.http import Http404
 from rest_framework import viewsets
@@ -429,14 +429,43 @@ class ProfileBoardDetailView(RetrieveUpdateDestroyAPIView):
 class ListListView(ListAPIView):
     print("queryset List view")
     # ##print(queryset)
-    serializer_class = BoardDetailSerializer
+    # serializer_class = BoardDetailSerializer
     permission_classes = (permissions.AllowAny,)
+
+    action_serializers = {
+        'retrieve': BoardTitleSerializer,
+        'list': BoardDetailSerializer,
+    }
+
+    def get_serializer_class(self, *args):
+        if hasattr(self, 'action_serializers'):
+            queryset = self.get_queryset()
+            print("ROMPOPE I", queryset, type(queryset))
+            if(type(queryset) is set):
+                return self.action_serializers.get("retrieve")
+            else:
+                return self.action_serializers.get('list')
+        # return super(ListListView, self).get_serializer_class()
+
+    # def get_serializer_class(self):
+    #     print("ROMPOPE", self)
+    #     # if len(self.queryset) == 0:
+    #     #     return BoardSerializer
+    #     return BoardDetailSerializer
 
     def get_queryset(self, *args, **kwargs):
         boardId = self.kwargs.get("pk")
-        queryset = BoardDetail.objects.filter(board=boardId[-1])
-        print(queryset.values())
+        boardId = boardId.split("board-", 1)[-1]
+        queryset = BoardDetail.objects.filter(board=boardId)
+        action = "list"
+        print("board List list: ", boardId, queryset.values(), len(queryset))
+        if len(queryset) == 0:
+            if(Board.objects.get(id=boardId) is not None):
+                return {Board.objects.get(id=boardId).title}
+            else:
+                return Response(HTTP_400_BAD_REQUEST)
         return queryset
+
 
 class ListCreateView(CreateAPIView):
     queryset = BoardDetail.objects.all()

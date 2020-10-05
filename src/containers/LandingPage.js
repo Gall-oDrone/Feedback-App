@@ -70,6 +70,16 @@ class LandingPage extends React.PureComponent {
     this.setState({loading: val})
   }
 
+  handleLoadingCounter = async (val) => {
+    setTimeout(
+      function() {
+          this.setState({ loading: !val });
+      }
+      .bind(this),
+      5000
+  );
+  }
+
   render() {
     const { loginModal, register, loading, forgotPass } = this.state
     console.log("CACAS: ", this.props)
@@ -86,6 +96,7 @@ class LandingPage extends React.PureComponent {
                             <div onClick={() => this.handleCloseModal()} className="login_modal_container_close_button">
                             </div>
                             {loading === true ?
+                              this.handleLoadingCounter(loading) &&
                               <div className="loading_spinner_con">
                                 <div className="auth_loader">
                                 </div>
@@ -136,18 +147,18 @@ class LandingPage extends React.PureComponent {
                 <div className="lp_header">
                   <Link to="/product">
                     <div id="logo">
-                      <a className="logo_container">
+                      <div className="logo_container">
                         <div className="lc_first_row">
                           <img className="logo-img" src={logo}></img>
                           <h1>Mate Crunch</h1>
                         </div>
-                      </a>
+                      </div>
                     </div>
                   </Link>
                   <div className="nav_bar">
                     <div ref={this.prodRef} className="nb_first_mi">
                       <Link to="/product">
-                        <a>What is Mate Crunch?</a>
+                        What is Mate Crunch?
                       </Link>
                     </div>
                     {/* <div className="nb_snd_mi">
@@ -162,7 +173,7 @@ class LandingPage extends React.PureComponent {
                     </div>*/}
                     <div ref={this.teamRef}  className="nb_thrd_mi">
                       <Link to="/team">
-                        <a>Meet the Team</a>
+                        Meet the Team
                       </Link>
                     </div>
                   </div> 

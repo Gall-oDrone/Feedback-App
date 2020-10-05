@@ -17,7 +17,7 @@ from sessionsApi.serializers import SessionSerializer, FeaturedSessionSerializer
 from collaborationsApi.serializers import FeaturedCollaborationSerializer
 from workshopsApi.serializers import FeaturedWorkshopSerializer
 from surveyApi.serializers import SurveySerializer
-
+from itertools import chain
 
 FeaturedProjectSerializer
 from rest_framework import generics, permissions

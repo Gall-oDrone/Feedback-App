@@ -5,8 +5,8 @@ class Board_types(models.Model):
     PUBLIC = 'public'
     PRIVATE = 'private'
     CHOICES = [
-        (PUBLIC, ('public')),
-        (PRIVATE, ('private')),
+        (PUBLIC, ('Public')),
+        (PRIVATE, ('Private')),
     ]
     board_type=models.CharField(max_length=15, choices=CHOICES, blank=True)
 

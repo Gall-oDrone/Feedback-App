@@ -226,6 +226,44 @@ export const authSignup = (
   };
 };
 
+export const authSignupTest = (
+  username,
+  email,
+  password1,
+  password2,
+  is_student
+) => {
+  return dispatch => {
+    dispatch(authStart());
+    const user = {
+      username,
+      email,
+      password1,
+      password2,
+      is_student,
+      is_teacher: !is_student
+    };
+    axios
+      .post(authSignUpURL, user)
+      .then(res => {
+        const user = {
+          token: res.data.key,
+          username,
+          userId: res.data.user,
+          is_student,
+          is_teacher: !is_student,
+          expirationDate: new Date(new Date().getTime() + 3600 * 1000)
+        };
+        localStorage.setItem("user", JSON.stringify(user));
+        dispatch(authSuccess(user));
+        dispatch(checkAuthTimeout(3600));
+      })
+      .catch(err => {
+        dispatch(authFail(err));
+      });
+  };
+};
+
 export const authCheckState = () => {
   return dispatch => {
     const user = JSON.parse(localStorage.getItem("user"));

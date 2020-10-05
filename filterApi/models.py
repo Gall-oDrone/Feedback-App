@@ -22,3 +22,17 @@ class Journal(models.Model):
 
     def __str__(self):
         return self.title
+
+class GlobalQuerySet(models.QuerySet):
+    def search(Self, query=None):
+        qs = self
+        if query is not None:
+            or_lookup = (models.Q(user__username__icontains=query) |
+                        models.Q(title__icontains=query) |
+                        models.Q(description__icontains=query) |
+                        models.Q(slug__icontains=query)
+                        )
+            qs = qs.filter(or_lookup).distinc()
+        return qs
+
+# class GlobalManager(models.)

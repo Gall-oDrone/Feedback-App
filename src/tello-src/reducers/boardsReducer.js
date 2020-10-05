@@ -80,6 +80,31 @@ const boardsReducer = (state = initialState, action) => {
       return ( { ...state })
     }
 
+    case CONSTANTS.FETCH_LISTS: {
+      console.log("ehreno QUE? ")
+      const { lists, boardId } = action.payload;
+      console.log("ehreno, ", lists)
+      const title = lists[0]["board_title"]
+        const theBoard = {
+          id: boardId,
+          title:title,
+          lists: lists.map((list_e, i) => {const list_item = `list-${list_e.id}`; return list_item })
+        };
+      return( { ...state, [boardId]: theBoard } );
+    }
+
+    case CONSTANTS.FETCH_NO_LISTS: {
+      const { lists, boardId } = action.payload;
+      console.log("ehreno NO LISTS, ", lists)
+      const title = lists[0]["board_title"]
+        const theBoard = {
+          id: boardId,
+          title:title,
+          lists: []
+        };
+      return( { ...state, [boardId]: theBoard } );
+    }
+
     default:
       return state;
   }

@@ -1,0 +1,47 @@
+/* .profile-pic {
+    max-width: 200px;
+    max-height: 200px;
+    display: block;
+} */
+
+.file-upload {
+    display: none !important;
+}
+.circle {
+    border-radius: 1000px !important;
+    clip-path: polygon(0 0,100% 0,100% 100%,20px 100%,0 calc(100% - 20px));
+    overflow: hidden;
+    width: 328px;
+    height: 328px;
+    border: 8px solid rgba(255, 255, 255, 0.7);
+    background-color: rgb(226, 226, 226);
+    position: absolute;
+    top: 72px;
+}
+.img-cont{
+    width: 20px;
+    height: 20px;
+}
+.circle img {
+    max-width: 100%;
+    height: inherit;
+}
+.p-image {
+  position: absolute;
+  top: 327px;
+  right: 50px;
+  color: #757777;
+  cursor: pointer;
+  transition: all .3s cubic-bezier(.175, .885, .32, 1.275);
+}
+.p-image:hover {
+  transition: all .3s cubic-bezier(.175, .885, .32, 1.275);
+}
+.upload-button {
+  font-size: 1.2em;
+}
+
+.upload-button:hover {
+  transition: all .3s cubic-bezier(.175, .885, .32, 1.275);
+  color: rgb(36, 167, 57);
+}

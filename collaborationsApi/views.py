@@ -17,6 +17,7 @@ from rest_framework import permissions, generics
 from .models import CollaborationTypes, RequestStatus, CollaborationCategory, Collaboration, CollaborationWorkFlow, CollaborationRequest, AcademicDisciplines, IndustryFields, RequestCollabPosition, RequestStatus, ColaborationStatus, RecruitmentForm
 from notificationsApi.models import Notification
 from users.models import User, Profile
+from boardsApi.models import Board
 from .constants import *
 from .serializers import (CollaborationSerializer, 
                         CollabRequestSerializer, 
@@ -270,13 +271,14 @@ class UserCollabListView(RetrieveUpdateDestroyAPIView):
         serializer.is_valid()
         if (request.data.get("status") == "accepted"):
             status_obj = RequestStatus.objects.get(req_status="accepted")
-            request = CollaborationRequest.objects.get(id=request.data.get("requestId"))
+            reqId = request.data.get("requestId")
+            request = CollaborationRequest.objects.get(id=reqId)
             request.status = status_obj
             request.save()
 
-            ## User how response to request
+            ## User who response to request
             user = User.objects.get(username=self.kwargs.get('pk'))
-            ## User how sent request and its reciving response
+            ## User who sent request and its reciving response
             recipient = User.objects.get(username=self.request.data["recipient"])
 
             #ADD COLLABORATOR TO COLLABORATION & CREATE TEAM
@@ -284,6 +286,15 @@ class UserCollabListView(RetrieveUpdateDestroyAPIView):
             # newTeam = Team()
             # newTeam.members.add(recipient)
 
+            # ADD WORKFLOW BOARD
+            try:
+                if(request.collaboration.workflow is None):
+                    new_board = Board.objects.create(title="Collaboration Board-{}".format(reqId), author=user)
+                    workflow = CollaborationWorkFlow.objects.create(board=new_board)
+                    request.collaboration.workflow = workflow
+                    request.collaboration.save()
+            except Exception as e:
+                print("ERROR: ", e)
             #NOTIFICATION
             notify = Notification()
             notify.user = recipient

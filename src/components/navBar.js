@@ -83,6 +83,23 @@ class NavMenu extends React.Component {
     }
   }
 
+    componentDidUpdate(prevProps) {
+      if (prevProps.unviews !== this.props.unviews) {
+        console.log("SHEDER: ", prevProps.unviews, this.props.unviews)
+        // WebSocketInstance.disconnect();
+        // if(prevProps.username !== undefined){
+        // this.waitForSocketConnection(() => {
+        //   WebSocketInstance.fetchNTFNS(
+        //     prevProps.username,
+        //   );
+        // });
+        // WebSocketInstance.notification_connect(prevProps.username);
+        // } else {
+        //   WebSocketInstance.disconnect();
+        // }
+    }
+  }
+
   render() {
     return (
       <Navbar>

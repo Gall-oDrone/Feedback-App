@@ -58,12 +58,12 @@ class CustomLayout extends React.Component {
 
     return (
      
-      <Layout className="parent layout" >
+      <Layout key="main-layout" className="parent layout" >
         {this.props.is_active === false ? 
               <VA/>
             : null 
         }
-        <Header style={{ height: "50px", padding: "0 15px"}}>
+        <Header ket="main-header" style={{ height: "50px", padding: "0 15px"}}>
           <Menu
             theme="dark"
             mode="horizontal"
@@ -146,16 +146,16 @@ class CustomLayout extends React.Component {
                       </Link>
                   </div>
                 </Menu.Item>
-                <Menu.Item key="8" style= {{float: 'right', paddingLeft: "15px", paddingRight: "15px"}}>
+                <Menu.Item key="10" style= {{float: 'right', paddingLeft: "15px", paddingRight: "15px"}}>
                     <ProfileHeaderMenu auth={this.props.isAuthenticated} logout={this.props.logout} userId={this.props.userId}/>
                 </Menu.Item>
-                <Menu.Item key="9" style= {{float: 'right', paddingLeft: "15px", paddingRight: "15px"}}>
+                <Menu.Item key="11" style= {{float: 'right', paddingLeft: "15px", paddingRight: "15px"}}>
                     <CreateHeaderMenu/>
                 </Menu.Item>
-                <Menu.Item key="10" style= {{float: 'right'}}>
+                <Menu.Item key="12" style= {{float: 'right'}}>
                     <NavMenu/>
                 </Menu.Item>
-                <Menu.Item key="11" style= {{float: 'right'}}>
+                <Menu.Item key="13" style= {{float: 'right'}}>
                     <NavMenu2/>
                 </Menu.Item>
                 
@@ -213,6 +213,12 @@ class CustomLayout extends React.Component {
                 </Menu.Item>
                 <Menu.Item key="9">
                   <Link to={`/video-chat-test/`}>
+                    <Icon type="video-camera"/>
+                    <span> Video-Chat</span>
+                  </Link>
+                </Menu.Item>
+                <Menu.Item key="10">
+                  <Link to={`/resume/`}>
                     <Icon type="video-camera"/>
                     <span> Video-Chat</span>
                   </Link>

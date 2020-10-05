@@ -49,7 +49,7 @@ const Home = ({ boards, boardOrder, boardList, username, token, dispatch }) => {
   // console.log("patas: ", boards, "boardOrder: ", boardOrder)
 
   useEffect(() => {
-    if(username !== null && token !== null && boardList === null){
+    if(username && token && boardList === null){
       dispatch(fetchBoardList(username, token))
     }
   })

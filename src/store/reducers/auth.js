@@ -35,6 +35,21 @@ const authSuccess = (state, action) => {
   });
 };
 
+const authSuccessTest = (state, action) => {
+  console.log("authScess action: ", action, action.user)
+  return updateObject(state, {
+    token: action.user.token,
+    username: action.user.username,
+    is_active_user: action.user.is_active_user,
+    has_profile_info: action.user.has_profile_info,
+    is_student: action.user.is_student,
+    is_teacher: action.user.is_teacher,
+    userId: action.user.userId,
+    error: null,
+    loading: false
+  });
+};
+
 const authFail = (state, action) => {
   return updateObject(state, {
     error: action.error,

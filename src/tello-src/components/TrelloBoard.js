@@ -17,29 +17,31 @@ const ListsContainer = styled.div`
 class TrelloBoard extends PureComponent {
   componentDidMount() {
     // set active trello board here
-    const { token, match:{params} } = this.props
-    const { boardID } = params;
+    const { token, match:{params: {boardID}}, boards } = this.props
 
+    // if (boards[boardID]) {
+    // localStorage.setItem(`board-${boardID}}`, boards[boardID].title);
+    // console.log("board 0", boards, "local storage: ", localStorage.getItem(`board-${boardID}}`))
+    // }
     this.props.dispatch(setActiveBoard(boardID));
     this.props.dispatch(fetchLists(token, boardID));
   }
 
   getSnapshotBeforeUpdate(prevProps, prevState){
-    const { match, boards } = prevProps;
-    const { boardID } = match.params;
-    const board = boards[boardID];
-    console.log("board", board, "prevState: ", prevState)
-    if (!board) {
-      return;
+    const { match: {params: {boardID} }, boards } = prevProps;
+    // console.log("board", board, "check?", !board, "prevProps", prevProps, "prevState: ", prevState, "local storage: ", localStorage.getItem('boardTitle'))
+    if (!boards[boardID]) {
+      const action = {id: boardID, action:"refetch"}
+      return {... action }
     }
-    if(board.lists.length)
     return null
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
-    console.log("Ramiro I: ", prevProps.boards, this.props.boards, "prevState: ", prevState)
-    if (snapshot !== null) {
-      console.log("Corso")
+    console.log("Ramiro I: ", prevProps.boards, "snapshot", snapshot, "prevState: ", prevState)
+    if (snapshot) {
+      // this.props.dispatch(fetchLists(this.props.token, snapshot.id, snapshot.action));
+      return
     }
   }
 
@@ -77,7 +79,7 @@ class TrelloBoard extends PureComponent {
       <div style={{height: "inherit", overflowX: "scroll", scrollMargin:"true"}}>
       <DragDropContext onDragEnd={this.onDragEnd}>
         <Link to="/project-management/"><Icon type="arrow-left"/>Go Back</Link>
-        <h2>{board.title}</h2>
+        <h2>{board.title} </h2>
         <Droppable droppableId="all-lists" direction="horizontal" type="list">
           {provided => (
             <ListsContainer

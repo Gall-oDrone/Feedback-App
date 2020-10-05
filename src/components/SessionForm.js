@@ -764,7 +764,7 @@ class ArticleCustomForm extends React.Component {
                   setFieldsValue: "fileList"
                 })(
                   // <div className="clearfix">
-                  <Upload name="photo" key="workshop photo" onPreview={this.handlePreview}  listType="picture-card" customRequest={this.dummyRequest}>
+                  <Upload name="photo" key="session photo" onPreview={this.handlePreview}  listType="picture-card" customRequest={this.dummyRequest}>
                     {fileList.length === 1 ? null : uploadButton}
                     {/* <Button>
                       <Icon type="upload" /> Click to upload

@@ -7,7 +7,7 @@ import ProfileMRSent from "./ProfileCRS"
 import ProfileMRR from "./ProfileCRR"
 import ProfileMRB from "./ProfileCRB"
 
-const antIcon = <Icon type="loading" style={{ fontSize: 24 }} spin />;
+const anticon = <Icon type="loading" style={{ fontSize: 24 }} spin />;
 
 class ProfileCollaborations extends React.PureComponent {
 
@@ -79,7 +79,7 @@ class ProfileCollaborations extends React.PureComponent {
               {this.tabListContent[(this.state.noTitleKey)]}
             </Card>
           </div>    
-          ) : <antIcon/>
+          ) : <anticon/>
         }
       </div>
     )

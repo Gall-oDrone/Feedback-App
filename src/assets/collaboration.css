@@ -68,9 +68,9 @@ cursor: pointer;
     background-color: #fff;
 }
 
-.grid-row{
+.grid-row {
+    border-bottom: 2px solid rgb(59, 56, 56);
 }
-
 .grid-row-inner{
 }
 .flexbox .resume_section {
@@ -185,13 +185,15 @@ cursor: pointer;
         flex-direction: column;
         /* -ms-flex-pack: justify; */
         justify-content: space-between;
+        align-self: flex-end;
         /* padding-top: 8px; */
         padding-bottom: 0;
     }
     .resume_top-right {
         padding: 25px 25px 25px 0;
-            padding-top: 25px;
-            padding-bottom: 25px;
+        width: 65%;
+        /* padding-top: 25px; */
+        /* padding-bottom: 25px; */
     }
 
 .resume_top-info{
