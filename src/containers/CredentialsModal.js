@@ -766,12 +766,12 @@ class CustomLayoutContainer extends React.Component {
                                           </div>
                                             <div>
                                               <Form.Item style={{marginBottom: "0px"}}>
-                                                {getFieldDecorator("bach_degree", {
+                                                {getFieldDecorator(`bache_edu_${index}`, {
                                                   rules: [
                                                     { type: 'string', required: true, message: 'Please select' },
                                                   ],
                                                 })(
-                                                  <select id="bach_degree" name="cars">
+                                                  <select id={`bache_edu_${index}`} name="cars">
                                                     <option value="" selected disabled hidden>Choose here</option>
                                                     {bachelors_degrees.map(el => {
                                                         return (
@@ -790,12 +790,12 @@ class CustomLayoutContainer extends React.Component {
                                           </div>
                                           <div>
                                           <Form.Item style={{marginBottom: "0px"}}>
-                                            {getFieldDecorator("bach_inst", {
+                                            {getFieldDecorator(`bach_inst_${index}`, {
                                               rules: [
                                                 { type: 'string', required: true, message: 'Please select' },
                                               ],
                                             })(
-                                              <select id="bach_inst" name="cars">
+                                              <select id={`bach_inst_${index}`} name="cars">
                                                 <option value="" selected disabled hidden>Choose here</option>
                                                       {universities.map(el => {
                                                       return (
@@ -813,31 +813,30 @@ class CustomLayoutContainer extends React.Component {
                                         <div className="bachelor-duration-from">
                                           <label id="bachelor-edu" for="bachelor-edu">From</label>
                                           <Form.Item style={{marginBottom: "0px"}}>
-                                    {getFieldDecorator("bach_from_year", {
-                                      rules: [
-                                        { type: 'string', required: true, message: 'Please select' },
-                                      ],
-                                    })(
-                                      <select id="bachelor-from-year" value={this.selectedYear} onChange={this.onHandleChange}> 
-                                              {options}
-                                            </select>
-                                    )}
-                                </Form.Item>
-                                            
+                                              {getFieldDecorator(`bach_from_year_${index}`, {
+                                                rules: [
+                                                  { type: 'string', required: true, message: 'Please select' },
+                                                ],
+                                              })(
+                                                <select id={`bach_from_year_${index}`} value={this.selectedYear} onChange={this.onHandleChange}> 
+                                                        {options}
+                                                      </select>
+                                              )}
+                                          </Form.Item> 
                                         </div>
                                         <div className="bachelor-duration-to">
                                           <label id="employment" for="employment">To</label>
                                           <Form.Item style={{marginBottom: "0px"}}>
-                                    {getFieldDecorator("bach_to_year", {
-                                      rules: [
-                                        { type: 'string', required: true, message: 'Please select' },
-                                      ],
-                                    })(
-                                      <select id="bachelor-to-year"value={this.selectedYear} onChange={this.onHandleChange}> 
-                                      {options}
-                                    </select>
-                                    )}
-                                </Form.Item>
+                                              {getFieldDecorator(`bach_to_year_${index}`, {
+                                                rules: [
+                                                  { type: 'string', required: true, message: 'Please select' },
+                                                ],
+                                              })(
+                                                <select id={`bach_to_year_${index}`} value={this.selectedYear} onChange={this.onHandleChange}> 
+                                                {options}
+                                              </select>
+                                              )}
+                                          </Form.Item>
                                         </div>
                                       </div>
                                     </div>
@@ -870,12 +869,12 @@ class CustomLayoutContainer extends React.Component {
                                           </div>
                                           <div>
                                             <Form.Item style={{marginBottom: "0px"}}>
-                                              {getFieldDecorator("master_degree", {
+                                              {getFieldDecorator(`master_degree_${index}`, {
                                                 rules: [
                                                   { type: 'string', required: true, message: 'Please select' },
                                                 ],
                                                 })(
-                                                  <select id="master_degree" name="cars">
+                                                  <select id={`master_degree_${index}`} name="cars">
                                                     <option value="" selected disabled hidden>Choose here</option>
                                                         {masters_degrees.map(el => {
                                                             return (
@@ -894,12 +893,12 @@ class CustomLayoutContainer extends React.Component {
                                           </div>
                                           <div>
                                           <Form.Item style={{marginBottom: "0px"}}>
-                                            {getFieldDecorator("master_inst", {
+                                            {getFieldDecorator(`master_inst_${index}`, {
                                               rules: [
                                                 { type: 'string', required: true, message: 'Please select' },
                                               ],
                                             })(
-                                              <select id="master_inst" name="cars">
+                                              <select id={`master_inst_${index}`} name="cars">
                                                 <option value="" selected disabled hidden>Choose here</option>
                                                       {universities.map(el => {
                                                       return (
@@ -917,12 +916,12 @@ class CustomLayoutContainer extends React.Component {
                                       <div className="master-duration-from">
                                         <label id="employment" for="employment">From</label>
                                         <Form.Item style={{marginBottom: "0px"}}>
-                                    {getFieldDecorator("master-from-year", {
+                                    {getFieldDecorator(`master_from_year_${index}`, {
                                       rules: [
                                         { type: 'string', required: true, message: 'Please select' },
                                       ],
                                     })(
-                                      <select id="master-from-year"value={this.selectedYear} onChange={this.onHandleChange}> 
+                                      <select id={`master_from_year_${index}`} value={this.selectedYear} onChange={this.onHandleChange}> 
                                             {options}
                                           </select>
                                     )}
@@ -931,12 +930,12 @@ class CustomLayoutContainer extends React.Component {
                                       <div className="master-duration-to">
                                         <label id="employment" for="employment">To</label>
                                         <Form.Item style={{marginBottom: "0px"}}>
-                                    {getFieldDecorator("master-to-year", {
+                                    {getFieldDecorator(`master_to_year_${index}`, {
                                       rules: [
                                         { type: 'string', required: true, message: 'Please select' },
                                       ],
                                     })(
-                                      <select id="master-to-year"value={this.selectedYear} onChange={this.onHandleChange}> 
+                                      <select id={`master_to_year_${index}`} value={this.selectedYear} onChange={this.onHandleChange}> 
                                             {options}
                                           </select>
                                     )}
@@ -969,12 +968,12 @@ class CustomLayoutContainer extends React.Component {
                                         </div>
                                         <div>
                                         <Form.Item style={{marginBottom: "0px"}}>
-                                            {getFieldDecorator("phd_degree", {
+                                            {getFieldDecorator(`phd_degree_${index}`, {
                                               rules: [
                                                 { type: 'string', required: true, message: 'Please select' },
                                               ],
                                             })(
-                                              <select id="phd_degree" name="cars">
+                                              <select id={`phd_degree_${index}`} name="cars">
                                                 <option value="" selected disabled hidden>Choose here</option>
                                                 {phD_degrees.map(el => {
                                                     return (
@@ -993,12 +992,12 @@ class CustomLayoutContainer extends React.Component {
                                       </div>
                                       <div>
                                       <Form.Item style={{marginBottom: "0px"}}>
-                                          {getFieldDecorator("phd_inst", {
+                                          {getFieldDecorator(`phd_inst_${index}`, {
                                             rules: [
                                               { type: 'string', required: true, message: 'Please select' },
                                             ],
                                           })(
-                                            <select id="phd_inst" name="cars">
+                                            <select id={`phd_inst_${index}`} name="cars">
                                               <option value="" selected disabled hidden>Choose here</option>
                                                 {universities.map(el => {
                                                     return (
@@ -1016,12 +1015,12 @@ class CustomLayoutContainer extends React.Component {
                                     <div className="phd-duration-from">
                                       <label id="employment" for="employment">From</label>
                                       <Form.Item style={{marginBottom: "0px"}}>
-                                    {getFieldDecorator("phd-from-year", {
+                                    {getFieldDecorator(`phd_from_year_${index}`, {
                                       rules: [
                                         { type: 'string', required: true, message: 'Please select' },
                                       ],
                                     })(
-                                      <select id="phd-from-year"value={this.selectedYear} onChange={this.onHandleChange}> 
+                                      <select id={`phd_from_year_${index}`} value={this.selectedYear} onChange={this.onHandleChange}> 
                                           {options}
                                         </select>
                                     )}
@@ -1030,12 +1029,12 @@ class CustomLayoutContainer extends React.Component {
                                     <div className="phd-duration-to">
                                       <label id="employment" for="employment">To</label>
                                       <Form.Item style={{marginBottom: "0px"}}>
-                                    {getFieldDecorator("phd-to-year", {
+                                    {getFieldDecorator(`phd_to_year_${index}`, {
                                       rules: [
                                         { type: 'string', required: true, message: 'Please select' },
                                       ],
                                     })(
-                                      <select id="phd-to-year"value={this.selectedYear} onChange={this.onHandleChange}> 
+                                      <select id={`phd_to_year_${index}`} value={this.selectedYear} onChange={this.onHandleChange}> 
                                           {options}
                                         </select>
                                     )}
@@ -1070,12 +1069,12 @@ class CustomLayoutContainer extends React.Component {
                                           </div>
                                           <div>
                                           <Form.Item style={{marginBottom: "0px"}}>
-                                    {getFieldDecorator("other_edu_degree", {
+                                    {getFieldDecorator(`other_edu_degree_${index}`, {
                                       rules: [
                                         { type: 'string', required: true, message: 'Please select' },
                                       ],
                                     })(
-                                      <select id="other_edu_degree" name="cars">
+                                      <select id={`other_edu_degree_${index}`} name="cars">
                                               <option value="volvo">Volvo</option>
                                               <option value="saab">Saab</option>
                                               <option value="fiat">Fiat</option>
@@ -1091,12 +1090,12 @@ class CustomLayoutContainer extends React.Component {
                                           </div>
                                           <div>
                                           <Form.Item style={{marginBottom: "0px"}}>
-                                    {getFieldDecorator("other_edu_inst", {
+                                    {getFieldDecorator(`other_edu_inst_${index}`, {
                                       rules: [
                                         { type: 'string', required: true, message: 'Please select' },
                                       ],
                                     })(
-                                      <select id="other_edu_inst" name="cars">
+                                      <select id={`other_edu_inst_${index}`} name="cars">
                                         <option value="" selected disabled hidden>Choose here</option>
                                               {universities.map(el => {
                                               return (
@@ -1114,12 +1113,12 @@ class CustomLayoutContainer extends React.Component {
                                       <div className="other-edu-duration-from">
                                         <label id="employment" for="employment">From</label>
                                         <Form.Item style={{marginBottom: "0px"}}>
-                                    {getFieldDecorator("other-edu-from-year", {
+                                    {getFieldDecorator(`other_edu_from_year_${index}`, {
                                       rules: [
                                         { type: 'string', required: true, message: 'Please select' },
                                       ],
                                     })(
-                                      <select id="other-edu-from-year"value={this.selectedYear} onChange={this.onHandleChange}> 
+                                      <select id={`other_edu_from_year_${index}`} value={this.selectedYear} onChange={this.onHandleChange}> 
                                             {options}
                                           </select>
                                     )}
@@ -1128,12 +1127,12 @@ class CustomLayoutContainer extends React.Component {
                                       <div className="other-edu-duration-to">
                                         <label id="employment" for="employment">To</label>
                                         <Form.Item style={{marginBottom: "0px"}}>
-                                    {getFieldDecorator("other-edu-to-year", {
+                                    {getFieldDecorator(`other_edu_to_year_${index}`, {
                                       rules: [
                                         { type: 'string', required: true, message: 'Please select' },
                                       ],
                                     })(
-                                      <select id="other-edu-to-year"value={this.selectedYear} onChange={this.onHandleChange}> 
+                                      <select id={`other_edu_to_year_${index}`} value={this.selectedYear} onChange={this.onHandleChange}> 
                                             {options}
                                           </select>
                                     )}
