@@ -51,7 +51,7 @@ class CustomLayoutContainer extends React.Component {
             company:null,
             location:null,
             duration: {from:null, to:null},
-            desc: [],
+            desc: [""],
             technos: [],
             skills: [],
           }
@@ -106,22 +106,47 @@ class CustomLayoutContainer extends React.Component {
     // alert(evt.target.value);
     this.setState({ selectedYear: e.target.value });
   };
-  handleChangePosDesc = (action, list) => {
+  handleChangePosDesc = (action, list, parent, index, child_i) => {
+    var callPar = parent[index]
+    const { form } = this.props;
     if(action === "add"){
       const addingEl = list.concat(list[list.length + 1])
-      this.setState({ jobPosDescList: addingEl });
-    } else {
+      callPar.desc.push("")
+      this.setState({ jobPosDescList: addingEl, employment: [callPar] });
+    } else if (action === "delete"){
       const removingEl = list.splice(-1,1)
-      this.setState({ jobPosDescList: removingEl });
+      var callPar = parent[index]
+      callPar.desc.pop()
+      this.setState({ jobPosDescList: removingEl, employment: [callPar] });
+    } else {
+      const desc_val = form.getFieldValue(`pos_desc_${child_i}`);
+      console.log("aleluya:", callPar.desc, desc_val, child_i)
+      // form.setFieldsValue({
+      //   [`pos_desc_${child_i}`]: desc_val
+      // });
+      callPar.desc[child_i] = desc_val
+      this.setState({ employment: [callPar] });
     }
   }
-  handleChangePos = (action, list) => {
+  handleChangePosDesc2 = (e, parent, index, child_i) => {
+    var callPar = parent[index]
+    const { form } = this.props;
+      const desc_val = form.getFieldValue(`pos_desc_${child_i}`);
+      console.log("aleluya II:", callPar.desc, e.target.value)
+      // form.setFieldsValue({
+      //   [`pos_desc_${child_i}`]: desc_val
+      // });
+      callPar.desc[child_i] = e.target.value
+      this.setState({ employment: [callPar] });
+  }
+  handleChangePos = async (action, list, parent, index) => {
     if(action === "add"){
       const addingEl = list.concat(list[list.length + 1])
-      this.setState({ jobPosList: addingEl });
+      var add_vals = parent.push({...parent[index]})
+      this.setState({ jobPosList: addingEl, employment: [add_vals] });
     } else {
       const removingEl = list.splice(-1,1)
-      this.setState({ jobPosList: removingEl });
+      this.setState({ jobPosList: removingEl, employment: [parent[index].pop] });
     }
   }
   handleAS = (e) =>{
@@ -291,15 +316,15 @@ class CustomLayoutContainer extends React.Component {
       thisYear, selectedYear, jobPosList, jobPosDescList,
       bachelorList, masterList, phdList, otherEduList, 
       academic_status, selectedImage, countries, 
-      bachelors_degrees, masters_degrees, phD_degrees, 
-      courses, universities
+      employment, bachelors_degrees, masters_degrees, 
+      phD_degrees, courses, universities
     } = this.state;
     const { getFieldDecorator, getFieldValue, getFieldsValue } = this.props.form;
     const options = [];
     
     for (let i = minOffset; i <= maxOffset; i++) {
       const year = thisYear - i;
-      options.push(<option value={year}>{year}</option>);
+      options.push(<option key={i} value={year}>{year}</option>);
     }
     return(
       
@@ -514,12 +539,12 @@ class CustomLayoutContainer extends React.Component {
                                             </div>
                                             <div className="job-pos-desc-textarea">
                                               <Form.Item style={{marginBottom: "0px"}}>
-                                                  {getFieldDecorator("pos_desc", {
+                                                  {getFieldDecorator(`pos_desc_${index}`, {
                                                     rules: [
                                                       { type: 'string', required: true, message: 'Please enter down the name of your job position' },
                                                     ],
                                                   })(
-                                                    <textarea type="text" id="pos_desc" name="bdaymonth" placeholder="E.g Led UX and UI for an investment banking web app, delivering clean and uncluttered look and feel based on research, creating, testing and enhancing main user-flows (onboarding, investing, withdrawing, customer feedback, and so on), building the design system, working across different teams and in an agile environment, collaborating efficiently with multiple stakeholders."/>
+                                                    <textarea type="text" onChange={(e) => this.handleChangePosDesc2(e, employment, i, index)} id={`pos_desc_${index}`} name="bdaymonth" placeholder="E.g Led UX and UI for an investment banking web app, delivering clean and uncluttered look and feel based on research, creating, testing and enhancing main user-flows (onboarding, investing, withdrawing, customer feedback, and so on), building the design system, working across different teams and in an agile environment, collaborating efficiently with multiple stakeholders."/>
                                                   )}
                                               </Form.Item>
                                             </div>
@@ -528,9 +553,10 @@ class CustomLayoutContainer extends React.Component {
                                       )
                                     })}
                                     <div className="pos-desc-add" data-role="load_more_link_wrapper">
-                                      <a className="button is-light is-small" onClick={() => this.handleChangePosDesc("add", jobPosDescList)} data-role="load_more_link">+</a>
+                                      <a className="button is-light is-small" 
+                                        onClick={() => this.handleChangePosDesc("add", jobPosDescList, employment, i, null)} data-role="load_more_link">+</a>
                                       {jobPosDescList.length > 1 ?
-                                          <a className="button is-light is-small" onClick={() => this.handleChangePosDesc("delete", jobPosDescList)} data-role="load_more_link">-</a>
+                                          <a className="button is-light is-small" onClick={() => this.handleChangePosDesc("delete", jobPosDescList, employment, i, null)} data-role="load_more_link">-</a>
                                         :
                                           null
                                       }
