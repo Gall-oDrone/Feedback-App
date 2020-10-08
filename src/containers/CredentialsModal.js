@@ -109,44 +109,47 @@ class CustomLayoutContainer extends React.Component {
   handleChangePosDesc = (action, list, parent, index, child_i) => {
     var callPar = parent[index]
     const { form } = this.props;
+    const desc_val = form.getFieldValue(`employment-${[index]}[pos_desc]`);
     if(action === "add"){
       const addingEl = list.concat(list[list.length + 1])
-      callPar.desc.push("")
-      this.setState({ jobPosDescList: addingEl, employment: [callPar] });
+      // callPar.desc.push("")
+      this.setState({ jobPosDescList: addingEl });
     } else if (action === "delete"){
       const removingEl = list.splice(-1,1)
-      var callPar = parent[index]
-      callPar.desc.pop()
-      this.setState({ jobPosDescList: removingEl, employment: [callPar] });
+      // var callPar = parent[index]
+      // callPar.desc.pop()
+      // this.setState({ jobPosDescList: removingEl, employment: [callPar] });
+      this.setState({ jobPosDescList: removingEl });
     } else {
       const desc_val = form.getFieldValue(`pos_desc_${child_i}`);
       console.log("aleluya:", callPar.desc, desc_val, child_i)
       // form.setFieldsValue({
       //   [`pos_desc_${child_i}`]: desc_val
       // });
-      callPar.desc[child_i] = desc_val
-      this.setState({ employment: [callPar] });
+      // callPar.desc[child_i] = desc_val
+      // this.setState({ employment: [callPar] });
     }
   }
   handleChangePosDesc2 = (e, parent, index, child_i) => {
     var callPar = parent[index]
     const { form } = this.props;
-      const desc_val = form.getFieldValue(`pos_desc_${child_i}`);
-      console.log("aleluya II:", callPar.desc, e.target.value)
+      // const desc_val = form.getFieldValue(`pos_desc_${child_i}`);
+      // console.log("aleluya II:", callPar.desc, e.target.value)
       // form.setFieldsValue({
       //   [`pos_desc_${child_i}`]: desc_val
       // });
-      callPar.desc[child_i] = e.target.value
-      this.setState({ employment: [callPar] });
+      // callPar.desc[child_i] = e.target.value
+      // this.setState({ employment: [callPar] });
   }
-  handleChangePos = async (action, list, parent, index) => {
+  handleChangePos = async (action, list, parent) => {
     if(action === "add"){
       const addingEl = list.concat(list[list.length + 1])
-      var add_vals = parent.push({...parent[index]})
-      this.setState({ jobPosList: addingEl, employment: [add_vals] });
+      // var add_vals = parent.push({...parent[0]})
+      // this.setState({ jobPosList: addingEl, employment: [add_vals] });
+      this.setState({ jobPosList: addingEl });
     } else {
       const removingEl = list.splice(-1,1)
-      this.setState({ jobPosList: removingEl, employment: [parent[index].pop] });
+      this.setState({ jobPosList: removingEl });
     }
   }
   handleAS = (e) =>{
@@ -189,7 +192,7 @@ class CustomLayoutContainer extends React.Component {
     const { UserAccountInfo} = this.props.profileIA;
     let formData = new FormData();
     this.props.form.validateFields((err, values) => {
-      console.log("handleFormSubmit values: ", JSON.stringify(values));
+      console.log("handleFormSubmit values: ", JSON.stringify(values) );
       const personal_info = 
         values["personal_info"] === undefined 
         || values["personal_info"][0] === UserAccountInfo.personal_info ? null : values["personal_info"][0];
@@ -232,8 +235,8 @@ class CustomLayoutContainer extends React.Component {
       //   values["website"] === undefined 
       //   || values["website"] === UserAccountInfo.website ? null : values["website"];
       // const employment = 
-      //   values["employment"] === undefined 
-      //   || values["employment"] === UserAccountInfo.employment ? null : values["employment"];
+        const employments = values["employments"] === undefined ? null : values["employments"];
+        const academy = values["academy"] === undefined ? null : values["academy"];
 
       const postObj = {
         profile_username: this.props.username,
@@ -244,6 +247,8 @@ class CustomLayoutContainer extends React.Component {
         iprofesion: iprofesion,
         ilocation: ilocation,
         imyself: imyself,
+        employments: employments,
+        academy: academy,
         // university: university,
         // attendace: attendace,
         // degree: degree,
@@ -321,7 +326,7 @@ class CustomLayoutContainer extends React.Component {
     } = this.state;
     const { getFieldDecorator, getFieldValue, getFieldsValue } = this.props.form;
     const options = [];
-    
+    // getFieldDecorator(`employments`, { initialValue: employment });
     for (let i = minOffset; i <= maxOffset; i++) {
       const year = thisYear - i;
       options.push(<option key={i} value={year}>{year}</option>);
@@ -455,12 +460,12 @@ class CustomLayoutContainer extends React.Component {
                                       </div>
                                       <div className="job-position-cont">
                                       <Form.Item style={{marginBottom: "0px"}}>
-                                        {getFieldDecorator("employment-1", {
+                                        {getFieldDecorator(`employments[${[i]}][job_pos]`, {
                                           rules: [
                                             { type: 'string', required: true, message: 'Please enter down the name of your job position' },
                                           ],
                                         })(
-                                          <input type="text" id="employment-1" name="employment-1" placeholder="E.g. Consultant Digital Designer of UX/UI, Interaction, and Strategy"/>
+                                          <input type="text" id={`employments[${[i]}][job_pos]`} name="employment-1" placeholder="E.g. Consultant Digital Designer of UX/UI, Interaction, and Strategy"/>
                                         )}
                                       </Form.Item>
                                       </div>
@@ -469,12 +474,13 @@ class CustomLayoutContainer extends React.Component {
                                       <div className="employment-duration-from">
                                         <label id="employment" for="employment">From</label>
                                           <Form.Item style={{marginBottom: "0px"}}>
-                                          {getFieldDecorator("employment-from-year", {
+                                          {getFieldDecorator(`employments[${[i]}]["duration"]["from"]`, {
                                             rules: [
                                               { type: 'string', required: true, message: 'Please enter down the name of your job position' },
                                             ],
                                           })(
-                                            <select id="employment-from-year" value={this.selectedYear} onChange={this.onHandleChange}> 
+                                            <select id={`employments[${[i]}]["duration"]["from"]`} value={this.selectedYear} onChange={this.onHandleChange}> 
+                                              <option value="" selected disabled hidden>Choose here</option>
                                               {options}
                                             </select>
                                           )}
@@ -483,12 +489,13 @@ class CustomLayoutContainer extends React.Component {
                                       <div className="employment-duration-to">
                                         <label id="employment" for="employment">To</label>
                                           <Form.Item style={{marginBottom: "0px"}}>
-                                            {getFieldDecorator("employment-to-year", {
+                                            {getFieldDecorator(`employments[${[i]}]["duration"]["to"]`, {
                                               rules: [
                                                 { type: 'string', required: true, message: 'Please enter down the name of your job position' },
                                               ],
                                             })(
-                                              <select id="employment-to-year" value={this.selectedYear} onChange={this.onHandleChange}> 
+                                              <select id={`employments[${[i]}]["duration"]["to"]`} value={this.selectedYear} onChange={this.onHandleChange}> 
+                                                <option value="" selected disabled hidden>Choose here</option>
                                                 {options}
                                               </select>
                                             )}
@@ -501,12 +508,12 @@ class CustomLayoutContainer extends React.Component {
                                       </div>
                                       <div className="job-position-cont">
                                         <Form.Item style={{marginBottom: "0px"}}>
-                                            {getFieldDecorator("company_name", {
+                                            {getFieldDecorator(`employments[${[i]}]["company"]`, {
                                               rules: [
                                                 { type: 'string', required: true, message: 'Please enter down the name of your job position' },
                                               ],
                                             })(
-                                              <input type="text" id="company_name" name="bdaymonth" placeholder="E.g. Bold&amp;Bald"/>
+                                              <input type="text" id={`employments[${[i]}]["company"]`} name="bdaymonth" placeholder="E.g. Bold&amp;Bald"/>
                                             )}
                                         </Form.Item>
                                       </div>
@@ -517,12 +524,12 @@ class CustomLayoutContainer extends React.Component {
                                       </div> 
                                       <div className="job-position-cont">
                                         <Form.Item style={{marginBottom: "0px"}}>
-                                            {getFieldDecorator("company_location", {
+                                            {getFieldDecorator(`employments[${[i]}]["location"]`, {
                                               rules: [
                                                 { type: 'string', required: true, message: 'Please enter down the name of your job position' },
                                               ],
                                             })(
-                                              <input type="text" id="company_location" name="bdaymonth" placeholder="E.g. New Zealand"/>
+                                              <input type="text" id={`employments[${[i]}]["company"]`} name="bdaymonth" placeholder="E.g. New Zealand"/>
                                             )}
                                         </Form.Item>
                                       </div>
@@ -539,12 +546,18 @@ class CustomLayoutContainer extends React.Component {
                                             </div>
                                             <div className="job-pos-desc-textarea">
                                               <Form.Item style={{marginBottom: "0px"}}>
-                                                  {getFieldDecorator(`pos_desc_${index}`, {
+                                                  {getFieldDecorator(`employments[${[i]}]["desc"][${index}]`, {
                                                     rules: [
                                                       { type: 'string', required: true, message: 'Please enter down the name of your job position' },
                                                     ],
                                                   })(
-                                                    <textarea type="text" onChange={(e) => this.handleChangePosDesc2(e, employment, i, index)} id={`pos_desc_${index}`} name="bdaymonth" placeholder="E.g Led UX and UI for an investment banking web app, delivering clean and uncluttered look and feel based on research, creating, testing and enhancing main user-flows (onboarding, investing, withdrawing, customer feedback, and so on), building the design system, working across different teams and in an agile environment, collaborating efficiently with multiple stakeholders."/>
+                                                    <textarea 
+                                                      type="text" 
+                                                      onChange={(e) => this.handleChangePosDesc2(e, employment, i, index)} 
+                                                      id={`employments[${[i]}]["desc"][${index}]`} 
+                                                      name="bdaymonth" 
+                                                      placeholder="E.g Led UX and UI for an investment banking web app, delivering clean and uncluttered look and feel based on research, creating, testing and enhancing main user-flows (onboarding, investing, withdrawing, customer feedback, and so on), building the design system, working across different teams and in an agile environment, collaborating efficiently with multiple stakeholders."
+                                                    />
                                                   )}
                                               </Form.Item>
                                             </div>
@@ -556,7 +569,7 @@ class CustomLayoutContainer extends React.Component {
                                       <a className="button is-light is-small" 
                                         onClick={() => this.handleChangePosDesc("add", jobPosDescList, employment, i, null)} data-role="load_more_link">+</a>
                                       {jobPosDescList.length > 1 ?
-                                          <a className="button is-light is-small" onClick={() => this.handleChangePosDesc("delete", jobPosDescList, employment, i, null)} data-role="load_more_link">-</a>
+                                          <a className="button is-light is-small button-delete" onClick={() => this.handleChangePosDesc("delete", jobPosDescList, employment, i, null)} data-role="load_more_link">-</a>
                                         :
                                           null
                                       }
@@ -567,12 +580,12 @@ class CustomLayoutContainer extends React.Component {
                                       <label id="employment" for="employment">Technologies</label>
                                       <div class="techs-select techs-select--multiple">
                                         <Form.Item style={{marginBottom: "0px"}}>
-                                          {getFieldDecorator("techs-multi-select", {
+                                          {getFieldDecorator(`employments[${[i]}]["techs"]`, {
                                             rules: [
                                               { type: 'array', required: true, message: 'Please select' },
                                             ],
                                           })(
-                                            <Select name="techs-multi-select" id="techs-multi-select" mode="tags" placeholder="Please select or type an option">
+                                            <Select name={`employment-${[i]}["techs"]`} id={`employments[${[i]}]["techs"]`} mode="tags" placeholder="Please select or type an option">
                                             </Select>
                                           )}
                                         </Form.Item>
@@ -610,12 +623,12 @@ class CustomLayoutContainer extends React.Component {
                                     <label id="employment" for="employment">Skills</label>
                                     <div class="techs-select techs-select--multiple">
                                       <Form.Item style={{marginBottom: "0px"}}>
-                                          {getFieldDecorator("skills-multi-select", {
+                                          {getFieldDecorator(`employments[${[i]}]["skills"]`, {
                                             rules: [
                                               { type: 'array', required: true, message: 'Please select' },
                                             ],
                                           })(
-                                             <Select name="skills-multi-select" id="skills-multi-select" mode="tags" placeholder="Please select or type an option">
+                                             <Select name={`employment-${[i]}["techs"]`} id={`employments[${[i]}]["techs"]`} mode="tags" placeholder="Please select or type an option">
                                               </Select>
                                           )}
                                       </Form.Item>
@@ -628,9 +641,9 @@ class CustomLayoutContainer extends React.Component {
                             )
                           })}
                           <div className="employment-actions-add" data-role="load_more_link_wrapper">
-                            <a className="button is-light is-small" onClick={() => this.handleChangePos("add", jobPosList)} data-role="load_more_link">Add</a>
+                            <a className="button is-light is-small" onClick={() => this.handleChangePos("add", jobPosList, employment)} data-role="load_more_link">Add</a>
                               {jobPosList.length > 1 ?
-                                  <a className="button is-light is-small" onClick={() => this.handleChangePos("delete", jobPosList)} data-role="load_more_link">Remove</a>
+                                  <a className="button is-light is-small button-delete" onClick={() => this.handleChangePos("delete", jobPosList, employment)} data-role="load_more_link">Remove</a>
                                 :
                                   null
                               }
@@ -655,7 +668,7 @@ class CustomLayoutContainer extends React.Component {
                               </div>
                               <div className="academic-grade-choices">
                                 <Form.Item style={{marginBottom: "0px"}}>
-                                  {getFieldDecorator("academic_grade", {
+                                  {getFieldDecorator("academy[academic_grade]", {
                                     rules: [
                                       { type: 'string', required: true, message: 'Please select' },
                                     ],
@@ -681,12 +694,12 @@ class CustomLayoutContainer extends React.Component {
                                 </div>
                                 <div>
                                   <Form.Item style={{marginBottom: "0px"}}>
-                                    {getFieldDecorator("academic_course", {
+                                    {getFieldDecorator("academy[undergraduate[academic_course]]", {
                                       rules: [
                                         { type: 'string', required: true, message: 'Please select' },
                                       ],
                                     })(
-                                      <select id="academic_course" name="courses">
+                                      <select id="academy[undergraduate[academic_course]]" name="courses">
                                         <option value="" selected disabled hidden>Choose here</option>
                                         {courses.map(el => {
                                           return(
@@ -704,12 +717,12 @@ class CustomLayoutContainer extends React.Component {
                                 </div>
                                 <div>
                                   <Form.Item style={{marginBottom: "0px"}}>
-                                    {getFieldDecorator("ac_institution", {
+                                    {getFieldDecorator("academy[undergraduate[institution]]", {
                                       rules: [
                                         { type: 'string', required: true, message: 'Please select' },
                                       ],
                                     })(
-                                      <select id="ac_institution" name="courses">
+                                      <select id="academy[undergraduate[institution]]" name="courses">
                                         <option value="" selected disabled hidden>Choose here</option>
                                         {universities.map(el => {
                                               return (
@@ -729,13 +742,13 @@ class CustomLayoutContainer extends React.Component {
                               </div>
                               <div>
                                 <Form.Item style={{marginBottom: "0px"}}>
-                                    {getFieldDecorator("stu_type", {
+                                    {getFieldDecorator("academy[undergraduate[student_type]]", {
                                       rules: [
                                         { type: 'string', required: true, message: 'Please select' },
                                       ],
                                     })(
-                                      <select id="stu_type" name="courses">
-                                        <option value="" selected disabled hidden>Choose</option>
+                                      <select id="academy[undergraduate[student_type]]" name="courses">
+                                        <option value="" selected disabled hidden>Choose here</option>
                                         <option value="freshman">Freshman</option>
                                         <option value="sophomore">Sophomore</option>
                                         <option value="junior">Junior</option>
@@ -749,12 +762,13 @@ class CustomLayoutContainer extends React.Component {
                             <div className="undergrad-duration-from">
                               <label id="undergrad-edu" for="undergrad-edu">Attending from</label>
                               <Form.Item style={{marginBottom: "0px"}}>
-                                    {getFieldDecorator("undergrad-from-year", {
+                                    {getFieldDecorator("academy[undergraduate[from_year]]", {
                                       rules: [
                                         { type: 'string', required: true, message: 'Please select' },
                                       ],
                                     })(
-                                    <select id="undergrad-from-year"value={this.selectedYear} onChange={this.onHandleChange}> 
+                                    <select id="academy[undergraduate[from_year]]"value={this.selectedYear} onChange={this.onHandleChange}> 
+                                      <option value="" selected disabled hidden>Choose a year</option>
                                       {options}
                                     </select>
                                     )}
@@ -763,12 +777,13 @@ class CustomLayoutContainer extends React.Component {
                             <div className="undergrad-duration-to">
                               <label id="employment" for="employment">To</label>
                               <Form.Item style={{marginBottom: "0px"}}>
-                                    {getFieldDecorator("undergrad-to-year", {
+                                    {getFieldDecorator("academy[undergraduate[to_year]]", {
                                       rules: [
                                         { type: 'string', required: true, message: 'Please select' },
                                       ],
                                     })(
-                                      <select id="undergrad-to-year"value={this.selectedYear} onChange={this.onHandleChange}> 
+                                      <select id="academy[undergraduate[to_year]]r"value={this.selectedYear} onChange={this.onHandleChange}> 
+                                        <option value="" selected disabled hidden>Choose a year</option>
                                         {options}
                                       </select>
                                     )}
@@ -792,12 +807,12 @@ class CustomLayoutContainer extends React.Component {
                                           </div>
                                             <div>
                                               <Form.Item style={{marginBottom: "0px"}}>
-                                                {getFieldDecorator(`bache_edu_${index}`, {
+                                                {getFieldDecorator(`academy[bachelor[${index}][degree]]`, {
                                                   rules: [
                                                     { type: 'string', required: true, message: 'Please select' },
                                                   ],
                                                 })(
-                                                  <select id={`bache_edu_${index}`} name="cars">
+                                                  <select id={`academy[bachelor[${index}][degree]]`} name="cars">
                                                     <option value="" selected disabled hidden>Choose here</option>
                                                     {bachelors_degrees.map(el => {
                                                         return (
@@ -816,12 +831,12 @@ class CustomLayoutContainer extends React.Component {
                                           </div>
                                           <div>
                                           <Form.Item style={{marginBottom: "0px"}}>
-                                            {getFieldDecorator(`bach_inst_${index}`, {
+                                            {getFieldDecorator(`academy[bachelor[${index}][institution]]`, {
                                               rules: [
                                                 { type: 'string', required: true, message: 'Please select' },
                                               ],
                                             })(
-                                              <select id={`bach_inst_${index}`} name="cars">
+                                              <select id={`academy[bachelor[${index}][institution]]`} name="cars">
                                                 <option value="" selected disabled hidden>Choose here</option>
                                                       {universities.map(el => {
                                                       return (
@@ -839,27 +854,29 @@ class CustomLayoutContainer extends React.Component {
                                         <div className="bachelor-duration-from">
                                           <label id="bachelor-edu" for="bachelor-edu">From</label>
                                           <Form.Item style={{marginBottom: "0px"}}>
-                                              {getFieldDecorator(`bach_from_year_${index}`, {
+                                              {getFieldDecorator(`academy[bachelor[${index}][from_year]]`, {
                                                 rules: [
                                                   { type: 'string', required: true, message: 'Please select' },
                                                 ],
                                               })(
-                                                <select id={`bach_from_year_${index}`} value={this.selectedYear} onChange={this.onHandleChange}> 
-                                                        {options}
-                                                      </select>
+                                                <select id={`academy[bachelor[${index}][from_year]]`} value={this.selectedYear} onChange={this.onHandleChange}> 
+                                                    <option value="" selected disabled hidden>Choose a year</option>
+                                                    {options}
+                                                  </select>
                                               )}
                                           </Form.Item> 
                                         </div>
                                         <div className="bachelor-duration-to">
                                           <label id="employment" for="employment">To</label>
                                           <Form.Item style={{marginBottom: "0px"}}>
-                                              {getFieldDecorator(`bach_to_year_${index}`, {
+                                              {getFieldDecorator(`academy[bachelor[${index}][to_year]]`, {
                                                 rules: [
                                                   { type: 'string', required: true, message: 'Please select' },
                                                 ],
                                               })(
-                                                <select id={`bach_to_year_${index}`} value={this.selectedYear} onChange={this.onHandleChange}> 
-                                                {options}
+                                                <select id={`academy[bachelor[${index}][to_year]]`} value={this.selectedYear} onChange={this.onHandleChange}> 
+                                                  <option value="" selected disabled hidden>Choose a year</option>
+                                                  {options}
                                               </select>
                                               )}
                                           </Form.Item>
@@ -873,7 +890,7 @@ class CustomLayoutContainer extends React.Component {
                             <div className="edu-actions-add" data-role="load_more_link_wrapper">
                               <a className="button is-light is-small" onClick={() => this.handleChangeEdu("add", "bachelor", bachelorList)} data-role="load_more_link">+</a>
                               {bachelorList.length > 1 ?
-                                  <a className="button is-light is-small" onClick={() => this.handleChangeEdu("delete", "bachelor", bachelorList)} data-role="load_more_link">-</a>
+                                  <a className="button is-light is-small button-delete" onClick={() => this.handleChangeEdu("delete", "bachelor", bachelorList)} data-role="load_more_link">-</a>
                                 :
                                   null
                               }
@@ -895,12 +912,12 @@ class CustomLayoutContainer extends React.Component {
                                           </div>
                                           <div>
                                             <Form.Item style={{marginBottom: "0px"}}>
-                                              {getFieldDecorator(`master_degree_${index}`, {
+                                              {getFieldDecorator(`academy[master[${index}][degree]]`, {
                                                 rules: [
                                                   { type: 'string', required: true, message: 'Please select' },
                                                 ],
                                                 })(
-                                                  <select id={`master_degree_${index}`} name="cars">
+                                                  <select id={`academy[master[${index}][degree]]`} name="cars">
                                                     <option value="" selected disabled hidden>Choose here</option>
                                                         {masters_degrees.map(el => {
                                                             return (
@@ -919,12 +936,12 @@ class CustomLayoutContainer extends React.Component {
                                           </div>
                                           <div>
                                           <Form.Item style={{marginBottom: "0px"}}>
-                                            {getFieldDecorator(`master_inst_${index}`, {
+                                            {getFieldDecorator(`academy[master[${index}][institution]]`, {
                                               rules: [
                                                 { type: 'string', required: true, message: 'Please select' },
                                               ],
                                             })(
-                                              <select id={`master_inst_${index}`} name="cars">
+                                              <select id={`academy[master[${index}][institution]]`} name="cars">
                                                 <option value="" selected disabled hidden>Choose here</option>
                                                       {universities.map(el => {
                                                       return (
@@ -942,12 +959,13 @@ class CustomLayoutContainer extends React.Component {
                                       <div className="master-duration-from">
                                         <label id="employment" for="employment">From</label>
                                         <Form.Item style={{marginBottom: "0px"}}>
-                                    {getFieldDecorator(`master_from_year_${index}`, {
+                                    {getFieldDecorator(`academy[master[${index}][from_year]]`, {
                                       rules: [
                                         { type: 'string', required: true, message: 'Please select' },
                                       ],
                                     })(
-                                      <select id={`master_from_year_${index}`} value={this.selectedYear} onChange={this.onHandleChange}> 
+                                        <select id={`academy[master[${index}][from_year]]`} value={this.selectedYear} onChange={this.onHandleChange}>
+                                            <option value="" selected disabled hidden>Choose a year</option> 
                                             {options}
                                           </select>
                                     )}
@@ -956,17 +974,17 @@ class CustomLayoutContainer extends React.Component {
                                       <div className="master-duration-to">
                                         <label id="employment" for="employment">To</label>
                                         <Form.Item style={{marginBottom: "0px"}}>
-                                    {getFieldDecorator(`master_to_year_${index}`, {
-                                      rules: [
-                                        { type: 'string', required: true, message: 'Please select' },
-                                      ],
-                                    })(
-                                      <select id={`master_to_year_${index}`} value={this.selectedYear} onChange={this.onHandleChange}> 
-                                            {options}
-                                          </select>
-                                    )}
-                                </Form.Item>
-                                          
+                                          {getFieldDecorator(`academy[master[${index}][to_year]]`, {
+                                            rules: [
+                                              { type: 'string', required: true, message: 'Please select' },
+                                            ],
+                                          })(
+                                              <select id={`academy[master[${index}][to_year]]`} value={this.selectedYear} onChange={this.onHandleChange}> 
+                                                <option value="" selected disabled hidden>Choose a year</option>
+                                                {options}
+                                              </select>
+                                          )}
+                                        </Form.Item>
                                       </div>
                                     </div>
                                     </li>
@@ -976,7 +994,7 @@ class CustomLayoutContainer extends React.Component {
                             <div className="edu-actions-add" data-role="load_more_link_wrapper">
                               <a className="button is-light is-small" onClick={() => this.handleChangeEdu("add", "master", masterList)} data-role="load_more_link">+</a>
                               {masterList.length > 1 ?
-                                  <a className="button is-light is-small" onClick={() => this.handleChangeEdu("delete", "master", masterList)} data-role="load_more_link">-</a>
+                                  <a className="button is-light is-small button-delete" onClick={() => this.handleChangeEdu("delete", "master", masterList)} data-role="load_more_link">-</a>
                                 :
                                   null
                               }
@@ -994,12 +1012,12 @@ class CustomLayoutContainer extends React.Component {
                                         </div>
                                         <div>
                                         <Form.Item style={{marginBottom: "0px"}}>
-                                            {getFieldDecorator(`phd_degree_${index}`, {
+                                            {getFieldDecorator(`academy[phd[${index}][degree]]`, {
                                               rules: [
                                                 { type: 'string', required: true, message: 'Please select' },
                                               ],
                                             })(
-                                              <select id={`phd_degree_${index}`} name="cars">
+                                              <select id={`academy[phd[${index}][degree]]`} name="cars">
                                                 <option value="" selected disabled hidden>Choose here</option>
                                                 {phD_degrees.map(el => {
                                                     return (
@@ -1018,12 +1036,12 @@ class CustomLayoutContainer extends React.Component {
                                       </div>
                                       <div>
                                       <Form.Item style={{marginBottom: "0px"}}>
-                                          {getFieldDecorator(`phd_inst_${index}`, {
+                                          {getFieldDecorator(`academy[phd[${index}][institution]]`, {
                                             rules: [
                                               { type: 'string', required: true, message: 'Please select' },
                                             ],
                                           })(
-                                            <select id={`phd_inst_${index}`} name="cars">
+                                            <select id={`academy[phd[${index}][institution]]`} name="cars">
                                               <option value="" selected disabled hidden>Choose here</option>
                                                 {universities.map(el => {
                                                     return (
@@ -1041,12 +1059,13 @@ class CustomLayoutContainer extends React.Component {
                                     <div className="phd-duration-from">
                                       <label id="employment" for="employment">From</label>
                                       <Form.Item style={{marginBottom: "0px"}}>
-                                    {getFieldDecorator(`phd_from_year_${index}`, {
+                                    {getFieldDecorator(`academy[phd[${index}][from_year]]`, {
                                       rules: [
                                         { type: 'string', required: true, message: 'Please select' },
                                       ],
                                     })(
-                                      <select id={`phd_from_year_${index}`} value={this.selectedYear} onChange={this.onHandleChange}> 
+                                      <select id={`academy[phd[${index}][from_year]]`} value={this.selectedYear} onChange={this.onHandleChange}> 
+                                          <option value="" selected disabled hidden>Choose a year</option>
                                           {options}
                                         </select>
                                     )}
@@ -1055,12 +1074,13 @@ class CustomLayoutContainer extends React.Component {
                                     <div className="phd-duration-to">
                                       <label id="employment" for="employment">To</label>
                                       <Form.Item style={{marginBottom: "0px"}}>
-                                    {getFieldDecorator(`phd_to_year_${index}`, {
+                                    {getFieldDecorator(`academy[phd[${index}][to_year]]`, {
                                       rules: [
                                         { type: 'string', required: true, message: 'Please select' },
                                       ],
                                     })(
-                                      <select id={`phd_to_year_${index}`} value={this.selectedYear} onChange={this.onHandleChange}> 
+                                      <select id={`academy[phd[${index}][to_year]]}`} value={this.selectedYear} onChange={this.onHandleChange}> 
+                                          <option value="" selected disabled hidden>Choose a year</option>
                                           {options}
                                         </select>
                                     )}
@@ -1074,7 +1094,7 @@ class CustomLayoutContainer extends React.Component {
                             <div className="edu-actions-add" data-role="load_more_link_wrapper">
                                 <a className="button is-light is-small" onClick={() => this.handleChangeEdu("add", "phd", phdList)} data-role="load_more_link">+</a>
                                 {phdList.length > 1 ?
-                                    <a className="button is-light is-small" onClick={() => this.handleChangeEdu("delete", "phd", phdList)} data-role="load_more_link">-</a>
+                                    <a className="button is-light is-small button-delete" onClick={() => this.handleChangeEdu("delete", "phd", phdList)} data-role="load_more_link">-</a>
                                   :
                                     null
                                 }
@@ -1095,12 +1115,13 @@ class CustomLayoutContainer extends React.Component {
                                           </div>
                                           <div>
                                           <Form.Item style={{marginBottom: "0px"}}>
-                                    {getFieldDecorator(`other_edu_degree_${index}`, {
+                                    {getFieldDecorator(`academy[other_edu[${index}][degree]]`, {
                                       rules: [
                                         { type: 'string', required: true, message: 'Please select' },
                                       ],
                                     })(
-                                      <select id={`other_edu_degree_${index}`} name="cars">
+                                      <select id={`academy[other_edu[${index}][degree]]`} name="cars">
+                                              <option value="" selected disabled hidden>Choose here</option>
                                               <option value="volvo">Volvo</option>
                                               <option value="saab">Saab</option>
                                               <option value="fiat">Fiat</option>
@@ -1116,22 +1137,22 @@ class CustomLayoutContainer extends React.Component {
                                           </div>
                                           <div>
                                           <Form.Item style={{marginBottom: "0px"}}>
-                                    {getFieldDecorator(`other_edu_inst_${index}`, {
-                                      rules: [
-                                        { type: 'string', required: true, message: 'Please select' },
-                                      ],
-                                    })(
-                                      <select id={`other_edu_inst_${index}`} name="cars">
-                                        <option value="" selected disabled hidden>Choose here</option>
-                                              {universities.map(el => {
-                                              return (
-                                                <option value={el.value}>{el.label}</option>
-                                              )
-                                            })
-                                          }
-                                            </select> 
-                                    )}
-                                </Form.Item>
+                                              {getFieldDecorator(`academy[other_edu[${index}][institution]]`, {
+                                                rules: [
+                                                  { type: 'string', required: true, message: 'Please select' },
+                                                ],
+                                              })(
+                                                <select id={`academy[other_edu[${index}][institution]]`} name="cars">
+                                                  <option value="" selected disabled hidden>Choose here</option>
+                                                        {universities.map(el => {
+                                                        return (
+                                                          <option value={el.value}>{el.label}</option>
+                                                        )
+                                                      })
+                                                    }
+                                                      </select> 
+                                              )}
+                                          </Form.Item>
                                           </div>
                                         </div>
                                       </div>
@@ -1139,12 +1160,13 @@ class CustomLayoutContainer extends React.Component {
                                       <div className="other-edu-duration-from">
                                         <label id="employment" for="employment">From</label>
                                         <Form.Item style={{marginBottom: "0px"}}>
-                                    {getFieldDecorator(`other_edu_from_year_${index}`, {
+                                    {getFieldDecorator(`academy[other_edu[${index}][from_year]]`, {
                                       rules: [
                                         { type: 'string', required: true, message: 'Please select' },
                                       ],
                                     })(
-                                      <select id={`other_edu_from_year_${index}`} value={this.selectedYear} onChange={this.onHandleChange}> 
+                                      <select id={`academy[other_edu[${index}][from_year]]`} value={this.selectedYear} onChange={this.onHandleChange}> 
+                                          <option value="" selected disabled hidden>Choose a year</option>
                                             {options}
                                           </select>
                                     )}
@@ -1153,12 +1175,13 @@ class CustomLayoutContainer extends React.Component {
                                       <div className="other-edu-duration-to">
                                         <label id="employment" for="employment">To</label>
                                         <Form.Item style={{marginBottom: "0px"}}>
-                                    {getFieldDecorator(`other_edu_to_year_${index}`, {
+                                    {getFieldDecorator(`academy[other_edu[${index}][to_year]]`, {
                                       rules: [
                                         { type: 'string', required: true, message: 'Please select' },
                                       ],
                                     })(
-                                      <select id={`other_edu_to_year_${index}`} value={this.selectedYear} onChange={this.onHandleChange}> 
+                                      <select id={`academy[other_edu[${index}][to_year]]`} value={this.selectedYear} onChange={this.onHandleChange}> 
+                                          <option value="" selected disabled hidden>Choose a year</option>
                                             {options}
                                           </select>
                                     )}
@@ -1173,7 +1196,7 @@ class CustomLayoutContainer extends React.Component {
                             <div className="edu-actions-add" data-role="load_more_link_wrapper">
                                 <a className="button is-light is-small" onClick={() => this.handleChangeEdu("add", "otherEdu",otherEduList)} data-role="load_more_link">+</a>
                                 {otherEduList.length > 1 ?
-                                    <a className="button is-light is-small" onClick={() => this.handleChangeEdu("delete", "otherEdu", otherEduList)} data-role="load_more_link">-</a>
+                                    <a className="button is-light is-small button-delete" onClick={() => this.handleChangeEdu("delete", "otherEdu", otherEduList)} data-role="load_more_link">-</a>
                                   :
                                     null
                                 }

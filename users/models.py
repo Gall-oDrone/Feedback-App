@@ -566,6 +566,15 @@ class Profile(models.Model):
         if self.pk == pk:
             return self.profile_avatar
 
+# class StudentType(models.Model):
+#     s_type = models.CharField(max_length=100, choices=STUDENT_TYPE, blank=True)
+class UserUndergraduate(models.Model):
+        course = models.ForeignKey(Course, related_name="user_resume_course", on_delete=models.CASCADE)
+        from_date = models.DateTimeField(auto_now_add=False)
+        to_date = models.DateTimeField(auto_now_add=False)
+        # student_type = models.CharField(max_length=100, choices=StudentType, blank=True)
+        institution=UNIVERSITIES
+
 class UserBachelor(models.Model):
         degree = models.CharField(max_length=100, choices=BACHELOR_DEGREES, blank=True)
         from_date = models.DateTimeField(auto_now_add=False)
@@ -584,8 +593,9 @@ class UserDoctorate(models.Model):
         to_date = models.DateTimeField(auto_now_add=False)
         institution=UNIVERSITIES
 
-# class UserDiploma(models.Model):
-#         degree = models.CharField(max_length=100, choices=BACHELOR_DEGREES, blank=True)
+# class UserDiplomaOrCertificate(models.Model):
+#         diploma = models.CharField(max_length=100, choices=BACHELOR_DEGREES, blank=True)
+#         certificate = models.CharField(max_length=100, choices=BACHELOR_DEGREES, blank=True)
 #         from_date = models.DateTimeField(auto_now_add=False)
 #         to_date = models.DateTimeField(auto_now_add=False)
 #         institution=UNIVERSITIES
@@ -593,15 +603,20 @@ class UserDoctorate(models.Model):
 
 ### TODO #######
 # class Education(models.Model):
+#     academic_degree = models.ForeignKey(Degree, blank=True)
+#     undergrad =  models.ForeignKey(UserUndergraduate, blank=True)
 #     bachelor = models.ManyToManyField(UserBachelor, blank=True)
 #     master = models.ManyToManyField(UserMaster, blank=True)
 #     phd = models.ManyToManyField(UserDoctorate, blank=True)
+#     other_edu = models.ManyToManyField(UserDiplomaOrCertificate, blank=True)
 
-# class JobActivity(models.Model):
-#     job_activity = models.TextField(max_length=100, blank=True)
+# class JobActivityDescription(models.Model):
+#     job_desc = models.TextField(max_length=500, blank=True)
 
 # class TechnologyUsed(models.Model):
 #     technology = models.CharField(max_length=100, choices=TECHNOLOGIES, blank=True)
+# classSkillUsed(models.Model):
+#     skill = models.CharField(max_length=100, choices=TECHNOLOGIES, blank=True)
 
 # class JobPosition(models.Model):
 #         position = models.CharField(max_length=100, choices=JOB_POSITIONS, blank=True)
@@ -609,8 +624,9 @@ class UserDoctorate(models.Model):
 #         location = models.CharField(max_length=100, choices=JOB_POSITIONS, blank=True)
 #         from_date = models.DateTimeField(auto_now_add=False)
 #         to_date = models.DateTimeField(auto_now_add=False)
-#         job_activities = models.ManyToManyField(JobActivity, blank=True)
+#         job_activities_desc = models.ManyToManyField(JobActivityDescription, blank=True)
 #         technologies_used = models.ManyToManyField(TechnologyUsed, blank=True)
+#         skills_used = models.ManyToManyField(classSkillUsed, blank=True)
 
 # class Employment(models.Model):
 #     job_positions = models.ManyToManyField(JobPosition, blank=True)

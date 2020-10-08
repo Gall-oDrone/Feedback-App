@@ -177,6 +177,16 @@
   padding: 10px 10px;
   text-align: center;
 }
+.employment-actions-add a:hover,
+.pos-desc-add a:hover {
+  border-color: green;
+  background-color: #14dd1757;
+}
+.button-delete:hover,
+.pos-desc-remove a:hover {
+  border-color: red !important;
+  background-color: #dd3c1457 !important;
+}
 .job-pos-desc{
   display: block;
   font-size: 17px;
@@ -295,6 +305,14 @@
 }
 .edu-actions-remove a{
   padding: 10px 10px;
+}
+.edu-actions-add a:hover {
+  border-color: green;
+  background-color: #14dd1757;
+}
+.edu-actions-remove a{
+  border-color: red !important;
+  background-color: #dd3c1457 !important;
 }
 .techs-select .techs-select--multiple{
 
