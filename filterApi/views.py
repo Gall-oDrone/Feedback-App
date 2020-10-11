@@ -1,6 +1,7 @@
 from django.db.models import Q, Count
 from django.shortcuts import render, get_object_or_404
-from .models import Journal, Category
+from django.views.generic import ListView
+from .models import Journal, Category, GlobalQuerySet
 from articlesApi.models import Article, Category, Tag
 from users.models import User, ProfileInfo, Universities, Degree, Bachelor, Master, Doctorate, Course
 from surveyApi.models import Survey
@@ -147,3 +148,60 @@ def showMultipleModels(request):
         "sessions":  sessionSerializer.data
     }
     return Response(resultModel)
+
+# class GlobalSearchView(ListView):
+# class GlobalSearchView(generics.ListAPIView):
+#     # serializer_class = InquirySerializer
+#     permission_classes = (permissions.AllowAny,)
+
+#     def get_context_data(self, *args, **kwargs):
+#         context = super().get_context_data(*args, **kwargs)
+#         context['count'] = self.count or 0
+#         context['query'] = self.request.GET.get('value')
+#         return context
+
+@api_view(["GET"])
+def get_search_queryset(request):
+    request = request
+    query = request.GET.get('value')
+    if query is not None:
+        articles_results = GlobalQuerySet.search(Article.objects.all(), query)
+        projects_results = GlobalQuerySet.search(Project.objects.all(), query)
+        inquiries_results = GlobalQuerySet.search(Inquiry.objects.all(), query)
+        workshops_results = GlobalQuerySet.search(Workshop.objects.all(), query)
+        sessions_results = GlobalQuerySet.search(Session.objects.all(), query)
+        # collaborations_results = GlobalQuerySet.search(Collaboration.objects.all(), query)
+        articleSerializer = FeaturedArticleSerializer(articles_results, many=True, context={'request': request})
+        workshopSerializer = FeaturedWorkshopSerializer(workshops_results, many=True, context={'request': request})
+        inquirySerializer = FeaturedInquirySerializer(inquiries_results, many=True, context={'request': request})
+        projectSerializer = FeaturedProjectSerializer(projects_results, many=True, context={'request': request})
+        sessionSerializer = FeaturedSessionSerializer(sessions_results, many=True, context={'request': request})
+
+        resultModel = {
+            "articles": articleSerializer.data, 
+            "workshops": workshopSerializer.data, 
+            "inquiries":  inquirySerializer.data, 
+            "projects":  projectSerializer.data,
+            "sessions":  sessionSerializer.data
+        }
+
+        queryset_chain = chain(
+            # articleSerializer,
+            # workshopSerializer,
+            # inquirySerializer,
+            # projectSerializer,
+            # sessionSerializer
+            articles_results,
+            projects_results,
+            inquiries_results,
+            workshops_results,
+            sessions_results,
+            # collaborations_results,
+        )
+        # qs = sorted(queryset_chain, key=lambda instance: instance.pk, reverse=True)
+        # count = len(queryset_chain)
+        print("qs: ",resultModel)
+        return Response(resultModel)
+    # qs = GlobalQuerySet.search(self, self.request.GET.get("value"))
+    print("GlobalSearchView qs: ",qs)
+    return qs

@@ -24,15 +24,23 @@ class Journal(models.Model):
         return self.title
 
 class GlobalQuerySet(models.QuerySet):
-    def search(Self, query=None):
+    def search(self, query=None):
         qs = self
+        print("DRAKE 0: ", qs)
         if query is not None:
-            or_lookup = (models.Q(user__username__icontains=query) |
-                        models.Q(title__icontains=query) |
-                        models.Q(description__icontains=query) |
-                        models.Q(slug__icontains=query)
+            or_lookup = (
+                            # models.Q(user__username__icontains=query) |
+                            models.Q(title__icontains=query)
+                            # models.Q(description__icontains=query) |
+                            # models.Q(slug__icontains=query)
                         )
-            qs = qs.filter(or_lookup).distinc()
+            qs = qs.filter(or_lookup).distinct()
+            print("DRAKE: ", qs)
         return qs
 
-# class GlobalManager(models.)
+class GlobalManager(models.Manager):
+    def get_queryset(self):
+        return GlobalQuerySet(self.model, using=self._db)
+    
+    def search(self, query=None):
+        return self.get_queryset().search(query=query)

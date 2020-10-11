@@ -602,6 +602,13 @@ class UserDoctorate(models.Model):
 
 
 ### TODO #######
+# class PersonalInfo(models.Model):
+#     name = models.CharField(max_length=50, blank=True)
+#     last_name = models.CharField(max_length=50, blank=True)
+#     profesion = models.CharField(max_length=50, blank=True)
+#     location = CountryField(blank_label='(select country)')
+#     about_me = models.TextField(max_length=500, blank=True)
+
 # class Education(models.Model):
 #     academic_degree = models.ForeignKey(Degree, blank=True)
 #     undergrad =  models.ForeignKey(UserUndergraduate, blank=True)
@@ -634,6 +641,24 @@ class UserDoctorate(models.Model):
 # class Experience(models.Model):
 #     experience_tags(many to many)
 #         experience_tag
+
+# class Profile2(models.Model):
+#     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+#     stripe_customer_id = models.CharField(max_length=50, blank=True, null=True)
+#     profile_avatar = models.ImageField(upload_to="profileAvatar/", blank=True)
+#     friends = models.ManyToManyField("Profile", blank=True)
+#     notifications = models.ManyToManyField("MeetingRequest", blank=True)
+#     notification_counter = models.IntegerField(default=0)
+
+#     message = models.CharField(max_length=150, blank=True, null=True)
+#     personal = models.ForeignKey(PersonalInfo, related_name="profile_personal_details", on_delete=models.CASCADE)
+#     academic = models.ForeignKey(Education, related_name="profile_academic_details", on_delete=models.CASCADE)
+#     employment = models.ForeignKey(Employment, related_name="profile_employment_details", on_delete=models.CASCADE)
+#     def __str__(self):
+#         return "{} profile info".format(self.profile_username.username)
+    
+#     def avatar(self, pk):
+#         return  self.profile_avatar
 
 class ProfileInfo(models.Model):
     profile = models.ForeignKey(Profile, related_name="user_profile", on_delete=models.CASCADE)

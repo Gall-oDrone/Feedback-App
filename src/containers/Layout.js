@@ -7,11 +7,13 @@ import ProfileHeaderMenu from "../components/ProfileHeaderMenu"
 import NotificationHeaderMenu from "../components/NotificationHeaderMenu"
 import NavMenu from "../components/navBar";
 import NavMenu2 from "../components/navBar2";
-import NavMenu3 from "../components/navBarWrapper";
+import Searcher from "../components/GlobalSearcher";
 import { ReactComponent as BellIcon } from '../icons/bell.svg';
 import {getProfileAccountDetail} from "../store/actions/profileAccountInfo"
 import CreateHeaderMenu from "../components/CreateHeaderMenu";
+import OptionsHeaderMenu from "../components/OptionsHeaderMenu";
 import Home from "./Home";
+import logo from "../assets2/mate-crunch-logo-3.png"
 import "../assets/main.css";
 import "../assets/navBar.css";
 import VA from "../components/VerifiyAlert";
@@ -75,87 +77,28 @@ class CustomLayout extends React.Component {
                 </Menu.Item> */}
                 
                 <Menu.Item key="1" style= {{float: 'left'}}>
-                  <div className="navbar-item-in">
-                    <Link to="/">
-                        <Icon style={{margin:0}} type="home" />
-                        <span className="caption">HOME</span>
+                    <Link to="/" style={{margin:"auto"}}>
+                        <img className="logo-img" style={{margin:0}} src={logo}></img>
                     </Link>
-                  </div>
                   </Menu.Item>
                   <Menu.Item key="2" style= {{float: 'left'}}>
-                  <div className="navbar-item-in">
-                      <Link to="/articles/">
-                        <Icon style={{margin:0}} type="edit" />
-                        <span className="caption">ARTICLES</span>
-                      </Link> 
-                  </div>
-                </Menu.Item>
-                <Menu.Item key="3" style= {{float: 'left'}}>
-                  <div className="navbar-item-in">
-                      <Link to="/projects/">
-                        <Icon style={{margin:0}} type="rocket" />
-                        <span className="caption">PROJECTS</span>
-                      </Link> 
-                  </div>
-                </Menu.Item>
-                <Menu.Item key="4" style= {{float: 'left'}}>
-                  <div className="navbar-item-in">
-                      <Link to="/inquiries/">
-                          <Icon style={{margin:0}} type="solution" />
-                          <span className="caption">INQUIRIES</span>
-                      </Link>
-                  </div>
+                    <div className="navbar-item-in-searcher">
+                        <Searcher/>
+                    </div>
                   </Menu.Item>
-                <Menu.Item key="5" style= {{float: 'left'}}>
-                  <div className="navbar-item-in">
-                        <Link to="/incentives/">
-                          <Icon style={{margin:0}} type="shop" />
-                          <span className="caption">SHOP</span>
-                        </Link>
-                  </div>
-                </Menu.Item>
-                <Menu.Item key="6" style= {{float: 'left'}}>
-                  <div className="navbar-item-in">
-                        <Link to="/sessions/">
-                          <Icon style={{margin:0}} type="team" />
-                          <span className="caption">MEET AND TALK</span>
-                        </Link>
-                  </div>
-                </Menu.Item>
-                <Menu.Item key="7" style= {{float: 'left'}}>
-                  <div className="navbar-item-in">
-                      <Link to="/survey/">
-                        <Icon style={{margin:0}} type="reconciliation" />
-                        <span className="caption">SURVEY</span>
-                      </Link>
-                  </div>
-                </Menu.Item>
-                <Menu.Item key="8" style= {{float: 'left'}}>
-                  <div className="navbar-item-in">
-                      <Link to="/workshops/">
-                        <Icon style={{margin:0}} type="schedule" />
-                        <span className="caption">WORKSHOPS</span>
-                      </Link>
-                  </div>
-                </Menu.Item>
-                <Menu.Item key="9" style= {{float: 'left'}}>
-                  <div className="navbar-item-in">
-                      <Link to="/collaborations/">
-                        <Icon style={{margin:0}} type="deployment-unit" />
-                        <span className="caption">COLLABORATIONS</span>
-                      </Link>
-                  </div>
-                </Menu.Item>
-                <Menu.Item key="10" style= {{float: 'right', paddingLeft: "15px", paddingRight: "15px"}}>
+                  <Menu.Item key="3" style= {{float: 'left'}}>
+                        <OptionsHeaderMenu/>
+                  </Menu.Item>
+                <Menu.Item key="11" style= {{float: 'right', paddingLeft: "15px", paddingRight: "15px"}}>
                     <ProfileHeaderMenu auth={this.props.isAuthenticated} logout={this.props.logout} userId={this.props.userId}/>
                 </Menu.Item>
-                <Menu.Item key="11" style= {{float: 'right', paddingLeft: "15px", paddingRight: "15px"}}>
+                <Menu.Item key="12" style= {{float: 'right', paddingLeft: "15px", paddingRight: "15px"}}>
                     <CreateHeaderMenu/>
                 </Menu.Item>
-                <Menu.Item key="12" style= {{float: 'right'}}>
+                <Menu.Item key="13" style= {{float: 'right'}}>
                     <NavMenu/>
                 </Menu.Item>
-                <Menu.Item key="13" style= {{float: 'right'}}>
+                <Menu.Item key="14" style= {{float: 'right'}}>
                     <NavMenu2/>
                 </Menu.Item>
                 

@@ -226,16 +226,29 @@ UNIVERSITIES = [
     (OTHER, [('other')])
 ]
 
+FRESHMAN = "freshman"
+SOPHOMORE = "sophomore"
+JUNIOR = "junior"
+SENIOR = "senior"
+STUDENT_TYPES = [
+    (FRESHMAN, ('Freshman')),
+    (SOPHOMORE, ('Sophomore')),
+    (JUNIOR, ('Junior')),
+    (SENIOR, ('Senior')),
+]
+
 BACHELOR = "bachelor"
 MASTER = "master"
 DOCTORATE = "Doctorate"
 DIPLOMA = 'diploma'
+CERTIFICATE = 'certificate'
 OTHER = "other"
 DEGREES = [
     (BACHELOR, ('Bachelor Degree')),
     (MASTER, ('Masters Degree')),
     (DOCTORATE, ('Ph.D.')),
     (DIPLOMA, ('Diploma')),
+    (CERTIFICATE, ('Certificate')),
     (OTHER, ('Other')),
 ]
 

@@ -2,6 +2,8 @@ import React from "react";
 import { Route } from "react-router-dom";
 import Hoc from "./hoc/hoc";
 
+import Search from "./containers/SearchResults";
+
 import Login from "./containers/Login";
 import Signup from "./containers/Signup";
 import Profile from "./containers/Profile";
@@ -120,6 +122,8 @@ import ProfileCollaborations from "./containers/ProfileCollaborations"
 
 const BaseRouter = () => (
   <Hoc>
+
+    <Route exact path="/search/:searchValue" component={Search} />
     <Route exact path="/create/" component={AssignmentChoices} />
     <Route exact path="/articles/" component={ArticleList} />
 

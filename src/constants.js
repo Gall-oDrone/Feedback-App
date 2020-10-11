@@ -25,6 +25,7 @@ const image_endpoint = `${files}${imageURL}`
 export const media_endpoint = `${files}${mediaURL}`
 
 export const homeListURL = `${endpoint}/filter/featured_list/`;
+export const searchListURL = `${endpoint}/filter/global_list/`;
 
 export const productListURL = `${endpoint}/paymentsApi/products/`;
 export const productDetailURL = id => `${endpoint}/payments/products/${id}/`;

@@ -8,6 +8,7 @@ import { Provider } from "react-redux";
 import thunk from "redux-thunk";
 
 import authReducer from "./store/reducers/auth";
+import searchReducer from "./store/reducers/search";
 import assignmentReducer from "./store/reducers/assignments";
 import inquiryReducer from "./store/reducers/inquiry"
 import surveyReducer from "./store/reducers/survey";
@@ -53,6 +54,7 @@ const composeEnhances = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
 const rootReducer = combineReducers({
   auth: authReducer,
+  search: searchReducer,
   // assignments: assignmentReducer,
   // gradedAssignments: gradedAssignmentReducer,
   // assignmentsChoices: assignmentChoiceReduce,
