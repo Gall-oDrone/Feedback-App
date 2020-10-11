@@ -1,6 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 // import { Router, Route, Switch } from "react-router-dom";
+import { withRouter } from "react-router-dom";
 import createHistory from "history/createBrowserHistory";
 import {searchListURL} from "../constants";
 import { fetchSearchResults } from "../store/actions/search";
@@ -31,7 +32,7 @@ class Searcher extends React.Component {
     console.log("handleFormSubmit", event.target.values, this.state.value)
       let getObj = {params: {value: this.state.value}}
       this.props.searchValue(getObj)
-      history.push(`/search/${this.state.value}`);
+      this.props.history.push(`/search/${this.state.value}`);
           // axios.defaults.headers = {
           //   "Content-Type": "application/json",
           // }
@@ -90,4 +91,4 @@ const mapDispatchToProps = dispatch => {
     searchValue: (obj) => dispatch(fetchSearchResults(obj))
   };
 };
-export default connect(null, mapDispatchToProps)(Searcher);
+export default withRouter(connect(null, mapDispatchToProps)(Searcher));

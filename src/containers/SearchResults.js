@@ -10,6 +10,7 @@ class Results extends React.Component {
     loading: null
   }
   componentDidMount(){
+    console.log("EHRENO III")
     if(this.props.match.params){
       let getObj = {params: {value: this.props.match.params.searchValue }}
       this.props.searchValue(getObj)
@@ -17,13 +18,18 @@ class Results extends React.Component {
   }
 
   componentDidUpdate(prevProps, prevState){
+    console.log("EHRENO: ", prevProps.results, this.props.results, prevState.query, this.state.query)
     if(prevProps.results !== this.props.results){
+      this.setState({query: this.props.results});
+    }
+    if(prevState.query !== this.state.query){
       this.setState({query: this.props.results});
     }
   }
 
   render(){
     const { query } = this.state
+    console.log("EHRENO II: ", query)
       return(
         query &&
           <ul style= {{ listStyleType: 'none'}}>

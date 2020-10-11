@@ -3,6 +3,17 @@ import "../assets/home.css";
 
 const Result = ({ item }) => {
   return (
+  //   <div>
+  //   <li>
+  //     <span>
+  //       <b>Title:</b> {item.title}{" "}
+  //     </span>
+  //     <span>
+  //       <b>View count:</b> {item.view_count}{" "}
+  //     </span>
+  //   </li>
+  //   <hr />
+  // </div>
     <div className="main_container">
             <main className="main_1">
               <div>
