@@ -93,7 +93,7 @@ class CustomLayout extends React.Component {
                             return(
                           <li>  
                             <div className="item">
-                              <a href={`articles/detailmenu/${el.id}`} className="link">
+                              <a href={`/articles/detailmenu/${el.id}`} className="link">
                                 <div className="thumbnail">
                                   <span><img src={el.thumbnail}></img></span>
                                 </div>
@@ -149,7 +149,7 @@ class CustomLayout extends React.Component {
                             return(
                           <li>
                             <div className="item">
-                              <a href={`projects/detailmenu/${el.id}`} className="link">
+                              <a href={`/projects/detailmenu/${el.id}`} className="link">
                                 {el.media.image ?
                                   <div className="thumbnail">
                                     <span><img src={el.media.image}></img></span>
@@ -207,7 +207,7 @@ class CustomLayout extends React.Component {
                     {workshops && workshops.map(el => {
                       return(
                           <li>
-                            <a href={`workshops/${el.id}`}>
+                            <a href={`/workshops/${el.id}`}>
                               <div>
                                 <div className="fst_font">
                                   {el.title}
@@ -249,7 +249,7 @@ class CustomLayout extends React.Component {
                               </span>
                               <div className="nested_con_actions">
                                 <span className="nested_font_1"><svg className="nested_icon_1"></svg>30</span>
-                                <a href={`inquiry/${el.id}`} className="nested_font_2">View</a>
+                                <a href={`/inquiry/${el.id}`} className="nested_font_2">View</a>
                               </div>
                             </div>
                             <div className="userImage">

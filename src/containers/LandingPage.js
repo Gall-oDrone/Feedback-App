@@ -3,7 +3,7 @@ import { Link, withRouter } from "react-router-dom";
 
 // https://py3-test-app-bucket.s3.amazonaws.com/media/assets/universities/Oxford-Logo.png
 // https://py3-test-app-bucket.s3.amazonaws.com/media/assets/universities/University-Cambridge-Logo.png
-import logo from "../assets2/mate-crunch-logo-3.png"
+import logo from "../assets2/mate-crunch-logo-5.png"
 import GoogleLogin from '../components/GoogleLogin';
 import FacebookLogin from '../components/FacebookLogin';
 import LPLogin from "./LPLogin";

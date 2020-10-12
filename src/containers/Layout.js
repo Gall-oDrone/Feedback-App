@@ -13,7 +13,7 @@ import {getProfileAccountDetail} from "../store/actions/profileAccountInfo"
 import CreateHeaderMenu from "../components/CreateHeaderMenu";
 import OptionsHeaderMenu from "../components/OptionsHeaderMenu";
 import Home from "./Home";
-import logo from "../assets2/mate-crunch-logo-3.png"
+import logo from "../assets2/mate-crunch-logo-5.png"
 import "../assets/main.css";
 import "../assets/navBar.css";
 import VA from "../components/VerifiyAlert";

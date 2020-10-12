@@ -27,7 +27,7 @@ const Result = ({ item }) => {
                             return(
                           <li>  
                             <div className="item">
-                              <a href={`articles/detailmenu/${el.id}`} className="link">
+                              <a href={`/articles/detailmenu/${el.id}`} className="link">
                                 <div className="thumbnail">
                                   <span><img src={el.thumbnail}></img></span>
                                 </div>
