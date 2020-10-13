@@ -1,3 +1,4 @@
+import os
 from django.conf import settings
 from django.contrib.sites.models import Site
 from allauth.account.models import EmailAddress
@@ -410,7 +411,10 @@ class ActivateView(View):
             EmailAddress.objects.filter(email__iexact=user.email).update(verified=True)
             login(request, user)
             print("Corso III")
-            return redirect("http://localhost:8001/login/{}/{}".format(uidb64, token))
+            if 'DYNO' in os.environ:
+                return redirect("https://py3-test-app.herokuapp.com/login/{}/{}".format(uidb64, token))
+            else:
+                return redirect("http://localhost:8001/login/{}/{}".format(uidb64, token))
             # return HttpResponse('Thank you for your email confirmation. Now you can login your account.')
             # form = PasswordChangeForm(request.user)
             # return render(request, 'activation.html', {'form': form})
@@ -449,7 +453,10 @@ class GoogleLogin(SocialLoginView):
     adapter_class = GoogleOAuth2Adapter
     # serializer_class = SocialTokenSerializer
     client_class = OAuth2Client
-    callback_url = "http://127.0.0.1:8000/api/users/auth/google/callback/"
+    if 'DYNO' in os.environ:
+        callback_url = "https://py3-test-app.herokuapp.com/api/users/auth/google/callback/"
+    else:
+        callback_url = "http://127.0.0.1:8000/api/users/auth/google/callback/"
 
 class FacebookLogin(SocialLoginView):
     print("LACKING")
@@ -462,7 +469,10 @@ class GoogleLoginView(SocialLoginView):
     # client_class = OAuth2Client
 
     # adapter_class = GoogleOAuth2AdapterIdToken
-    callback_url = "http://127.0.0.1:8000/api/users/auth/google/callback/"
+    if 'DYNO' in os.environ:
+        callback_url = "https://py3-test-app.herokuapp.com/api/users/auth/google/callback/"
+    else:
+        callback_url = "http://127.0.0.1:8000/api/users/auth/google/callback/"
     # client_class = OAuth2Client
     # serializer_class = SocialLoginSerializer
 
