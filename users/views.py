@@ -344,14 +344,6 @@ class UserResumeInfoView(RetrieveUpdateDestroyAPIView):
             return Response(status=HTTP_201_CREATED)
         return Response(status=HTTP_400_BAD_REQUEST)
 
-import ssl
-from urllib.parse import urlparse
-import urllib.request
-from django.core.files.base import ContentFile
-from django.core.files.temp import NamedTemporaryFile
-from django.core.files import File
-ssl._create_default_https_context = ssl._create_unverified_context
-
 class Degrees_and_CoursesView(generics.ListAPIView):
     # queryset = ProfileInfo.objects.all()
     serializer_class = (testSerializer)
