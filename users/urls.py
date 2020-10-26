@@ -21,7 +21,8 @@ from .views import (
     google_callback,
     EmailTemplateView,
     ResendConfirmationView,
-    UserFollowingViewSet
+    UserFollowingViewSet,
+    # UserResumeInfoView,
     # BachelorView,
     # MasterView,
     # DoctorateView,
@@ -46,6 +47,7 @@ urlpatterns = [
     path('profile/account/user/info/<username>', UserProfileInfoView.as_view()),
     path('profile/account/info/<userid>', UserProfileView.as_view()),
     path('profile/info/<username>', UserMeetingInfoView.as_view()),
+    # path('profile/resume/<username>', UserResumeInfoView.as_view()),
     path('profile-page/<username>', ProfilePageView.as_view()),
     path('profile/account/user/info/update/<user>', UserProfileInfoView.as_view()),
     path('courses-degrees/', Degrees_and_CoursesView.as_view()),

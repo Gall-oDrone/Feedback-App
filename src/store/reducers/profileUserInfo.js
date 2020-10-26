@@ -7,7 +7,14 @@ import {
   GET_PROFILE_INFO_SUCCESS,
   PUT_PROFILE_INFO_START,
   PUT_PROFILE_INFO_SUCCESS,
-  PUT_PROFILE_INFO_FAIL
+  PUT_PROFILE_INFO_FAIL,
+
+  GET_PROFILE_RESUME_START,
+  GET_PROFILE_RESUME_FAIL,
+  GET_PROFILE_RESUME_SUCCESS,
+  PUT_PROFILE_RESUME_START,
+  PUT_PROFILE_RESUME_SUCCESS,
+  PUT_PROFILE_RESUME_FAIL,
 } from "../actions/actionTypes";
 import { updateObject } from "../utility";
 
@@ -115,6 +122,84 @@ const putProfileAccountInfoFail = (state, action) => {
   });
 };
 
+////////////////
+//// RESUME ////
+////////////////
+
+const getProfileResumeStart = (state, action) => {
+  return updateObject(state, {
+    error: null,
+    loading: true
+  });
+};
+
+const getProfileResumeSuccess = (state, action) => {
+  console.log("2) Reducers getProfileResumeSuccess")
+  console.log(JSON.stringify(action))
+  return updateObject(state, {
+    // currentArticle: action.article,
+    UserResume: action.data,
+    error: null,
+    loading: false
+  });
+};
+
+const getProfileResumeFail = (state, action) => {
+  return updateObject(state, {
+    error: action.error,
+    loading: false
+  });
+};
+
+const createResumeStart = (state, action) => {
+  console.log("1) Reducers createResumeStart")
+  console.log("1.1) Reducers actions: "+ JSON.stringify(action))
+  return updateObject(state, {
+    error: null,
+    loading: true
+  });
+};
+
+const createResumeSuccess = (state, action) => {
+  console.log("2) Reducers createResumeSuccess")
+  return updateObject(state, {
+    error: null,
+    loading: false
+  });
+};
+
+const createResumeFail = (state, action) => {
+  return updateObject(state, {
+    error: action.error,
+    loading: false
+  });
+};
+
+const putProfileResumeStart = (state, action) => {
+  console.log("1) Reducers getProfileMRIStart")
+  return updateObject(state, {
+    error: null,
+    loading: true
+  });
+};
+
+const putProfileResumeSuccess = (state, action) => {
+  console.log("2) Reducers getResumeListSuccess")
+  console.log(JSON.stringify(action))
+  return updateObject(state, {
+    commentData: action.data,
+    error: null,
+    loading: false
+  });
+};
+
+const putProfileResumeFail = (state, action) => {
+  return updateObject(state, {
+    error: action.error,
+    loading: false
+  });
+};
+
 const reducer = (state = initialState, action) => {
   switch (action.type) {
     case GET_USER_PROFILE_INFO_START:
@@ -135,6 +220,18 @@ const reducer = (state = initialState, action) => {
       return putProfileAccountInfoSuccess(state, action);
     case PUT_PROFILE_INFO_FAIL:
       return putProfileAccountInfoFail(state, action);
+    case GET_PROFILE_RESUME_START:
+      return getProfileResumeStart(state, action);
+    case GET_PROFILE_RESUME_FAIL:
+      return getProfileResumeFail(state, action);
+    case GET_PROFILE_RESUME_SUCCESS:
+      return getProfileResumeSuccess(state, action);
+    case PUT_PROFILE_RESUME_START:
+      return putProfileResumeStart(state, action);
+    case PUT_PROFILE_RESUME_SUCCESS:
+      return putProfileResumeSuccess(state, action);
+    case PUT_PROFILE_RESUME_FAIL:
+      return putProfileResumeFail(state, action);
     default:
       return state;
   }

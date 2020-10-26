@@ -7,6 +7,7 @@ from workshopsApi.views import (
     WorkshopCreateView,
     WorkshopDeleteView,
     WorkshopUpdateView,
+    WorkshopCreateRegisterView,
     ProfileWorkshopListView,
     ProfileWorkshopDetailView,
     LikeListView,
@@ -35,6 +36,7 @@ urlpatterns = [
     path('detail/<pk>', WorkshopDetailView.as_view()),
     path('<pk>/update/', WorkshopUpdateView.as_view()),
     path('<pk>/delete/', WorkshopDeleteView.as_view()),
+    path('detail/<pk>/register/', WorkshopCreateRegisterView.as_view()),
     path('list/<username>/', ProfileWorkshopListView.as_view()),
     path('detail/<pk>/<username>/', ProfileWorkshopDetailView.as_view()),
 

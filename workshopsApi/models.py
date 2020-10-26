@@ -107,20 +107,28 @@ class Rating(models.Model):
 
 class Lesson(models.Model):
     workshop = models.ForeignKey(Workshop, on_delete=models.CASCADE)
-    lesson_title = models.CharField(max_length=120)
+    lesson_title = models.CharField(max_length=120, null=True, blank=True)
+    lesson_description = models.TextField(max_length=120, null=True, blank=True)
+    lesson_video = models.ForeignKey("LessonVideo", on_delete=models.CASCADE, null=True, blank=True)
     practice_file = models.ManyToManyField("PracticeFile", null=True, blank=True)
     created = models.DateTimeField(auto_now_add=True)
 
 class LessonTopic(models.Model):
     lesson = models.ForeignKey(Lesson, on_delete=models.CASCADE)
-    topic_title = models.CharField(max_length=120)
-    lesson_video = models.ForeignKey("LessonVideo", on_delete=models.CASCADE, null=True, blank=True)
+    topic_title = models.CharField(max_length=120, null=True, blank=True)
+    topic_description = models.TextField(max_length=120, null=True, blank=True)
+    topic_video = models.ForeignKey("LessonTopicVideo", on_delete=models.CASCADE, null=True, blank=True)
     created = models.DateTimeField(auto_now_add=True)
 
 class LessonVideo(models.Model):
     # lesson = models.ForeignKey(Lesson, on_delete=models.CASCADE)
     created = models.DateTimeField(auto_now_add=True)
     videofile = models.FileField(upload_to="workshops/lessons/videos/", null=True, verbose_name="")
+
+class LessonTopicVideo(models.Model):
+    # lesson = models.ForeignKey(Lesson, on_delete=models.CASCADE)
+    created = models.DateTimeField(auto_now_add=True)
+    videofile = models.FileField(upload_to="workshops/lessons/topics/videos/", null=True, verbose_name="")
 
 class PracticeFile(models.Model):
     # lesson = models.ForeignKey(Lesson, on_delete=models.CASCADE)

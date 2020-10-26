@@ -27,13 +27,13 @@ import {
                   { required: true, message: 'Please select a field!', type: 'string' },
                 ],
               })(
-              <div className="card-list">
+              <div className="collab-type-card-list">
                 {recruitment_ops.map(el => {
                   console.log("ehreno", pull, el.type)
                   if(!pull && el.type === "Pull"){
                     return(
-                      <div className="card">
-                        <header className="card-header">
+                      <div className="collab-type-card">
+                        <header className="collab-type-card-header">
                           <h2>{el.type}</h2>
                           <p>{`You do not have any ${collab_type} yet`}</p>
                         </header>
@@ -41,12 +41,12 @@ import {
                     )
                   }
                     return(
-                      <div onClick={() => {val(el.type)} }className="card">
-                        <header className="card-header">
+                      <div onClick={() => {val(el.type)} } className="collab-type-card">
+                        <header className="collab-type-card-header">
                           <h2>{el.type}</h2>
                           <p>{el.desc}</p>
                         </header>
-                        <div className="card-image">
+                        <div className="collab-type-card-image">
                           <span class="image-cover">
                             <img></img>
                           </span>

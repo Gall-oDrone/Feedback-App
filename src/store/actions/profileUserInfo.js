@@ -8,13 +8,21 @@ import {
   GET_PROFILE_INFO_SUCCESS,
   PUT_PROFILE_INFO_START,
   PUT_PROFILE_INFO_SUCCESS,
-  PUT_PROFILE_INFO_FAIL
+  PUT_PROFILE_INFO_FAIL,
+
+  GET_PROFILE_RESUME_START,
+  GET_PROFILE_RESUME_FAIL,
+  GET_PROFILE_RESUME_SUCCESS,
+  PUT_PROFILE_RESUME_START,
+  PUT_PROFILE_RESUME_SUCCESS,
+  PUT_PROFILE_RESUME_FAIL
 } from "./actionTypes";
 import {
   profileUserInfoURL,
   profileAccountUserInfoURL,
   profileAccountUserInfoUpdateURL,
   profilePageURL,
+  profileResumeInfoURL,
 } from "../../constants"
 
 const getProfileMeetingInfoStart = () => {
@@ -145,6 +153,91 @@ export const putProfileAccountInfo = (token, username, data) => {
         })
         .catch(err => {
             dispatch(putProfileAccountInfoFail(err));
+        })
+    }
+}
+
+const getProfileResumeStart = () => {
+  console.log("1) Actions getProfileResumeStart")
+  return {
+    type: GET_PROFILE_RESUME_START
+  };
+};
+
+const getProfileResumeSuccess = data => {
+  console.log("2) Actions getProfileResumeSuccess")
+  return {
+    type: GET_PROFILE_RESUME_SUCCESS,
+    data
+  };
+};
+
+const getProfileResumeFail = error => {
+  return {
+    type: GET_PROFILE_RESUME_FAIL,
+    error: error
+  };
+};
+
+export const getProfileResume = (token, userID) => {
+    return dispatch => {
+      console.log(" getProfileResume ")
+      console.log(" token, userID: "+ token, userID)
+        // dispatch(getProfileResumeStart());
+        axios.defaults.headers = {
+            "Content-Type": "application/json",
+            Authorization: `Token ${token}`
+        }
+        axios.get(profileResumeInfoURL(userID))
+        .then(res => {
+            const data = res.data;
+            console.log("data: "+ JSON.stringify(data))
+            dispatch(getProfileResumeSuccess(data));
+        })
+        .catch(err => {
+            dispatch(getProfileResumeFail(err));
+        })
+    }
+}
+
+const putProfileResumeStart = () => {
+  console.log("1) Actions getProfileResumeStart")
+  return {
+    type: PUT_PROFILE_RESUME_START
+  };
+};
+
+const putProfileResumeSuccess = data => {
+  console.log("2) Actions getProfileResumeSuccess")
+  return {
+    type: PUT_PROFILE_RESUME_SUCCESS,
+    data
+  };
+};
+
+const putProfileResumeFail = error => {
+  return {
+    type: PUT_PROFILE_RESUME_FAIL,
+    error: error
+  };
+};
+
+export const putProfileResume = (token, username, data) => {
+    return dispatch => {
+      console.log(" putProfileResume ")
+        // dispatch(getProfileResumeStart());
+        axios.defaults.headers = {
+            "Content-Type": "application/json",
+            Authorization: `Token ${token}`
+        }
+        axios.put(profileResumeInfoURL(username), data)
+        .then(res => {
+            const data = res.data;
+            console.log("data: "+ JSON.stringify(data))
+            dispatch(putProfileResumeSuccess(data));
+        })
+        .catch(err => {
+            dispatch(putProfileResumeFail(err));
         })
     }
 }

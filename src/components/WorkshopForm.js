@@ -1,5 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import Hoc from "../hoc/hoc";
 import {
   Form,
   Select,
@@ -9,6 +10,7 @@ import {
   Icon,
   Input,
   Checkbox,
+  Divider,
   Modal,
   Row,
   Cascader,
@@ -17,12 +19,14 @@ import {
   TimePicker
 } from 'antd';
 import {workshopCreateURL} from "../constants";
+import SurveyQuestionForm from "../containers/WorkshopLessonForm"
 import moment from "moment";
 import axios from 'axios';
 import lodash from "lodash";
 import Lessons from "../containers/LessonCreate";
-const CheckboxGroup = Checkbox.Group;
-const { Option } = Select;
+import "../assets/workshop.css"
+import Pic from "../components/WorkshopPicUploader";
+
 const { RangePicker } = DatePicker;
 const rangeConfig = {
   rules: [{ type: 'array', required: true, message: 'Please select time!' }],
@@ -142,7 +146,31 @@ class ArticleCustomForm extends React.Component {
       defaultSelectedMonth: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
       startTime:null,
       endTime:true,
+      selectedImage:null,
+      formCount: 1
     };
+  }
+  remove = () => {
+    const {formCount} = this.state;
+        this.setState({
+            formCount: formCount - 1
+        })
+  };
+
+  add = () => {
+    const {formCount} = this.state;
+    if(formCount < 6){
+        this.setState({
+            formCount: formCount + 1
+        })
+    };
+  }
+  handleLessonsList = (val) => {
+    const { setFieldsValue } = this.props.form;
+    setFieldsValue({lessons:val})
+  }
+  handleSelectedPicture = (val) => {
+    this.setState({selectedImage: val})
   }
 
   dummyRequest = ({ file, onSuccess }) => {
@@ -304,18 +332,6 @@ class ArticleCustomForm extends React.Component {
     var futureMonthEnd = moment(futureMonth).endOf('month');
     let index = dateArray.findIndex(dateV => moment(dateV).format('YYYY-MM-DD') === moment(date).format('YYYY-MM-DD'))
       return index !== -1 || date < moment().endOf('day') || date.years() !==  moment().year()
-  };
-
-  disabledMonth = date => {
-    //根据选择的日期判断是否要禁用日期选择
-    //1-6为周一到周六, 周日为0
-    // console.log("CHANGES 2: ", moment(date).format('MM-DD'), date.months(), currentMonth, date.days())
-    // const { defaultSelectedWeekday, dateArray, currentMonth } = this.state;
-    // if (defaultSelectedWeekday.indexOf(date.days()) === -1 && date.months() === currentMonth) {
-    //   return true;
-    // }
-    // let index = dateArray.findIndex(dateV => moment(dateV).format('YYYY-MM-DD') === moment(date).format('YYYY-MM-DD'))
-    //   return index !== -1 || date < moment().startOf('day')
   };
 
   disableHour = value => {
@@ -490,12 +506,12 @@ class ArticleCustomForm extends React.Component {
     });
   }
 
-  handleFormSubmit = async (event) => {
+  handleFormSubmit =  (event) => {
     event.preventDefault();
-    const { defaultSelectedWeekday, defaultSelectedMonth, dateArray } = this.state
-    console.log("handleFormSubmit", dateArray, defaultSelectedWeekday)
+    const { selectedImage } = this.state
+    // console.log("handleFormSubmit", dateArray, defaultSelectedWeekday)
     let formData = new FormData();
-    await this.props.form.validateFields((err, values) => {
+     this.props.form.validateFields((err, values) => {
       console.log("handleFormSubmit values: ", JSON.stringify(values));
       const title =
         values["title"] === undefined ? null : values["title"];
@@ -503,43 +519,87 @@ class ArticleCustomForm extends React.Component {
         values["content"] === undefined ? null : values["content"];
       const topic =
         values["topic"] === undefined ? null : values["topic"];
-      const inquiry =
-        values["topics"] === undefined ? null : values["topics"];
-      const university =
-        values["areas_experience"] === undefined ? null : values["areas_experience"];
-      const datepicker =
-        values["date-picker"] === undefined ? null : values["date-picker"];
-      const price =
-        values["price"] === undefined ? null : values["price"];
-      const max_hours =
-        values["max_hours"] === undefined ? null : values["max_hours"];
-      const start_time =
-        values["start_time"] === undefined ? null : values["start_time"];
-      const end_time =
-        values["end_time"] === undefined ? null : values["end_time"];
-      const file = 
-        values["upload"] === undefined ? null : values["upload"];
+    //  const lessons = [];
+    //   for (let i =0; i< values.lessons.length; i += 1) {
+    //       lessons.push({
+    //         title: values.lesson[i].title,
+    //         desc: values.lesson[i].desc,
+    //         media: values.lesson[i].media,
+    //         topics: values.lesson[i].topics,
+    //     });
+    //   }
+      // const datepicker =
+      //   values["date-picker"] === undefined ? null : values["date-picker"];
+      // const price =
+      //   values["price"] === undefined ? null : values["price"];
+      // const max_hours =
+      //   values["max_hours"] === undefined ? null : values["max_hours"];
+      // const start_time =
+      //   values["start_time"] === undefined ? null : values["start_time"];
+      // const end_time =
+      //   values["end_time"] === undefined ? null : values["end_time"];
       const postObj = {
         user: this.props.username,
-        title: values.title,
-        content: values.content,
-        topics: values.topics,
-        areas_experience: values.areas_experience,
-        datepicker: values.datepicker,       
-        price: values.price,       
-        max_hours: values.max_hours,
-        start_time: values.start_time,
-        end_time: values.end_time,
-        weekdays: defaultSelectedWeekday,
-        months: defaultSelectedMonth,
-        dates: dateArray
+        title: "title",
+        content: "content",
+        topics: "topic",
+        // lessons: lessons,
+        // datepicker: values.datepicker,       
+        // price: values.price,       
+        // max_hours: values.max_hours,
+        // start_time: values.start_time,
+        // end_time: values.end_time,
+        // weekdays: defaultSelectedWeekday,
+        // months: defaultSelectedMonth,
+        // dates: dateArray
       }
-      console.log("postObj: ", JSON.stringify(postObj))
-      if (file !== null){
-        formData.append("file", file[0].originFileObj)
+      console.log("postObj: ", JSON.stringify(postObj), selectedImage)
+      if (selectedImage !== null){
+        formData.append("file", selectedImage)
       }
-      formData.append("data", JSON.stringify(postObj))
+      const lessons = [];
+      const topics = [];
+        for (let i =0; i< values.lesson.length; i += 1) {
+          console.log("lessons2: ", JSON.stringify(values.lesson[i].topics[0].title), values.lesson[i].lesson_media[0].originFileObj)
+          formData.append(`lesson_media_${i}`, values.lesson[i].lesson_media[0].originFileObj)
+
+          // lessons.push({
+          //   lesson_title: values.lesson[i].lesson_title,
+          //   lesson_desc: values.lesson[i].lesson_desc,
+          // });
+
+          for (let j =0; j< values.lesson[i].topics.length; j += 1) {
+            formData.append(`topic_media_${j}`, values.lesson[i].topics[j].media[0].originFileObj)
+            topics.push({
+              lesson_topic_title: values.lesson[i].topics[j].title,
+              lesson_topic_desc: values.lesson[i].topics[j].desc,
+            })
+            lessons.push({
+              lesson_title: values.lesson[i].lesson_title,
+              lesson_desc: values.lesson[i].lesson_desc,
+              lesson_topics: topics
+            });
+          }
+        }
+        // postObj["lessons"] = lessons
+        // console.log("lessons2: ", JSON.stringify(lessons2))
       if (!err) {
+        // const lessons2 = [];
+        // for (let i =0; i< values.lesson.length; i += 1) {
+        //     lessons2.push({
+        //       lesson_title: values.lesson[i].title,
+        //       lesson_desc: values.lesson[i].description,
+        //       lesson_media: values.lesson[i].media,
+        //       lesson_topics: {
+        //         lesson_topic_title: values.lesson[i].topics.filter(el => el !== null && el === "title"),
+        //         lesson_topic_desc: values.lesson[i].topics.filter(el => el !== null && el === "desc"),
+        //         lesson_topic_media: values.lesson[i].topics.filter(el => el !== null && el === "media"),
+        //       },
+        //     });
+        // }
+        postObj["lessons"] = lessons
+        console.log("postObj 2: ", JSON.stringify(postObj))
+        formData.append("data", JSON.stringify(postObj))
         axios.defaults.headers = {
           "content-type": "multipart/form-data",
           Authorization: `Token ${this.props.token}`
@@ -560,6 +620,7 @@ class ArticleCustomForm extends React.Component {
         console.log('Received error: ', err);
       }
     });
+
   }
 
   render() {
@@ -568,6 +629,23 @@ class ArticleCustomForm extends React.Component {
     const { getFieldDecorator, getFieldValue } = this.props.form;
     const { fileList, previewVisible, previewImage, chars_left, endTime } = this.state;
     const contact_option = form.getFieldValue(`contact_options`);
+    const lessons = [];
+    for (let i=0; i < this.state.formCount; i+= 1) {
+      lessons.push(
+        <Hoc key= {i}>
+          {lessons.length > 0 ? (
+            <Icon
+              className="dynamic-delete-button"
+              type = "minus-circle-o"
+              disabled={lessons.length === 0 || lessons.length === 6}
+              onClick={() => this.remove()}
+              />
+          ) : null}
+          <SurveyQuestionForm id={i} {...this.props} />
+          <Divider />
+        </Hoc>
+        );
+    }
     console.log("contact_option  I: "+ JSON.stringify(contact_option))
     const fields = getFieldValue("upload")
     console.log("upload  I: "+ JSON.stringify(fields))
@@ -577,7 +655,7 @@ class ArticleCustomForm extends React.Component {
       wrapperCol: { span: 14 },
     };
     const uploadButton = (
-      <div>
+      <div className="workshop-poster-pic-cont">
         <Icon type="plus" />
         <div className="ant-upload-text">Upload</div>
       </div>
@@ -592,6 +670,7 @@ class ArticleCustomForm extends React.Component {
         <Form.Item label={"Workshop Title:"}>
           {getFieldDecorator(`title`, {
           validateTrigger: ['onChange', 'onBlur'],
+          initialValue: "C",
           rules: [
             {
               required: true,
@@ -601,7 +680,7 @@ class ArticleCustomForm extends React.Component {
         })(<Input placeholder="Add a title" style={{ width: '60%', marginRight: 8 }} />)}
         </Form.Item>
 
-          <p>Short description about the workshop</p>
+          <p>Description about the Workshop</p>
         <Form.Item label="Description" hasFeedback>
           {getFieldDecorator('content', {
             initialValue: "C",
@@ -611,44 +690,57 @@ class ArticleCustomForm extends React.Component {
             <p>Characters Left: {chars_left}</p>
         </Form.Item>
 
-      <p>Workshop Categories</p>
-       <Form.Item label="Topics">
-        {getFieldDecorator('topics', {
-              initialValue: ["undergraduates"],
-              rules: [
-                { required: true, message: 'Please select or type a topic!', type: 'array' },
-              ],
-            })(
-              <Select name="topics" mode="tags" placeholder="Please select or type a topic">
-              </Select>,
-            )
-        }
+        <p>Workshop Main Poster Photo</p>
+        <Form.Item style={{justifyContent: "center", display: "flex"}} extra="1MB Max Size">
+                {getFieldDecorator('upload', {
+                  initialValue: this.handleFileList(null, null),
+                  rules: [{ required: false, message: 'Please upload a photo'}],
+                  valuePropName: 'fileList',
+                  getValueFromEvent: this.normFile,
+                  setFieldsValue: "fileList"
+                })(
+                  <Pic profile_pic={this.handleSelectedPicture} />
+                  // <Upload 
+                  //   name="photo" 
+                  //   key="workshop photo" 
+                  //   onPreview={this.handlePreview} 
+                  //   listType="picture-card" 
+                  //   customRequest={this.dummyRequest}
+                  //   className="upload-cont"
+                  // >
+                  //   {/* {fileList.length === 1 ? null : uploadButton} */}
+                  // </Upload>
+                )}
+                <Modal visible={previewVisible} footer={null} onCancel={this.handleCancel}>
+                  <img alt="example" style={{ width: '100%' }} src={previewImage} />
+                </Modal>
         </Form.Item>
 
+      <p>Workshop Categories</p>
+       <Form.Item label="Topics">
+          {getFieldDecorator('topics', {
+            initialValue: ["C"],
+                rules: [
+                  { required: true, message: 'Please select or type a topic!', type: 'array' },
+                ],
+              })(
+                <Select name="topics" mode="tags" placeholder="Please select or type a topic">
+                </Select>,
+              )
+          }
+        </Form.Item>
         <div>
-        <Form layout="inline">
-          <Form.Item label="Datepicker" />
-            <RangePicker 
-              disabledDate={this.disabledDate} 
-              onOpenChange={this.handleOpenChange}  
-              onPanelChange={this.handlePanelChange}
-              onChange={this.onDateChange.bind(this)}
-              dateRender={this.dateRender} size={"default"}
-            />
+          <Form layout="inline">
+            <Form.Item label="Datepicker" />
+              <RangePicker 
+                disabledDate={this.disabledDate} 
+                onOpenChange={this.handleOpenChange}  
+                onPanelChange={this.handlePanelChange}
+                onChange={this.onDateChange.bind(this)}
+                dateRender={this.dateRender} size={"default"}
+              />
           </Form>
-        {/* <div className="">
-          <DatePicker
-            disabledDate={this.disabledDate}
-            showToday={false}
-            open={this.state.open}
-            onOpenChange={this.handleOpenChange}
-            onPanelChange={this.handlePanelChange}
-            onChange={this.onDateChange.bind(this)}
-            dateRender={this.dateRender}
-            renderExtraFooter={this.dateFooterContent}
-          />
-        </div> */}
-      </div>
+        </div>
 
         <Form.Item label="Workshop Fee" hasFeedback>
             {getFieldDecorator('price', {
@@ -657,7 +749,7 @@ class ArticleCustomForm extends React.Component {
             })(
               <InputNumber
                 name="price"
-                defaultValue={50}
+                // defaultValue={50}
                 min={0}
                 max={100}
                 formatter={value => `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
@@ -665,77 +757,17 @@ class ArticleCustomForm extends React.Component {
                 onChange={this.priceOnChange}
               />
             )}
-          </Form.Item>
-          <Form.Item label="Workshop total hours" hasFeedback>
-            {getFieldDecorator('max_hours', {
-              initialValue: 1,
-              rules: [{ required: true, message: 'Field require' }],
-            })(
-              <InputNumber
-                name="hours"
-                defaultValue={1}
-                min={1}
-                max={15}
-                formatter={value => value>1 ? `${value} Hrs`:`${value} Hr`}
-                // parser={value => value.replace(/\$\s?|(,*)/g, '')}
-                onChange={this.hourOnChange}
-              />
-            )}
-          </Form.Item>
-          <Form.Item label="Start Time" hasFeedback>
-            {getFieldDecorator('start_time', {
-              // initialValue: 1,
-              rules: [{ required: true, message: 'Field require' }],
-            })(
-              <TimePicker 
-                onChange={this.onTimeChange.bind(this)} 
-                defaultOpenValue={moment('00', 'HH')} 
-                format={"HH"}
-              />
-            )}
-          </Form.Item>
-          <Form.Item label="End Time" hasFeedback>
-            {getFieldDecorator('end_time', {
-              // initialValue: 1,
-              rules: [{ required: true, message: 'Field require' }],
-            })(
-              <TimePicker 
-                onChange={this.onTimeChange2.bind(this)} 
-                defaultOpenValue={moment('00', 'HH')} 
-                disabledHours={this.disableHour}
-                format={"HH"}
-                disabled={endTime}
-              />
-            )}
-          </Form.Item>
-          <Lessons/>
-        <Form.Item label="Workshop Poster Pic" extra="2.5 MB Field">
-                {getFieldDecorator('upload', {
-                  initialValue: this.handleFileList(null, null),
-                  rules: [{ required: false, message: 'Please upload a photo'}],
-                  valuePropName: 'fileList',
-                  getValueFromEvent: this.normFile,
-                  setFieldsValue: "fileList"
-                })(
-                  // <div className="clearfix">
-                  <Upload 
-                    name="photo" 
-                    key="workshop photo" 
-                    onPreview={this.handlePreview} 
-                    listType="picture-card" 
-                    customRequest={this.dummyRequest}
-                  >
-                    {fileList.length === 1 ? null : uploadButton}
-                  </Upload>
-                        //   <Modal visible={previewVisible} footer={null} onCancel={this.handleCancel}>
-                        //   <img alt="example" style={{ width: '100%' }} src={previewImage} />
-                        // </Modal>
-                        // </div>
-                )}
-                     <Modal visible={previewVisible} footer={null} onCancel={this.handleCancel}>
-                           <img alt="example" style={{ width: '100%' }} src={previewImage} />
-                         </Modal>
-        </Form.Item>
+            </Form.Item>
+              <div>
+                  <h1>Workshop Lessons/Modules</h1>
+                  {lessons}
+                <Form.Item >
+                  <Button type="secondary" onClick={this.add} >
+                    <Icon type="plus" /> Add a lesson or module
+                  </Button>
+                </Form.Item>
+              </div>
+
         <Form.Item wrapperCol={{ span: 12, offset: 6 }}>
           <Button type="primary" htmlType="submit" >
             Post

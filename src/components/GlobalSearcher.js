@@ -2,14 +2,13 @@ import React from 'react';
 import { connect } from 'react-redux';
 // import { Router, Route, Switch } from "react-router-dom";
 import { withRouter } from "react-router-dom";
-import createHistory from "history/createBrowserHistory";
 import {searchListURL} from "../constants";
 import { fetchSearchResults } from "../store/actions/search";
 import axios from 'axios';
 import lodash from "lodash";
 import "../assets/searcher.css"
 
-const history = createHistory();
+const history = require("history").createBrowserHistory;
 
 class Searcher extends React.Component {
 

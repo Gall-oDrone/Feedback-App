@@ -13,9 +13,9 @@ from rest_framework.status import(
     HTTP_400_BAD_REQUEST
 )
 from rest_framework import permissions, generics
-from workshopsApi.models import Workshop, Category, WorkshopView, Like, Rating, Comment
+from .models import Workshop, Category, WorkshopView, Like, Rating, Comment, Participants
 from users.models import User
-from .serializers import WorkshopSerializer, WorkshopFeatureSerializer, WorkshopDetailSerializer, CommentSerializer, LikeSerializer, LikeListSerializer, RatingSerializer, CommentListSerializer, ProfileWorkshopListSerializer, Cat_FT_Serializer
+from .serializers import WorkshopSerializer, WorkshopFeatureSerializer, WorkshopDetailSerializer, WorkshopInscribedDetailSerializer, WorkshopCreateRegistrationView, CommentSerializer, LikeSerializer, LikeListSerializer, RatingSerializer, CommentListSerializer, ProfileWorkshopListSerializer, Cat_FT_Serializer
 from analytics.models import View
 from django.http import Http404
 from rest_framework import viewsets
@@ -109,8 +109,35 @@ class WorkshopListView(ListAPIView):
 
 class WorkshopDetailView(RetrieveAPIView):
     queryset = Workshop.objects.all()
-    serializer_class = WorkshopDetailSerializer
+    # serializer_class = WorkshopDetailSerializer
     permission_classes = (permissions.AllowAny,)
+
+    # def get_serializer_class(self,request, *args, **kwargs):
+    def get_serializer_class(self, *args, **kwargs):
+        user = self.request.user
+        wsh = Workshop.objects.get(id="1")
+        wsh_inscribed = Participants.objects.get(workshop=wsh)
+        # wsh_inscribed = Workshop.objects.get(id=request.data["workshop"])
+        print("user", user, "culo", wsh_inscribed)
+        print("culo 2", wsh_inscribed.inscribed)
+        print("culo 3", wsh_inscribed.inscribed.all().values())
+        for u in wsh_inscribed.inscribed.all().values():
+            print("culo 4", u)
+            if(user.username == u["username"]):
+                print("INSCRIBED")
+                return WorkshopInscribedDetailSerializer
+        print("NOT INSCRIBED")
+        return WorkshopDetailSerializer
+        # if self.action == 'retrieve':
+        #     user = self.request.user
+        #     wsh_inscribed = Workshop.objects.get(id="1")
+        #     # wsh_inscribed = Workshop.objects.get(id=request.data["workshop"])
+        #     print("user", user, "culo", wsh_inscribed)
+        #     print("culo 2", wsh_inscribed.workshop_inscribed.inscribed.values())
+        #     if(user in wsh_inscribed.workshop_inscribed.inscribed):
+        #         return WorkshopInscribedDetailSerializer
+        #     return WorkshopDetailSerializer
+        # return WorkshopDetailSerializer
 
 
 class WorkshopCreateView(CreateAPIView):
@@ -171,6 +198,23 @@ class WorkshopUpdateView(UpdateAPIView):
         print(serializer.is_valid())
         update_workshop = serializer.update_likes(request)
         if update_workshop:
+            return Response(status=HTTP_201_CREATED)
+        return Response(status=HTTP_400_BAD_REQUEST)
+
+class WorkshopCreateRegisterView(CreateAPIView):
+    queryset = Participants.objects.all()
+    print("queryset Create view")
+    serializer_class = WorkshopCreateRegistrationView
+    permission_classes = (permissions.IsAuthenticated,)
+
+    def post(self, request, *args, **kwargs):
+        print("request from WorkshopCreateView")
+        workshopId = self.kwargs.get("pk")
+        serializer = WorkshopCreateRegistrationView(data=request)
+        serializer.is_valid()
+        print(serializer.is_valid())
+        create_register = serializer.create(request, {"id":workshopId} )
+        if create_register:
             return Response(status=HTTP_201_CREATED)
         return Response(status=HTTP_400_BAD_REQUEST)
 

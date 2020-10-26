@@ -4,8 +4,10 @@ from .models import(
     Workshop, Category, 
     Comment, WorkshopView, 
     Author, Like,
-    Rating, Comment, CommentReply, Lesson, 
-    LessonTopic, LessonVideo, PracticeFile
+    Rating, Comment, CommentReply, 
+    Lesson, LessonTopic, LessonVideo, 
+    LessonTopicVideo, PracticeFile,
+    Participants
 ) 
 
 # class RatingAdmin(admin.ModelAdmin):
@@ -18,7 +20,9 @@ admin.site.register(WorkshopView)
 admin.site.register(Lesson)
 admin.site.register(LessonTopic)
 admin.site.register(LessonVideo)
+admin.site.register(LessonTopicVideo)
 admin.site.register(PracticeFile)
+admin.site.register(Participants)
 # admin.site.register(Video)
 admin.site.register(Author)
 admin.site.register(Like)

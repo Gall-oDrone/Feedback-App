@@ -108,6 +108,7 @@ export const profileInquiryDetailURL = (articleID, username) => `${endpoint}/inq
 export const profileAccountInfoURL = (userId) => `${endpoint}/users/profile/account/info/${userId}`
 export const profileURL = (articleID, username) => `${endpoint}/articles/${articleID}/detail/${username}/`
 export const profileUserInfoURL = username => `${endpoint}/users/profile/info/${username}`
+export const profileResumeInfoURL = username => `${endpoint}/users/profile/resume/${username}`
 export const profilePageURL = username => `${endpoint}/users/profile-page/${username}`
 export const profileFollowUser = username => `${endpoint}/users/following/${username}`
 export const profileWorkshopListURL = username => `${endpoint}/workshops/list/${username}/`
@@ -200,6 +201,7 @@ export const sessionUpdateURL = (sessionID) => `${endpoint}/sessions/session/${s
 export const workshopListURL = `${endpoint}/workshops/list/`
 export const workshopCreateURL = `${endpoint}/workshops/create/`
 export const workshopDetailURL = (workshopID) => `${endpoint}/workshops/detail/${workshopID}`
+export const workshopRegisterURL = (workshopID) => `${endpoint}/workshops/detail/${workshopID}/register/`
 export const workshopProfileDetailURL = (workshopID, userID) => `${endpoint}/workshops/detail/${workshopID}/${userID}`
 export const workshopUpdateURL = (workshopID) => `${endpoint}/workshops/workshop/${workshopID}/update/`
 

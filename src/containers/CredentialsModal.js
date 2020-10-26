@@ -7,7 +7,7 @@ import * as actions from "../store/actions/auth";
 import countryList from 'react-select-country-list'
 import "../assets/collaboration.css";
 import "../assets/resume.css";
-import {getProfileAccountInfo, putProfileAccountInfo} from "../store/actions/profileUserInfo";
+import {getProfileAccountInfo, putProfileAccountInfo, getProfileResume, putProfileResume} from "../store/actions/profileUserInfo";
 import {putProfileAccountDetail } from "../store/actions/profileAccountInfo";
 import { fetchDegreesAndCoursesURL } from "../constants"
 import ProfilePic from "../components/ProfilePicUploader";
@@ -204,39 +204,8 @@ class CustomLayoutContainer extends React.Component {
         values["ilocation"] === undefined ? null : values["ilocation"]
       const imyself = 
         values["imyself"] === undefined ? null : values["imyself"]
-      // const university = 
-      //   values["university"] === undefined 
-      //   || values["university"][0] === UserAccountInfo.university ? null : values["university"][0];
-      // const attendace = 
-      //   values["attendace"] === undefined 
-      //   || values["attendace"] === UserAccountInfo.attendace ? null : values["attendace"];
-      // const degree = 
-      //   values["degree"] === undefined 
-      //   || values["degree"] === UserAccountInfo.degree ? null : values["degree"];
-      // const bachelor = 
-      //   values["bachelor"] === undefined 
-      //   || values["bachelor"][0] === UserAccountInfo.bachelor ? null : values["bachelor"][0];
-      // const master = 
-      //   values["master"] === undefined 
-      //   || values["master"][0] === UserAccountInfo.master ? null : values["master"][0];
-      // const doctorate = 
-      //   values["doctorate"] === undefined 
-      //   || values["doctorate"][0] === UserAccountInfo.doctorate ? null : values["doctorate"][0];
-      // const other_edu = 
-      //   values["other_edu"] === undefined 
-      //   || values["other_edu"][0] === UserAccountInfo.other_edu ? null : values["other_edu"][0];
-      // const course = 
-      //   values["course"] === undefined 
-      //   || values["course"][0] === UserAccountInfo.course ? null : values["course"][0];
-      // const student_type = 
-      //   values["student_type"] === undefined 
-      //   || values["student_type"][0] === UserAccountInfo.student_type ? null : values["student_type"][0];
-      // const website = 
-      //   values["website"] === undefined 
-      //   || values["website"] === UserAccountInfo.website ? null : values["website"];
-      // const employment = 
-        const employments = values["employments"] === undefined ? null : values["employments"];
-        const academy = values["academy"] === undefined ? null : values["academy"];
+      const employments = values["employments"] === undefined ? null : values["employments"];
+      const academy = values["academy"] === undefined ? null : values["academy"];
 
       const postObj = {
         profile_username: this.props.username,
@@ -249,16 +218,6 @@ class CustomLayoutContainer extends React.Component {
         imyself: imyself,
         employments: employments,
         academy: academy,
-        // university: university,
-        // attendace: attendace,
-        // degree: degree,
-        // bachelor: bachelor,
-        // master: master,
-        // doctorate: doctorate,
-        // course: course,
-        // website: website,
-        // student_type: student_type,
-        // employment: employment,
       }
       console.log("postObj: ", JSON.stringify(postObj), UserAccountInfo, this.state.selectedImage);
       if (this.state.selectedImage !== null){
@@ -268,7 +227,8 @@ class CustomLayoutContainer extends React.Component {
       }
         formData.append("data", JSON.stringify(postObj))
       if (!err) {
-        this.props.putProfileInfo(this.props.token, this.props.userId, formData)
+        this.props.putProfileResume(this.props.token, this.props.userId, formData)
+        // this.props.putProfileInfo(this.props.token, this.props.userId, formData)
       } else{
         console.error('Received error: ', err);
       }
@@ -294,6 +254,11 @@ class CustomLayoutContainer extends React.Component {
     .catch(err =>
       console.error("ERROR 123: ", err.message));
   }
+
+  fetchInfo = () => {
+    this.props.getProfileResume(this.props.token, this.props.userID)
+  }
+
   componentDidMount() {
     if (this.props.token !== undefined && this.props.token !== null) {
       if(this.props.username !== null){
@@ -1237,6 +1202,8 @@ const mapDispatchToProps = dispatch => {
   console.log("mapDispatchToProps: ")
   return {
     getProfileInfo: (token, userID) => dispatch(getProfileAccountInfo(token, userID)),
+    getProfileResume: (token, userID) => dispatch(getProfileResume(token, userID)),
+    putProfileResume: (token, userID) => dispatch(putProfileResume(token, userID)),
     // putProfileInfo: (token, username, data) => dispatch(putProfileAccountInfo(token, username, data)),
     putProfileInfo: (token, username, data) => dispatch(putProfileAccountDetail(token, username, data)),
   };

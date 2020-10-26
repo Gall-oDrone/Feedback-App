@@ -3,7 +3,20 @@ from rest_auth.registration.serializers import RegisterSerializer
 from django.contrib.sites.models import Site
 from rest_framework import serializers
 from rest_framework.authtoken.models import Token
-from .models import User, MeetingRequest, Universities, ProfileInfo, Profile, Degree, Bachelor, Master, Doctorate, Course, UserFollowing
+from .models import (
+        User, 
+        MeetingRequest, 
+        Universities, 
+        ProfileInfo, 
+        Profile, 
+        Degree, 
+        Bachelor, 
+        Master, 
+        Doctorate, 
+        Course, 
+        UserFollowing,
+        Profile2
+    )
 from django.conf import settings
 from django.core.files.storage import FileSystemStorage
 import json 
@@ -421,6 +434,193 @@ class ProfileInfoSerializer(serializers.ModelSerializer):
             
         profile.save()
         return profile
+
+class ProfileInfoSerializer2(serializers.ModelSerializer): 
+    user = StringSerializer(many=False)
+    stripe_customer_id = StringSerializer(many=False)
+    profile_avatar = StringSerializer(many=False)
+    notifications = StringSerializer(many=False)
+    notification_counter = StringSerializer(many=False)
+    message = StringSerializer(many=False)
+    personal = StringSerializer(many=False)
+    academic = StringSerializer(many=False)
+    employment = StringSerializer(many=False)
+
+    class Meta:
+        model = Profile2
+        fields = ("__all__")
+    
+    def create(self, request):
+        data = request.data
+        print('update_account_info data: ')
+        username = request.user
+        print(username)
+        profile = Profile2.objects.get(profile_username = username.username)
+        personal = PersonalInfo()
+        p_info = data.get("personal")
+        personal.name = p_info.get("name")
+        personal.last_name = p_info.get("last_name")
+        if("profesion" in p_info):
+            personal.profesion = p_info.get("profesion")
+        personal.location = p_info.get("location")
+        personal.about_me = p_info.get("about_me")
+        profile.personal = personal
+
+        if(data.get("experience") != None):
+            profile.work_experience = data.get("experience")
+        
+        education = Education()
+        undergrad = UserUndergraduate()
+        bachelor = UserBachelor()
+        master = UserMaster()
+        doctorate = UserDoctorate()
+        other_edu = UserDiplomaOrCertificate()
+        edu = data.get("education")
+        education.academic_degree = edu.get("academic_degree")
+        education.undergrad = edu.get("undergrad")
+        education.bachelor = edu.get("bachelor")
+        education.master = edu.get("master")
+        education.phd = edu.get("phd")
+        education.other_edu = edu.get("other_edu")
+
+        employment = Employment()
+        jobs = JobPosition()
+        job_desc = JobActivityDescription()
+        technos = TechnologyUsed()
+        skills= SkillUsed()
+        employ = data.get("employment")
+        jobs.position = jp.get("position")
+        jobs.enterprise = jp.get("enterprise")
+        jobs.location = jp.get("location")
+        jobs.from_date = jp.get("from_date")
+        jobs.to_date = jp.get("to_date")
+        jobs.job_activities_desc = jp.get("job_activities_desc")
+        jobs.technologies_used = jp.get("technologies_used")
+        jobs.skills_used = jp.get("skills_used")
+
+        profile2.save()
+        if(data.get("university") != None):
+            profile.university = Universities.objects.get(university=data.get("university"))
+        if(data.get("attendace") != None):
+            profile.attendace = data.get("attendace")
+        if(data.get("degree") != None):
+            profile.degree = Degree.objects.get(degree=data.get("degree"))
+        if(data.get("bachelor") != None):
+            profile.bachelor = Bachelor(bachelor_degree=data.get("bachelor"))
+        if(data.get("master") != None):
+            profile.master = Master.objects.get(master_degree=data.get("master"))
+        if(data.get("doctorate") != None):
+            profile.doctorate = Doctorate.objects.get(pHd_degree=data.get("doctorate"))
+        if(data.get("course") != None):
+            profile.course = Course.objects.get(course=data.get("course"))
+        if(data.get("graduate") != None):
+            profile.graduate = data.get("graduate")
+        if(data.get("undergraduate") != None):
+            profile.undergraduate = data.get("undergraduate")
+        if(data.get("postgraduate") != None):
+            profile.postgraduate = data.get("postgraduate")
+        
+        files = args[0]
+        if files:
+            print("FILES -I: ", files)
+            print("FILES -II: ", files is dict)
+            print("FILES I: ", files['file'])
+            for f in files:
+                myfile = files[f]
+                # print("file type: ", myfile.content_type.split('/')[0])
+                if settings.USE_S3:
+                    profile2.profile_avatar = myfile
+                else:
+                    file_type = myfile.content_type.split('/')[0]
+                    fs = FileSystemStorage()
+                    valid_extensions = ['.pdf', '.doc', '.docx', '.jpg', '.png', '.xlsx', '.xls']
+                    filename = fs.save("profileAvatar/"+myfile.name, myfile)
+                    uploaded_file_url = fs.url(filename)
+                    # print("uploaded_file_url", uploaded_file_url)
+                    # print("myfile.name", myfile.name)
+                    # profile.profile_avatar = myfile
+                    profile2.profile_avatar = "profileAvatar/"+myfile.name
+        profile2.save()
+        return profile2
+
+class ProfileResumeSerializer(serializers.ModelSerializer):
+    personal = serializers.SerializerMethodField()
+    academic = serializers.SerializerMethodField()
+    employment = serializers.SerializerMethodField()
+    profile_avatar = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Profile2
+        fields = ("__all__")
+    
+    def get_profile_avatar(self, obj):
+        request = self.context.get('request')
+        profile = ProfileSerializer(obj.profile, many=False, context={'request': request}).data["profile_avatar"]
+        return profile
+
+    def update_account_info(self, request):
+        data = request.data
+        print('update_account_info data: ')
+        print(data, data.get("profile_username"))
+        username = User.objects.get(username="q")
+        print(username)
+        profile = ProfileInfo.objects.get(profile_username = username)
+        # profile.country = data.get("country"),
+        if(data.get("experience") != None):
+            profile.name = data.get("name"),
+        if(data.get("experience") != None):
+            profile.work_experience = data.get("experience")
+        if(data.get("website") != None):
+            profile.website = data.get("website")
+        if(data.get("message") != None):
+            profile.message = data.get("message")
+        if(data.get("github") != None):
+            profile.github = data.get("github")
+
+        profile.save()
+        if(data.get("university") != None):
+            profile.university = Universities.objects.get(university=data.get("university"))
+        if(data.get("attendace") != None):
+            profile.attendace = data.get("attendace")
+        if(data.get("degree") != None):
+            profile.degree = Degree.objects.get(degree=data.get("degree"))
+        if(data.get("bachelor") != None):
+            profile.bachelor = Bachelor(bachelor_degree=data.get("bachelor"))
+        if(data.get("master") != None):
+            profile.master = Master.objects.get(master_degree=data.get("master"))
+        if(data.get("doctorate") != None):
+            profile.doctorate = Doctorate.objects.get(pHd_degree=data.get("doctorate"))
+        if(data.get("course") != None):
+            profile.course = Course.objects.get(course=data.get("course"))
+        if(data.get("graduate") != None):
+            profile.graduate = data.get("graduate")
+        if(data.get("undergraduate") != None):
+            profile.undergraduate = data.get("undergraduate")
+        if(data.get("postgraduate") != None):
+            profile.postgraduate = data.get("postgraduate")
+        
+        files = args[0]
+        if files:
+            print("FILES -I: ", files)
+            print("FILES -II: ", files is dict)
+            print("FILES I: ", files['file'])
+            for f in files:
+                myfile = files[f]
+                # print("file type: ", myfile.content_type.split('/')[0])
+                if settings.USE_S3:
+                    profile2.profile_avatar = myfile
+                else:
+                    file_type = myfile.content_type.split('/')[0]
+                    fs = FileSystemStorage()
+                    valid_extensions = ['.pdf', '.doc', '.docx', '.jpg', '.png', '.xlsx', '.xls']
+                    filename = fs.save("profileAvatar/"+myfile.name, myfile)
+                    uploaded_file_url = fs.url(filename)
+                    # print("uploaded_file_url", uploaded_file_url)
+                    # print("myfile.name", myfile.name)
+                    # profile.profile_avatar = myfile
+                    profile2.profile_avatar = "profileAvatar/"+myfile.name
+        profile2.save()
+        return profile2
 
 class ProfilePageSerializer(serializers.ListSerializer):
     info = ProfileInfoSerializer

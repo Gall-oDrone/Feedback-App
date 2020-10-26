@@ -24,7 +24,8 @@ from .models import (
     Master, 
     Doctorate, 
     Course, 
-    UserFollowing
+    UserFollowing,
+    Profile2,
     )
 from .serializers import (
     UserSerializer, 
@@ -40,7 +41,8 @@ from .serializers import (
     SocialTokenSerializer,
     UniSerializer,
     send_verification_email,
-    UserFollowingSerializer
+    UserFollowingSerializer,
+    ProfileResumeSerializer
 )
 
 from django.views import View
@@ -67,6 +69,7 @@ from rest_auth.registration.serializers import SocialLoginSerializer
 from rest_auth.registration.views import SocialLoginView
 from .my_adapter import GoogleOAuth2AdapterIdToken, MyAdapter
 
+from collaborationsApi.constants import *
 class UserViewSet(viewsets.ModelViewSet):
     serializer_class = UserSerializer
     queryset = User.objects.all()
@@ -307,9 +310,58 @@ class UserProfileInfoView(RetrieveUpdateDestroyAPIView):
             return Response(status=HTTP_201_CREATED)
         return Response(status=HTTP_400_BAD_REQUEST)
 
+class UserResumeInfoView(RetrieveUpdateDestroyAPIView):
+    queryset = Profile2.objects.all()
+    serializer_class = ProfileResumeSerializer
+    permission_classes = (permissions.IsAuthenticated,)
+    if(len(Degree.objects.all()) == 0):
+        for d in Degree.DEGREES:
+            degree = Degree.objects.create(degree=d[0])
+    if(len(Degree.objects.all()) == 0):
+        for d in Degree.DEGREES:
+            degree = Degree.objects.create(degree=d[0])
+
+    def get_object(self, *args, **kwargs):
+        try:
+            print("UserProfileInfoView Silk Road")
+            username = self.kwargs.get('username')
+            user = User.objects.get(username=username)
+            # articleId = Article.objects.get(title=article).id
+            userInfo = Profile2.objects.get(profile_username=user.id)
+            ProfileResumeSerializer(userInfo)
+            return userInfo
+        except ObjectDoesNotExist:
+            raise Http404("You do not have an active order")
+            return Response({"message": "You do not have an active order"}, status=HTTP_400_BAD_REQUEST)
+    
+    def put(self, request, *args, **kwargs):
+        serializer = ProfileResumeSerializer(data=request.data)
+        serializer.is_valid()
+        print("On update method")
+        print(self.request.data)
+        update_resume_info = serializer.update_resume_info(request)
+        if update_resume_info:
+            return Response(status=HTTP_201_CREATED)
+        return Response(status=HTTP_400_BAD_REQUEST)
+
+import ssl
+from urllib.parse import urlparse
+import urllib.request
+from django.core.files.base import ContentFile
+from django.core.files.temp import NamedTemporaryFile
+from django.core.files import File
+ssl._create_default_https_context = ssl._create_unverified_context
+
 class Degrees_and_CoursesView(generics.ListAPIView):
     # queryset = ProfileInfo.objects.all()
     serializer_class = (testSerializer)
+    universities = Universities.objects.all()
+    for u in universities:
+        if(u.thumbnail == ""):
+            for l in UNIVERSITIES:
+                if(l[1] == u.university):
+                    create_logo("self", url, l[0], u)
+
     permission_classes = (permissions.AllowAny,)
     if(len(Bachelor.objects.all()) == 0):
         for b in Bachelor.BACHELOR_DEGREES:

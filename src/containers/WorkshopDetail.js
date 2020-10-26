@@ -7,7 +7,7 @@ import { Menu, Card, Button, DatePicker, TimePicker, Form, Modal, Skeleton, mess
 import { Link, withRouter } from "react-router-dom";
 import ArticleCreate from './ArticleCreate';
 import Checkout from "../components/MeetingCheckout";
-import { workshopDirectBuyURL } from "../constants";
+import { workshopDirectBuyURL, workshopRegisterURL } from "../constants";
 import { configConsumerProps } from 'antd/lib/config-provider';
 import * as actions from "../store/actions/auth";
 import { authAxios } from '../utils';
@@ -38,6 +38,7 @@ class ArticleDetail extends React.Component {
         author_pic: null,
         lessons: null,
         lessons_topic: null,
+        registered: false,
     };
 
     handleClick = e => {
@@ -67,6 +68,22 @@ class ArticleDetail extends React.Component {
         selectedDateTime.year(myDate.year());
         return selectedDateTime
       }
+
+      handleRegisterForm() {
+            const workshopId = this.props.match.params.workshopID
+            axios.defaults.headers = {
+                "Content-Type": "application/json",
+                Authorization: `Token ${this.props.token}`
+            }
+            axios.post(workshopRegisterURL(workshopId))
+                .then(res => {
+                    if (res.status === 201) {
+                    this.setState({ registered: true})
+                    }
+                })
+                .catch(error => console.error(error))
+                console.log('Error');
+        }
 
     componentDidMount() {
         console.log("componentDidMount THIPROPS: " + JSON.stringify(this.props))
@@ -557,7 +574,7 @@ class ArticleDetail extends React.Component {
                                     </h1>
                                 </div>
                             </div>
-                            <div id="element-4633">
+                            <div id="element-4633" onClick={() => {this.handleRegisterForm()}}>
                                 <div className="conversion_wrapper">
                                     <a>
                                         <div className="submit-btn">

@@ -1,8 +1,6 @@
 from django.db import models
 import urllib.request
 from django.core.files.storage import FileSystemStorage
-# import ssl
-# ssl._create_default_https_context = ssl._create_unverified_context
 
 Humanities = 'humanities'
 SocialSciences = 'social_sciences'
@@ -125,40 +123,76 @@ ROLE_CHOICES = [
 # ]
 
 # class InstitutionLogo(models.Model):
+    # name = models.CharField(length=255)
 #     logo = models.ImageField(upload_to="images/logos/institution/", blank=True)
+    # university = models.CharField(max_length=100, choices=UNIVERSITIES, blank=True)
 
 #     def __str__(self):
 #         return str(self.logo)
 
-# url="https://lh3.googleusercontent.com/proxy/HI-PKoMzsC3aHXrNWMphdmebgkc_nESj2FkXma9gY3FeOr0JNTFmFSBLGXBdUs6DNpw3J6kPtt0CKvHs-qXYMLxJx7xDryd53A7lufqfjYJSH1pmx6-DCNbKwvAXJ1zrx8nfJMOAi7NU76fjuf_xIpeUbX9vGME"
 # import os
+import ssl
+from urllib.parse import urlparse
+import requests
+# import urllib2
+from django.core.files.base import ContentFile
+from django.core.files.temp import NamedTemporaryFile
+from django.core.files import File
+import base64
+from django.conf import settings
+ssl._create_default_https_context = ssl._create_unverified_context
+
+url="https://www.oroyfinanzas.com/files/2015/04/mit_logo.jpg"
+
 # current_path = os.path.dirname(__file__)
 # image_folder = os.path.join(current_path, mediafiles)
 # print("CACAS: ", current_path)
-# def create_logo(self, url, institution_name, obj):
-#     institution = institution_name.upper()
-#     urllib.request.urlretrieve(url, '/Users/diegogallovalenzuela/djreact/Feedback-App/mediafiles/logos/institution/{}-logo.jpg'.format(institution_name))
+def create_logo(self, url, institution_name, obj):
+    institution = institution_name.upper()
+    # urllib.request.urlretrieve(url, '/Users/diegogallovalenzuela/djreact/Feedback-App/mediafiles/images/logos/institution/{}-logo.jpg'.format(institution_name))
+    try:
+        content = urllib.request.urlretrieve(url)
+        name = urlparse(url).path.split('/')[-1]
+        extension = name.split('.')[-1]
+        if settings.USE_S3:
+            obj.thumbnail = content[0]
+        else:
+            obj.thumbnail.save(institution_name+extension, File(open(content[0], 'rb')), save=True)
+            # self.signed_file.save("{timestamp}.pdf".format(timestamp=timezone.now().strftime('%Y-%m-%d%/%H-%M-%S')), File(open(tempname, 'rb')))
+    finally:
+        # urlcleanup()
+        print ("CHECK")
+    
+#     if is_file:
+#     for f in files:
+#         myfile = files[f]
+#         if settings.USE_S3:
+#             obj.thumbnail = myfile
+#         else:
+#             file_type = myfile.content_type.split('/')[0]
+#             fs = FileSystemStorage()
+#             valid_extensions = ['.pdf', '.jpg', '.png']
+#             filename = fs.save("images/logos/institution/"+myfile.name, myfile)
+#             uploaded_file_url = fs.url(filename)
+#             # print("uploaded_file_url", uploaded_file_url)
+#             # print("myfile.name", myfile.name)
+#             # profile.profile_avatar = myfile
+#             obj.thumbnail = "images/logos/institution/"+myfile.name
+#     obj.save()
+#     return obj
 
 # create_logo("self", url, "MIT", "obj")
-#     if is_file:
-#         print("FILES -I: ", is_file)
-#         for f in files:
-#             myfile = files[f]
-#             # print("file type: ", myfile.content_type.split('/')[0])
-#             if settings.USE_S3:
-#                 obj.logo = myfile
-#             else:
-#                 file_type = myfile.content_type.split('/')[0]
-#                 fs = FileSystemStorage()
-#                 valid_extensions = ['.pdf', '.jpg', '.png']
-#                 filename = fs.save("images/logos/institution/"+myfile.name, myfile)
-#                 uploaded_file_url = fs.url(filename)
-#                 # print("uploaded_file_url", uploaded_file_url)
-#                 # print("myfile.name", myfile.name)
-#                 # profile.profile_avatar = myfile
-#                 obj.logo = "images/logos/institution/"+myfile.name
-#         obj.save()
-#         return obj
+
+# universities = Universities.objects.all()
+# for u in universities:
+#     if(u.thumbnail == None):
+#         for l in UNIVERSITIES:
+#             print ("COÑO", l)
+#             if(l[1] == u.university[0]):
+#                 create_logo("self", url, l[0], u)
+
+
+
 # logo_MIT = InstitutionLogo.objects.get(logo="MIT-logo.jpg")
 # logo_CAMBRIDGE = InstitutionLogo.objects.get(logo="MIT-logo.jpg")
 # logo_OXFORD = InstitutionLogo.objects.get(logo="MIT-logo.jpg")
@@ -193,9 +227,23 @@ ITESM = "Monterrey Institute of Technology and Higher Education"
 UIA = " Ibero-American University"
 OTHER = 'other'
 UNIVERSITIES = [
-    (logo_MIT, [
-        (MIT, ('Massachusetts Institute of Technology'))
-    ]),
+    (MIT, ('Massachusetts Institute of Technology')),
+    (CAMBRIDGE, ('University of Cambridge')),
+    (OXFORD, ('University of Oxford')),
+    (STANDFORD, ('Stanford University')),
+    (DUKE, ("Duke's University")),
+    (CIDE, ("Center of Teaching and Research in Economics")),
+    (ITAM, ("Instituto Tecnológico Autónomo de México")),
+    (COLMEX, ("El Colegio de México")),
+    (ITESM, ("Instituto Tecnológico y de Estudios Superiores de Monterrey")),
+    (UIA, ("Universidad Iberoamericana")),
+    (OTHER, ('other'))
+]
+# ´´`´
+UNIVERSITIES_TEST = [
+    # (logo_MIT, [
+        (MIT, ('Massachusetts Institute of Technology')),
+    # ]),
     (logo_CAMBRIDGE, [
         (CAMBRIDGE, ('University of Cambridge'))
     ]),
@@ -481,6 +529,20 @@ PHD_DEGREES = [
     ("Doctor_of_Veterinary_Medicine", ("DVM or D.V.M."))
 ]
 
+DIPLOMAS = [
+    ("Other", ("Other"))
+]
+
+CERTIFICATES = [
+    ("Other", ("Other"))
+]
+
+TECHNOLOGIES = [
+    ("Other", ("Other"))
+]
+SKILLS = [
+    ("Other", ("Other"))
+]
 PROGRAMMER = 'programmer'
 PROJECT_MANAGER = 'project_manager'
 DATA_ANALYST = 'data_analyst'

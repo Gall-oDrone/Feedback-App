@@ -7,7 +7,7 @@ import {createSurvey} from "../store/actions/survey"
 
 const FormItem = Form.Item;
 
-class SurveyCreate extends React.Component {
+class LessonCreate extends React.Component {
     state = {
         formCount: 1
     };
@@ -30,40 +30,44 @@ class SurveyCreate extends React.Component {
     handleSubmit = e => {
         e.preventDefault();
         this.props.form.validateFields((err, values) => {
-            if (!err) {
-                const questions = [];
-                for (let i =0; i< values.questions.length; i += 1) {
-                  questions.push({
-                    title: values.question[i],
-                    choices: values.questions[i].choices.filter(el => el !== null),
-                });
-              }
-              console.log("Calling... 0");
-                const asnt = {
-                  teacher: this.props.username,
-                  questions
-                };
-                this.props.createSurvey(this.props.token, asnt).then(res => {
-                  if (res.status === "HTTP 200"){
+            console.log("handleFormSubmit values: ", JSON.stringify(values));
+            console.log("handleFormSubmit values II: ", values.lesson[0].topics.filter(el => el !== null));
+            // if (!err) {
+            //     const lessons = [];
+            //     for (let i =0; i< values.lessons.length; i += 1) {
+            //       lessons.push({
+            //         title: values.question[i],
+            //         choices: values.lessons[i].choices.filter(el => el !== null),
+            //     });
+            //   }
+            //   console.log("Calling... 0");
+            //     const asnt = {
+            //       teacher: this.props.username,
+            //       lessons
+            //     };
+            //     this.props.createSurvey(this.props.token, asnt).then(res => {
+            //       if (res.status === "HTTP_200"){
 
-                  } else {
+            //       } else {
 
-                  }
-                });
-            }
+            //       }
+            //     });
+            // }
         });
     };
+
   render() {
-    const { getFieldDecorator } = this.props.form;
-    const questions = [];
+    const { handleLessons } = this.props;
+    const lessons = [];
+    handleLessons(lessons)
     for (let i=0; i < this.state.formCount; i+= 1) {
-      questions.push(
+      lessons.push(
         <Hoc key= {i}>
-          {questions.length > 0 ? (
+          {lessons.length > 0 ? (
             <Icon
               className="dynamic-delete-button"
               type = "minus-circle-o"
-              disabled={questions.length === 0 || questions.length === 6}
+              disabled={lessons.length === 0 || lessons.length === 6}
               onClick={() => this.remove()}
               />
           ) : null}
@@ -74,25 +78,25 @@ class SurveyCreate extends React.Component {
     }
 
     return (
-      <Form onSubmit={this.handleSubmit}>
+        <div>
           <h1>Workshop Lessons/Modules</h1>
-        {questions}
+          {lessons}
         <FormItem >
           <Button type="secondary" onClick={this.add} >
-            <Icon type="plus" /> Add lesson/module
+            <Icon type="plus" /> Add a lesson or module
           </Button>
         </FormItem>
-        <FormItem>
-          <Button type="primary" htmlType="submit">
-            Submit
+        <Form.Item wrapperCol={{ span: 12, offset: 6 }}>
+          <Button type="primary" htmlType="submit" >
+            Post
           </Button>
-        </FormItem>
-      </Form>
+        </Form.Item>
+      </div>
     );
       }
 }
 
-const WrappedSurveyCreate = Form.create()(SurveyCreate);
+const WrappedLessonCreate = Form.create()(LessonCreate);
 
 const mapStateToProps = state => {
   return {
@@ -111,4 +115,4 @@ const mapDispatchToProps = dispatch => {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(WrappedSurveyCreate);
+)(WrappedLessonCreate);

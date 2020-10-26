@@ -1,12 +1,16 @@
+/* ------------------------------- */
+/* FORM TYPES & JOIN CARDS SECTION */
+/* ------------------------------- */
+
 @import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&display=swap');
 
-.card-list{
+.collab-type-card-list{
     display:flex;
     padding: 3rem;
     /* overflow-x: scroll; */
 }
 
-.card{
+.collab-type-card{
 display:flex;
 position:relative;
 flex-direction: column;
@@ -22,24 +26,24 @@ box-shadow: -1rem 1rem 3rem #000;
 transition: .2s;
 cursor: pointer;
 }
-.card:hover {
+.collab-type-card:hover {
     transform: translateY(-1rem);
 }
-.card:hover~.card {
+.collab-type-card:hover~.collab-type-card {
     transform: translateX(130px);
 }
-.card-header{
+.collab-type-card-header{
     margin-bottom: auto;
 }
 
-.card-header p {
+.collab-type-card-header p {
     font-size: 14px;
     margin: 0 0 1rem;
     line-height: 1rem;
     color: #d39715;
 }
 
-.card-header h2 {
+.collab-type-card-header h2 {
     font-size: 20px;
     margin: .25rem 0 auto;
     text-decoration: none;
@@ -48,7 +52,7 @@ cursor: pointer;
     display: inline-block;
 }
 
-.card-image {
+.collab-type-card-image {
     position: relative;
     display: grid;
     grid-template-columns: 75px;

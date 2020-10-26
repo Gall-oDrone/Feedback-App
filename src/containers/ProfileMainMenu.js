@@ -91,6 +91,14 @@ class ProfileMMenu extends React.Component {
                             </Link>
                             </span>
                         </Menu.Item>
+                        <Menu.Item key="sub12">
+                            <span>
+                            <Link to={`/profile/${this.props.userId}/account/user/resume/`}>
+                                <Icon type="setting" />
+                                    Resume
+                            </Link>
+                            </span>
+                        </Menu.Item>
                         <Menu.Item key="sub3">
                             <span>
                             <Link to={`/profile/${this.props.userId}/account/survey/list/`}>

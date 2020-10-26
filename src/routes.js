@@ -167,10 +167,10 @@ const BaseRouter = () => (
     <Route exact path="/userProfile/" component={MeetingReview} />
     <Route exact path="/profile-page/:user" component={ProfilePage} />
     <Route exact path="/profile/:id/meetings/" component={ProfileMeetings} />
-    <Route exact path="/resume/" component={CredentialsModal} />
 
     <Route exact path="/profile/:id/account/info/" component={ProfileAccountInfo} />
     <Route exact path="/profile/:id/account/user/info/" component={ProfileAccountUserInfo} />
+    <Route exact path="/profile/:id/account/user/resume/" component={CredentialsModal} />
     <Route exact path="/profile/:id/account/articles/list/" component={ProfileAccountArticleList} />
     <Route exact path="/profile/:id/account/articles/detail/:articleID" component={ProfileAccountArticleDetail} />
 

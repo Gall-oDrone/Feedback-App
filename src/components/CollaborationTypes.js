@@ -39,16 +39,16 @@ import {
                   { required: true, message: 'Please select a field!', type: 'string' },
                 ],
               })(
-              <div className="card-list">
+              <div className="collab-type-card-list">
                 {collab_ops.map(el => {
                     return(
-                      <div onClick={() => {val(el.type)} }className="card">
-                        <header className="card-header">
+                      <div onClick={() => {val(el.type)} }className="collab-type-card">
+                        <header className="collab-type-card-header">
                           <h2>{el.type}</h2>
                           <p>{el.desc}</p>
                         </header>
-                        <div className="card-image">
-                          <span class="image-cover">
+                        <div className="collab-type-card-image">
+                          <span class="collab-type-image-cover">
                             <img></img>
                           </span>
                         </div>

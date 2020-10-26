@@ -123,10 +123,37 @@ class Universities(models.Model):
         (UIA, ("Universidad Iberoamericana")),
         (OTHER, ('other'))
     ]
+
+    thumbnail = models.ImageField(upload_to="images/logos/institution/", blank=True)
     university=models.CharField(max_length=100, choices=UNIVERSITIES, blank=True)
 
     def __str__(self):
         return self.university
+
+    def create_logo(self, url, institution_name, obj):
+        institution = institution_name.upper()
+        urllib.request.urlretrieve(url, '/Users/diegogallovalenzuela/djreact/Feedback-App/mediafiles/images/logos/institution/{}-logo.jpg'.format(institution_name))
+
+# create_logo("self", url, "MIT", "obj")
+#     if is_file:
+#         print("FILES -I: ", is_file)
+#         for f in files:
+#             myfile = files[f]
+#             # print("file type: ", myfile.content_type.split('/')[0])
+#             if settings.USE_S3:
+#                 obj.logo = myfile
+#             else:
+#                 file_type = myfile.content_type.split('/')[0]
+#                 fs = FileSystemStorage()
+#                 valid_extensions = ['.pdf', '.jpg', '.png']
+#                 filename = fs.save("images/logos/institution/"+myfile.name, myfile)
+#                 uploaded_file_url = fs.url(filename)
+#                 # print("uploaded_file_url", uploaded_file_url)
+#                 # print("myfile.name", myfile.name)
+#                 # profile.profile_avatar = myfile
+#                 obj.logo = "images/logos/institution/"+myfile.name
+#         obj.save()
+#         return obj
 
 class Degree(models.Model):
     BACHELOR = "Bachelor's degree"
@@ -572,8 +599,8 @@ class UserUndergraduate(models.Model):
         course = models.ForeignKey(Course, related_name="user_resume_course", on_delete=models.CASCADE)
         from_date = models.DateTimeField(auto_now_add=False)
         to_date = models.DateTimeField(auto_now_add=False)
-        # student_type = models.CharField(max_length=100, choices=StudentType, blank=True)
-        institution=UNIVERSITIES
+        student_type = models.CharField(max_length=100, choices=STUDENT_TYPES, blank=True)
+        institution= models.CharField(max_length=100, choices=UNIVERSITIES, blank=True)
 
 class UserBachelor(models.Model):
         degree = models.CharField(max_length=100, choices=BACHELOR_DEGREES, blank=True)
@@ -593,72 +620,72 @@ class UserDoctorate(models.Model):
         to_date = models.DateTimeField(auto_now_add=False)
         institution=UNIVERSITIES
 
-# class UserDiplomaOrCertificate(models.Model):
-#         diploma = models.CharField(max_length=100, choices=BACHELOR_DEGREES, blank=True)
-#         certificate = models.CharField(max_length=100, choices=BACHELOR_DEGREES, blank=True)
-#         from_date = models.DateTimeField(auto_now_add=False)
-#         to_date = models.DateTimeField(auto_now_add=False)
-#         institution=UNIVERSITIES
+class UserDiplomaOrCertificate(models.Model):
+        diploma = models.CharField(max_length=100, choices=DIPLOMAS, blank=True)
+        certificate = models.CharField(max_length=100, choices=CERTIFICATES, blank=True)
+        from_date = models.DateTimeField(auto_now_add=False)
+        to_date = models.DateTimeField(auto_now_add=False)
+        institution=UNIVERSITIES
 
 
 ### TODO #######
-# class PersonalInfo(models.Model):
-#     name = models.CharField(max_length=50, blank=True)
-#     last_name = models.CharField(max_length=50, blank=True)
-#     profesion = models.CharField(max_length=50, blank=True)
-#     location = CountryField(blank_label='(select country)')
-#     about_me = models.TextField(max_length=500, blank=True)
+class PersonalInfo(models.Model):
+    name = models.CharField(max_length=50, blank=True)
+    last_name = models.CharField(max_length=50, blank=True)
+    profesion = models.CharField(max_length=50, blank=True)
+    location = CountryField(blank_label='(select country)')
+    about_me = models.TextField(max_length=500, blank=True)
 
-# class Education(models.Model):
-#     academic_degree = models.ForeignKey(Degree, blank=True)
-#     undergrad =  models.ForeignKey(UserUndergraduate, blank=True)
-#     bachelor = models.ManyToManyField(UserBachelor, blank=True)
-#     master = models.ManyToManyField(UserMaster, blank=True)
-#     phd = models.ManyToManyField(UserDoctorate, blank=True)
-#     other_edu = models.ManyToManyField(UserDiplomaOrCertificate, blank=True)
+class Education(models.Model):
+    academic_degree = models.ForeignKey(Degree, blank=True, on_delete=models.CASCADE)
+    undergrad =  models.ForeignKey(UserUndergraduate, blank=True, on_delete=models.CASCADE)
+    bachelor = models.ManyToManyField(UserBachelor, blank=True)
+    master = models.ManyToManyField(UserMaster, blank=True)
+    phd = models.ManyToManyField(UserDoctorate, blank=True)
+    other_edu = models.ManyToManyField(UserDiplomaOrCertificate, blank=True)
 
-# class JobActivityDescription(models.Model):
-#     job_desc = models.TextField(max_length=500, blank=True)
+class JobActivityDescription(models.Model):
+    job_desc = models.TextField(max_length=500, blank=True)
 
-# class TechnologyUsed(models.Model):
-#     technology = models.CharField(max_length=100, choices=TECHNOLOGIES, blank=True)
-# classSkillUsed(models.Model):
-#     skill = models.CharField(max_length=100, choices=TECHNOLOGIES, blank=True)
+class TechnologyUsed(models.Model):
+    technology = models.CharField(max_length=100, choices=TECHNOLOGIES, blank=True)
+class SkillUsed(models.Model):
+    skill = models.CharField(max_length=100, choices=SKILLS, blank=True)
 
-# class JobPosition(models.Model):
-#         position = models.CharField(max_length=100, choices=JOB_POSITIONS, blank=True)
-#         enterprise = models.CharField(max_length=100, choices=JOB_POSITIONS, blank=True)
-#         location = models.CharField(max_length=100, choices=JOB_POSITIONS, blank=True)
-#         from_date = models.DateTimeField(auto_now_add=False)
-#         to_date = models.DateTimeField(auto_now_add=False)
-#         job_activities_desc = models.ManyToManyField(JobActivityDescription, blank=True)
-#         technologies_used = models.ManyToManyField(TechnologyUsed, blank=True)
-#         skills_used = models.ManyToManyField(classSkillUsed, blank=True)
+class JobPosition(models.Model):
+        position = models.CharField(max_length=100, choices=JOB_POSITIONS, blank=True)
+        enterprise = models.CharField(max_length=100, choices=JOB_POSITIONS, blank=True)
+        location = models.CharField(max_length=100, choices=JOB_POSITIONS, blank=True)
+        from_date = models.DateTimeField(auto_now_add=False)
+        to_date = models.DateTimeField(auto_now_add=False)
+        job_activities_desc = models.ManyToManyField(JobActivityDescription, blank=True)
+        technologies_used = models.ManyToManyField(TechnologyUsed, blank=True)
+        skills_used = models.ManyToManyField(SkillUsed, blank=True)
 
-# class Employment(models.Model):
-#     job_positions = models.ManyToManyField(JobPosition, blank=True)
+class Employment(models.Model):
+    job_positions = models.ManyToManyField(JobPosition, blank=True)
 
 # class Experience(models.Model):
 #     experience_tags(many to many)
 #         experience_tag
 
-# class Profile2(models.Model):
-#     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-#     stripe_customer_id = models.CharField(max_length=50, blank=True, null=True)
-#     profile_avatar = models.ImageField(upload_to="profileAvatar/", blank=True)
-#     friends = models.ManyToManyField("Profile", blank=True)
-#     notifications = models.ManyToManyField("MeetingRequest", blank=True)
-#     notification_counter = models.IntegerField(default=0)
+class Profile2(models.Model):
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    stripe_customer_id = models.CharField(max_length=50, blank=True, null=True)
+    profile_avatar = models.ImageField(upload_to="profileAvatar/", blank=True)
+    friends = models.ManyToManyField("Profile", blank=True)
+    notifications = models.ManyToManyField("MeetingRequest", blank=True)
+    notification_counter = models.IntegerField(default=0)
 
-#     message = models.CharField(max_length=150, blank=True, null=True)
-#     personal = models.ForeignKey(PersonalInfo, related_name="profile_personal_details", on_delete=models.CASCADE)
-#     academic = models.ForeignKey(Education, related_name="profile_academic_details", on_delete=models.CASCADE)
-#     employment = models.ForeignKey(Employment, related_name="profile_employment_details", on_delete=models.CASCADE)
-#     def __str__(self):
-#         return "{} profile info".format(self.profile_username.username)
+    message = models.CharField(max_length=150, blank=True, null=True)
+    personal = models.ForeignKey(PersonalInfo, related_name="profile_personal_details", on_delete=models.CASCADE)
+    academic = models.ForeignKey(Education, related_name="profile_academic_details", on_delete=models.CASCADE)
+    employment = models.ForeignKey(Employment, related_name="profile_employment_details", on_delete=models.CASCADE)
+    def __str__(self):
+        return "{} profile info".format(self.profile_username.username)
     
-#     def avatar(self, pk):
-#         return  self.profile_avatar
+    def avatar(self, pk):
+        return  self.profile_avatar
 
 class ProfileInfo(models.Model):
     profile = models.ForeignKey(Profile, related_name="user_profile", on_delete=models.CASCADE)
