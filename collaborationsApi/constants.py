@@ -156,6 +156,7 @@ def create_logo(self, url, institution_name, obj):
         if settings.USE_S3:
             print("S3 LOGO")
             obj.thumbnail = File(open(content[0], 'rb'))
+            obj.save()
         else:
             obj.thumbnail.save(institution_name+extension, File(open(content[0], 'rb')), save=True)
             # self.signed_file.save("{timestamp}.pdf".format(timestamp=timezone.now().strftime('%Y-%m-%d%/%H-%M-%S')), File(open(tempname, 'rb')))
