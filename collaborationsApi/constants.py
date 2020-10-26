@@ -133,8 +133,6 @@ ROLE_CHOICES = [
 # import os
 import ssl
 from urllib.parse import urlparse
-import requests
-# import urllib2
 from django.core.files.base import ContentFile
 from django.core.files.temp import NamedTemporaryFile
 from django.core.files import File
@@ -154,11 +152,15 @@ def create_logo(self, url, institution_name, obj):
         content = urllib.request.urlretrieve(url)
         name = urlparse(url).path.split('/')[-1]
         extension = name.split('.')[-1]
+        print("LOGO")
         if settings.USE_S3:
+            print("S3 LOGO")
             obj.thumbnail = content[0]
         else:
             obj.thumbnail.save(institution_name+extension, File(open(content[0], 'rb')), save=True)
             # self.signed_file.save("{timestamp}.pdf".format(timestamp=timezone.now().strftime('%Y-%m-%d%/%H-%M-%S')), File(open(tempname, 'rb')))
+    except Exception as e: 
+        print("ERROR LOGO", e)
     finally:
         # urlcleanup()
         print ("CHECK")
