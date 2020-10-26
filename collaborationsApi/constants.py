@@ -155,7 +155,7 @@ def create_logo(self, url, institution_name, obj):
         print("LOGO")
         if settings.USE_S3:
             print("S3 LOGO")
-            obj.thumbnail = File(open(content[0], 'rb'))
+            obj.thumbnail.save(institution_name+extension, File(open(content[0], 'rb')), save=True)
             obj.save()
         else:
             obj.thumbnail.save(institution_name+extension, File(open(content[0], 'rb')), save=True)
