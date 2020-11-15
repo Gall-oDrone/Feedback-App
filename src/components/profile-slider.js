@@ -16,9 +16,11 @@ const ProfileSlider = ( {props} ) => (
                                 <span className="img-text">
                                     <h4>{`${el.user_info.name}`}</h4>
                                     <p>{`${el.user_info.country}`}</p>
-                                    <p>
+                                    {/* <p>
                                         {`${el.user_info.university}`}
-                                    </p>
+                                    </p> */}
+                                    <img style={{width: "90px", height: "60px"}} src={el.university_logo}>
+                                    </img>
                                 </span>
                             </span>
                         </a>

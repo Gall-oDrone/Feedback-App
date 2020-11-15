@@ -109,6 +109,7 @@ export const profileAccountInfoURL = (userId) => `${endpoint}/users/profile/acco
 export const profileURL = (articleID, username) => `${endpoint}/articles/${articleID}/detail/${username}/`
 export const profileUserInfoURL = username => `${endpoint}/users/profile/info/${username}`
 export const profileResumeInfoURL = username => `${endpoint}/users/profile/resume/${username}`
+export const profileResumeCreateURL = username => `${endpoint}/users/profile/resume/create/${username}`
 export const profilePageURL = username => `${endpoint}/users/profile-page/${username}`
 export const profileFollowUser = username => `${endpoint}/users/following/${username}`
 export const profileWorkshopListURL = username => `${endpoint}/workshops/list/${username}/`

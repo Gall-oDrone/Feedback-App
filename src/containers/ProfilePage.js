@@ -4,8 +4,9 @@ import { connect } from 'react-redux';
 import { Menu, Card, Button, DatePicker, TimePicker, Form, Modal, Skeleton, message, Divider, List, Tabs, Row, Col, Icon} from "antd";
 import { Link, withRouter } from "react-router-dom";
 import Checkout from "../components/MeetingCheckout";
-import {getProfileAccountInfo, putProfileAccountInfo} from "../store/actions/profileUserInfo";
-import {profilePageURL, profileFollowUser} from "../constants"
+import {getProfileAccountInfo, putProfileAccountInfo, getProfileResume, putProfileResume} from "../store/actions/profileUserInfo";
+import {putProfileAccountDetail } from "../store/actions/profileAccountInfo";
+import { profilePageURL, profileFollowUser, fetchDegreesAndCoursesURL, profileResumeCreateURL } from "../constants"
 import MessengerBox from "../components/MessengerBox";
 import "../assets/session.css";
 import "../assets/collaboration.css";
@@ -57,6 +58,7 @@ class ArticleDetail extends React.Component {
         work_experience: null,
         open_messenger: false,
         visible: false,
+        resumeInfo: null,
     };
 
     handleOpenMessenger = e => {
@@ -184,6 +186,10 @@ class ArticleDetail extends React.Component {
         return this.work_e
       }
 
+      fetchInfo = () => {
+        this.props.getProfileResume(this.props.token, this.props.match.params.user)
+      }
+
     componentDidMount() {
         console.log("componentDidMount THIPROPS: " + JSON.stringify(this.props))
         const user = this.props.match.params.user;
@@ -209,6 +215,7 @@ class ArticleDetail extends React.Component {
                 });
                 console.log("Article Detail res data: " + res.data);
             });
+        this.fetchInfo()
     }
 
     componentWillReceiveProps(newProps) {
@@ -241,6 +248,22 @@ class ArticleDetail extends React.Component {
 
     }
 
+    componentDidUpdate(prevProps, prevState) {
+      if(this.props.resume && !this.state.resumeInfo){
+        this.setState({resumeInfo: this.props.resume})
+      }
+      if (prevProps.token !== this.props.token) {
+        if (this.props.token) {
+          // this.props.getProfileInfo(this.props.token, this.props.username)
+          this.fetchData()
+          this.fetchInfo()
+          console.log("RESUME:0")
+        } else {
+          this.props.history.push('/');
+        }
+      }
+    }
+
     render() {
         console.log('this.PROPS: ' + JSON.stringify(this.props))
         console.log("this.state: " + this.state, this.state.orderId)
@@ -260,7 +283,10 @@ class ArticleDetail extends React.Component {
         website,
         work_experience,
         open_messenger,
-        visible, orderId, loading } = this.state
+        visible, 
+        orderId, 
+        loading, 
+        resumeInfo } = this.state
         return (
             <div>
               <div className="layout-shadow">
@@ -270,17 +296,17 @@ class ArticleDetail extends React.Component {
                       <div className="resume_section resume_top-section" data-view="resumes#top-aligner">
                         <div className="resume_top-left" data-role="left_panel">
                           <div className="resume_top-photo_wrapper">
-                            <img alt="Adrien Castelain, Designer in Wellington, New Zealand" className="resume_top-photo" src="http://127.0.0.1:8000/media/profileAvatar/IMG_20180723_230803_tKPJtyV.jpg"></img>
+                            <img alt="Adrien Castelain, Designer in Wellington, New Zealand" className="resume_top-photo" src={resumeInfo?resumeInfo.profile_avatar:null}></img>
                           </div>
                         </div>
                         <div className="resume_top-right" data-role="right_panel">
                           <div className="resume_top-info">
-                            <div className="resume_top-info_name" data-slug="adrien-castelain" data-target-role="Designer">Adrien Castelain</div>
+        <div className="resume_top-info_name" data-slug="adrien-castelain" data-target-role="Designer">{resumeInfo?resumeInfo.personal.name:null} {resumeInfo?resumeInfo.personal.last_name:null}</div>
                             <div className="resume_top-info_short_description" data-talent_title="Designer">
                               <h1 className="resume_top-info_location">Designer in Wellington, New Zealand</h1>
                               <div className="resume_top-info_since">Member since January 10, 2019</div>
                             </div>
-                            <div className="resume_top-info_bio" data-role="description">Adrien is an award-winning designer and digital art director specialized in strategy, user experience (UX), user interface (UI), brand identity and interaction design. For the last 13 years, he's been crafting and delivering unique digital experiences for global companies and startups. His clients hire him for his UX and UI expertise, user-centered approach, strategic mindset, collaborative leadership, creativity, and effectiveness.</div>
+                            <div className="resume_top-info_bio" data-role="description">{resumeInfo?resumeInfo.personal.about_me:null}</div>
                           </div>
                           <div className="resume_top-tags" data-max-rows="2" data-role="tags_list">
                             <a className="tag is-expert" data-gql-id="VjEtU2tpbGxTZXQtMjY5Mjg4NQ" data-role="tag" href="https://www.toptal.com/designers/ux">User Experience (UX)</a>
@@ -783,6 +809,8 @@ const mapStateToProps = state => {
     return {
         token: state.auth.token,
         username: state.auth.username,
+        resume: state.profileInfo.UserResume,
+        resumeLoading: state.profileInfo.loading,
         profileIA: state.profileInfo
     }
 }
@@ -791,60 +819,8 @@ const mapDispatchToProps = dispatch => {
     console.log("mapDispatchToProps: ")
     return {
       getProfileInfo: (token, userID) => dispatch(getProfileAccountInfo(token, userID)),
+      getProfileResume: (token, userID) => dispatch(getProfileResume(token, userID)),
     };
   };
 
 export default withRouter(connect(mapStateToProps,mapDispatchToProps)(WrappedArticleCreate));
-
-
-
-              // <Card title={username}>
-              //       <Row type="flex" style={{ alignItems: 'left' }} >
-              //           <Col span={1}>
-              //             <Button>
-              //               Follow
-              //             </Button>
-              //           </Col>
-              //       </Row>
-              //       <Row type="flex" style={{ alignItems: 'center' }} justify="center">
-              //           <Col span={12}>
-              //             <Row type="flex" style={{ alignItems: 'center' }} justify="center">
-              //               <div id="session-div-2">
-              //               <img
-              //                   className="contain"
-              //                   alt="logo"
-              //                   src={profile_avatar}
-              //               />
-              //               </div>
-              //               </Row>
-              //               <Row type="flex" style={{ alignItems: 'center' }} justify="center">
-              //                 <Button disabled={open_messenger} onClick={() => this.handleOpenMessenger()}>
-              //                   Send Message
-              //                 </Button>
-              //               </Row>
-              //           </Col>
-              //           <Col span={12}>
-              //             <div>
-              //                 <p style={pStyle}>Basic Information</p>
-              //                 <p>{username}</p>
-              //                 <p>{message}</p>
-
-              //                 <Divider />
-              //                 <p style={pStyle}>Academic Information</p>
-              //                 <p>University: {university}</p>
-              //                 <p>{academic_status}</p>
-              //                 <p>Degree: {academic_degree}</p>
-              //                 <p>{bachelors_degree}</p>
-              //                 <p>{masters_degree}</p>
-              //                 <p>{phD_degree}</p>
-              //                 <p>Course: {course}</p>
-
-              //                 <Divider />
-              //                 <p style={pStyle}>Working experience</p>
-              //                 <p>Website: {website}</p>
-              //                 <p>Experience: {work_experience}</p>
-              //                 </div>
-              //           </Col>
-              //       </Row>
-              //         <MessengerBox op={open_messenger}/>
-              //   </Card>

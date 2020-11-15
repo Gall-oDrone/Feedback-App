@@ -37,12 +37,12 @@ class ProfilePicUploader extends React.Component {
 
   render(){
       const { selectedFile } = this.state
-      const { profile_pic, form } = this.props
+      const { profile_pic, form, avatar } = this.props
     return(
         <div className="row">
             <div className="small-12 medium-2 large-2 columns">
             <div className="circle">
-                <img className="profile-pic" ref="imgFile" src={selectedFile} alt={selectedFile}/>
+                <img className="profile-pic" ref="imgFile" src={avatar?avatar:selectedFile} alt={selectedFile}/>
                 <i className="fa fa-user fa-5x"></i>
             </div>
             <div className="p-image">

@@ -9,7 +9,7 @@ import "../assets/collaboration.css";
 import "../assets/resume.css";
 import {getProfileAccountInfo, putProfileAccountInfo, getProfileResume, putProfileResume} from "../store/actions/profileUserInfo";
 import {putProfileAccountDetail } from "../store/actions/profileAccountInfo";
-import { fetchDegreesAndCoursesURL } from "../constants"
+import { fetchDegreesAndCoursesURL, profileResumeCreateURL } from "../constants"
 import ProfilePic from "../components/ProfilePicUploader";
 
 const minOffset = 0;
@@ -27,6 +27,7 @@ class CustomLayoutContainer extends React.Component {
       collapsed: true,
       current: '1',
       profileInfoModal: false,
+      resumeInfo: null,
       thisYear: thisYear,
       selectedYear: thisYear,
       jobPosList: ["initial"],
@@ -187,6 +188,9 @@ class CustomLayoutContainer extends React.Component {
       }
     }
   }
+  handleJobPos = (value) => {
+
+  }
   handleSubmit = e => {
     e.preventDefault();
     const { UserAccountInfo} = this.props.profileIA;
@@ -227,7 +231,20 @@ class CustomLayoutContainer extends React.Component {
       }
         formData.append("data", JSON.stringify(postObj))
       if (!err) {
-        this.props.putProfileResume(this.props.token, this.props.userId, formData)
+        axios.defaults.headers = {
+          "Content-Type": "application/json",
+          Authorization: `Token ${this.props.token}`
+      }
+      axios.post(profileResumeCreateURL(this.props.username), formData)
+      .then(res => {
+          const data = res.data;
+          console.log("data: "+ JSON.stringify(data))
+      })
+      .catch(err => {
+          console.error(err)
+      })
+
+        // this.props.putProfileResume(this.props.token, this.props.userId, formData)
         // this.props.putProfileInfo(this.props.token, this.props.userId, formData)
       } else{
         console.error('Received error: ', err);
@@ -256,29 +273,35 @@ class CustomLayoutContainer extends React.Component {
   }
 
   fetchInfo = () => {
-    this.props.getProfileResume(this.props.token, this.props.userID)
+    this.props.getProfileResume(this.props.token, this.props.username)
   }
 
   componentDidMount() {
     if (this.props.token !== undefined && this.props.token !== null) {
       if(this.props.username !== null){
-        this.props.getProfileInfo(this.props.token, this.props.username)
+        // this.props.getProfileInfo(this.props.token, this.props.username)
         this.fetchData()
+        this.fetchInfo()
       } else {
         console.log("this.props.getMeetings was undefined at CDM")
       }
     }
   }
   
-  componentDidUpdate(newProps) {
-    if (newProps.token !== this.props.token) {
-      if (this.props.token !== undefined && this.props.token !== null) {
-        this.props.getProfileInfo(this.props.token, this.props.username)
+  componentDidUpdate(prevProps, prevState) {
+    if(this.props.resume && !this.state.resumeInfo){
+      this.setState({resumeInfo: this.props.resume})
+    }
+    if (prevProps.token !== this.props.token) {
+      if (this.props.token) {
+        // this.props.getProfileInfo(this.props.token, this.props.username)
         this.fetchData()
+        this.fetchInfo()
+        console.log("RESUME:0")
       } else {
         this.props.history.push('/');
       }
-    }    
+    }
   }
 
   render() {
@@ -287,17 +310,17 @@ class CustomLayoutContainer extends React.Component {
       bachelorList, masterList, phdList, otherEduList, 
       academic_status, selectedImage, countries, 
       employment, bachelors_degrees, masters_degrees, 
-      phD_degrees, courses, universities
+      phD_degrees, courses, universities, resumeInfo
     } = this.state;
     const { getFieldDecorator, getFieldValue, getFieldsValue } = this.props.form;
     const options = [];
+    console.log("RESUME: ", resumeInfo)
     // getFieldDecorator(`employments`, { initialValue: employment });
     for (let i = minOffset; i <= maxOffset; i++) {
       const year = thisYear - i;
       options.push(<option key={i} value={year}>{year}</option>);
     }
     return(
-      
       <div>
         <Form onSubmit={this.handleSubmit}>
           <div className="layout-shadow">
@@ -310,7 +333,7 @@ class CustomLayoutContainer extends React.Component {
                         <img alt="Adrien Castelain, Designer in Wellington, New Zealand" className="resume_top-photo" src="http://127.0.0.1:8000/media/profileAvatar/IMG_20180723_230803_tKPJtyV.jpg"></img>
                       </div> */}
                       <div className="resume_top-photo_wrapper-2">
-                        <ProfilePic profile_pic={this.handleSelectedPicture}/>
+                        <ProfilePic profile_pic={this.handleSelectedPicture} avatar={resumeInfo?resumeInfo.profile_avatar:null}/>
                       </div>
                     </div>
                     <div className="resume_top-right" data-role="right_panel">
@@ -323,6 +346,7 @@ class CustomLayoutContainer extends React.Component {
                             <div>
                               <Form.Item style={{marginBottom: "0px"}}>
                                 {getFieldDecorator("ifname", {
+                                  initialValue : resumeInfo?resumeInfo.personal.name:null,
                                   rules: [
                                     { type: 'string', required: true, message: 'Please enter down your name' },
                                   ],
@@ -339,6 +363,7 @@ class CustomLayoutContainer extends React.Component {
                             <div>
                               <Form.Item style={{marginBottom: "0px"}}>
                                   {getFieldDecorator("ilname", {
+                                    initialValue : resumeInfo?resumeInfo.personal.last_name:null,
                                     rules: [
                                       { type: 'string', required: true, message: 'Please enter down your lastname' },
                                     ],
@@ -358,6 +383,7 @@ class CustomLayoutContainer extends React.Component {
                               {/* <input type="text" id="iprofesion" name="profesion" placeholder="E.g. Designer..."/>  */}
                               <Form.Item style={{marginBottom: "0px"}}>
                                   {getFieldDecorator("iprofesion", {
+                                    initialValue : resumeInfo?resumeInfo.personal.profesion:null,
                                     rules: [
                                       { type: 'string', required: true, message: 'Please enter down your current profesion' },
                                     ],
@@ -393,6 +419,7 @@ class CustomLayoutContainer extends React.Component {
                           <div>
                             <Form.Item>
                               {getFieldDecorator("imyself", {
+                                initialValue : resumeInfo?resumeInfo.personal.about_me:null,
                                 rules: [
                                   { type: 'string', required: true, message: 'Please write down a short bio about yourself' },
                                 ],
@@ -426,6 +453,8 @@ class CustomLayoutContainer extends React.Component {
                                       <div className="job-position-cont">
                                       <Form.Item style={{marginBottom: "0px"}}>
                                         {getFieldDecorator(`employments[${[i]}][job_pos]`, {
+                                          initialValue: resumeInfo&&resumeInfo.employment.job_positions[i]?
+                                          resumeInfo.employment.job_positions[i].position:null,
                                           rules: [
                                             { type: 'string', required: true, message: 'Please enter down the name of your job position' },
                                           ],
@@ -440,6 +469,7 @@ class CustomLayoutContainer extends React.Component {
                                         <label id="employment" for="employment">From</label>
                                           <Form.Item style={{marginBottom: "0px"}}>
                                           {getFieldDecorator(`employments[${[i]}]["duration"]["from"]`, {
+                                            initialValue: resumeInfo&&resumeInfo.employment.job_positions[i]?resumeInfo.employment.job_positions[i].from_date:null,
                                             rules: [
                                               { type: 'string', required: true, message: 'Please enter down the name of your job position' },
                                             ],
@@ -455,6 +485,7 @@ class CustomLayoutContainer extends React.Component {
                                         <label id="employment" for="employment">To</label>
                                           <Form.Item style={{marginBottom: "0px"}}>
                                             {getFieldDecorator(`employments[${[i]}]["duration"]["to"]`, {
+                                              initialValue: resumeInfo&&resumeInfo.employment.job_positions[i]?resumeInfo.employment.job_positions[i].to_date:null,
                                               rules: [
                                                 { type: 'string', required: true, message: 'Please enter down the name of your job position' },
                                               ],
@@ -474,6 +505,7 @@ class CustomLayoutContainer extends React.Component {
                                       <div className="job-position-cont">
                                         <Form.Item style={{marginBottom: "0px"}}>
                                             {getFieldDecorator(`employments[${[i]}]["company"]`, {
+                                              initialValue: resumeInfo&&resumeInfo.employment.job_positions[i]?resumeInfo.employment.job_positions[i].enterprise:null,
                                               rules: [
                                                 { type: 'string', required: true, message: 'Please enter down the name of your job position' },
                                               ],
@@ -490,6 +522,7 @@ class CustomLayoutContainer extends React.Component {
                                       <div className="job-position-cont">
                                         <Form.Item style={{marginBottom: "0px"}}>
                                             {getFieldDecorator(`employments[${[i]}]["location"]`, {
+                                              initialValue: resumeInfo&&resumeInfo.employment.job_positions[i]?resumeInfo.employment.job_positions[i].location:null,
                                               rules: [
                                                 { type: 'string', required: true, message: 'Please enter down the name of your job position' },
                                               ],
@@ -512,6 +545,7 @@ class CustomLayoutContainer extends React.Component {
                                             <div className="job-pos-desc-textarea">
                                               <Form.Item style={{marginBottom: "0px"}}>
                                                   {getFieldDecorator(`employments[${[i]}]["desc"][${index}]`, {
+                                                    initialValue: resumeInfo&&resumeInfo.employment.job_positions[i]?resumeInfo.employment.job_positions[i].job_activities_desc[index].job_desc:null,
                                                     rules: [
                                                       { type: 'string', required: true, message: 'Please enter down the name of your job position' },
                                                     ],
@@ -546,6 +580,7 @@ class CustomLayoutContainer extends React.Component {
                                       <div class="techs-select techs-select--multiple">
                                         <Form.Item style={{marginBottom: "0px"}}>
                                           {getFieldDecorator(`employments[${[i]}]["techs"]`, {
+                                            initialValue: resumeInfo&&resumeInfo.employment.job_positions[i]?resumeInfo.employment.job_positions[i].technologies_used.map(el => {return el.technology}):null,
                                             rules: [
                                               { type: 'array', required: true, message: 'Please select' },
                                             ],
@@ -589,6 +624,7 @@ class CustomLayoutContainer extends React.Component {
                                     <div class="techs-select techs-select--multiple">
                                       <Form.Item style={{marginBottom: "0px"}}>
                                           {getFieldDecorator(`employments[${[i]}]["skills"]`, {
+                                            initialValue: resumeInfo&&resumeInfo.employment.job_positions[i]?resumeInfo.employment.job_positions[i].skills_used.map(el => {return el.skill}):null,
                                             rules: [
                                               { type: 'array', required: true, message: 'Please select' },
                                             ],
@@ -634,6 +670,7 @@ class CustomLayoutContainer extends React.Component {
                               <div className="academic-grade-choices">
                                 <Form.Item style={{marginBottom: "0px"}}>
                                   {getFieldDecorator("academy[academic_grade]", {
+                                    initialValue: resumeInfo?resumeInfo.academic.academic_degree:null,
                                     rules: [
                                       { type: 'string', required: true, message: 'Please select' },
                                     ],
@@ -660,6 +697,7 @@ class CustomLayoutContainer extends React.Component {
                                 <div>
                                   <Form.Item style={{marginBottom: "0px"}}>
                                     {getFieldDecorator("academy[undergraduate[academic_course]]", {
+                                      initialValue: resumeInfo?resumeInfo.academic.undergrad.course.course:null,
                                       rules: [
                                         { type: 'string', required: true, message: 'Please select' },
                                       ],
@@ -683,6 +721,7 @@ class CustomLayoutContainer extends React.Component {
                                 <div>
                                   <Form.Item style={{marginBottom: "0px"}}>
                                     {getFieldDecorator("academy[undergraduate[institution]]", {
+                                      initialValue: resumeInfo?resumeInfo.academic.undergrad.institution:null,
                                       rules: [
                                         { type: 'string', required: true, message: 'Please select' },
                                       ],
@@ -708,6 +747,7 @@ class CustomLayoutContainer extends React.Component {
                               <div>
                                 <Form.Item style={{marginBottom: "0px"}}>
                                     {getFieldDecorator("academy[undergraduate[student_type]]", {
+                                      initialValue: resumeInfo?resumeInfo.academic.undergrad.student_type:null,
                                       rules: [
                                         { type: 'string', required: true, message: 'Please select' },
                                       ],
@@ -728,6 +768,7 @@ class CustomLayoutContainer extends React.Component {
                               <label id="undergrad-edu" for="undergrad-edu">Attending from</label>
                               <Form.Item style={{marginBottom: "0px"}}>
                                     {getFieldDecorator("academy[undergraduate[from_year]]", {
+                                      initialValue: resumeInfo?resumeInfo.academic.undergrad.from_date:null,
                                       rules: [
                                         { type: 'string', required: true, message: 'Please select' },
                                       ],
@@ -743,6 +784,7 @@ class CustomLayoutContainer extends React.Component {
                               <label id="employment" for="employment">To</label>
                               <Form.Item style={{marginBottom: "0px"}}>
                                     {getFieldDecorator("academy[undergraduate[to_year]]", {
+                                      initialValue: resumeInfo?resumeInfo.academic.undergrad.to_date:null,
                                       rules: [
                                         { type: 'string', required: true, message: 'Please select' },
                                       ],
@@ -773,6 +815,7 @@ class CustomLayoutContainer extends React.Component {
                                             <div>
                                               <Form.Item style={{marginBottom: "0px"}}>
                                                 {getFieldDecorator(`academy[bachelor[${index}][degree]]`, {
+                                                  initialValue: resumeInfo?resumeInfo.academic.bachelor[index].degree:null,
                                                   rules: [
                                                     { type: 'string', required: true, message: 'Please select' },
                                                   ],
@@ -797,6 +840,7 @@ class CustomLayoutContainer extends React.Component {
                                           <div>
                                           <Form.Item style={{marginBottom: "0px"}}>
                                             {getFieldDecorator(`academy[bachelor[${index}][institution]]`, {
+                                              initialValue: resumeInfo?resumeInfo.academic.bachelor[index].institution:null,
                                               rules: [
                                                 { type: 'string', required: true, message: 'Please select' },
                                               ],
@@ -820,6 +864,7 @@ class CustomLayoutContainer extends React.Component {
                                           <label id="bachelor-edu" for="bachelor-edu">From</label>
                                           <Form.Item style={{marginBottom: "0px"}}>
                                               {getFieldDecorator(`academy[bachelor[${index}][from_year]]`, {
+                                                initialValue: resumeInfo?resumeInfo.academic.bachelor[index].from_date:null,
                                                 rules: [
                                                   { type: 'string', required: true, message: 'Please select' },
                                                 ],
@@ -835,6 +880,7 @@ class CustomLayoutContainer extends React.Component {
                                           <label id="employment" for="employment">To</label>
                                           <Form.Item style={{marginBottom: "0px"}}>
                                               {getFieldDecorator(`academy[bachelor[${index}][to_year]]`, {
+                                                initialValue: resumeInfo?resumeInfo.academic.bachelor[index].to_date:null,
                                                 rules: [
                                                   { type: 'string', required: true, message: 'Please select' },
                                                 ],
@@ -878,6 +924,7 @@ class CustomLayoutContainer extends React.Component {
                                           <div>
                                             <Form.Item style={{marginBottom: "0px"}}>
                                               {getFieldDecorator(`academy[master[${index}][degree]]`, {
+                                                initialValue: resumeInfo?resumeInfo.academic.master[index].degree:null,
                                                 rules: [
                                                   { type: 'string', required: true, message: 'Please select' },
                                                 ],
@@ -902,6 +949,7 @@ class CustomLayoutContainer extends React.Component {
                                           <div>
                                           <Form.Item style={{marginBottom: "0px"}}>
                                             {getFieldDecorator(`academy[master[${index}][institution]]`, {
+                                              initialValue: resumeInfo?resumeInfo.academic.master.institution:null,
                                               rules: [
                                                 { type: 'string', required: true, message: 'Please select' },
                                               ],
@@ -925,6 +973,7 @@ class CustomLayoutContainer extends React.Component {
                                         <label id="employment" for="employment">From</label>
                                         <Form.Item style={{marginBottom: "0px"}}>
                                     {getFieldDecorator(`academy[master[${index}][from_year]]`, {
+                                      initialValue: resumeInfo?resumeInfo.academic.master[index].from_date:null,
                                       rules: [
                                         { type: 'string', required: true, message: 'Please select' },
                                       ],
@@ -940,6 +989,7 @@ class CustomLayoutContainer extends React.Component {
                                         <label id="employment" for="employment">To</label>
                                         <Form.Item style={{marginBottom: "0px"}}>
                                           {getFieldDecorator(`academy[master[${index}][to_year]]`, {
+                                            initialValue: resumeInfo?resumeInfo.academic.master[index].to_date:null,
                                             rules: [
                                               { type: 'string', required: true, message: 'Please select' },
                                             ],
@@ -978,6 +1028,7 @@ class CustomLayoutContainer extends React.Component {
                                         <div>
                                         <Form.Item style={{marginBottom: "0px"}}>
                                             {getFieldDecorator(`academy[phd[${index}][degree]]`, {
+                                              initialValue: resumeInfo?resumeInfo.academic.phd[index].degree:null,
                                               rules: [
                                                 { type: 'string', required: true, message: 'Please select' },
                                               ],
@@ -1002,6 +1053,7 @@ class CustomLayoutContainer extends React.Component {
                                       <div>
                                       <Form.Item style={{marginBottom: "0px"}}>
                                           {getFieldDecorator(`academy[phd[${index}][institution]]`, {
+                                            initialValue: resumeInfo?resumeInfo.academic.phd.institution:null,
                                             rules: [
                                               { type: 'string', required: true, message: 'Please select' },
                                             ],
@@ -1025,6 +1077,7 @@ class CustomLayoutContainer extends React.Component {
                                       <label id="employment" for="employment">From</label>
                                       <Form.Item style={{marginBottom: "0px"}}>
                                     {getFieldDecorator(`academy[phd[${index}][from_year]]`, {
+                                      initialValue: resumeInfo?resumeInfo.academic.phd[index].from_date:null,
                                       rules: [
                                         { type: 'string', required: true, message: 'Please select' },
                                       ],
@@ -1040,6 +1093,7 @@ class CustomLayoutContainer extends React.Component {
                                       <label id="employment" for="employment">To</label>
                                       <Form.Item style={{marginBottom: "0px"}}>
                                     {getFieldDecorator(`academy[phd[${index}][to_year]]`, {
+                                      initialValue: resumeInfo?resumeInfo.academic.phd[index].to_date:null,
                                       rules: [
                                         { type: 'string', required: true, message: 'Please select' },
                                       ],
@@ -1081,6 +1135,7 @@ class CustomLayoutContainer extends React.Component {
                                           <div>
                                           <Form.Item style={{marginBottom: "0px"}}>
                                     {getFieldDecorator(`academy[other_edu[${index}][degree]]`, {
+                                      initialValue: resumeInfo?resumeInfo.academic.other_edu[index].degree:null,
                                       rules: [
                                         { type: 'string', required: true, message: 'Please select' },
                                       ],
@@ -1103,6 +1158,7 @@ class CustomLayoutContainer extends React.Component {
                                           <div>
                                           <Form.Item style={{marginBottom: "0px"}}>
                                               {getFieldDecorator(`academy[other_edu[${index}][institution]]`, {
+                                                initialValue: resumeInfo?resumeInfo.academic.other_edu.institution:null,
                                                 rules: [
                                                   { type: 'string', required: true, message: 'Please select' },
                                                 ],
@@ -1126,6 +1182,7 @@ class CustomLayoutContainer extends React.Component {
                                         <label id="employment" for="employment">From</label>
                                         <Form.Item style={{marginBottom: "0px"}}>
                                     {getFieldDecorator(`academy[other_edu[${index}][from_year]]`, {
+                                      initialValue: resumeInfo?resumeInfo.academic.other_edu[index].from_date:null,
                                       rules: [
                                         { type: 'string', required: true, message: 'Please select' },
                                       ],
@@ -1141,6 +1198,7 @@ class CustomLayoutContainer extends React.Component {
                                         <label id="employment" for="employment">To</label>
                                         <Form.Item style={{marginBottom: "0px"}}>
                                     {getFieldDecorator(`academy[other_edu[${index}][to_year]]`, {
+                                      initialValue: resumeInfo?resumeInfo.academic.other_edu[index].to_date:null,
                                       rules: [
                                         { type: 'string', required: true, message: 'Please select' },
                                       ],
@@ -1191,6 +1249,8 @@ const mapStateToProps = state => {
     userId: state.auth.userId,
     username: state.auth.username,
     token: state.auth.token,
+    resume: state.profileInfo.UserResume,
+    resumeLoading: state.profileInfo.loading,
     is_active: state.auth.is_active_user,
     is_student: state.auth.is_student,
     is_teacher: state.auth.is_teacher,

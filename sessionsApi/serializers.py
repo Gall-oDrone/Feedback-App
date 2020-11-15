@@ -4,7 +4,7 @@ from django.utils.dateparse import parse_datetime
 from datetime import datetime, date
 from sessionsApi.models import Session, SessionMeeting, Topic, Experience, Months, Weekdays, Dates
 from users.models import User, Profile, ProfileInfo
-from users.serializers import ProfileInfoSerializer
+from users.serializers import ProfileInfoSerializer, UniSerializer
 from django.core.files.storage import FileSystemStorage
 from articlesApi.models import Article
 
@@ -21,15 +21,21 @@ class SessionTestSerializer(serializers.ModelSerializer):
 
 class FeaturedSessionSerializer(serializers.ModelSerializer):
     user_info = serializers.SerializerMethodField()
+    university_logo = serializers.SerializerMethodField()
 
     class Meta:
         model = Session
-        fields = ('id', "session_photo", "user_info")
+        fields = ('id', "session_photo", "user_info", "university_logo")
     
     def get_user_info(self, obj):
         request = self.context.get('request')
         user_info = ProfileInfoSerializer(obj.user_name, many=False, context={'request': request}).data
         return user_info
+    def get_university_logo(self, obj):
+        request = self.context.get('request')
+        university_logo = UniSerializer(obj.user_name.university, many=False, context={'request': request}).data.get("thumbnail")
+        print("pito", university_logo)
+        return university_logo
 
 class SessionTest2Serializer(serializers.ModelSerializer):
     name = StringSerializer(many=False)

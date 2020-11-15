@@ -78,6 +78,10 @@ class ArticleCustomForm extends React.Component {
       case "Workshop":
         console.log("casio workshop")
         return this.props.getWorkshops(this.props.token, this.props.username);
+      case "Seed Grand":
+        // "EPXLORACIÓN DE PROYECTOS"
+        console.log("seed grand")
+        return this.props.getProjects(this.props.token, this.props.username);
       default:
         return null;
     }

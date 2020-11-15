@@ -633,16 +633,16 @@ class PersonalInfo(models.Model):
     name = models.CharField(max_length=50, blank=True)
     last_name = models.CharField(max_length=50, blank=True)
     profesion = models.CharField(max_length=50, blank=True)
-    location = CountryField(blank_label='(select country)')
+    # location = CountryField(blank_label='(select country)')
     about_me = models.TextField(max_length=500, blank=True)
 
 class Education(models.Model):
     academic_degree = models.ForeignKey(Degree, blank=True, on_delete=models.CASCADE)
-    undergrad =  models.ForeignKey(UserUndergraduate, blank=True, on_delete=models.CASCADE)
-    bachelor = models.ManyToManyField(UserBachelor, blank=True)
-    master = models.ManyToManyField(UserMaster, blank=True)
-    phd = models.ManyToManyField(UserDoctorate, blank=True)
-    other_edu = models.ManyToManyField(UserDiplomaOrCertificate, blank=True)
+    undergrad =  models.ForeignKey(UserUndergraduate, null=True, blank=True, on_delete=models.CASCADE)
+    bachelor = models.ManyToManyField(UserBachelor, null=True, blank=True)
+    master = models.ManyToManyField(UserMaster, null=True, blank=True)
+    phd = models.ManyToManyField(UserDoctorate, null=True, blank=True)
+    other_edu = models.ManyToManyField(UserDiplomaOrCertificate, null=True, blank=True)
 
 class JobActivityDescription(models.Model):
     job_desc = models.TextField(max_length=500, blank=True)
@@ -682,7 +682,7 @@ class Profile2(models.Model):
     academic = models.ForeignKey(Education, related_name="profile_academic_details", on_delete=models.CASCADE)
     employment = models.ForeignKey(Employment, related_name="profile_employment_details", on_delete=models.CASCADE)
     def __str__(self):
-        return "{} profile info".format(self.profile_username.username)
+        return "{} profile info".format(self.user.username)
     
     def avatar(self, pk):
         return  self.profile_avatar

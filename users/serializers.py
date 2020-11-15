@@ -15,7 +15,19 @@ from .models import (
         Doctorate, 
         Course, 
         UserFollowing,
-        Profile2
+        Profile2,
+        PersonalInfo,
+        Education,
+        JobActivityDescription,
+        TechnologyUsed,
+        SkillUsed,
+        JobPosition,
+        Employment,
+        UserUndergraduate,
+        UserBachelor,
+        UserMaster,
+        UserDoctorate,
+        UserDiplomaOrCertificate,
     )
 from django.conf import settings
 from django.core.files.storage import FileSystemStorage
@@ -30,6 +42,8 @@ from allauth.account.signals import user_signed_up
 from django.dispatch import receiver
 from django.contrib.auth import get_user_model
 from django.http import HttpResponse
+from django.utils.dateparse import parse_date
+import datetime
 
 class StringSerializer(serializers.StringRelatedField):
     def to_internal_value(self, value):
@@ -450,75 +464,135 @@ class ProfileInfoSerializer2(serializers.ModelSerializer):
         model = Profile2
         fields = ("__all__")
     
-    def create(self, request):
-        data = request.data
-        print('update_account_info data: ')
-        username = request.user
+    def create(self, request, *args):
+        print("COÑO", request)
+        data = request
+        username = request.get("profile_username")
+        user = User.objects.get(username=username)
         print(username)
-        profile = Profile2.objects.get(profile_username = username.username)
+        profile2 = Profile2()
+        profile2.user = user
         personal = PersonalInfo()
-        p_info = data.get("personal")
-        personal.name = p_info.get("name")
-        personal.last_name = p_info.get("last_name")
-        if("profesion" in p_info):
-            personal.profesion = p_info.get("profesion")
-        personal.location = p_info.get("location")
-        personal.about_me = p_info.get("about_me")
-        profile.personal = personal
+        # p_info = data.get("personal_info")
+        personal.name = data.get("ifname")
+        personal.last_name = data.get("ilname")
+        if("profesion" in data):
+            personal.profesion = data.get("iprofesion")
+        personal.location = data.get("ilocation")
+        personal.about_me = data.get("imyself")
+        personal.save()
+        profile2.personal = personal
 
         if(data.get("experience") != None):
-            profile.work_experience = data.get("experience")
+            profile2.work_experience = data.get("experience")
         
-        education = Education()
-        undergrad = UserUndergraduate()
-        bachelor = UserBachelor()
-        master = UserMaster()
-        doctorate = UserDoctorate()
-        other_edu = UserDiplomaOrCertificate()
-        edu = data.get("education")
-        education.academic_degree = edu.get("academic_degree")
-        education.undergrad = edu.get("undergrad")
-        education.bachelor = edu.get("bachelor")
-        education.master = edu.get("master")
-        education.phd = edu.get("phd")
-        education.other_edu = edu.get("other_edu")
+        if(data.get("academy") != None):
+            education = Education()
+            bachelor = UserBachelor()
+            master = UserMaster()
+            doctorate = UserDoctorate()
+            other_edu = UserDiplomaOrCertificate()
+            edu = data.get("academy")
+            education.academic_degree = Degree.objects.get(degree="Bachelor's degree")
+            education.save()
+            # if(edu.get("academic_grade") not list):
+            #     for d in deg:
+            #         if(d[1] == edu.get("academic_grade")):
+            #             education.academic_degree = d[1]
+            
+            # else:
+            #     for d in edu.get("academic_grade"):
+            #         deg = d 
+            #         education.academic_degree = deg
+        
+        if("undergraduate" in edu):
+            undergrad = UserUndergraduate()
+            underg = edu.get("undergraduate")
+            course = Course.objects.get(course="Entrepreneurship")
+            # underg["academic_course"]
+            undergrad.student_type = underg["student_type"]
+            undergrad.institution = underg["institution"]
+            undergrad.from_date = datetime.datetime.strptime(underg["from_year"], "%Y").date()
+            undergrad.to_date = datetime.datetime.strptime(underg["to_year"], "%Y").date()
+            undergrad.course = course
+            print("que I")
+            undergrad.save()
+            print("que II")
+            education.undergrad = undergrad
+            print("que III")
+        if("bachelor" in edu):
+            bach = UserBachelor()
+            for b in edu.get("bachelor"):
+                bach.degree = b["degree"]
+                bach.institution = b["institution"]
+                bach.from_date = datetime.datetime.strptime(b["from_year"], "%Y").date()
+                bach.to_date = datetime.datetime.strptime(b["to_year"], "%Y").date()
+                bach.save()
+                education.bachelor.add(bach)
+        if("master" in edu):
+            master = UserMaster()
+            for m in edu.get("master"):
+                master.degree = m["degree"]
+                master.institution = m["institution"]
+                master.from_date = datetime.datetime.strptime(m["from_year"], "%Y").date()
+                master.to_date = datetime.datetime.strptime(m["to_year"], "%Y").date()
+                master.save()
+                education.master = master
+        if("phd" in edu):
+            phd = UserDoctorate()
+            for doc in edu.get("phd"):
+                phd.degree = doc["degree"]
+                phd.institution = doc["institution"]
+                phd.from_date = datetime.datetime.strptime(doc["from_year"], "%Y").date()
+                phd.to_date = datetime.datetime.strptime(doc["to_year"], "%Y").date()
+                phd.save()
+                education.phd = phd
+        if("other_edu" in edu):
+            otherE = UserDiplomaOrCertificate()
+            for oe in edu.get("other_edu"):
+                other_edu.degree = oe["degree"]
+                otherE.institution = oe["institution"]
+                otherE.from_date = datetime.datetime.strptime(oe["from_year"], "%Y").date()
+                otherE.to_date = datetime.datetime.strptime(oe["to_year"], "%Y").date()
+                otherE.save()
+                education.other_edu.add(otherE)
+        education.save()
+        profile2.academic = education
 
-        employment = Employment()
-        jobs = JobPosition()
-        job_desc = JobActivityDescription()
-        technos = TechnologyUsed()
-        skills= SkillUsed()
-        employ = data.get("employment")
-        jobs.position = jp.get("position")
-        jobs.enterprise = jp.get("enterprise")
-        jobs.location = jp.get("location")
-        jobs.from_date = jp.get("from_date")
-        jobs.to_date = jp.get("to_date")
-        jobs.job_activities_desc = jp.get("job_activities_desc")
-        jobs.technologies_used = jp.get("technologies_used")
-        jobs.skills_used = jp.get("skills_used")
+        if("employments" in data):
+            employ = data.get("employments")
+            employment = Employment()
+            for jp in employ:
+                jobs = JobPosition()
+                jobs.position = jp.get("job_pos")
+                jobs.enterprise = jp.get("company")
+                jobs.location = jp.get("location")
+                jobs.from_date = datetime.datetime.strptime(jp.get("duration")["from"], "%Y").date()
+                jobs.to_date = datetime.datetime.strptime(jp.get("duration")["to"], "%Y").date()
+                jobs.save()
+                
+                for jpd in jp.get("desc"):
+                    job_desc = JobActivityDescription()
+                    job_desc.job_desc = jpd
+                    job_desc.save()
+                    jobs.job_activities_desc.add(job_desc)
+                for jpt in jp.get("techs"):
+                    technos = TechnologyUsed()
+                    technos.technology = jpt
+                    technos.save()
+                    jobs.technologies_used.add(technos)
+                for jps in jp.get("skills"):
+                    skills = SkillUsed()
+                    skills.skill = jps
+                    skills.save()
+                    jobs.skills_used.add(skills)
+                jobs.save()        
+                employment.save()
+                employment.job_positions.add(jobs)
+                employment.save()
+                profile2.employment = employment
 
         profile2.save()
-        if(data.get("university") != None):
-            profile.university = Universities.objects.get(university=data.get("university"))
-        if(data.get("attendace") != None):
-            profile.attendace = data.get("attendace")
-        if(data.get("degree") != None):
-            profile.degree = Degree.objects.get(degree=data.get("degree"))
-        if(data.get("bachelor") != None):
-            profile.bachelor = Bachelor(bachelor_degree=data.get("bachelor"))
-        if(data.get("master") != None):
-            profile.master = Master.objects.get(master_degree=data.get("master"))
-        if(data.get("doctorate") != None):
-            profile.doctorate = Doctorate.objects.get(pHd_degree=data.get("doctorate"))
-        if(data.get("course") != None):
-            profile.course = Course.objects.get(course=data.get("course"))
-        if(data.get("graduate") != None):
-            profile.graduate = data.get("graduate")
-        if(data.get("undergraduate") != None):
-            profile.undergraduate = data.get("undergraduate")
-        if(data.get("postgraduate") != None):
-            profile.postgraduate = data.get("postgraduate")
         
         files = args[0]
         if files:
@@ -527,7 +601,6 @@ class ProfileInfoSerializer2(serializers.ModelSerializer):
             print("FILES I: ", files['file'])
             for f in files:
                 myfile = files[f]
-                # print("file type: ", myfile.content_type.split('/')[0])
                 if settings.USE_S3:
                     profile2.profile_avatar = myfile
                 else:
@@ -536,23 +609,185 @@ class ProfileInfoSerializer2(serializers.ModelSerializer):
                     valid_extensions = ['.pdf', '.doc', '.docx', '.jpg', '.png', '.xlsx', '.xls']
                     filename = fs.save("profileAvatar/"+myfile.name, myfile)
                     uploaded_file_url = fs.url(filename)
-                    # print("uploaded_file_url", uploaded_file_url)
-                    # print("myfile.name", myfile.name)
-                    # profile.profile_avatar = myfile
                     profile2.profile_avatar = "profileAvatar/"+myfile.name
         profile2.save()
         return profile2
 
+class ProfilePageSerializer(serializers.ListSerializer):
+    info = ProfileInfoSerializer
+
+
+class ProfileInfoListSerializer(serializers.ListSerializer):
+    child = ProfileInfoSerializer()
+    allow_null = True
+    many = True
+
+class UniSerializer(serializers.ModelSerializer):
+    university = StringSerializer(many=False)
+    # UNIVERSITIES = serializers.MultipleChoiceField(choices = Universities.UNIVERSITIES) 
+    class Meta:
+        model = Universities
+        fields = ("university", "thumbnail")
+        # read_only_fields = ("bac",)
+
+class degreeSerializer(serializers.Serializer):
+    # degree = serializers.MultipleChoiceField(choices=Degree.DEGREES)
+    # degree = serializers.SerializerMethodField()
+    # bachelor = serializers.SerializerMethodField()
+    # degree = serializers.MultipleChoiceField(choices=Degree.DEGREES)
+    # print("123456, ", degree)
+    # def get_degree(self, obj):
+    #     obj = Degree.DEGREES
+    #     return obj
+    
+    # def get_bachelor(self, obj):
+    #     obj = Degree.DEGREES
+    #     return obj
+
+    class Meta:
+        model = Degree
+        fields = ("__all__")
+
+class bachelor_degreeSerializer(serializers.ModelSerializer):
+    # type = serializers.ChoiceField(choices=Bachelor.BACHELOR_DEGREES)
+
+    class Meta:
+        model = Bachelor
+        fields = ("__all__")
+
+class master_degreeSerializer(serializers.ModelSerializer):
+    # type = serializers.ChoiceField(choices= Master.MASTER_DEGREES)
+
+    class Meta:
+        model = Master
+        fields = ("__all__")
+
+class pHd_degreeSerializer(serializers.ModelSerializer):
+    # type = serializers.ChoiceField(choices= Doctorate.PHD_DEGREES)
+
+    class Meta:
+        model = Doctorate
+        fields = ("__all__")
+
+class courseSerializer(serializers.ModelSerializer):
+    # type = serializers.ChoiceField(choices= Course.COURSES)
+
+    class Meta:
+        model = Course
+        fields = ("__all__")
+
+class UserUndergraduateSerializer(serializers.ModelSerializer):
+    course = courseSerializer()
+    from_date = StringSerializer()
+    to_date = StringSerializer()
+    student_type = StringSerializer()
+    # institution = UniSerializer()
+
+    class Meta:
+        model = UserUndergraduate
+        fields = ("__all__")
+
+class UserBachelorSerializer(serializers.ModelSerializer):
+    degree = bachelor_degreeSerializer()
+    from_date = StringSerializer()
+    to_date = StringSerializer()
+    # institution = StringSerializer()
+
+    class Meta:
+        model = UserBachelor
+        fields = ("__all__")
+
+class UserMasterSerializer(serializers.ModelSerializer):
+    degree = master_degreeSerializer()
+    from_date = StringSerializer()
+    to_date = StringSerializer()
+    # institution = StringSerializer()
+    class Meta:
+        model = UserMaster
+        fields = ("__all__")
+
+class UserDoctorateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = UserDoctorate
+        fields = ("__all__")
+
+class UserDiplomaOrCertificateSerializer(serializers.ModelSerializer):
+    diploma = pHd_degreeSerializer()
+    certificate = StringSerializer()
+    from_date = StringSerializer()
+    to_date = StringSerializer()
+    # institution = StringSerializer()
+    class Meta:
+        model = UserDiplomaOrCertificate
+        fields = ("__all__")
+
+class PersonalInfoSerializer(serializers.ModelSerializer):
+    name = StringSerializer()
+    last_name = StringSerializer()
+    profesion = StringSerializer()
+    about_me = StringSerializer()
+    class Meta:
+        model = PersonalInfo
+        fields = ("__all__")
+
+class EducationSerializer(serializers.ModelSerializer):
+    academic_degree = StringSerializer()
+    undergrad = UserUndergraduateSerializer()
+    bachelor = StringSerializer()
+    master = StringSerializer()
+    phd = StringSerializer()
+    other_edu = StringSerializer()
+    class Meta:
+        model = Education
+        fields = ("__all__")
+
+class JobActivityDescriptionSerializer(serializers.ModelSerializer):
+    job_desc = StringSerializer()
+    class Meta:
+        model = JobActivityDescription
+        fields = ("__all__")
+
+class TechnologyUsedSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = TechnologyUsed
+        fields = ("__all__")
+
+class SkillUsedSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = SkillUsed
+        fields = ("__all__")
+
+class JobPositionSerializer(serializers.ModelSerializer):
+    job_activities_desc = JobActivityDescriptionSerializer(many=True)
+    technologies_used = TechnologyUsedSerializer(many=True)
+    skills_used = SkillUsedSerializer(many=True)
+    class Meta:
+        model = JobPosition
+        fields = ("__all__")
+
+class EmploymentSerializer(serializers.ModelSerializer):
+    job_positions = JobPositionSerializer(many=True)
+    class Meta:
+        model = Employment
+        fields = ("__all__")
+
 class ProfileResumeSerializer(serializers.ModelSerializer):
-    personal = serializers.SerializerMethodField()
     academic = serializers.SerializerMethodField()
+    personal = serializers.SerializerMethodField()
     employment = serializers.SerializerMethodField()
-    profile_avatar = serializers.SerializerMethodField()
+    # profile_avatar = serializers.SerializerMethodField()
 
     class Meta:
         model = Profile2
         fields = ("__all__")
     
+    
+    def get_academic(self, obj):
+        return EducationSerializer(obj.academic, many=False).data
+    def get_personal(self, obj):
+        return PersonalInfoSerializer(obj.personal, many=False).data
+    def get_employment(self, obj):
+        return EmploymentSerializer(obj.employment, many=False).data
     def get_profile_avatar(self, obj):
         request = self.context.get('request')
         profile = ProfileSerializer(obj.profile, many=False, context={'request': request}).data["profile_avatar"]
@@ -622,68 +857,6 @@ class ProfileResumeSerializer(serializers.ModelSerializer):
         profile2.save()
         return profile2
 
-class ProfilePageSerializer(serializers.ListSerializer):
-    info = ProfileInfoSerializer
-
-
-class ProfileInfoListSerializer(serializers.ListSerializer):
-    child = ProfileInfoSerializer()
-    allow_null = True
-    many = True
-
-class UniSerializer(serializers.ModelSerializer):
-    university = StringSerializer(many=False)
-    # UNIVERSITIES = serializers.MultipleChoiceField(choices = Universities.UNIVERSITIES) 
-    class Meta:
-        model = Universities
-        fields = ("university", )
-        # read_only_fields = ("bac",)
-
-class degreeSerializer(serializers.Serializer):
-    # degree = serializers.MultipleChoiceField(choices=Degree.DEGREES)
-    degree = serializers.SerializerMethodField()
-    bachelor = serializers.SerializerMethodField()
-    # degree = serializers.MultipleChoiceField(choices=Degree.DEGREES)
-    # print("123456, ", degree)
-    def get_degree(self, obj):
-        obj = Degree.DEGREES
-        return obj
-    
-    def get_bachelor(self, obj):
-        obj = Degree.DEGREES
-        return obj
-
-    class Meta:
-        model = Degree
-        fields = ("__all__")
-
-class bachelor_degreeSerializer(serializers.ModelSerializer):
-    type = serializers.ChoiceField(choices=Bachelor.BACHELOR_DEGREES)
-
-    class Meta:
-        model = Bachelor
-        fields = ("__all__")
-
-class master_degreeSerializer(serializers.ModelSerializer):
-    type = serializers.ChoiceField(choices= Master.MASTER_DEGREES)
-
-    class Meta:
-        model = Master
-        fields = ("__all__")
-
-class pHd_degreeSerializer(serializers.ModelSerializer):
-    type = serializers.ChoiceField(choices= Doctorate.PHD_DEGREES)
-
-    class Meta:
-        model = Doctorate
-        fields = ("__all__")
-
-class courseSerializer(serializers.ModelSerializer):
-    type = serializers.ChoiceField(choices= Course.COURSES)
-
-    class Meta:
-        model = Course
-        fields = ("__all__")
 
 class FetchDataSerializer(serializers.ListSerializer):
     child = serializers.ListField(child=serializers.CharField())

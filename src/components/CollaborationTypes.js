@@ -20,6 +20,10 @@ import {
       type: 'Research',
       desc: 'Collaborate in important research fields with professionals, industry experts or faculty members'
     },
+    {
+      type: 'Seed Grand',
+      desc: 'Explore new projects possibilities, delimiter your area of interest'
+    },
     // {
     //   type: 'Volunteering',
     //   desc: 'Social inclusion throughout volunteer programs'

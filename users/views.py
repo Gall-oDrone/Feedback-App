@@ -42,7 +42,8 @@ from .serializers import (
     UniSerializer,
     send_verification_email,
     UserFollowingSerializer,
-    ProfileResumeSerializer
+    ProfileResumeSerializer,
+    ProfileInfoSerializer2
 )
 
 from django.views import View
@@ -310,13 +311,37 @@ class UserProfileInfoView(RetrieveUpdateDestroyAPIView):
             return Response(status=HTTP_201_CREATED)
         return Response(status=HTTP_400_BAD_REQUEST)
 
+class UserResumeCreateView(CreateAPIView):
+    queryset = Profile2.objects.all()
+    serializer_class = ProfileInfoSerializer2
+
+    def create(self, *args, **kwargs):
+        try:
+            username = self.kwargs.get('username')
+            user = User.objects.get(username=username)
+            request_data = json.loads((self.request.data["data"]))
+            request_files = (self.request.FILES)
+            print("request_data ", request_data)
+            print("request_files ", request_files)
+            serializer = ProfileInfoSerializer2(data=request_data)
+            serializer.is_valid()
+            print("On create method UserResumeCreateView")
+            create_resume = serializer.create(request_data, request_files)
+            if create_resume:
+                return Response(status=HTTP_201_CREATED)
+            return Response(status=HTTP_400_BAD_REQUEST)
+
+            # userInfo = Profile2.objects.get(profile_username=user.id)
+            # ProfileResumeSerializer(userInfo)
+            # return userInfo
+        except ObjectDoesNotExist:
+            raise Http404("You do not have an active order")
+            return Response({"message": "You do not have an active order"}, status=HTTP_400_BAD_REQUEST)
+
 class UserResumeInfoView(RetrieveUpdateDestroyAPIView):
     queryset = Profile2.objects.all()
     serializer_class = ProfileResumeSerializer
     permission_classes = (permissions.IsAuthenticated,)
-    if(len(Degree.objects.all()) == 0):
-        for d in Degree.DEGREES:
-            degree = Degree.objects.create(degree=d[0])
     if(len(Degree.objects.all()) == 0):
         for d in Degree.DEGREES:
             degree = Degree.objects.create(degree=d[0])
@@ -327,7 +352,7 @@ class UserResumeInfoView(RetrieveUpdateDestroyAPIView):
             username = self.kwargs.get('username')
             user = User.objects.get(username=username)
             # articleId = Article.objects.get(title=article).id
-            userInfo = Profile2.objects.get(profile_username=user.id)
+            userInfo = Profile2.objects.get(user=user.id)
             ProfileResumeSerializer(userInfo)
             return userInfo
         except ObjectDoesNotExist:
