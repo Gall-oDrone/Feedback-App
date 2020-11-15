@@ -42,6 +42,7 @@ export const addBoard = (title, token) => {
 };
 
 const getBoardListSuccess = (boards) => {
+  console.log("RERAMIRE: ", boards)
   return {
     type: CONSTANTS.FETCH_BOARDS,
     payload: { boards }
