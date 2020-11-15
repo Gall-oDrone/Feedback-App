@@ -21,8 +21,8 @@ import {
       desc: 'Collaborate in important research fields with professionals, industry experts or faculty members'
     },
     {
-      type: 'Seed Grand',
-      desc: 'Explore new projects possibilities, delimiter your area of interest'
+      type: 'Seed Grants',
+      desc: 'Strategic seed funding schemes to foster collaborative research partnerships and deepen relationships with priority countries'
     },
     // {
     //   type: 'Volunteering',

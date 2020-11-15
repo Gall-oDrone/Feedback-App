@@ -301,7 +301,7 @@ class ArticleDetail extends React.Component {
                         </div>
                         <div className="resume_top-right" data-role="right_panel">
                           <div className="resume_top-info">
-        <div className="resume_top-info_name" data-slug="adrien-castelain" data-target-role="Designer">{resumeInfo?resumeInfo.personal.name:null} {resumeInfo?resumeInfo.personal.last_name:null}</div>
+                  <div className="resume_top-info_name" data-slug="adrien-castelain" data-target-role="Designer">{resumeInfo?resumeInfo.personal.name:null} {resumeInfo?resumeInfo.personal.last_name:null}</div>
                             <div className="resume_top-info_short_description" data-talent_title="Designer">
                               <h1 className="resume_top-info_location">Designer in Wellington, New Zealand</h1>
                               <div className="resume_top-info_since">Member since January 10, 2019</div>
