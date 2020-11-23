@@ -4,6 +4,7 @@ from django.urls import path, re_path
 from workshopsApi.views import (
     WorkshopListView, 
     WorkshopDetailView, 
+    WorkshopContentView,
     WorkshopCreateView,
     WorkshopDeleteView,
     WorkshopUpdateView,
@@ -34,6 +35,7 @@ urlpatterns = [
     path('list/', WorkshopListView.as_view()),
     path('create/', WorkshopCreateView.as_view()),
     path('detail/<pk>', WorkshopDetailView.as_view()),
+    path('content/<pk>/<username>/', WorkshopContentView.as_view()),
     path('<pk>/update/', WorkshopUpdateView.as_view()),
     path('<pk>/delete/', WorkshopDeleteView.as_view()),
     path('detail/<pk>/register/', WorkshopCreateRegisterView.as_view()),

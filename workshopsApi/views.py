@@ -13,9 +13,9 @@ from rest_framework.status import(
     HTTP_400_BAD_REQUEST
 )
 from rest_framework import permissions, generics
-from .models import Workshop, Category, WorkshopView, Like, Rating, Comment, Participants
+from .models import Workshop, Category, WorkshopView, Like, Rating, Comment, Participants, Lesson
 from users.models import User
-from .serializers import WorkshopSerializer, WorkshopFeatureSerializer, WorkshopDetailSerializer, WorkshopInscribedDetailSerializer, WorkshopCreateRegistrationView, CommentSerializer, LikeSerializer, LikeListSerializer, RatingSerializer, CommentListSerializer, ProfileWorkshopListSerializer, Cat_FT_Serializer
+from .serializers import WorkshopSerializer, WorkshopFeatureSerializer, WorkshopContentSerializer, WorkshopDetailSerializer, WorkshopInscribedDetailSerializer, WorkshopCreateRegistrationView, CommentSerializer, LikeSerializer, LikeListSerializer, RatingSerializer, CommentListSerializer, ProfileWorkshopListSerializer, Cat_FT_Serializer
 from analytics.models import View
 from django.http import Http404
 from rest_framework import viewsets
@@ -138,6 +138,42 @@ class WorkshopDetailView(RetrieveAPIView):
         #         return WorkshopInscribedDetailSerializer
         #     return WorkshopDetailSerializer
         # return WorkshopDetailSerializer
+
+class WorkshopContentView(generics.ListAPIView):
+    # queryset = Workshop.objects.all()
+    serializer_class = WorkshopContentSerializer
+    permission_classes = (permissions.AllowAny,)
+
+    # def get_serializer_class(self, *args, **kwargs):
+    #     user = self.request.user
+    #     wsh = Workshop.objects.get(id="1")
+    #     wsh_inscribed = Participants.objects.get(workshop=wsh)
+    #     # wsh_inscribed = Workshop.objects.get(id=request.data["workshop"])
+    #     print("user", user, "culo", wsh_inscribed)
+    #     print("culo 2", wsh_inscribed.inscribed)
+    #     print("culo 3", wsh_inscribed.inscribed.all().values())
+    #     for u in wsh_inscribed.inscribed.all().values():
+    #         print("culo 4", u)
+    #         if(user.username == u["username"]):
+    #             print("INSCRIBED")
+    #             return WorkshopInscribedDetailSerializer
+    #     print("NOT INSCRIBED")
+    #     return WorkshopDetailSerializer
+
+    def get_queryset(self, *args, **kwargs):
+        print("CORSO AT diarrea")
+        try:
+            user = self.request.user
+            workshop = self.kwargs.get("pk")
+            wsh = Workshop.objects.get(id="1")
+            wsh_inscribed = Participants.objects.get(workshop=wsh)
+            for u in wsh_inscribed.inscribed.all().values():
+                if(user.username == u["username"]):
+                    print("INSCRIBED")
+                    return Lesson.objects.filter(workshop="1")
+        except ObjectDoesNotExist:
+            raise Http404("You do not have an active order")
+            return Response({"message": "You do not have an active order"}, status=HTTP_400_BAD_REQUEST)
 
 
 class WorkshopCreateView(CreateAPIView):

@@ -551,18 +551,40 @@ class LessonSerializer(serializers.ModelSerializer):
         model = Lesson
         fields = ('id', 'lesson_title', 'lesson_topic')
 
+class LessonTopicVideoSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = LessonTopicVideo
+        fields = ('id', "videofile")
+
 class LessonTopicSerializer(serializers.ModelSerializer):
     topic_title = StringSerializer(many=False)
+    topic_video = LessonTopicVideoSerializer()
+
+    # def get_topic_video(self, obj):
+    #     request = self.context.get('request')
+    #     video_url = LessonTopicVideo(LessonTopic.objects.filter(lesson=obj.id), many=True, context={'request': request}).data.get("topic_video")
+    #     return video_url
 
     class Meta:
         model = LessonTopic
-        fields = ('id', 'topic_title')
+        fields = ('id', 'topic_title', "topic_description", "topic_video")
 
 class ProfileWorkshopListSerializer(serializers.ListSerializer):
     child = WorkshopSerializer()
     allow_null = True
     many = True
 
+class WorkshopContentSerializer(serializers.ModelSerializer):
+    lesson_topic = serializers.SerializerMethodField()
+
+    def get_lesson_topic(self, obj):
+        request = self.context.get('request')
+        topic = LessonTopicSerializer(LessonTopic.objects.filter(lesson=obj.id), many=True, context={'request': request}).data
+        return topic
+    class Meta:
+        model = Lesson
+        fields = ('__all__')
+        
 class LikeSerializer(serializers.ModelSerializer):
     user = StringSerializer(many=False)
     # user_name = serializers.CharField(source='user.username', read_only=True)

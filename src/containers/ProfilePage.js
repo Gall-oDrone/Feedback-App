@@ -303,7 +303,7 @@ class ArticleDetail extends React.Component {
                           <div className="resume_top-info">
                   <div className="resume_top-info_name" data-slug="adrien-castelain" data-target-role="Designer">{resumeInfo?resumeInfo.personal.name:null} {resumeInfo?resumeInfo.personal.last_name:null}</div>
                             <div className="resume_top-info_short_description" data-talent_title="Designer">
-                              <h1 className="resume_top-info_location">Designer in Wellington, New Zealand</h1>
+                              <h1 className="resume_top-info_location">{resumeInfo?resumeInfo.personal.profesion:null} in Wellington, New Zealand</h1>
                               <div className="resume_top-info_since">Member since January 10, 2019</div>
                             </div>
                             <div className="resume_top-info_bio" data-role="description">{resumeInfo?resumeInfo.personal.about_me:null}</div>
@@ -328,7 +328,7 @@ class ArticleDetail extends React.Component {
                     <div class="grid-row-inner">
                       <div class="resume_section for-hire_block mobile_app-hide">
                         <div class="resume_hire_block">
-                          <div class="resume_hire_block-text">Adrien is now <span class="resume_hire_block-availability is-green">available</span> for hire</div>
+                          <div class="resume_hire_block-text">{resumeInfo?resumeInfo.personal.name:null} is now <span class="resume_hire_block-availability is-green">available</span> for hire</div>
                           <div class="resume_hire_block-actions">
                             <a class="button is-green_candy is-default resume_top-hire_button" data-role="action_button" data-short-text="Hire" href="https://www.toptal.com/hire?interested_in=designers&amp;talent_full_name=Adrien+Castelain&amp;talent_slug=adrien-castelain">Hire Adrien</a>
                             <span style={{padding:"0 10px"}}/>
@@ -608,17 +608,23 @@ class ArticleDetail extends React.Component {
                         <div className="resume_section-inner">
                           <h2 className="resume_section-title has-default_offset">Employment</h2>
                           <div className="resume_section-content">
-                            <ul>
+                          {resumeInfo?resumeInfo.employment.job_positions.map((el, index) =>
+                            {return(<ul>
                               <li className="resume_section-content_item" data-gql-id="VjEtRW1wbG95bWVudC0xNjIxNTQ" data-role="item" id="employment-162154">
                                 <div className="resume_section-content_row">
-                                  <h3 className="resume_section-content_title has-range">Consultant Digital Designer of UX/UI, Interaction, and Strategy</h3>
-                                  <div className="resume_section-content_range">2016 - PRESENT</div>
-                                  <div className="resume_section-content_subtitle">Bold&amp;Bald (New Zealand)</div>
+                                  <h3 className="resume_section-content_title has-range">{el.position}</h3>
+                                  <div className="resume_section-content_range">{el.from_date} - {el.to_date}</div>
+                                  <div className="resume_section-content_subtitle">{el.enterprise} {el.location}</div>
                                 </div>
                                 <div className="muted">
                                   <ul>
-                                    <li>Led UX and UI for an investment banking web app, delivering clean and uncluttered look and feel based on research, creating, testing and enhancing main user-flows (onboarding, investing, withdrawing, customer feedback, and so on), building the design system, working across different teams and in an agile environment, collaborating efficiently with multiple stakeholders.
-                                    </li>
+                                    {el.job_activities_desc.map((e, i) => {
+                                      return(
+                                        <li>{e.job_desc}
+                                        </li>
+                                      )
+                                      })
+                                    }
                                     <li>Developed creative concepts, UX and UI for innovative AI-powered experience startups, working closely with the production teams and the different stakeholders, using a design-thinking and user-centered approach to develop and improve user-flows and interactions.
                                     </li>
                                     <li>Directed user research, UX/UI and branding for an innovative crowdsourcing map application, running interviews, developing creative concepts, wireframing, prototyping, and testing, scaling the design system, iterating, and rebranding the overarching guidelines.
@@ -628,7 +634,9 @@ class ArticleDetail extends React.Component {
                                     <li>Designed the UX and UI for Air New Zealand's promotional app.
                                     </li>
                                   </ul>
-                                  <div className="js-technologies">Technologies: Adobe Experience Design (XD), Webflow, MacOS, InVision, Adobe Photoshop, Zeplin, Sketch
+                                  <div className="js-technologies">Technologies: {el.technologies_used.map((e) => {return (e.technology)})}
+                                  </div>
+                                  <div className="js-technologies">Skills: {el.skills_used.map((e) => {return (e.skill)})}
                                   </div>
                                 </div>
                               </li>
@@ -693,6 +701,9 @@ class ArticleDetail extends React.Component {
                                 </div>
                               </li>
                             </ul>
+                          )}
+                          )
+                          :null}
                           </div>
                         </div>
                         <div className="resume_section-actions" data-role="load_more_link_wrapper">

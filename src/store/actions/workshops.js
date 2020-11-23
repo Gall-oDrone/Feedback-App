@@ -1,6 +1,6 @@
 import axios from "axios";
 import * as actionTypes from "./actionTypes";
-
+import {workshopContentURL} from "../../constants";
 const getWorkshopListStart = () => {
   console.log("1) Actions getWorkshopListStart")
   return {
@@ -114,6 +114,44 @@ export const createWorkshop = (token, workshop) => {
         })
         .catch(err => {
             dispatch(createWorkshopFail());
+        })
+    }
+}
+
+const getWorkshopContentStart = () => {
+  return {
+    type: actionTypes.GET_PROFILE_WORKSHOP_CONTENT_START
+  };
+};
+
+const getWorkshopContentSuccess = workshop => {
+  return {
+    type: actionTypes.GET_PROFILE_WORKSHOP_CONTENT_SUCCESS,
+    workshop
+  };
+};
+
+const getWorkshopContentFail = error => {
+  return {
+    type: actionTypes.GET_PROFILE_WORKSHOP_CONTENT_FAIL,
+    error: error
+  };
+};
+
+export const getWorkshopContent = (token, workshopID, userID) => {
+    return dispatch => {
+        dispatch(getWorkshopContentStart());
+        axios.defaults.headers = {
+            "Content-Type": "application/json",
+            Authorization: `Token ${token}`
+        }
+        axios.get(workshopContentURL(workshopID, userID))
+        .then(res => {
+            const workshop = res.data;
+            dispatch(getWorkshopContentSuccess(workshop));
+        })
+        .catch(err => {
+            dispatch(getWorkshopContentFail());
         })
     }
 }

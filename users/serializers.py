@@ -616,7 +616,6 @@ class ProfileInfoSerializer2(serializers.ModelSerializer):
 class ProfilePageSerializer(serializers.ListSerializer):
     info = ProfileInfoSerializer
 
-
 class ProfileInfoListSerializer(serializers.ListSerializer):
     child = ProfileInfoSerializer()
     allow_null = True
@@ -688,6 +687,7 @@ class UserUndergraduateSerializer(serializers.ModelSerializer):
         fields = ("__all__")
 
 class UserBachelorSerializer(serializers.ModelSerializer):
+    ##TOFIX
     degree = bachelor_degreeSerializer()
     from_date = StringSerializer()
     to_date = StringSerializer()

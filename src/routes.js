@@ -99,6 +99,7 @@ import SessionRoomMenu from "./containers/SessionRoomMenu2";
 
 import WorkshopList from "./containers/WorkshopList";
 import WorkshopCreate from "./containers/WorkshopCreate";
+import WorkshopContent from "./containers/WorkshopContent";
 // import WorkshopFeedback from "./containers/WorkshopFeedback";
 // import WorkshopRating from "./containers/WorkshopRating";
 // import WorkshopUpdate from "./containers/WorkshopUpdate";
@@ -222,6 +223,7 @@ const BaseRouter = () => (
 
     <Route exact path="/create-workshop/" component={WorkshopCreate} />
     <Route exact path="/workshops/" component={WorkshopList} />
+    <Route exact path="/workshop-content/" component={WorkshopContent} />
     {/* <Route exact path="/workshops/update/" component={WorkshopUpdate} /> */}
     {/* <Route exact path="/workshops/:workshopID/feedback/" component={WorkshopFeedback} /> */}
     {/* <Route exact path="/workshops/:workshopID/rating/" component={WorkshopRating} /> */}

@@ -77,6 +77,28 @@ const createWorkshopFail = (state, action) => {
   });
 };
 
+const getWorkshopContentStart = (state, action) => {
+  return updateObject(state, {
+    error: null,
+    loading: true
+  });
+};
+
+const getWorkshopContentSuccess = (state, action) => {
+  return updateObject(state, {
+    currentWorkshop: action.workshop,
+    error: null,
+    loading: false
+  });
+};
+
+const getWorkshopContentFail = (state, action) => {
+  return updateObject(state, {
+    error: action.error,
+    loading: false
+  });
+};
+
 const reducer = (state = initialState, action) => {
   switch (action.type) {
     case actionTypes.GET_ARTICLE_LIST_START:
@@ -97,6 +119,12 @@ const reducer = (state = initialState, action) => {
       return createWorkshopSuccess(state, action);
     case actionTypes.CREATE_ARTICLE_FAIL:
       return createWorkshopFail(state, action);
+    case actionTypes.GET_WORKSHOP_CONTENT_START:
+      return getWorkshopContentStart(state, action);
+    case actionTypes.GET_WORKSHOP_CONTENT_SUCCESS:
+      return getWorkshopContentSuccess(state, action);
+    case actionTypes.GET_WORKSHOP_CONTENT_FAIL:
+      return getWorkshopContentFail(state, action);
     default:
       return state;
   }

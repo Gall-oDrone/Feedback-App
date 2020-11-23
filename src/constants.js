@@ -202,6 +202,7 @@ export const sessionUpdateURL = (sessionID) => `${endpoint}/sessions/session/${s
 export const workshopListURL = `${endpoint}/workshops/list/`
 export const workshopCreateURL = `${endpoint}/workshops/create/`
 export const workshopDetailURL = (workshopID) => `${endpoint}/workshops/detail/${workshopID}`
+export const workshopContentURL = (workshopID, userID) => `${endpoint}/workshops/content/${workshopID}/${userID}`
 export const workshopRegisterURL = (workshopID) => `${endpoint}/workshops/detail/${workshopID}/register/`
 export const workshopProfileDetailURL = (workshopID, userID) => `${endpoint}/workshops/detail/${workshopID}/${userID}`
 export const workshopUpdateURL = (workshopID) => `${endpoint}/workshops/workshop/${workshopID}/update/`
@@ -227,7 +228,7 @@ export const collaborationBookedURL = username => `${endpoint}/collaboration/req
 export const collaborationListDetailURL =  (articleID, userID) => `${endpoint}/collaboration/request/listdetail/${articleID}/${userID}`
 
 export const boardCreateURL = `${endpoint}/boards/create/`
-export const boardListURL = username => `${endpoint}/boards/list/${username}`
+export const boardListURL = username => `${endpoint}/boards/list/${username}/`
 export const boardDetailURL = roomName => `${endpoint}/boards/detail/${roomName}`
 export const boardUpdateURL = roomName => `${endpoint}/boards/update/${roomName}`
 
