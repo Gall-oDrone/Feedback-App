@@ -29,6 +29,13 @@ class User(AbstractUser):
             'Unselect this instead of deleting accounts.'
         ),
     )
+    # user_full_data = models.BooleanField(
+    #     default=False,
+    #     help_text=_(
+    #         'Designates whether this user has input all of his personal data. '
+    #         'Unselect this instead of deleting accounts.'
+    #     ),
+    # )
     # USERNAME_FIELD = 'email'
 
     def __str__(self):
@@ -40,40 +47,43 @@ class User(AbstractUser):
     def get_short_name(self):
         return self.email
 
+    # TOFIX When user signed_up from register form don't need to redirect here
     @receiver(user_signed_up)
-    def populate_profile(sociallogin, user, **kwargs):
-        print("populate_profile METHOD", kwargs, user.username)
-        profile = Profile()
-        profile_info = ProfileInfo()
+    def populate_profile(sender, **kwargs):
+    # def populate_profile(request, sociallogin, user, **kwargs):
+        print("populate_profile METHOD", kwargs)
+        if "sociallogin" in kwargs.keys():
+            profile = Profile()
+            profile_info = ProfileInfo()
 
-        if sociallogin.account.provider == 'facebook':
-            user_data = user.socialaccount_set.filter(provider='facebook')[0].extra_data
-            picture_url = "http://graph.facebook.com/" + sociallogin.account.uid + "/picture?type=large"
-            email = user_data['email']
-            full_name = user_data['name']
+            if sociallogin.account.provider == 'facebook':
+                user_data = user.socialaccount_set.filter(provider='facebook')[0].extra_data
+                picture_url = "http://graph.facebook.com/" + sociallogin.account.uid + "/picture?type=large"
+                email = user_data['email']
+                full_name = user_data['name']
 
-        if sociallogin.account.provider == 'google':
-            user_data = user.socialaccount_set.filter(provider='google')[0].extra_data
-            picture_url = user_data['picture']
-            email = user_data['email']
-            full_name = user_data['name']
-        
-        print("user_data: ", user_data)
-        user = User.objects.get(email=user_data['email'])
-        try:
-            profile.user_id = user.id
-            print("CODSO: ", user.profile.notification_counter, ", ", user.profileinfo_set)
-            user.profile.profile_avatar = picture_url
-            # profile.save()
+            if sociallogin.account.provider == 'google':
+                user_data = user.socialaccount_set.filter(provider='google')[0].extra_data
+                picture_url = user_data['picture']
+                email = user_data['email']
+                full_name = user_data['name']
+            
+            print("user_data: ", user_data)
+            user = User.objects.get(email=user_data['email'])
+            try:
+                profile.user_id = user.id
+                print("CODSO: ", user.profile.notification_counter, ", ", user.profileinfo_set)
+                user.profile.profile_avatar = picture_url
+                # profile.save()
 
-            # profile_info = ProfileInfo.objects.get_or_create(profile_username=user)
-            # profile_info.profile = user.profile
-            # profile_info.profile_username = user
-            # profile_info.name = user_data['name']
-            user.save()
-        except Exception as e:
-            print("Exception: ", e)
-            user.delete()
+                # profile_info = ProfileInfo.objects.get_or_create(profile_username=user)
+                # profile_info.profile = user.profile
+                # profile_info.profile_username = user
+                # profile_info.name = user_data['name']
+                user.save()
+            except Exception as e:
+                print("Exception: ", e)
+                user.delete()
 
 
         # if(user.is_active_user == False):
@@ -156,11 +166,13 @@ class Universities(models.Model):
 #         return obj
 
 class Degree(models.Model):
+    UNDERGRADUATE = "Undergraduate"
     BACHELOR = "Bachelor's degree"
     MASTER = "Master's degree"
     DOCTORATE = "Doctorate"
     OTHER = "Other"
     DEGREES = [
+        (UNDERGRADUATE, ('U')),
         (BACHELOR, ('B')),
         (MASTER, ('M')),
         (DOCTORATE, ('pHd')),
@@ -637,7 +649,7 @@ class PersonalInfo(models.Model):
     about_me = models.TextField(max_length=500, blank=True)
 
 class Education(models.Model):
-    academic_degree = models.ForeignKey(Degree, blank=True, on_delete=models.CASCADE)
+    academic_degree = models.ManyToManyField(Degree, null=True, blank=True)
     undergrad =  models.ForeignKey(UserUndergraduate, null=True, blank=True, on_delete=models.CASCADE)
     bachelor = models.ManyToManyField(UserBachelor, null=True, blank=True)
     master = models.ManyToManyField(UserMaster, null=True, blank=True)

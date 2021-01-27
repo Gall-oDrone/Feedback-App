@@ -7,7 +7,7 @@ import { ReactComponent as AnswerIcon } from '../icons/answers.svg';
 import { ReactComponent as SurveyIcon } from '../icons/surveys.svg';
 import { ReactComponent as WorkShopIcon } from '../icons/workshops.svg';
 import { ReactComponent as BrandIcon } from '../icons/brand.svg';
-
+import VideoPlayer from "./ProductPageVideoPlayer";
 // https://py3-test-app-bucket.s3.amazonaws.com/media/assets/universities/Oxford-Logo.png
 // https://py3-test-app-bucket.s3.amazonaws.com/media/assets/universities/University-Cambridge-Logo.png
 import a from "../assets2/u-munich-logo.png"
@@ -26,6 +26,20 @@ import l from "../assets2/University-LSE-Logo.png";
 import m from "../assets2/university-tec-logo.png";
 
 class ProductPage extends React.PureComponent {
+  
+  constructor(props) {
+    super(props);
+    this.state = { 
+      VideoPlayerModal: false,
+    };
+  }
+  handleVideoBanner = (action) => {
+    if (action === "open"){
+      this.setState({VideoPlayerModal: true})
+    }else {
+      this.setState({VideoPlayerModal: false})
+    }
+  }
   render() {
     return (
       <div id="product-page">
@@ -46,8 +60,24 @@ class ProductPage extends React.PureComponent {
           </div>
             <section className="second-section">
               <div className="second-flex-container">
+                {this.state.VideoPlayerModal === true ? 
+                    <VideoPlayer showVideo={this.handleVideoBanner} />
+                      : null 
+                }
                   <div className="description-container">
                     <h2>What is Mate Crunch?</h2>
+                      <div className="description-video-container">
+                        <button className="WatchVideoButton" onClick={()=> this.handleVideoBanner("open")} data-ae-button="ae home - cards banner - watch the video">
+                          <div className="WatchVideoButton-slideInBg">
+                            <div className="WatchVideoButton-slideInBgContent">
+                              <img className="WatchVideoButton-icon" src="data:image/svg+xml;base64,PHN2ZyBhcmlhLWhpZGRlbj0idHJ1ZSIgZGF0YS1wcmVmaXg9ImZhcyIgZGF0YS1pY29uPSJwbGF5LWNpcmNsZSIgY2xhc3M9InN2Zy1pbmxpbmUtLWZhIGZhLXBsYXktY2lyY2xlIGZhLXctMTYiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgdmlld0JveD0iMCAwIDUxMiA1MTIiPjxwYXRoIGZpbGw9IiNGRkYiIGQ9Ik0yNTYgOEMxMTkgOCA4IDExOSA4IDI1NnMxMTEgMjQ4IDI0OCAyNDggMjQ4LTExMSAyNDgtMjQ4UzM5MyA4IDI1NiA4em0xMTUuNyAyNzJsLTE3NiAxMDFjLTE1LjggOC44LTM1LjctMi41LTM1LjctMjFWMTUyYzAtMTguNCAxOS44LTI5LjggMzUuNy0yMWwxNzYgMTA3YzE2LjQgOS4yIDE2LjQgMzIuOSAwIDQyeiIvPjwvc3ZnPg==" alt=""/>
+                                <span className="WatchVideoButton-text WatchVideoButton-text--white">Watch the Video</span>
+                            </div>
+                          </div>
+                          <img class="WatchVideoButton-icon" src="data:image/svg+xml;base64,PHN2ZyBhcmlhLWhpZGRlbj0idHJ1ZSIgZGF0YS1wcmVmaXg9ImZhcyIgZGF0YS1pY29uPSJwbGF5LWNpcmNsZSIgY2xhc3M9InN2Zy1pbmxpbmUtLWZhIGZhLXBsYXktY2lyY2xlIGZhLXctMTYiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgdmlld0JveD0iMCAwIDUxMiA1MTIiPjxwYXRoIGZpbGw9IiMwMjIwM2MiIGQ9Ik0yNTYgOEMxMTkgOCA4IDExOSA4IDI1NnMxMTEgMjQ4IDI0OCAyNDggMjQ4LTExMSAyNDgtMjQ4UzM5MyA4IDI1NiA4em0xMTUuNyAyNzJsLTE3NiAxMDFjLTE1LjggOC44LTM1LjctMi41LTM1LjctMjFWMTUyYzAtMTguNCAxOS44LTI5LjggMzUuNy0yMWwxNzYgMTA3YzE2LjQgOS4yIDE2LjQgMzIuOSAwIDQyeiIvPjwvc3ZnPg==" alt=""/>
+                            <span class="WatchVideoButton-text WatchVideoButton-text--blue">Watch the Video</span>
+                        </button>
+                      </div>
                       <div className="description-banner-container">
                           <div className="description-banner-articles-container">
                             <svg className="articles-svg"><ArticleIcon id="articlesIcon"/></svg>

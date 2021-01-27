@@ -46,8 +46,10 @@ class RegistrationForm extends React.Component {
         this.props.onAuth(
           values.userName,
           values.email,
+          "None",
           values.password,
           values.confirm,
+          true
         );
         this.props.history.push("/");
       }
@@ -182,9 +184,9 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    onAuth: (username, email, password1, password2) =>
+    onAuth: (username, email, university, password1, password2, is_student) =>
       dispatch(
-        actions.authSignup(username, email, password1, password2)
+        actions.authSignup(username, email, university, password1, password2, is_student)
       )
   };
 };

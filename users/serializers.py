@@ -50,9 +50,19 @@ class StringSerializer(serializers.StringRelatedField):
         return value
 
 class UserSerializer(serializers.ModelSerializer):
+    has_full_data = serializers.SerializerMethodField()
+
+    def get_has_full_data(self, obj):
+        try:
+            profile2 = ProfileInfo.objects.get(profile_username=obj.username)
+            if(profile2 is not None):
+                if(profile2.personal is not None):
+                    return True
+        except:
+            return False
     class Meta:
         model = User
-        fields = ('email', 'university', 'is_active_user', 'username', 'password', 'is_student', 'is_teacher', 'id')
+        fields = ('email', 'university', 'is_active_user', 'username', 'password', 'is_student', 'is_teacher', 'id', "has_full_data")
 
 
 class CustomRegisterSerializer(RegisterSerializer):
@@ -71,18 +81,20 @@ class CustomRegisterSerializer(RegisterSerializer):
             'password1': self.validated_data.get('password1', ''),
             'password2': self.validated_data.get('password2', ''),
             'email': self.validated_data.get('email', ''),
-            'is_student': self.validated_data.get('is_student', ''),
-            'is_teacher': self.validated_data.get('is_teacher', ''),
-            'university': self.validated_data.get('university', '')
+            # 'is_student': self.validated_data.get('is_student', ''),
+            # 'is_teacher': self.validated_data.get('is_teacher', ''),
+            # 'university': self.validated_data.get('university', '')
         }
 
     def save(self, request):
         adapter = get_adapter()
         user = adapter.new_user(request)
         self.cleaned_data = self.get_cleaned_data()
-        user.is_student = self.cleaned_data.get('is_student')
-        user.is_teacher = self.cleaned_data.get('is_teacher')
-        user.university = self.cleaned_data.get('university')
+        user.is_student = True
+        user.is_teacher = False
+        # user.is_student = self.cleaned_data.get('is_student')
+        # user.is_teacher = self.cleaned_data.get('is_teacher')
+        # user.university = self.cleaned_data.get('university')
         print("EHMARIMACHO 1")
         user.save()
         adapter.save_user(request, user, self)
@@ -91,22 +103,23 @@ class CustomRegisterSerializer(RegisterSerializer):
         profile_info.profile_username = User.objects.get(username=user.username)
         # profile_info.name = self.cleaned_data.get('first_name')+" "+self.cleaned_data.get('last_name')
         print("self.cleaned_data.get('university')", self.cleaned_data.get('university'))
-        self.send_verification_email(request, user)
-        self.add_fields(self.cleaned_data.get('university'),0, profile_info)
+        # self.send_verification_email_no_social_login(request, user)
+        # self.add_fields(self.cleaned_data.get('university'),0, profile_info)
+        self.add_fields("other", 0, profile_info)
         # profile_info.university = Universities.objects.get(university=self.cleaned_data.get('university'))
-        profile_info.save()
+        # profile_info.save()
         return user
 
     # Send an email to the user with the token:
-    def send_verification_email(request, user):
-        print("EHMARIMACHO 2: ", request, data)
-        user = User.objects.get(pk=data("id"))
+    def send_verification_email_no_social_login(self, request, data):
+        print("EHMARIMACHO 2: ", request, data, data.id)
+        user = User.objects.get(pk=data.id)
         if request.method == 'POST':
             to_email = user.email
             if User.objects.filter(email__iexact=to_email).count() == 1:
                 mail_subject, from_email, to = 'Activate your account.', 'gallodiego117@gmail.com', "piehavok@hotmail.com"
-                current_site = get_current_site(request)
-                print("CURRENT: ", current_site)
+                current_site = Site.objects.get_current() #get_current_site(request)
+                print("CURRENT: ", current_site, current_site.domain)
                 uid = urlsafe_base64_encode(force_bytes(user.pk))
                 token = account_activation_token.make_token(user)
                 activation_link = "{0}/?uid={1}&token{2}".format(current_site, uid, token)
@@ -493,7 +506,17 @@ class ProfileInfoSerializer2(serializers.ModelSerializer):
             doctorate = UserDoctorate()
             other_edu = UserDiplomaOrCertificate()
             edu = data.get("academy")
-            education.academic_degree = Degree.objects.get(degree="Bachelor's degree")
+            for d in edu:
+                if("undergraduate" in edu):
+                    education.academic_degree.add(Degree.objects.get(degree="Undergraduate"))
+                if("bachelor" in edu):
+                    education.academic_degree.add(Degree.objects.get(degree="Bachelor's degree"))
+                if("master" in edu):
+                    education.academic_degree.add(Degree.objects.get(degree="Master's degree"))
+                if("phd" in edu):
+                    education.academic_degree.add(Degree.objects.get(degree="Doctorate"))
+                if("other_edu" in edu):
+                    education.academic_degree.add(Degree.objects.get(degree="Other"))
             education.save()
             # if(edu.get("academic_grade") not list):
             #     for d in deg:
@@ -1014,7 +1037,7 @@ class testSerializer2(serializers.Serializer):
     #     choices = GEEKS_CHOICES) 
 @receiver(user_signed_up)
 # def send_verification_email(sociallogin, request, data, **kwargs):
-def send_verification_email(sociallogin, user, **kwargs):
+def send_verification_email(user, **kwargs):
     # print("EHMARIMACHO 2: ", request, data)
     print("EHMARIMACHO 2: ", user)
     try:

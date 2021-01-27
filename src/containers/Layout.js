@@ -12,6 +12,7 @@ import { ReactComponent as BellIcon } from '../icons/bell.svg';
 import {getProfileAccountDetail} from "../store/actions/profileAccountInfo"
 import CreateHeaderMenu from "../components/CreateHeaderMenu";
 import OptionsHeaderMenu from "../components/OptionsHeaderMenu";
+// import OptionsHeaderMenuTest from "../components/OptionsHeaderMenuTest";
 import Home from "./Home";
 import logo from "../assets2/mate-crunch-logo-5.png"
 import "../assets/main.css";
@@ -89,6 +90,9 @@ class CustomLayout extends React.Component {
                   <Menu.Item key="3" style= {{float: 'left'}}>
                         <OptionsHeaderMenu/>
                   </Menu.Item>
+                  {/* <Menu.Item key="4" style= {{float: 'left'}}>
+                        <OptionsHeaderMenuTest/>
+                  </Menu.Item> */}
                 <Menu.Item key="11" style= {{float: 'right', paddingLeft: "15px", paddingRight: "15px"}}>
                     <ProfileHeaderMenu auth={this.props.isAuthenticated} logout={this.props.logout} userId={this.props.userId}/>
                 </Menu.Item>

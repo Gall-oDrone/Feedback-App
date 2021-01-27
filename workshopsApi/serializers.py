@@ -552,6 +552,14 @@ class LessonSerializer(serializers.ModelSerializer):
         fields = ('id', 'lesson_title', 'lesson_topic')
 
 class LessonTopicVideoSerializer(serializers.ModelSerializer):
+    # videofile= serializers.SerializerMethodField()
+
+    # def get_videofile(self, obj):
+    #     request = self.context.get('request')
+    #     photo_url = obj.videofile.url
+    #     print("ano enomre", request.build_absolute_uri(photo_url))
+    #     return request.build_absolute_uri(photo_url)
+
     class Meta:
         model = LessonTopicVideo
         fields = ('id', "videofile")
@@ -562,7 +570,7 @@ class LessonTopicSerializer(serializers.ModelSerializer):
 
     # def get_topic_video(self, obj):
     #     request = self.context.get('request')
-    #     video_url = LessonTopicVideo(LessonTopic.objects.filter(lesson=obj.id), many=True, context={'request': request}).data.get("topic_video")
+    #     video_url = LessonTopicVideo(LessonTopic.objects.filter(lesson=obj.id), context={'request': request}).data.get("topic_video")
     #     return video_url
 
     class Meta:
@@ -574,8 +582,14 @@ class ProfileWorkshopListSerializer(serializers.ListSerializer):
     allow_null = True
     many = True
 
+class WorkshopVideoSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = LessonVideo
+        fields = ('__all__')
+
 class WorkshopContentSerializer(serializers.ModelSerializer):
     lesson_topic = serializers.SerializerMethodField()
+    lesson_video = WorkshopVideoSerializer()
 
     def get_lesson_topic(self, obj):
         request = self.context.get('request')

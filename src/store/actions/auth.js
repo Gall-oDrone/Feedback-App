@@ -204,9 +204,11 @@ export const authSignup = (
       is_student,
       is_teacher: !is_student
     };
+    console.log("COLAS: ", user)
     axios
       .post(authSignUpURL, user)
       .then(res => {
+        console.log("CANIJO: ", res.data)
         const user = {
           token: res.data.key,
           username,
