@@ -3,7 +3,7 @@ from .base import *
 import dj_database_url
 
 DEBUG = False
-ALLOWED_HOSTS += ['py3-test-app.herokuapp.com', '*'] 
+ALLOWED_HOSTS += ['py3-test-app.herokuapp.com', '*', 'www.matecrunch.com'] 
 WSGI_APPLICATION = 'home.wsgi.prod.application'
 ASGI_APPLICATION = "home.asgi.routing.application"
 

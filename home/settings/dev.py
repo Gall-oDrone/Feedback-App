@@ -2,7 +2,7 @@
 import dj_database_url
 from .base import *
 
-ALLOWED_HOSTS += ['py3-test-app.herokuapp.com', '127.0.0.1', 'localhost'] 
+ALLOWED_HOSTS += ['py3-test-app.herokuapp.com', '127.0.0.1', 'localhost', 'www.matecrunch.com'] 
 DEBUG = True
 
 WSGI_APPLICATION = 'home.wsgi.dev.application'
