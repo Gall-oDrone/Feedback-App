@@ -12,6 +12,7 @@ import RecoverPassword from "./LPPForgot";
 import "../assets/authentication.css"
 import "../assets/landing.css";
 import { Spin, Icon } from "antd";
+import  Footer from "./FooterPage";
 const antIcon = <Icon type="loading" style={{ fontSize: 24 }} spin />;
 
 class LandingPage extends React.PureComponent {
@@ -27,6 +28,7 @@ class LandingPage extends React.PureComponent {
     };
     this.teamRef = React.createRef()
     this.prodRef = React.createRef()
+    this.purchRef = React.createRef()
   }
 
   handleClickOutside = event => {
@@ -41,6 +43,12 @@ class LandingPage extends React.PureComponent {
     }
     else if (!this.teamRef.current.contains(event.target)){
       document.getElementsByClassName('nb_thrd_mi')[0].style.borderBottom= "";
+    }
+    if (this.purchRef && this.purchRef.current.contains(event.target)) {
+      document.getElementsByClassName('nb_frth_mi')[0].style.borderBottom= "1px solid #fff";
+    }
+    else if (!this.purchRef.current.contains(event.target)){
+      document.getElementsByClassName('nb_frth_mi')[0].style.borderBottom= "";
     }
   };
 
@@ -174,6 +182,11 @@ class LandingPage extends React.PureComponent {
                     <div ref={this.teamRef}  className="nb_thrd_mi">
                       <Link to="/team">
                         Meet the Team
+                      </Link>
+                    </div>
+                    <div ref={this.purchRef}   className="nb_frth_mi _3X-TCckY_45DQl6YEoqiC1">
+                      <Link to="/purchase">
+                      <b>Purchase</b>
                       </Link>
                     </div>
                   </div> 
@@ -342,6 +355,7 @@ class LandingPage extends React.PureComponent {
               </div>
             </section>
          */}
+         <Footer/>
         </div>
       </body>
       );

@@ -450,6 +450,7 @@ class WorkshopDetailSerializer(serializers.ModelSerializer):
     categories = StringSerializer(many=True)
     overview = StringSerializer(many=False)
     author = StringSerializer(many=False)
+    title = StringSerializer(many=False)
     lesson = serializers.SerializerMethodField()
     user_name = serializers.SerializerMethodField()
     user_pic = serializers.SerializerMethodField()
@@ -478,13 +479,14 @@ class WorkshopDetailSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Workshop
-        fields = ('id', 'overview', 'categories', 
+        fields = ('id', 'title', 'overview', 'categories', 
                 'author', "lesson", "user_name", 
                 "user_pic", "is_registered")
 
 class WorkshopInscribedDetailSerializer(serializers.ModelSerializer):
     categories = StringSerializer(many=True)
     overview = StringSerializer(many=False)
+    title = StringSerializer(many=False)
     author = StringSerializer(many=False)
     lesson = serializers.SerializerMethodField()
     user_name = serializers.SerializerMethodField()
@@ -507,14 +509,19 @@ class WorkshopInscribedDetailSerializer(serializers.ModelSerializer):
     
     def get_is_registered(self, obj):
         print("user is not registered")
-        # user = obj.author.username
-        # if(user in obj.workshop_inscribed.inscribed):
-        #     return True
-        return True
+        request = self.context.get('request', None)
+        if request:
+            part = Participants.objects.get(workshop=obj.id)
+            # print("hawk",  part.inscribed.filter(username="diego"))
+            for u in part.inscribed.all():
+                if u.id == request.user.id:
+                    return True
+                else:
+                    return False
 
     class Meta:
         model = Workshop
-        fields = ('id', 'overview', 'categories', 
+        fields = ('id', 'title','overview', 'categories', 
                 'author', "lesson", "user_name", 
                 "user_pic", "is_registered")
 
@@ -549,7 +556,7 @@ class LessonSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Lesson
-        fields = ('id', 'lesson_title', 'lesson_topic')
+        fields = ('id', 'lesson_title', 'practice_file','lesson_topic')
 
 class LessonTopicVideoSerializer(serializers.ModelSerializer):
     # videofile= serializers.SerializerMethodField()

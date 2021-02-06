@@ -18,6 +18,7 @@ import logo from "../assets2/mate-crunch-logo-5.png"
 import "../assets/main.css";
 import "../assets/navBar.css";
 import VA from "../components/VerifiyAlert";
+import FooterPage from "./FooterPage";
 const { Header, Content, Footer, Sider } = Layout;
 
 class CustomLayout extends React.Component {
@@ -245,9 +246,7 @@ class CustomLayout extends React.Component {
         </Content>
   }
         </Layout>
-        <Footer style={{ textAlign: "center" }}>
-          Footer
-        </Footer>
+        <FooterPage/>
       </Layout>
     );
   }

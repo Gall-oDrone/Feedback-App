@@ -35,6 +35,7 @@ class ArticleDetail extends React.Component {
         endTime: null,
         orderId: null,
         author: null,
+        workshop_title: null,
         author_pic: null,
         lessons: null,
         lessons_topic: null,
@@ -103,8 +104,10 @@ class ArticleDetail extends React.Component {
                     startTime: res.data.start_time,
                     endTime: res.data.end_time,
                     author: res.data.user_name,
+                    workshop_title: res.data.title,
                     author_pic: res.data.user_pic,
                     lessons: res.data.lesson,
+                    registered:res.data.is_registered,
                     // lessons_topic: 
                 });
                 console.log("Article Detail res data: " + res.data);
@@ -291,10 +294,8 @@ class ArticleDetail extends React.Component {
     render() {
         console.log('this.PROPS: ' + JSON.stringify(this.props))
         console.log("this.state: " + this.state, this.state.orderId, "this.state.lessons ==> ", this.state.lessons)
-        const { form } = this.props;
-        const { getFieldDecorator } = this.props.form;
-        const { author, author_pic, loading, lessons } = this.state
-        const {user_name} = this.state.article
+        const { author, registered, workshop_title, author_pic, loading, lessons } = this.state
+        const {username} = this.props
         return (
             <div>
                <div className="workshop-detail-block" id="overview">
@@ -395,7 +396,7 @@ class ArticleDetail extends React.Component {
                                                                         <div className="contents">
                                                                             <h1>
                                                                                 <p>
-                                                                                    <b><font>Module {el.id}</font></b>
+                                                                                    <b><font>Module {++i}</font></b>
                                                                                 </p>
                                                                             </h1>
                                                                         </div>
@@ -437,32 +438,36 @@ class ArticleDetail extends React.Component {
                                                                     })}
                                                                 </ul>
                                                             </div>
-                                                            <div className="labs_container-A">
-                                                                <div id="element-3453-A">
-                                                                    <div className="box-AB">
-                                                                        <div id="element-3458-A">
-                                                                            <div className="contents">
-                                                                                <div className="cropped"></div>
+                                                            {lessons && lessons.practice_file && lessons.practice_file.length >0 ?
+                                                                <div className="labs_container-A">
+                                                                    <div id="element-3453-A">
+                                                                        <div className="box-AB">
+                                                                            <div id="element-3458-A">
+                                                                                <div className="contents">
+                                                                                    <div className="cropped"></div>
+                                                                                </div>
                                                                             </div>
+                                                                            <div id="element-3456-A">
+                                                                                <div className="contents">
+                                                                                        <p>{lessons.practice_file[i]}</p>
+                                                                                </div>
+                                                                            </div>
+                                                                            {/* <div id="element-3458-A">
+                                                                                <div className="contents">
+                                                                                    <div className="cropped"></div>
+                                                                                </div>
+                                                                            </div>
+                                                                            <div id="element-3456-A">
+                                                                                <div className="contents">
+                                                                                        <p>Claiming your first Particle device* </p>
+                                                                                </div>
+                                                                            </div> */}
                                                                         </div>
-                                                                        <div id="element-3456-A">
-                                                                            <div className="contents">
-                                                                                    <p>Claiming your first Particle device*  </p>
-                                                                            </div>
-                                                                        </div>
-                                                                        {/* <div id="element-3458-A">
-                                                                            <div className="contents">
-                                                                                <div className="cropped"></div>
-                                                                            </div>
-                                                                        </div>
-                                                                        <div id="element-3456-A">
-                                                                            <div className="contents">
-                                                                                    <p>Claiming your first Particle device* </p>
-                                                                            </div>
-                                                                        </div> */}
                                                                     </div>
                                                                 </div>
-                                                            </div>
+                                                                :
+                                                                null
+                                                            }
                                                         </div>
                                                     </div>
                         )
@@ -574,20 +579,44 @@ class ArticleDetail extends React.Component {
                                     </h1>
                                 </div>
                             </div>
-                            <div id="element-4633" onClick={() => {this.handleRegisterForm()}}>
-                                <div className="conversion_wrapper">
-                                    <a>
-                                        <div className="submit-btn">
-                                            Sign Up Now
+                                    
+                                    {username !== null ? 
+                                        registered === true?
+                                            <div id="element-4633">
+                                                <div className="conversion_wrapper">
+                                                    <a href={`/workshop-content/`}>
+                                                        <div className="submit-btn">
+                                                            You are enrolled
+                                                        </div>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                            :
+                                            <div id="element-4633" onClick={() => {this.handleRegisterForm()}}>
+                                                <div className="conversion_wrapper">
+                                                    <a>
+                                                        <div className="submit-btn">
+                                                            Sign Up Now
+                                                        </div>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        :
+                                        <div id="element-4633">
+                                            <div className="conversion_wrapper">
+                                                <a>
+                                                    <div className="submit-btn">
+                                                        Login In to Register
+                                                    </div>
+                                                </a>
+                                            </div>
                                         </div>
-                                    </a>
-                                </div>
-                            </div>
+                                    }
                             <div id="element-4634">
                                 <div className="contents">
                                     <h1>
                                         <p></p>
-                                        <p><font><b>Particle 101</b></font></p>
+                                        <p><font><b>{workshop_title}</b></font></p>
                                         <p><b>Workshop</b></p>
                                         <p></p>
                                     </h1>
@@ -617,7 +646,7 @@ class ArticleDetail extends React.Component {
                                 </div>
                             </div>
                         <div id="element-1027">
-                                <div style={{backgroundImage:`url(${author_pic})`}} className="circle">
+                                <div style={{backgroundImage:`url(${author_pic})`}} id="circle">
                                 </div>
                             </div>
                         <div id="element-1029">
@@ -735,13 +764,13 @@ class ArticleDetail extends React.Component {
                                 <p><font>The workshop is on-demand and can be accessed as soon as your purchase is complete via your Hackster profile. </font></p>
                             </div>
                         </div>
-                        <div id="element-553">
+                        {/* <div id="element-553">
                                 <div className="contents">
                                     <h1>
                                         <p><b><font>Brandon Satrom</font></b></p>
                                     </h1>
                                 </div>
-                            </div>
+                            </div> */}
                         <div id="element-554">
                             <div className="contents">
                                 <h1>
@@ -774,13 +803,11 @@ class ArticleDetail extends React.Component {
                                 <p><font><b>OTHER QUESTIONS?</b></font></p>
                             </div>
                         </div>    
-                        <div id="element-4472">
+                        {/* <div id="element-4472">
                             <div className="contents">
-                                {/* <p></p>
-                                <p></p> */}
                                 <p><font><b>Sr. Manager, Developer Relations</b></font></p>
                             </div>
-                        </div>                            
+                        </div>                             */}
                         </div>
                     </div>
                 </div>
@@ -794,7 +821,8 @@ const WrappedArticleCreate = Form.create()(ArticleDetail);
 
 const mapStateToProps = state => {
     return {
-        token: state.auth.token
+        token: state.auth.token,
+        username: state.auth.username
     }
 }
 export default withRouter(connect(mapStateToProps)(WrappedArticleCreate));

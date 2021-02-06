@@ -1537,13 +1537,13 @@ margin-bottom: 10px;
   position: absolute;
  }
 
- #element-1027 .circle{
+ #circle{
   width: 231px;
-  height: 231px;
+  height: 233px;
   background-color: #f0f3f5;
   border: 1px solid #fbfbfb;
   opacity: 1;
-  filter: alpha(opacity=100);
+  /* filter: alpha(opacity=100); */
   /* background-image: url('http://127.0.0.1:8000/media/profileAvatar/Copia_de_LogoMakr_9ZDTQ7_BXNDJe4.png'); */
   background-repeat: cover;
   background-position: 49% 99%;
@@ -2072,7 +2072,8 @@ position: absolute;
   opacity: 0.5;
   display: none;
 }
-.workshop-detail-questions-block-color-overlay-border-holder{
+/* PRESENT PROBELM WITH Y-SCROLLING */
+/* .workshop-detail-questions-block-color-overlay-border-holder{
   background-image: none;
   background-color: #ffffff;
   background-repeat: no-repeat;
@@ -2088,7 +2089,7 @@ position: absolute;
   border-top-width: 0px;
   border-bottom-width: 0px;
   height: 633px;
-}
+} */
 .workshop-detail-questions-block-inner{
   margin-top: 0px;
   height: calc(100% + 0px);
@@ -2335,7 +2336,6 @@ position: absolute;
 .file-upload {
   display: none !important;
 }
-
 .upload-cont{
   width: 100%;
   height: 300px;
