@@ -46,15 +46,15 @@ class PurchasePage extends React.PureComponent {
                   <div className="_1JSuQsVcw4aDU2Z45-PLve">
                      <div className="_1gDYBstR6RZ54oaxIg0sNC">
                      <div className="_3xAt59oB_zY25smDh5N2RG _3whGtWqLHQRhwRssV4JWtv">
-                           <div className="e2azJCWUv71MKfhPb8KBN _3bwYuG6NsjQg7I5AvFdeHS">Basic Membership</div>
-                           <div className="_1VTE6TFiAn61YN5mSJwQzn"><span className="_1zv_ORPMgPmMYtWaBITgjc">$</span><span className="_3E50tX07z_uPmWXeEPQ9ck">49</span></div>
-                           <div className="_3UVuhEAJD7s3KKroNbokUH">1 YEAR ACCESS</div>
+                           <div className="e2azJCWUv71MKfhPb8KBN _3bwYuG6NsjQg7I5AvFdeHS">Standard Membership</div>
+                           <div className="_1VTE6TFiAn61YN5mSJwQzn"><span className="_1zv_ORPMgPmMYtWaBITgjc">$</span><span className="_3E50tX07z_uPmWXeEPQ9ck">0</span></div>
+                           <div className="_3UVuhEAJD7s3KKroNbokUH">Free ACCESS</div>
                            <ul className="jjqP8_ileAGlVxYS5vWNy _34XAE2TTlyJIQejYPdZb9g">
-                           <li>
+                           {/* <li>
                               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="currentColor" className="_2I0xigLcjXwVfcY3AXFgwv _2Rnf377id7eA_P11YKvlKO">
                               <path d="M504.502 75.496c-9.997-9.998-26.205-9.998-36.204 0L161.594 382.203 43.702 264.311c-9.997-9.998-26.205-9.997-36.204 0-9.998 9.997-9.998 26.205 0 36.203l135.994 135.992c9.994 9.997 26.214 9.99 36.204 0L504.502 111.7c9.998-9.997 9.997-26.206 0-36.204z" stroke="currentColor" stroke-width="5"></path>
                               </svg>
-                              125 of the best coding interview questions.
+                              Posting Articles.
                            </li>
                            <li>
                               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="currentColor" className="_2I0xigLcjXwVfcY3AXFgwv _2Rnf377id7eA_P11YKvlKO">
@@ -109,7 +109,7 @@ class PurchasePage extends React.PureComponent {
                               <path d="M504.502 75.496c-9.997-9.998-26.205-9.998-36.204 0L161.594 382.203 43.702 264.311c-9.997-9.998-26.205-9.997-36.204 0-9.998 9.997-9.998 26.205 0 36.203l135.994 135.992c9.994 9.997 26.214 9.99 36.204 0L504.502 111.7c9.998-9.997 9.997-26.206 0-36.204z" stroke="currentColor" stroke-width="5"></path>
                               </svg>
                               Bonus behavioral interview content.
-                           </li>
+                           </li> */}
                            </ul>
                            <div className="u-flexSpacer"></div>
                            <div className="_38W6ZlvQOxJyaS4741EOXk">
@@ -139,16 +139,16 @@ class PurchasePage extends React.PureComponent {
                      <div className="_3xAt59oB_zY25smDh5N2RG xxydwYpHSkNNkDxzJdmcz">
                            <div className="_10Of8fYztjX0Pj7iJvgEl6">BEST VALUE!</div>
                            <div className="e2azJCWUv71MKfhPb8KBN _26ouvfdR8iTk6PpctivhIJ">Pro Membership</div>
-                           <div className="_1VTE6TFiAn61YN5mSJwQzn"><span className="_1zv_ORPMgPmMYtWaBITgjc">$</span><span className="_3E50tX07z_uPmWXeEPQ9ck">69</span><span className="_1dRfcp8oxaJEcSr24RBeUX">$88</span></div>
+                           <div className="_1VTE6TFiAn61YN5mSJwQzn"><span className="_1zv_ORPMgPmMYtWaBITgjc">$</span><span className="_3E50tX07z_uPmWXeEPQ9ck">5</span><span className="_1dRfcp8oxaJEcSr24RBeUX">$88</span></div>
                            <div className="_3UVuhEAJD7s3KKroNbokUH">1 YEAR ACCESS</div>
                            <ul className="jjqP8_ileAGlVxYS5vWNy NxjVl8em1YXJ1mMofRK6r">
                            <li>
                               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="currentColor" className="_2I0xigLcjXwVfcY3AXFgwv B8O_01Rutn67_v9bd4WIx">
                               <path d="M504.502 75.496c-9.997-9.998-26.205-9.998-36.204 0L161.594 382.203 43.702 264.311c-9.997-9.998-26.205-9.997-36.204 0-9.998 9.997-9.998 26.205 0 36.203l135.994 135.992c9.994 9.997 26.214 9.99 36.204 0L504.502 111.7c9.998-9.997 9.997-26.206 0-36.204z" stroke="currentColor" stroke-width="5"></path>
                               </svg>
-                              Everything AlgoExpert offers.
+                              International Passport.
                            </li>
-                           <li>
+                           {/* <li>
                               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="currentColor" className="_2I0xigLcjXwVfcY3AXFgwv B8O_01Rutn67_v9bd4WIx">
                               <path d="M504.502 75.496c-9.997-9.998-26.205-9.998-36.204 0L161.594 382.203 43.702 264.311c-9.997-9.998-26.205-9.997-36.204 0-9.998 9.997-9.998 26.205 0 36.203l135.994 135.992c9.994 9.997 26.214 9.99 36.204 0L504.502 111.7c9.998-9.997 9.997-26.206 0-36.204z" stroke="currentColor" stroke-width="5"></path>
                               </svg>
@@ -159,7 +159,7 @@ class PurchasePage extends React.PureComponent {
                               <path d="M504.502 75.496c-9.997-9.998-26.205-9.998-36.204 0L161.594 382.203 43.702 264.311c-9.997-9.998-26.205-9.997-36.204 0-9.998 9.997-9.998 26.205 0 36.203l135.994 135.992c9.994 9.997 26.214 9.99 36.204 0L504.502 111.7c9.998-9.997 9.997-26.206 0-36.204z" stroke="currentColor" stroke-width="5"></path>
                               </svg>
                               Everything you need for tech interviews.
-                           </li>
+                           </li> */}
                            </ul>
                            <div className="u-flexSpacer"></div>
                            <svg data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1041.32 554.17" className="_318uer-Hf-JYuTgA7mrm3M">
@@ -223,16 +223,16 @@ class PurchasePage extends React.PureComponent {
                      </div>
                      <div className="_3xAt59oB_zY25smDh5N2RG _1zOa4GGhuaW1MJgx0ScMLm">
                            <div className="e2azJCWUv71MKfhPb8KBN H4_gP7tpPnAN6Pz43G_wu">Ultimate Membership</div>
-                           <div className="_1VTE6TFiAn61YN5mSJwQzn"><span className="_1zv_ORPMgPmMYtWaBITgjc">$</span><span className="_3E50tX07z_uPmWXeEPQ9ck">39</span></div>
+                           <div className="_1VTE6TFiAn61YN5mSJwQzn"><span className="_1zv_ORPMgPmMYtWaBITgjc">$</span><span className="_3E50tX07z_uPmWXeEPQ9ck">10</span></div>
                            <div className="_3UVuhEAJD7s3KKroNbokUH">1 YEAR ACCESS</div>
                            <ul className="jjqP8_ileAGlVxYS5vWNy _2nksdFlxUVZ4oqM_Nldj_S">
                            <li>
                               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="currentColor" className="_2I0xigLcjXwVfcY3AXFgwv _1cG1LjhakRnNNEolIVzDhg">
                               <path d="M504.502 75.496c-9.997-9.998-26.205-9.998-36.204 0L161.594 382.203 43.702 264.311c-9.997-9.998-26.205-9.997-36.204 0-9.998 9.997-9.998 26.205 0 36.203l135.994 135.992c9.994 9.997 26.214 9.99 36.204 0L504.502 111.7c9.998-9.997 9.997-26.206 0-36.204z" stroke="currentColor" stroke-width="5"></path>
                               </svg>
-                              10 of the best systems interview questions.
+                              Access to Research Collaborations and Seed Grant
                            </li>
-                           <li>
+                           {/* <li>
                               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="currentColor" className="_2I0xigLcjXwVfcY3AXFgwv _1cG1LjhakRnNNEolIVzDhg">
                               <path d="M504.502 75.496c-9.997-9.998-26.205-9.998-36.204 0L161.594 382.203 43.702 264.311c-9.997-9.998-26.205-9.997-36.204 0-9.998 9.997-9.998 26.205 0 36.203l135.994 135.992c9.994 9.997 26.214 9.99 36.204 0L504.502 111.7c9.998-9.997 9.997-26.206 0-36.204z" stroke="currentColor" stroke-width="5"></path>
                               </svg>
@@ -279,7 +279,7 @@ class PurchasePage extends React.PureComponent {
                               <path d="M504.502 75.496c-9.997-9.998-26.205-9.998-36.204 0L161.594 382.203 43.702 264.311c-9.997-9.998-26.205-9.997-36.204 0-9.998 9.997-9.998 26.205 0 36.203l135.994 135.992c9.994 9.997 26.214 9.99 36.204 0L504.502 111.7c9.998-9.997 9.997-26.206 0-36.204z" stroke="currentColor" stroke-width="5"></path>
                               </svg>
                               Bonus behavioral interview content.
-                           </li>
+                           </li> */}
                            </ul>
                            <div className="u-flexSpacer"></div>
                            <div className="_38W6ZlvQOxJyaS4741EOXk">

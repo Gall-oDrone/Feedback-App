@@ -113,7 +113,7 @@ import CollaborationList from "./containers/CollaborationList";
 import CollaborationCreate from "./containers/CollaborationCreate";
 import CollaborationDetail from "./containers/CollaborationDetail";
 import ProfileCollaborations from "./containers/ProfileCollaborations"
-
+import SphereTest from "./components/WorldSphere3D";
 // const BaseRouter2 = () => (
 //   <Hoc>
 //     <Route exact path="/"/>
@@ -134,6 +134,7 @@ const BaseRouter = () => (
     <Route exact path="/peers3/" component={PeerList3} />
     <Route exact path="/create-inquiry/" component={InquiryCreate} />
     <Route exact path="/inquiries/" component={InquiryList} />
+    <Route exact path="/sphere/" component={SphereTest} />
 
     <Route exact path="/frameTest/:roomID" component={RoomMenu} />
     <Route exact path="/create-article/" component={ArticleCreate} />

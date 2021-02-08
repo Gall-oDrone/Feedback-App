@@ -2066,3 +2066,131 @@
  .eight-section-div {
   opacity: 1;
  }
+ ._1TBpQomryh4JlZLsDwgQhi {
+  padding: 100px 40px;
+  position: relative;
+}
+.__react_component_tooltip-304517788.place-top {
+  margin-top: -10px;
+}
+.__react_component_tooltip-304517788 {
+  color: rgb(255, 255, 255);
+  border: 1px solid transparent;
+  background-color: rgb(34, 34, 34);
+}
+.__react_component_tooltip {
+  border-radius: 3px;
+  display: inline-block;
+  font-size: 13px;
+  left: -999em;
+  opacity: 0;
+  padding: 8px 21px;
+  position: fixed;
+  pointer-events: none;
+  transition: opacity 0.3s ease-out;
+  top: -999em;
+  visibility: hidden;
+  z-index: 999;
+}
+
+.__react_component_tooltip-304517788.place-top::before {
+
+  border-top: 8px solid transparent;
+
+}
+.__react_component_tooltip.place-top::before {
+
+  border-left: 10px solid transparent;
+  border-right: 10px solid transparent;
+  bottom: -8px;
+  left: 50%;
+  margin-left: -10px;
+
+}
+
+.__react_component_tooltip-304517788.place-top::after {
+
+  left: 50%;
+  bottom: -6px;
+  border-left: 8px solid transparent;
+  margin-left: -8px;
+  border-right: 8px solid transparent;
+  border-top: 6px solid rgb(34, 34, 34);
+
+}
+.__react_component_tooltip::before, .__react_component_tooltip::after {
+
+  content: "";
+  width: 0;
+  height: 0;
+  position: absolute;
+
+}._-7ll5shwmwWrOl8UX7DSr {
+  position: absolute;
+  left: 89%;
+  top: 1.5vh;
+  height: 30px;
+  cursor: pointer;
+  transition: transform 200ms ease-in-out;
+}
+img {
+  vertical-align: middle;
+}
+._3H-7Qe8fS74lhxCAFfSk73 {
+  display: flex;
+  flex-direction: row;
+  max-width: 1200px;
+  margin: 0 auto 50px;
+}
+._3tzDmuKcsVhevrNFIwONWr {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+._3QBwXTWg8lgAS38IsfnHj9 {
+  flex: 1 1 50%;
+}
+.Z8yNIFJhCz-vSS3RtL1Jl {
+  flex: 1 1 50%;
+  display: flex;
+  margin: 250px 0 0 0;
+  justify-content: center;
+}
+
+elemento {
+
+}
+._1iY1U-UeTX5NTWGxWKzOs- {
+
+    font-size: 35px;
+    margin: 0 0 20px 0;
+
+}
+._1zfZj1jWUyrBmZI5wJ60oN {
+  padding: 0;
+}
+ul, ol {
+  margin: 0;
+}
+._1zfZj1jWUyrBmZI5wJ60oN li {
+  margin: 0 0 25px 0;
+  color: #445d6e;
+}
+li {
+  display: block;
+}
+.shadowContainer {
+  perspective: 800px;
+  perspective-origin: 50% 100px;
+  -webkit-perspective: 800px;
+  -webkit-perspective-origin: 50% 100px;
+}
+.actualCubeContainer {
+  perspective: 800px;
+  perspective-origin: 50% 100px;
+}
+.EkAr_bRMlAZr8uJYv58V2 {
+  margin-right: 20px;
+  width: 50px;
+  color: #02203c;
+  vertical-align: middle;
+}
