@@ -2,11 +2,23 @@ import React from "react";
 import "../assets/purchasePageAndFooter.css";
 import * as THREE from 'three';
 import jsonf from "../svg-to-coordinates-master-Globe/points.json";
+import { BufferGeometryUtils } from 'three/examples/jsm/utils/BufferGeometryUtils.js';
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
+
 const globeRadius = 100;
 const globeWidth = 4098 / 2;
 const globeHeight = 1968 / 2;
+var scene = new THREE.Scene();
+let renderRequested = false;
+var test = null;
 class SphereCont extends React.PureComponent {
       
+        constructor(props) {
+          super(props);
+          this.state = { 
+            test: null,
+          };
+        }
         convertFlatCoordsToSphereCoords(x, y) {
           let latitude = ((x - globeWidth) / globeWidth) * -180;
           let longitude = ((y - globeHeight) / globeHeight) * -90;
@@ -20,16 +32,146 @@ class SphereCont extends React.PureComponent {
             z: Math.sin(latitude) * radius
           };
         }
+
+        async loadFile(url) {
+          const req = await fetch(url);
+          return req.text();
+        }
+
+        parseData(text) {
+          const data = [];
+          const settings = {data};
+          let max;
+          let min;
+          // split into lines
+          text.split('\n').forEach((line) => {
+            // split the line by whitespace
+            const parts = line.trim().split(/\s+/);
+            if (parts.length === 2) {
+              // only 2 parts, must be a key/value pair
+              settings[parts[0]] = parseFloat(parts[1]);
+            } else if (parts.length > 2) {
+              // more than 2 parts, must be data
+              const values = parts.map((v) => {
+                const value = parseFloat(v);
+                if (value === settings.NODATA_value) {
+                  return undefined;
+                }
+                max = Math.max(max === undefined ? value : max, value);
+                min = Math.min(min === undefined ? value : min, value);
+                return value;
+              });
+              data.push(values);
+            }
+          });
+          return Object.assign(settings, {min, max});
+        }
+        addBoxes(file, test) {
+          const {min, max, data} = file;
+          const range = max - min;
+      
+          // these helpers will make it easy to position the boxes
+          // We can rotate the lon helper on its Y axis to the longitude
+          const lonHelper = new THREE.Object3D();
+          scene.add(lonHelper);
+          // We rotate the latHelper on its X axis to the latitude
+          const latHelper = new THREE.Object3D();
+          lonHelper.add(latHelper);
+          // The position helper moves the object to the edge of the sphere
+          const positionHelper = new THREE.Object3D();
+          positionHelper.position.z = 1;
+          latHelper.add(positionHelper);
+          // Used to move the center of the cube so it scales from the position Z axis
+          const originHelper = new THREE.Object3D();
+          originHelper.position.z = 0.5;
+          positionHelper.add(originHelper);
+      
+          const lonFudge = Math.PI * .5;
+          const latFudge = Math.PI * -0.135;
+          const geometries = [];
+          data.forEach((row, latNdx) => {
+            row.forEach((value, lonNdx) => {
+              if (value === undefined) {
+                return;
+              }
+              const amount = (value - min) / range;
+      
+              const boxWidth = 1;
+              const boxHeight = 1;
+              const boxDepth = 1;
+              const geometry = new THREE.BoxGeometry(boxWidth, boxHeight, boxDepth);
+      
+              // adjust the helpers to point to the latitude and longitude
+              lonHelper.rotation.y = THREE.MathUtils.degToRad(lonNdx + file.xllcorner) + lonFudge;
+              latHelper.rotation.x = THREE.MathUtils.degToRad(latNdx + file.yllcorner) + latFudge;
+      
+              // use the world matrix of the origin helper to
+              // position this geometry
+              positionHelper.scale.set(0.005, 0.005, THREE.MathUtils.lerp(0.01, 0.5, amount));
+              originHelper.updateWorldMatrix(true, false);
+              geometry.applyMatrix4(originHelper.matrixWorld);
+      
+              geometries.push(geometry);
+            });
+          });
+      
+          const mergedGeometry = BufferGeometryUtils.mergeBufferGeometries(
+              geometries, false);
+          const material = new THREE.MeshBasicMaterial({color:'red'});
+          const mesh = new THREE.Mesh(mergedGeometry, material);
+          scene.add(mesh);
+        }
+
+        resizeRendererToDisplaySize(renderer) {
+          const canvas = renderer.domElement;
+          const width = canvas.clientWidth;
+          const height = canvas.clientHeight;
+          const needResize = canvas.width !== width || canvas.height !== height;
+          if (needResize) {
+            renderer.setSize(width, height, false);
+          }
+          return needResize;
+        }
+
+        render2(renderer, camera, test) {
+          renderRequested = undefined;
+          var rotateX = test.rotation.x + 0.002;
+          var rotateY = test.rotation.y + 0.005;
+          var rotateZ = test.rotation.z + 0.01;
+          test.rotation.set( rotateX, rotateY, rotateZ );
+          if (this.resizeRendererToDisplaySize(renderer)) {
+            const canvas = renderer.domElement;
+            camera.aspect = canvas.clientWidth / canvas.clientHeight;
+            camera.updateProjectionMatrix();
+          }
+      
+          // controls.update();
+          renderer.render(scene, camera);
+          requestAnimationFrame(this.render2);
+        }
+      
   
         componentDidMount() {
-            var scene = new THREE.Scene();
-            var camera = new THREE.PerspectiveCamera( 75, 480/450, 0.1, 1000 );
-            camera.position.set(0,0,250);
+            const fov = 60;
+            const aspect = 2;  // the canvas default
+            const near = 0.1;
+            const far = 10;
+            const camera = new THREE.PerspectiveCamera(fov, aspect, near, far);
+            camera.position.z = 2.5;
+            scene.background = new THREE.Color('black');
+
             var renderer = new THREE.WebGLRenderer();
             renderer.setSize( 480, 450 );
             this.mount.appendChild( renderer.domElement );
             var light = new THREE.HemisphereLight(0xffffbb, 0x080820, 1);
             scene.add(light);
+
+            // const controls = OrbitControls(camera, this.mount);
+            // controls.enableDamping = true;
+            // controls.enablePan = false;
+            // controls.minDistance = 1.2;
+            // controls.maxDistance = 4;
+            // controls.update();
 
             const points = jsonf.points
             const vertices = []
@@ -45,27 +187,12 @@ class SphereCont extends React.PureComponent {
         
                 vertices.push(x, y, z)
             }
-            const positions = new Float32Array( vertices );
-            // length: 117486
-            console.log("culo:", positions) 
-            const mergedGeometry = new THREE.BufferGeometry();
-            mergedGeometry.setAttribute( 'position', new THREE.BufferAttribute( positions, 3 ) );
-
-            const material = new THREE.MeshStandardMaterial( {color: "#FFFF00",  wireframe: true});
-
-            var geometory = new THREE.SphereGeometry(0.5,1,1);
-            var material2 = new THREE.MeshBasicMaterial({
-              color: 0x1a1a1a
-            });
-            var mesh = new THREE.Mesh(geometory, material2);
-
-            const particles = new THREE.Points( mergedGeometry, material );
-            scene.add( particles );
+            this.loadFile('https://threejsfundamentals.org/threejs/resources/data/gpw/gpw_v4_basic_demographic_characteristics_rev10_a000_014mt_2010_cntm_1_deg.asc')
+            .then(this.parseData)
+            .then(this.addBoxes.bind(this))
+            .then(this.render2(renderer,camera, this.state.test));
             
             var animate = function () {
-                particles.rotation.x = 0.00
-                particles.rotation.y = 0.01
-                particles.rotation.z = 0.00
                 requestAnimationFrame( animate );
                 renderer.render( scene, camera );
                 camera.lookAt(scene.position);
