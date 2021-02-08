@@ -13,7 +13,7 @@ class PurchasePage extends React.PureComponent {
                                  <h1 className="_1rIyY0rMnPPaDcUW5bIN_R">The Ultimate Peer Learning Platform</h1>
                                  <p className="
                                  _1gI2YxNDFKTgZTH6q1X2cb 
-                                 ">Organized. Guided. All-encompassing.</p>
+                                 ">Currciculum Expansion. Networking. Continuous Education.</p>
                                  <a className="
                                  _21hBJZpoTM8O04o_efZ4l 
                                  tO8rJ_vL1Hpknd0aOcYl6
