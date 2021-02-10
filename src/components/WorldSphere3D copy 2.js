@@ -3,79 +3,105 @@ import "../assets/purchasePageAndFooter.css";
 import * as THREE from 'three';
 import jsonf from "../svg-to-coordinates-master-Globe/points.json";
 import { BufferGeometryUtils } from 'three/examples/jsm/utils/BufferGeometryUtils.js';
-const globeRadius = 50;
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
+
+const globeRadius = 100;
 const globeWidth = 4098 / 2;
 const globeHeight = 1968 / 2;
+var scene = new THREE.Scene();
+let renderRequested = false;
 class SphereCont extends React.PureComponent {
-      
-        convertFlatCoordsToSphereCoords(x, y) {
-          let latitude = ((x - globeWidth) / globeWidth) * -180;
-          let longitude = ((y - globeHeight) / globeHeight) * -90;
-          latitude = (latitude * Math.PI) / 180;
-          longitude = (longitude * Math.PI) / 180;
-          const radius = Math.cos(longitude) * globeRadius;
-      
-          return {
-            x: Math.cos(latitude) * radius,
-            y: Math.sin(longitude) * globeRadius,
-            z: Math.sin(latitude) * radius
-          };
-        }
-  
-        componentDidMount() {
-            var scene = new THREE.Scene();
-            var camera = new THREE.PerspectiveCamera( 45, 480/450, 0.1, 1000 );
-            camera.position.set(0,0,250);
-            var renderer = new THREE.WebGLRenderer();
-            renderer.setSize( 480, 450 );
-            this.mount.appendChild( renderer.domElement );
-            var group = new THREE.Object3D();
-      
-            const light = new THREE.HemisphereLight( 0xffffb0, 0x080820, 1 );
-            scene.add( light );
-            const points = jsonf.points
-            
-            for (let point of points) {
-                let width = 180 
-                let height = 150
-                const { x, y, z } = this.convertFlatCoordsToSphereCoords(
-                    point.x,
-                    point.y,
-                    width,
-                    height
-                );
-        
-                var geometry = new THREE.SphereGeometry(0.1, 1, 1);
-                const material = new THREE.MeshStandardMaterial( {color: 0xffff00,  wireframe: true});
-                const mesh = new THREE.Mesh( geometry, material );
-                mesh.position.x = x;
-                mesh.position.y = y;
-                mesh.position.z = z;
-                group.add(mesh);
-            }            
-            // scene.add(group);
-            const mergedGeometry = BufferGeometryUtils.mergeBufferGeometries(
-                group, false);
-            const material = new THREE.MeshBasicMaterial({color:'red'});
-            const mesh = new THREE.Mesh(mergedGeometry, material);
-            scene.add(mesh);
-            var animate = function () {
-                requestAnimationFrame( animate );
-                var rotateX = group.rotation.x + 0.00;
-                var rotateY = group.rotation.y + 0.01;
-                var rotateZ = group.rotation.z + 0.00;
-                group.rotation.set( rotateX, rotateY, rotateZ );
-                renderer.render( scene, camera );
-                camera.lookAt(scene.position);
-            };
-            animate();
-        }
-      
-   render() {
-        return (
-            <div ref={ref => (this.mount = ref)} />
-        );
-    }
+  componentDidMount() {
+    this.sceneSetup();
+    this.addCustomSceneObjects();
+    this.startAnimationLoop();
+    window.addEventListener('resize', this.handleWindowResize);
+}
+
+componentWillUnmount() {
+    window.removeEventListener('resize', this.handleWindowResize);
+    window.cancelAnimationFrame(this.requestID);
+    this.controls.dispose();
+}
+
+// Standard scene setup in Three.js. Check "Creating a scene" manual for more information
+// https://threejs.org/docs/#manual/en/introduction/Creating-a-scene
+sceneSetup = () => {
+    // get container dimensions and use them for scene sizing
+    const width = this.mount.clientWidth;
+    const height = this.mount.clientHeight;
+
+    this.scene = new THREE.Scene();
+    this.camera = new THREE.PerspectiveCamera(
+        75, // fov = field of view
+        width / height, // aspect ratio
+        0.1, // near plane
+        1000 // far plane
+    );
+    this.camera.position.z = 9; // is used here to set some distance from a cube that is located at z = 0
+    // OrbitControls allow a camera to orbit around the object
+    // https://threejs.org/docs/#examples/controls/OrbitControls
+    this.controls = new OrbitControls( this.camera, this.mount );
+    this.renderer = new THREE.WebGLRenderer();
+    this.renderer.setSize( width, height );
+    this.mount.appendChild( this.renderer.domElement ); // mount using React ref
+};
+
+// Here should come custom code.
+// Code below is taken from Three.js BoxGeometry example
+// https://threejs.org/docs/#api/en/geometries/BoxGeometry
+addCustomSceneObjects = () => {
+    const geometry = new THREE.BoxGeometry(2, 2, 2);
+    const material = new THREE.MeshPhongMaterial( {
+        color: 0x156289,
+        emissive: 0x072534,
+        side: THREE.DoubleSide,
+        flatShading: true
+    } );
+    this.cube = new THREE.Mesh( geometry, material );
+    this.scene.add( this.cube );
+
+    const lights = [];
+    lights[ 0 ] = new THREE.PointLight( 0xffffff, 1, 0 );
+    lights[ 1 ] = new THREE.PointLight( 0xffffff, 1, 0 );
+    lights[ 2 ] = new THREE.PointLight( 0xffffff, 1, 0 );
+
+    lights[ 0 ].position.set( 0, 200, 0 );
+    lights[ 1 ].position.set( 100, 200, 100 );
+    lights[ 2 ].position.set( - 100, - 200, - 100 );
+
+    this.scene.add( lights[ 0 ] );
+    this.scene.add( lights[ 1 ] );
+    this.scene.add( lights[ 2 ] );
+};
+
+startAnimationLoop = () => {
+    this.cube.rotation.x += 0.01;
+    this.cube.rotation.y += 0.01;
+
+    this.renderer.render( this.scene, this.camera );
+
+    // The window.requestAnimationFrame() method tells the browser that you wish to perform
+    // an animation and requests that the browser call a specified function
+    // to update an animation before the next repaint
+    this.requestID = window.requestAnimationFrame(this.startAnimationLoop);
+};
+
+handleWindowResize = () => {
+    const width = this.mount.clientWidth;
+    const height = this.mount.clientHeight;
+
+    this.renderer.setSize( width, height );
+    this.camera.aspect = width / height;
+
+    // Note that after making changes to most of camera properties you have to call
+    // .updateProjectionMatrix for the changes to take effect.
+    this.camera.updateProjectionMatrix();
+};
+
+render() {
+    return <div style={style} ref={ref => (this.mount = ref)} />;
+}
 }
 
 export default (SphereCont);

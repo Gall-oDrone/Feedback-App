@@ -10,7 +10,6 @@ const globeWidth = 4098 / 2;
 const globeHeight = 1968 / 2;
 var scene = new THREE.Scene();
 let renderRequested = false;
-var test = null;
 class SphereCont extends React.PureComponent {
       
         constructor(props) {
@@ -44,6 +43,7 @@ class SphereCont extends React.PureComponent {
           let max;
           let min;
           // split into lines
+          console.log("DATA: ", text)
           text.split('\n').forEach((line) => {
             // split the line by whitespace
             const parts = line.trim().split(/\s+/);
@@ -64,9 +64,10 @@ class SphereCont extends React.PureComponent {
               data.push(values);
             }
           });
+          
           return Object.assign(settings, {min, max});
         }
-        addBoxes(file, test) {
+        addBoxes(file) {
           const {min, max, data} = file;
           const range = max - min;
       
@@ -107,7 +108,7 @@ class SphereCont extends React.PureComponent {
       
               // use the world matrix of the origin helper to
               // position this geometry
-              positionHelper.scale.set(0.005, 0.005, THREE.MathUtils.lerp(0.01, 0.5, amount));
+              positionHelper.scale.set(0.005, 0.005, THREE.MathUtils.lerp(0.01, 0.5, 0.01));
               originHelper.updateWorldMatrix(true, false);
               geometry.applyMatrix4(originHelper.matrixWorld);
       
@@ -117,9 +118,10 @@ class SphereCont extends React.PureComponent {
       
           const mergedGeometry = BufferGeometryUtils.mergeBufferGeometries(
               geometries, false);
-          const material = new THREE.MeshBasicMaterial({color:'red'});
+          const material = new THREE.MeshBasicMaterial({color:'black'});
           const mesh = new THREE.Mesh(mergedGeometry, material);
           scene.add(mesh);
+          return mesh;
         }
 
         resizeRendererToDisplaySize(renderer) {
@@ -133,21 +135,22 @@ class SphereCont extends React.PureComponent {
           return needResize;
         }
 
-        render2(renderer, camera, test) {
+        render2(renderer, camera, controls, mesh) {
           renderRequested = undefined;
-          var rotateX = test.rotation.x + 0.002;
-          var rotateY = test.rotation.y + 0.005;
-          var rotateZ = test.rotation.z + 0.01;
-          test.rotation.set( rotateX, rotateY, rotateZ );
+            requestAnimationFrame( this.render2() );
+              var rotateX = mesh.rotation.x + 0.00;
+              var rotateY = mesh.rotation.y + 0.01;
+              var rotateZ = mesh.rotation.z + 0.00;
+              mesh.rotation.set( rotateX, rotateY, rotateZ );
+
           if (this.resizeRendererToDisplaySize(renderer)) {
             const canvas = renderer.domElement;
             camera.aspect = canvas.clientWidth / canvas.clientHeight;
             camera.updateProjectionMatrix();
           }
       
-          // controls.update();
+          controls.update();
           renderer.render(scene, camera);
-          requestAnimationFrame(this.render2);
         }
       
   
@@ -158,20 +161,20 @@ class SphereCont extends React.PureComponent {
             const far = 10;
             const camera = new THREE.PerspectiveCamera(fov, aspect, near, far);
             camera.position.z = 2.5;
-            scene.background = new THREE.Color('black');
-
+            scene.background = new THREE.Color('white');
+           
             var renderer = new THREE.WebGLRenderer();
-            renderer.setSize( 480, 450 );
+            renderer.setSize( 1200, 1100 );
             this.mount.appendChild( renderer.domElement );
             var light = new THREE.HemisphereLight(0xffffbb, 0x080820, 1);
             scene.add(light);
 
-            // const controls = OrbitControls(camera, this.mount);
-            // controls.enableDamping = true;
-            // controls.enablePan = false;
-            // controls.minDistance = 1.2;
-            // controls.maxDistance = 4;
-            // controls.update();
+            const controls = new OrbitControls(camera, renderer.domElement);
+            controls.enableDamping = true;
+            controls.enablePan = false;
+            controls.minDistance = 1.2;
+            controls.maxDistance = 4;
+            controls.update();
 
             const points = jsonf.points
             const vertices = []
@@ -189,15 +192,20 @@ class SphereCont extends React.PureComponent {
             }
             this.loadFile('https://threejsfundamentals.org/threejs/resources/data/gpw/gpw_v4_basic_demographic_characteristics_rev10_a000_014mt_2010_cntm_1_deg.asc')
             .then(this.parseData)
-            .then(this.addBoxes.bind(this))
-            .then(this.render2(renderer,camera, this.state.test));
-            
-            var animate = function () {
-                requestAnimationFrame( animate );
-                renderer.render( scene, camera );
-                camera.lookAt(scene.position);
-            };
-            animate();
+            .then(this.addBoxes)
+            .then(mesh => 
+                {var animate = function () {
+                  requestAnimationFrame( animate );
+                  var rotateX = mesh.rotation.x + 0.00;
+                  var rotateY = mesh.rotation.y + 0.001;
+                  var rotateZ = mesh.rotation.z + 0.00;
+                  mesh.rotation.set( rotateX, rotateY, rotateZ );
+                  renderer.render( scene, camera );
+                  camera.lookAt(scene.position);
+                };
+                animate();
+                // this.render2(renderer,camera, controls, res)
+              });
         }
       
    render() {
