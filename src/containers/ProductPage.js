@@ -67,7 +67,9 @@ class ProductPage extends React.PureComponent {
                       : null 
                 }
                   <div className="description-container">
+                    <div className="fourth-section-div">
                     <h2>What is Mate Crunch?</h2>
+                    </div>
                       <div className="description-video-container">
                         <button className="WatchVideoButton" onClick={()=> this.handleVideoBanner("open")} data-ae-button="ae home - cards banner - watch the video">
                           <div className="WatchVideoButton-slideInBg">
@@ -263,7 +265,7 @@ class ProductPage extends React.PureComponent {
                     <div className="sixth-section-cont">
                       <div className="sixth-col bifold testimonial-right">
                         <div className="header-wrap-1 _3">
-                          <h2>Paid and Rewarded For</h2>
+                          <h2>Paid and Rewarded for</h2>
                         </div>
                       </div>
                       <div className="sixth-col bifold testimonial-right">
@@ -320,7 +322,7 @@ class ProductPage extends React.PureComponent {
                         <img className="_-7ll5shwmwWrOl8UX7DSr" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMjkgMTI5IiB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiI+PHBhdGggZD0iTTEyMS40IDYxLjZsLTU0LTU0Yy0uNy0uNy0xLjgtMS4yLTIuOS0xLjJzLTIuMi41LTIuOSAxLjJsLTU0IDU0Yy0xLjYgMS42LTEuNiA0LjIgMCA1LjguOC44IDEuOCAxLjIgMi45IDEuMnMyLjEtLjQgMi45LTEuMmw0Ny00N3Y5OC4xYzAgMi4zIDEuOCA0LjEgNC4xIDQuMXM0LjEtMS44IDQuMS00LjFWMjAuNGw0NyA0N2MxLjYgMS42IDQuMiAxLjYgNS44IDBzMS41LTQuMiAwLTUuOHoiIGZpbGw9IiMwMjIwM2MiLz48L3N2Zz4=" alt="scroll to top arrow"/> */}
                         <div className="_3H-7Qe8fS74lhxCAFfSk73">
                           <div className="_3QBwXTWg8lgAS38IsfnHj9">
-                              <h2 className="_1iY1U-UeTX5NTWGxWKzOs-">An International Community and Grwoing.</h2>
+                              <h2 className="_1iY1U-UeTX5NTWGxWKzOs-">An International Community and Growing.</h2>
                               {/* <ul className="_1zfZj1jWUyrBmZI5wJ60oN">
                                 <li>
                                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 295.238 295.238" fill="currentColor" className="EkAr_bRMlAZr8uJYv58V2">

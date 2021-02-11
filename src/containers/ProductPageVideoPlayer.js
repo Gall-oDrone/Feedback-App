@@ -7,7 +7,7 @@ class ProductPageVideoPlayer extends React.PureComponent {
   }
   render() {
     return (
-        <div>
+        <div className="_1M0ijdL-CbKY690_1up2Yd">
           <div className="HI041TWNAx9wen9PAWcq4">
             <div className="
               PP9ArtWfvhDwwl47xaTXE 
