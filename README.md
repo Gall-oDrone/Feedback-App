@@ -1,4 +1,4 @@
-# Django React Social Media App
+# Django React Peer to peer learning Web Platform
 
 This repository contains a boilerplate project setup for Django and React. The project contains backend user authentication with the Django Rest Framework and rest-auth. The frontend has react redux setup for user authentication in the frontend.
 
@@ -22,3 +22,7 @@ npm start
 ```json
 npm run build
 ```
+
+## Demo
+
+https://py3-test-app.herokuapp.com/
