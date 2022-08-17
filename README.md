@@ -26,3 +26,7 @@ npm run build
 ## Demo
 
 https://py3-test-app.herokuapp.com/
+
+## Product explainer video
+
+https://matecrunchpev.s3.amazonaws.com/PEV_3.mp4
