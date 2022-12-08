@@ -9,7 +9,7 @@ Automat==0.7.0
 autopep8==1.4.4
 boto3==1.12.23
 botocore==1.15.23
-certifi==2019.6.16
+certifi==2022.12.7
 cffi==1.12.3
 channels==2.4.0
 channels-redis==2.4.0
